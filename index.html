@@ -3,17 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yara - Optimize Every Dollar. Protect Every Right.</title>
+    <title>Yara - Your Personal Advocate</title>
     <style>
         /* --- CSS VARIABLES & RESET --- */
         :root {
-            --primary-accent: #5F5FF8;
-            --primary-hover: #4a4ac7;
-            --bg-gradient: linear-gradient(135deg, #e0ebff 0%, #e8def7 100%);
-            --text-main: #1a202c;
-            --text-muted: #4a5568;
-            --card-bg: rgba(255, 255, 255, 0.75);
-            --glass-border: rgba(255, 255, 255, 0.9);
+            --primary-blue: #5b86e5;
+            --primary-hover: #4a75d4;
+            --soft-purple: #e6e9f0;
+            --bg-gradient: linear-gradient(135deg, #ffffff 0%, #f3f4f8 50%, #e0c3fc 100%);
+            --text-main: #2d3748;
+            --text-muted: #718096;
+            --card-bg: rgba(255, 255, 255, 0.65);
+            --glass-border: rgba(255, 255, 255, 0.8);
             --shadow-soft: 0 20px 40px rgba(100, 100, 111, 0.1);
             --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
         }
@@ -27,23 +28,6 @@
             color: var(--text-main);
             overflow-x: hidden;
             position: relative;
-        }
-
-        /* --- SHARED SVG STYLING (For Larva/Pupa/Icons) --- */
-        .line-art-icon {
-            fill: none;
-            stroke: var(--text-main);
-            stroke-width: 12;
-            stroke-linecap: round;
-            stroke-linejoin: round;
-        }
-
-        /* --- IMAGE STYLING --- */
-        .brand-img {
-            height: 100%;
-            width: auto;
-            object-fit: contain;
-            display: block;
         }
 
         /* --- NAVIGATION --- */
@@ -61,27 +45,26 @@
         .logo {
             font-size: 1.8rem;
             font-weight: 800;
-            color: var(--text-main);
+            color: var(--primary-blue);
             letter-spacing: -0.5px;
             display: flex;
             align-items: center;
-            gap: 15px;
-            height: 50px; /* Fixed height for alignment */
+            gap: 10px;
         }
-        
+
         .nav-btn {
             padding: 10px 24px;
             border-radius: 30px;
-            border: 2px solid var(--primary-accent);
-            color: var(--primary-accent);
+            border: 1px solid var(--primary-blue);
+            color: var(--primary-blue);
             background: transparent;
-            font-weight: 700;
+            font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
         }
 
         .nav-btn:hover {
-            background: var(--primary-accent);
+            background: var(--primary-blue);
             color: white;
         }
 
@@ -91,22 +74,21 @@
             flex-direction: row;
             align-items: center;
             justify-content: space-between;
-            min-height: calc(100vh - 100px);
-            padding: 40px 60px;
+            height: calc(100vh - 80px);
+            padding: 0 60px;
             max-width: 1400px;
             margin: 0 auto;
         }
 
         .hero-content {
-            width: 45%;
+            width: 50%;
             padding-right: 50px;
             animation: slideInLeft 1s ease;
-            z-index: 2;
         }
 
         .hero-visual {
-            width: 55%;
-            height: 600px;
+            width: 50%;
+            height: 100%;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -114,29 +96,29 @@
         }
 
         h1 {
-            font-size: 3.8rem;
-            font-weight: 900;
+            font-size: 4rem;
+            font-weight: 800;
             line-height: 1.1;
-            margin-bottom: 25px;
-            color: var(--text-main);
+            margin-bottom: 20px;
+            background: linear-gradient(90deg, #5b86e5, #9b5de5);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         .hero-tagline {
             font-size: 1.5rem;
             color: var(--text-muted);
             margin-bottom: 40px;
-            font-weight: 500;
-            max-width: 90%;
+            font-weight: 400;
         }
 
         /* --- NEWSLETTER FORM --- */
         .newsletter-form {
             display: flex;
             gap: 15px;
-            max-width: 480px;
-            background: var(--card-bg);
+            max-width: 500px;
+            background: white;
             padding: 8px;
-            border: 1px solid var(--glass-border);
             border-radius: 50px;
             box-shadow: var(--shadow-soft);
         }
@@ -145,72 +127,99 @@
             flex: 1;
             border: none;
             padding: 15px 25px;
-            background: transparent;
+            border-radius: 40px;
             outline: none;
             font-size: 1rem;
-            color: var(--text-main);
         }
-        
-        .newsletter-form input::placeholder { color: #999; }
 
         .btn-primary {
-            background: var(--primary-accent);
+            background: var(--primary-blue);
             color: white;
             border: none;
             padding: 15px 35px;
             border-radius: 40px;
-            font-weight: 700;
+            font-weight: 600;
             cursor: pointer;
-            transition: transform 0.2s, background-color 0.2s;
+            transition: transform 0.2s;
             white-space: nowrap;
-            box-shadow: 0 4px 15px rgba(95, 95, 248, 0.3);
         }
-        
+
         .btn-primary:hover {
             background: var(--primary-hover);
-            transform: translateY(-2px);
+            transform: scale(1.05);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--primary-blue);
+            border: 2px solid var(--primary-blue);
+            padding: 12px 30px;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary-blue);
+            color: white;
+        }
+
+        .btn-tertiary {
+            background: transparent;
+            color: var(--text-muted);
+            border: 1px solid #e2e8f0;
+            padding: 12px 30px;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-tertiary:hover {
+            background: #f7fafc;
+            border-color: var(--text-muted);
         }
 
         /* --- METAMORPHOSIS ANIMATION --- */
         .morph-stage {
             position: absolute;
-            width: 350px;
-            height: 350px;
+            width: 300px;
+            height: 300px;
             display: flex;
             justify-content: center;
             align-items: center;
+            font-size: 8rem;
             opacity: 0;
-            animation-duration: 9s; 
+            animation-duration: 9s;
             animation-iteration-count: infinite;
-        }
-        
-        /* Specific sizing for the image inside the animation */
-        .morph-stage img {
-            width: 80%; /* Prevent it from touching edges */
-            height: 80%;
-            object-fit: contain;
-            filter: drop-shadow(0 5px 15px rgba(95, 95, 248, 0.2));
-        }
-
-        .morph-stage svg {
-            width: 100%;
-            height: 100%;
-            filter: drop-shadow(0 5px 15px rgba(95, 95, 248, 0.2));
         }
 
         .bg-glow {
             position: absolute;
-            width: 500px;
-            height: 500px;
-            background: radial-gradient(circle, rgba(224, 235, 255, 0.8) 0%, rgba(232, 222, 247, 0.5) 40%, rgba(255,255,255,0) 70%);
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(200,180,255,0.4) 0%, rgba(255,255,255,0) 70%);
             border-radius: 50%;
             z-index: -1;
-            animation: pulse 4s infinite alternate ease-in-out;
+            animation: pulse 3s infinite alternate;
         }
 
         #stage-larva     { animation-name: cycle-larva; }
         #stage-pupa      { animation-name: cycle-pupa; }
         #stage-butterfly { animation-name: cycle-butterfly; }
+
+        .pupa-svg {
+            width: 150px;
+            height: 150px;
+            fill: #a8b26c;
+            filter: drop-shadow(0 10px 10px rgba(0,0,0,0.1));
+        }
 
         @keyframes cycle-larva {
             0%, 25% { opacity: 1; transform: translateY(0) scale(1); }
@@ -218,35 +227,39 @@
         }
 
         @keyframes cycle-pupa {
-            0%, 25% { opacity: 0; transform: translateY(-20px) scale(0.8); }
-            33%, 58% { opacity: 1; transform: translateY(0) scale(1); }
-            66%, 100% { opacity: 0; transform: translateY(20px) scale(0.8); }
+            0%, 25% { opacity: 0; transform: translateY(-20px); }
+            33%, 58% { opacity: 1; transform: translateY(0); }
+            66%, 100% { opacity: 0; transform: translateY(20px); }
         }
 
         @keyframes cycle-butterfly {
-            0%, 58% { opacity: 0; transform: scale(0.8) translateY(20px); }
-            66%, 91% { opacity: 1; transform: scale(1.1) translateY(0); filter: drop-shadow(0 0 25px rgba(95, 95, 248, 0.6)); }
-            100% { opacity: 0; transform: scale(1.2) translateY(-20px); }
+            0%, 58% { opacity: 0; transform: scale(0.5) translateY(20px); }
+            66%, 91% { opacity: 1; transform: scale(1.2) translateY(0); filter: drop-shadow(0 0 20px var(--primary-blue)); }
+            100% { opacity: 0; transform: scale(1.5) translateY(-20px); }
         }
 
-        @keyframes pulse { from { transform: scale(1); opacity: 0.7; } to { transform: scale(1.2); opacity: 1; } }
+        @keyframes pulse { from { transform: scale(1); } to { transform: scale(1.1); } }
         @keyframes slideInLeft { from { opacity: 0; transform: translateX(-30px); } to { opacity: 1; transform: translateX(0); } }
 
-        /* --- MODALS --- */
+        /* --- MODAL SYSTEM --- */
         .modal-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(224, 235, 255, 0.6);
-            backdrop-filter: blur(12px);
+            background: rgba(255,255,255,0.8);
+            backdrop-filter: blur(8px);
             z-index: 100;
             display: none;
             justify-content: center;
             align-items: center;
             opacity: 0;
             transition: opacity 0.3s ease;
+            overflow-y: auto;
         }
 
-        .modal-overlay.active { display: flex; opacity: 1; }
+        .modal-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
 
         .glass-card {
             background: var(--card-bg);
@@ -259,49 +272,443 @@
             text-align: center;
             position: relative;
             animation: popUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            margin: 20px;
         }
 
         @keyframes popUp { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
-        .glass-card h2 { margin-bottom: 15px; color: var(--text-main); font-weight: 800; }
-        .glass-card p { color: var(--text-muted); margin-bottom: 25px; line-height: 1.6; }
+        .glass-card h2 { margin-bottom: 15px; color: var(--primary-blue); }
+        .glass-card p { color: var(--text-muted); margin-bottom: 25px; line-height: 1.5; }
 
         .glass-input {
             width: 100%;
-            padding: 16px;
+            padding: 15px;
             margin-bottom: 15px;
-            border-radius: 15px;
-            border: 2px solid transparent;
-            background: rgba(255,255,255,0.8);
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            background: rgba(255,255,255,0.9);
             font-size: 1rem;
             outline: none;
-            transition: all 0.3s;
-            color: var(--text-main);
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
         }
-        
-        .glass-input:focus { border-color: var(--primary-accent); background: white; }
-        textarea.glass-input { height: 120px; resize: none; }
+
+        .glass-input:focus { border-color: var(--primary-blue); box-shadow: 0 0 0 3px rgba(91, 134, 229, 0.1); }
 
         .close-btn {
             position: absolute;
             top: 20px; right: 20px;
             background: none; border: none;
-            font-size: 1.8rem; cursor: pointer; color: var(--text-muted);
-            transition: color 0.2s;
+            font-size: 1.5rem; cursor: pointer; color: #aaa;
         }
-        .close-btn:hover { color: var(--text-main); }
 
-        .step-indicator { font-size: 0.8rem; text-transform: uppercase; color: var(--primary-accent); font-weight: 700; letter-spacing: 1px; margin-bottom: 10px; }
+        .error-message {
+            color: #e53e3e;
+            font-size: 0.9rem;
+            margin-top: -10px;
+            margin-bottom: 15px;
+            text-align: left;
+        }
 
-        @media (max-width: 968px) {
-            .hero-container { flex-direction: column-reverse; justify-content: center; text-align: center; padding-top: 20px; }
+        /* --- SURVEY MODAL STYLES --- */
+        #survey-modal .glass-card {
+            max-width: 700px;
+            text-align: left;
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+
+        .survey-progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .survey-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-blue), #9b5de5);
+            transition: width 0.5s ease;
+            position: relative;
+        }
+
+        .survey-progress-fill::after {
+            content: '🦋';
+            position: absolute;
+            right: -15px;
+            top: -10px;
+            font-size: 1.5rem;
+        }
+
+        .survey-progress-text {
+            text-align: center;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+        }
+
+        .modal-content-inner {
+            /* Container for dynamic content */
+        }
+
+        /* Survey Components */
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .question-number {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .section-label {
+            background: var(--primary-blue);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .question-title {
+            font-size: 1.5rem;
+            color: var(--text-main);
+            margin-bottom: 15px;
+        }
+
+        .question-context {
+            background: #f7fafc;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            line-height: 1.6;
+            color: var(--text-main);
+            font-size: 0.95rem;
+        }
+
+        .question-prompt {
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--text-main);
+        }
+
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .option-card {
+            display: flex;
+            align-items: flex-start;
+            padding: 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .option-card:hover {
+            border-color: var(--primary-blue);
+            background: rgba(91, 134, 229, 0.05);
+        }
+
+        .option-card input[type="radio"] {
+            margin-right: 12px;
+            margin-top: 3px;
+        }
+
+        .option-content {
+            display: flex;
+            gap: 10px;
+            flex: 1;
+        }
+
+        .option-label {
+            font-weight: 700;
+            color: var(--primary-blue);
+            min-width: 25px;
+        }
+
+        .option-text {
+            flex: 1;
+            line-height: 1.5;
+        }
+
+        .scenario-container {
+            background: #f7fafc;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        .scenario-title {
+            color: var(--primary-blue);
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        .scenario-description {
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+
+        .scenario-fields {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .form-field {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .field-label {
+            font-weight: 600;
+            color: var(--text-main);
+            font-size: 0.95rem;
+        }
+
+        .form-select, .form-input, .form-textarea {
+            padding: 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1rem;
+            outline: none;
+            background: white;
+        }
+
+        .form-select:focus, .form-input:focus, .form-textarea:focus {
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px rgba(91, 134, 229, 0.1);
+        }
+
+        .form-textarea {
+            min-height: 100px;
+            resize: vertical;
+            font-family: inherit;
+        }
+
+        .follow-up-section {
+            margin-top: 25px;
+            padding-top: 25px;
+            border-top: 2px solid #e2e8f0;
+        }
+
+        .ranking-container, .scale-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .ranking-item, .scale-item {
+            background: #f7fafc;
+            padding: 15px;
+            border-radius: 12px;
+        }
+
+        .ranking-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .ranking-select {
+            padding: 8px 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            background: white;
+            font-weight: 600;
+            color: var(--primary-blue);
+        }
+
+        .ranking-text, .scale-text {
+            font-size: 0.95rem;
+            line-height: 1.5;
+            color: var(--text-main);
+        }
+
+        .scale-options {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .scale-label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .scale-radio {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .scale-radio input {
+            margin-bottom: 5px;
+        }
+
+        .scale-value {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        .radio-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+
+        .question-navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        /* Survey Info Cards */
+        .survey-info {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin: 30px 0;
+        }
+
+        .info-item {
+            text-align: center;
+            padding: 20px;
+            background: #f7fafc;
+            border-radius: 12px;
+        }
+
+        .info-item strong {
+            display: block;
+            color: var(--primary-blue);
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+        }
+
+        .info-item p {
+            margin: 0;
+            font-size: 0.9rem;
+        }
+
+        .survey-note {
+            background: #fff3cd;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            margin-top: 20px;
+        }
+
+        /* Section Transition */
+        .section-transition {
+            text-align: center;
+        }
+
+        .transition-animation {
+            position: relative;
+            height: 100px;
+            margin-bottom: 30px;
+        }
+
+        .cocoon, .butterfly {
+            font-size: 4rem;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .cocoon {
+            animation: fadeOut 2s forwards;
+        }
+
+        .butterfly {
+            animation: fadeInFly 2s 1s forwards;
+            opacity: 0;
+        }
+
+        @keyframes fadeOut {
+            0% { opacity: 1; transform: translateX(-50%) scale(1); }
+            100% { opacity: 0; transform: translateX(-50%) scale(0.5); }
+        }
+
+        @keyframes fadeInFly {
+            0% { opacity: 0; transform: translateX(-50%) translateY(20px) scale(0.5); }
+            100% { opacity: 1; transform: translateX(-50%) translateY(0) scale(1.2); }
+        }
+
+        .transition-message {
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+        }
+
+        .progress-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin: 30px 0;
+        }
+
+        .stat {
+            text-align: center;
+            padding: 20px;
+            background: #f7fafc;
+            border-radius: 12px;
+        }
+
+        .stat strong {
+            display: block;
+            color: var(--primary-blue);
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+
+        .stat span {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* Final Comments */
+        .final-comments {
+            margin: 30px 0;
+        }
+
+        .final-comments h3 {
+            color: var(--primary-blue);
+            margin-bottom: 10px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-container { flex-direction: column-reverse; justify-content: center; text-align: center; }
             .hero-content, .hero-visual { width: 100%; padding: 0; }
-            .hero-visual { height: 50vh; }
-            h1 { font-size: 2.8rem; }
-            .hero-tagline { margin: 0 auto 30px auto; }
+            .hero-visual { height: 40vh; }
+            h1 { font-size: 2.5rem; }
             .newsletter-form { margin: 0 auto; }
-            nav { padding: 20px 30px; }
+            .glass-card { padding: 30px 20px; }
+            .survey-info, .progress-stats { grid-template-columns: 1fr; }
+            .question-navigation { flex-direction: column; }
+            .question-navigation button { width: 100%; }
         }
     </style>
 </head>
@@ -309,139 +716,100 @@
 
     <nav>
         <div class="logo">
-            <img src="yara_logo.png" alt="Yara Butterfly" class="brand-img" style="height: 50px;">
-            Yara
+            <span style="font-size: 1.5rem;">🦋</span> Yara
         </div>
-        <button class="nav-btn" onclick="openModal('login-modal')">Login</button>
+        <button class="nav-btn" onclick="openModal('login-modal')">Invited Login</button>
     </nav>
 
     <main class="hero-container">
-        
+
         <div class="hero-content">
-            <h1>Optimize Every Dollar.<br>Protect Every Right.</h1>
-            <p class="hero-tagline">Yara uses advanced AI to ensure you get the most out of your opportunities while safeguarding your interests.</p>
-            
+            <h1>Your Personal Advocate<br>is Evolving.</h1>
+            <p class="hero-tagline">Your advocate that negotiates, protects, and acts on your behalf.</p>
+
             <div class="newsletter-form">
-                <input type="email" placeholder="Enter email for early access..." aria-label="Newsletter Email">
-                <button class="btn-primary" onclick="alert('Thanks for joining the Yara waitlist!')">Get Early Access</button>
+                <input type="email" placeholder="Enter your email..." aria-label="Newsletter Email">
+                <button class="btn-primary" onclick="alert('You are on the waitlist!')">Notify Me</button>
             </div>
         </div>
 
         <div class="hero-visual">
             <div class="bg-glow"></div>
-            
-            <div id="stage-larva" class="morph-stage">
-                <svg class="line-art-icon" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M40,110 Q55,90 70,110 Q85,130 100,110 Q115,90 130,110 Q145,130 160,110" stroke-width="14" fill="none" stroke-linecap="round" />
-                    <path d="M165,105 C175,100 185,110 180,120" stroke-width="14" stroke-linecap="round" />
-                </svg>
-            </div>
-            
+
+            <div id="stage-larva" class="morph-stage">🐛</div>
+
             <div id="stage-pupa" class="morph-stage">
-                <svg class="line-art-icon" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M80,30 Q100,20 120,30" stroke-width="8"/>
-                    <line x1="100" y1="30" x2="100" y2="50" stroke-width="6" />
-                    <path d="M100,50 C135,75 135,135 100,170 C65,135 65,75 100,50 Z" />
-                    <path d="M82,90 Q100,100 118,90 M85,120 Q100,130 115,120" stroke-width="6" opacity="0.6"/>
+                <svg class="pupa-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M40,5 Q50,0 60,5" stroke="#8d6e63" stroke-width="4" fill="none" stroke-linecap="round"/>
+                    <line x1="50" y1="5" x2="50" y2="15" stroke="#fff" stroke-width="2" />
+                    <path d="M50,15 C65,25 65,55 50,85 C35,55 35,25 50,15 Z" fill="#b5c99a" />
+                    <path d="M40,35 Q50,40 60,35 M42,45 Q50,50 58,45 M45,55 Q50,58 55,55" stroke="#fff" stroke-width="1" fill="none" opacity="0.6"/>
                 </svg>
             </div>
-            
-            <div id="stage-butterfly" class="morph-stage">
-                <img src="yara_logo.png" alt="Yara Butterfly" class="brand-img">
-            </div>
+
+            <div id="stage-butterfly" class="morph-stage">🦋</div>
         </div>
 
     </main>
 
-
+    <!-- Login Modal -->
     <div id="login-modal" class="modal-overlay">
         <div class="glass-card">
             <button class="close-btn" onclick="closeModal('login-modal')">&times;</button>
-            
-            <div style="height: 80px; margin-bottom: 20px; display: flex; justify-content: center;">
-                <img src="yara_logo.png" alt="Yara" class="brand-img">
-            </div>
-
             <h2>Welcome Back</h2>
-            <p>Sign in to continue optimizing your world.</p>
-            <input type="email" id="login-email" class="glass-input" placeholder="Email Address">
-            <input type="password" id="login-password" class="glass-input" placeholder="Password">
-            <button class="btn-primary" style="width:100%" onclick="handleLogin()">Sign In</button>
+            <p>Please sign in to access the stakeholder survey.</p>
+
+            <form id="login-form">
+                <input type="email" id="login-email" class="glass-input" placeholder="Email Address" required>
+                <input type="password" id="login-password" class="glass-input" placeholder="Password" required>
+                <div id="login-error" class="error-message"></div>
+                <button type="submit" class="btn-primary" style="width:100%">Sign In</button>
+            </form>
         </div>
     </div>
 
-    <div id="questionnaire-modal" class="modal-overlay">
-        <div class="glass-card" style="text-align: left;">
-            <button class="close-btn" onclick="closeModal('questionnaire-modal')">&times;</button>
-            
-            <div id="q-step-1" class="q-step">
-                <p class="step-indicator">Step 1 of 3</p>
-                <h2>Financial Goals</h2>
-                <p>What is your primary goal for optimizing your finances?</p>
-                <textarea class="glass-input" placeholder="e.g., Reduce expenses, maximize savings..."></textarea>
-                <button class="btn-primary" style="width:100%" onclick="nextQStep(2)">Next</button>
-            </div>
-
-            <div id="q-step-2" class="q-step" style="display: none;">
-                <p class="step-indicator">Step 2 of 3</p>
-                <h2>Rights & Protection</h2>
-                <p>Are there specific areas where you feel your rights need better protection?</p>
-                <textarea class="glass-input" placeholder="e.g., Tenant rights, consumer contracts..."></textarea>
-                <button class="btn-primary" style="width:100%" onclick="nextQStep(3)">Next</button>
-            </div>
-
-            <div id="q-step-3" class="q-step" style="display: none;">
-                <p class="step-indicator">Step 3 of 3</p>
-                <h2>Ideal Outcome</h2>
-                <p>What does success look like for you with Yara?</p>
-                <textarea class="glass-input" placeholder="I hope to achieve..."></textarea>
-                <button class="btn-primary" style="width:100%" onclick="finishQuestionnaire()">Complete Setup</button>
-            </div>
-
-             <div id="q-step-final" class="q-step" style="display: none; text-align: center; padding-top: 20px;">
-                <svg class="line-art-icon" style="height: 80px; margin-bottom: 20px; stroke: var(--primary-accent);" viewBox="0 0 100 100">
-                    <polyline points="20 50 40 70 80 30" />
-                </svg>
-                <h2>You're All Set</h2>
-                <p>Yara is analyzing your inputs and preparing your personalized dashboard.</p>
-                <button class="btn-primary" style="width:100%" onclick="handleSubmitData()">Go to Dashboard</button>
+    <!-- Resume Survey Modal -->
+    <div id="resume-modal" class="modal-overlay">
+        <div class="glass-card">
+            <h2>Welcome Back!</h2>
+            <p>We found your saved progress. Would you like to continue where you left off?</p>
+            <div style="display: flex; gap: 15px; margin-top: 20px;">
+                <button class="btn-secondary" onclick="surveyApp.startFresh()" style="flex: 1">Start Fresh</button>
+                <button class="btn-primary" onclick="surveyApp.resumeSurvey()" style="flex: 1">Resume</button>
             </div>
         </div>
     </div>
 
+    <!-- Survey Modal -->
+    <div id="survey-modal" class="modal-overlay">
+        <div class="glass-card">
+            <button class="close-btn" onclick="surveyApp.saveAndExit()">&times;</button>
+
+            <div class="survey-progress-bar">
+                <div id="survey-progress-bar" class="survey-progress-fill" style="width: 0%"></div>
+            </div>
+            <div id="survey-progress-text" class="survey-progress-text">Question 0 of 25</div>
+
+            <div class="modal-content-inner">
+                <!-- Dynamic survey content will be injected here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Load Survey Data -->
+    <script src="survey-questions.js"></script>
+
+    <!-- Load Survey App -->
+    <script src="survey-app.js"></script>
 
     <script>
+        // --- Modal Helper Functions ---
         function openModal(id) {
             document.getElementById(id).classList.add('active');
         }
-        
+
         function closeModal(id) {
             document.getElementById(id).classList.remove('active');
-        }
-
-        function handleLogin() {
-            const email = document.getElementById('login-email').value;
-            const pass = document.getElementById('login-password').value;
-            if(email && pass) {
-                closeModal('login-modal');
-                setTimeout(() => { openModal('questionnaire-modal'); }, 300);
-            } else {
-                alert("Please enter any email and password to demo the flow.");
-            }
-        }
-
-        function nextQStep(step) {
-            document.querySelectorAll('.q-step').forEach(el => el.style.display = 'none');
-            document.getElementById('q-step-' + step).style.display = 'block';
-        }
-
-        function finishQuestionnaire() {
-            nextQStep('final');
-        }
-
-        function handleSubmitData() {
-            alert("Demo Complete! Redirecting to dashboard...");
-            location.reload();
         }
     </script>
 </body>
