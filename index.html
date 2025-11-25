@@ -7,21 +7,14 @@
     <style>
         /* --- CSS VARIABLES & RESET --- */
         :root {
-            /* Palette based on Swift Code & Image analysis */
-            --primary-accent: #5F5FF8; /* Vibrant blue-purple for buttons/highlights */
+            --primary-accent: #5F5FF8;
             --primary-hover: #4a4ac7;
-            
-            /* Swift Code Gradient Background */
             --bg-gradient: linear-gradient(135deg, #e0ebff 0%, #e8def7 100%);
-            
-            --text-main: #1a202c; /* Deep black/gray for contrast on light bg */
+            --text-main: #1a202c;
             --text-muted: #4a5568;
-            
-            /* Glassmorphism variables */
             --card-bg: rgba(255, 255, 255, 0.75);
             --glass-border: rgba(255, 255, 255, 0.9);
             --shadow-soft: 0 20px 40px rgba(100, 100, 111, 0.1);
-            
             --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
         }
 
@@ -37,11 +30,10 @@
         }
 
         /* --- SHARED SVG STYLING --- */
-        /* Ensures all icons follow the minimalist line-art style of Image 3 */
         .line-art-icon {
             fill: none;
             stroke: var(--text-main);
-            stroke-width: 8;
+            stroke-width: 12; /* Slightly thicker for bold look */
             stroke-linecap: round;
             stroke-linejoin: round;
         }
@@ -69,7 +61,7 @@
         }
 
         .logo svg {
-            height: 40px;
+            height: 45px; /* Adjusted size */
             width: auto;
         }
         
@@ -184,7 +176,7 @@
             justify-content: center;
             align-items: center;
             opacity: 0;
-            animation-duration: 9s; /* 3 seconds per stage */
+            animation-duration: 9s; 
             animation-iteration-count: infinite;
         }
         
@@ -194,19 +186,16 @@
             filter: drop-shadow(0 5px 15px rgba(95, 95, 248, 0.2));
         }
 
-        /* Glow Effect - Updated colors */
         .bg-glow {
             position: absolute;
             width: 500px;
             height: 500px;
-            /* Glow matching the Swift gradient and accent */
             background: radial-gradient(circle, rgba(224, 235, 255, 0.8) 0%, rgba(232, 222, 247, 0.5) 40%, rgba(255,255,255,0) 70%);
             border-radius: 50%;
             z-index: -1;
             animation: pulse 4s infinite alternate ease-in-out;
         }
 
-        /* Animation Keyframes */
         #stage-larva     { animation-name: cycle-larva; }
         #stage-pupa      { animation-name: cycle-pupa; }
         #stage-butterfly { animation-name: cycle-butterfly; }
@@ -231,11 +220,11 @@
         @keyframes pulse { from { transform: scale(1); opacity: 0.7; } to { transform: scale(1.2); opacity: 1; } }
         @keyframes slideInLeft { from { opacity: 0; transform: translateX(-30px); } to { opacity: 1; transform: translateX(0); } }
 
-        /* --- MODAL / CARD SYSTEM --- */
+        /* --- MODALS --- */
         .modal-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(224, 235, 255, 0.5); /* Light blue tint */
+            background: rgba(224, 235, 255, 0.6);
             backdrop-filter: blur(12px);
             z-index: 100;
             display: none;
@@ -293,7 +282,6 @@
 
         .step-indicator { font-size: 0.8rem; text-transform: uppercase; color: var(--primary-accent); font-weight: 700; letter-spacing: 1px; margin-bottom: 10px; }
 
-        /* Responsive Tweaks */
         @media (max-width: 968px) {
             .hero-container { flex-direction: column-reverse; justify-content: center; text-align: center; padding-top: 20px; }
             .hero-content, .hero-visual { width: 100%; padding: 0; }
@@ -310,11 +298,10 @@
     <nav>
         <div class="logo">
             <svg class="line-art-icon" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-                 <path d="M50,70 C20,70 10,100 10,120 C10,150 35,170 65,170 C95,170 95,140 95,140" />
-                 <path d="M150,70 C180,70 190,100 190,120 C190,150 165,170 135,170 C105,170 105,140 105,140" />
-                 <path d="M95,140 L105,140" stroke-width="12"/>
-                 <circle cx="85" cy="80" r="8" fill="var(--text-main)" stroke="none"/>
-                 <circle cx="115" cy="80" r="8" fill="var(--text-main)" stroke="none"/>
+                <path d="M95,135 C65,165 35,155 25,125 C15,95 35,55 65,65 C85,72 95,95 95,95" />
+                <path d="M105,135 C135,165 165,155 175,125 C185,95 165,55 135,65 C115,72 105,95 105,95" />
+                <circle cx="88" cy="80" r="8" fill="var(--text-main)" stroke="none"/>
+                <circle cx="112" cy="80" r="8" fill="var(--text-main)" stroke="none"/>
             </svg>
             Yara
         </div>
@@ -338,30 +325,26 @@
             
             <div id="stage-larva" class="morph-stage">
                 <svg class="line-art-icon" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M20,120 Q40,100 60,120 Q80,140 100,120 Q120,100 140,120 Q160,140 180,120" />
-                     <circle cx="30" cy="120" r="5" fill="var(--text-main)" stroke="none"/>
-                     <circle cx="70" cy="120" r="5" fill="var(--text-main)" stroke="none"/>
-                     <circle cx="110" cy="120" r="5" fill="var(--text-main)" stroke="none"/>
-                     <circle cx="150" cy="120" r="5" fill="var(--text-main)" stroke="none"/>
+                    <path d="M40,110 Q55,90 70,110 Q85,130 100,110 Q115,90 130,110 Q145,130 160,110" stroke-width="14" fill="none" stroke-linecap="round" />
+                    <path d="M165,105 C175,100 185,110 180,120" stroke-width="14" stroke-linecap="round" />
                 </svg>
             </div>
             
             <div id="stage-pupa" class="morph-stage">
                 <svg class="line-art-icon" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M80,20 Q100,10 120,20" stroke-width="6"/>
-                    <line x1="100" y1="20" x2="100" y2="40" stroke-width="4" />
-                    <path d="M100,40 C130,60 130,120 100,180 C70,120 70,60 100,40 Z" />
-                    <path d="M85,80 Q100,90 115,80 M88,110 Q100,120 112,110" stroke-width="4" opacity="0.6"/>
+                    <path d="M80,30 Q100,20 120,30" stroke-width="8"/>
+                    <line x1="100" y1="30" x2="100" y2="50" stroke-width="6" />
+                    <path d="M100,50 C135,75 135,135 100,170 C65,135 65,75 100,50 Z" />
+                    <path d="M82,90 Q100,100 118,90 M85,120 Q100,130 115,120" stroke-width="6" opacity="0.6"/>
                 </svg>
             </div>
             
             <div id="stage-butterfly" class="morph-stage">
-                 <svg class="line-art-icon" style="stroke-width: 6;" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-                 <path d="M50,60 C20,60 10,90 10,110 C10,140 35,160 65,160 C95,160 95,130 95,130" />
-                 <path d="M150,60 C180,60 190,90 190,110 C190,140 165,160 135,160 C105,160 105,130 105,130" />
-                 <path d="M95,130 L105,130" stroke-width="10"/>
-                 <circle cx="85" cy="70" r="7" fill="var(--text-main)" stroke="none"/>
-                 <circle cx="115" cy="70" r="7" fill="var(--text-main)" stroke="none"/>
+                 <svg class="line-art-icon" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M95,135 C65,165 35,155 25,125 C15,95 35,55 65,65 C85,72 95,95 95,95" />
+                    <path d="M105,135 C135,165 165,155 175,125 C185,95 165,55 135,65 C115,72 105,95 105,95" />
+                    <circle cx="88" cy="80" r="8" fill="var(--text-main)" stroke="none"/>
+                    <circle cx="112" cy="80" r="8" fill="var(--text-main)" stroke="none"/>
             </svg>
             </div>
         </div>
@@ -373,18 +356,17 @@
         <div class="glass-card">
             <button class="close-btn" onclick="closeModal('login-modal')">&times;</button>
             
-            <svg class="line-art-icon" style="height: 60px; margin-bottom: 20px;" viewBox="0 0 200 200">
-                 <path d="M50,70 C20,70 10,100 10,120 C10,150 35,170 65,170 C95,170 95,140 95,140" />
-                 <path d="M150,70 C180,70 190,100 190,120 C190,150 165,170 135,170 C105,170 105,140 105,140" />
-                 <path d="M95,140 L105,140" stroke-width="12"/>
+            <svg class="line-art-icon" style="height: 70px; margin-bottom: 20px;" viewBox="0 0 200 200">
+                 <path d="M95,135 C65,165 35,155 25,125 C15,95 35,55 65,65 C85,72 95,95 95,95" />
+                 <path d="M105,135 C135,165 165,155 175,125 C185,95 165,55 135,65 C115,72 105,95 105,95" />
+                 <circle cx="88" cy="80" r="8" fill="var(--text-main)" stroke="none"/>
+                 <circle cx="112" cy="80" r="8" fill="var(--text-main)" stroke="none"/>
             </svg>
 
             <h2>Welcome Back</h2>
             <p>Sign in to continue optimizing your world.</p>
-            
             <input type="email" id="login-email" class="glass-input" placeholder="Email Address">
             <input type="password" id="login-password" class="glass-input" placeholder="Password">
-            
             <button class="btn-primary" style="width:100%" onclick="handleLogin()">Sign In</button>
         </div>
     </div>
@@ -418,14 +400,13 @@
             </div>
 
              <div id="q-step-final" class="q-step" style="display: none; text-align: center; padding-top: 20px;">
-                 <svg class="line-art-icon" style="height: 80px; margin-bottom: 20px; stroke: var(--primary-accent);" viewBox="0 0 100 100">
+                <svg class="line-art-icon" style="height: 80px; margin-bottom: 20px; stroke: var(--primary-accent);" viewBox="0 0 100 100">
                     <polyline points="20 50 40 70 80 30" />
                 </svg>
                 <h2>You're All Set</h2>
                 <p>Yara is analyzing your inputs and preparing your personalized dashboard.</p>
                 <button class="btn-primary" style="width:100%" onclick="handleSubmitData()">Go to Dashboard</button>
             </div>
-
         </div>
     </div>
 
