@@ -6,11 +6,28 @@ const crypto = require('crypto');
 // Format: {"email@example.com": "hashed_password", ...}
 const AUTH_CREDENTIALS = process.env.AUTH_CREDENTIALS;
 
+// CORS headers to allow requests from the website
+const corsHeaders = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Headers': 'Content-Type',
+    'Access-Control-Allow-Methods': 'POST, OPTIONS'
+};
+
 exports.handler = async (event, context) => {
+    // Handle preflight OPTIONS request
+    if (event.httpMethod === 'OPTIONS') {
+        return {
+            statusCode: 200,
+            headers: corsHeaders,
+            body: ''
+        };
+    }
+
     // Only accept POST requests
     if (event.httpMethod !== 'POST') {
         return {
             statusCode: 405,
+            headers: corsHeaders,
             body: JSON.stringify({ message: 'Method Not Allowed' })
         };
     }
@@ -21,6 +38,7 @@ exports.handler = async (event, context) => {
     } catch (error) {
         return {
             statusCode: 400,
+            headers: corsHeaders,
             body: JSON.stringify({ message: 'Invalid JSON format' })
         };
     }
@@ -31,6 +49,7 @@ exports.handler = async (event, context) => {
     if (!email || !password) {
         return {
             statusCode: 400,
+            headers: corsHeaders,
             body: JSON.stringify({ message: 'Email and password are required' })
         };
     }
@@ -40,6 +59,7 @@ exports.handler = async (event, context) => {
         console.error('AUTH_CREDENTIALS environment variable not set');
         return {
             statusCode: 500,
+            headers: corsHeaders,
             body: JSON.stringify({ message: 'Authentication system not configured' })
         };
     }
@@ -51,6 +71,7 @@ exports.handler = async (event, context) => {
         console.error('Failed to parse AUTH_CREDENTIALS:', error);
         return {
             statusCode: 500,
+            headers: corsHeaders,
             body: JSON.stringify({ message: 'Authentication configuration error' })
         };
     }
@@ -63,11 +84,11 @@ exports.handler = async (event, context) => {
         // Authentication successful
         return {
             statusCode: 200,
+            headers: corsHeaders,
             body: JSON.stringify({
                 success: true,
                 message: 'Authentication successful',
                 userId: email,
-                // You could add a JWT token here for more security
                 timestamp: new Date().toISOString()
             })
         };
@@ -75,6 +96,7 @@ exports.handler = async (event, context) => {
         // Authentication failed
         return {
             statusCode: 401,
+            headers: corsHeaders,
             body: JSON.stringify({
                 success: false,
                 message: 'Invalid email or password'
