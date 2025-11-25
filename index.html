@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yara - Your Personal Advocate</title>
+    <style>
+        /* --- CSS VARIABLES & RESET --- */
+        :root {
+            --primary-blue: #5b86e5; /* Matches the Yara text tone */
+            --soft-purple: #e6e9f0;
+            --soft-pink: #eef1f5;
+            --glow-color: rgba(166, 193, 238, 0.5);
+            --text-color: #4a5568;
+            --input-bg: #ffffff;
+            --shadow-light: 0 10px 25px rgba(100, 100, 111, 0.1);
+            --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: var(--font-family);
+            /* Soft gradient background matching the reference */
+            background: linear-gradient(180deg, #ffffff 0%, #f3f4f8 40%, #e0c3fc 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--text-color);
+            overflow-x: hidden;
+        }
+
+        /* --- CONTAINER & LAYOUT --- */
+        .app-container {
+            width: 100%;
+            max-width: 400px; /* Mobile width */
+            min-height: 800px;
+            background: rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(10px);
+            border-radius: 40px; /* High border radius like phone screen */
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            padding: 40px 30px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.6);
+        }
+
+        /* --- TYPOGRAPHY --- */
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--primary-blue);
+            margin-bottom: 10px;
+            letter-spacing: -0.5px;
+        }
+
+        h2 { font-size: 1.5rem; margin-bottom: 20px; color: var(--text-color); }
+        p { font-size: 1rem; line-height: 1.5; color: #718096; margin-bottom: 20px; }
+        
+        .tagline {
+            font-weight: 500;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        /* --- METAMORPHOSIS ANIMATION --- */
+        .morph-wrapper {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            margin: 20px auto 40px auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* The glow behind the butterfly */
+        .glow-bg {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #d4a9ff 0%, rgba(255,255,255,0) 70%);
+            opacity: 0.6;
+            z-index: 0;
+        }
+
+        .stage {
+            font-size: 4rem;
+            position: absolute;
+            animation-duration: 8s; /* Total cycle time */
+            animation-iteration-count: infinite;
+            opacity: 0;
+            z-index: 1;
+        }
+
+        /* Cycle: Egg -> Larva -> Chrysalis -> Butterfly */
+        #stage-egg       { animation-name: fade-egg; }
+        #stage-larva     { animation-name: fade-larva; }
+        #stage-chrysalis { animation-name: fade-chrysalis; }
+        #stage-butterfly { animation-name: fade-butterfly; }
+
+        @keyframes fade-egg {
+            0%, 20% { opacity: 1; transform: scale(1); }
+            25%, 100% { opacity: 0; transform: scale(0.8); }
+        }
+        @keyframes fade-larva {
+            0%, 20% { opacity: 0; transform: scale(0.8); }
+            25%, 45% { opacity: 1; transform: scale(1); }
+            50%, 100% { opacity: 0; transform: scale(0.8); }
+        }
+        @keyframes fade-chrysalis {
+            0%, 45% { opacity: 0; transform: scale(0.8); }
+            50%, 70% { opacity: 1; transform: scale(1); }
+            75%, 100% { opacity: 0; transform: scale(0.8); }
+        }
+        @keyframes fade-butterfly {
+            0%, 70% { opacity: 0; transform: scale(0.5); }
+            75%, 95% { opacity: 1; transform: scale(1.1); filter: drop-shadow(0 0 10px var(--primary-blue)); }
+            100% { opacity: 0; transform: scale(1.2); } /* Reset loop */
+        }
+
+        /* --- FORMS & INPUTS --- */
+        .input-group { width: 100%; margin-bottom: 15px; }
+        
+        input, textarea {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 15px;
+            background: var(--input-bg);
+            box-shadow: var(--shadow-light);
+            font-size: 1rem;
+            margin-bottom: 10px;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        input:focus, textarea:focus {
+            box-shadow: 0 0 0 2px var(--primary-blue);
+        }
+
+        button {
+            width: 100%;
+            padding: 16px;
+            border-radius: 50px;
+            border: none;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            margin-top: 10px;
+        }
+
+        .btn-primary {
+            background: #ffffff;
+            color: #333;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.1); }
+
+        .btn-secondary {
+            background: transparent;
+            border: 1px solid #ccc;
+            color: #666;
+        }
+
+        .btn-link {
+            background: none;
+            color: var(--primary-blue);
+            font-size: 0.9rem;
+            text-decoration: underline;
+            padding: 10px;
+            margin-top: 20px;
+            display: inline-block;
+            width: auto;
+        }
+
+        /* --- VIEW UTILITIES --- */
+        .view-section {
+            display: none; /* Hidden by default */
+            width: 100%;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        
+        .view-section.active {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Specific Styling for Questionnaire */
+        textarea { resize: none; height: 120px; }
+        .step-indicator { font-size: 0.85rem; color: #999; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px; }
+
+        /* Apple/Google Style Buttons (Visual Only) */
+        .social-login {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        
+        <div id="coming-soon-view" class="view-section active">
+            <div class="morph-wrapper">
+                <div class="glow-bg"></div>
+                <div id="stage-egg" class="stage">🥚</div>
+                <div id="stage-larva" class="stage">🐛</div>
+                <div id="stage-chrysalis" class="stage">🧶</div>
+                <div id="stage-butterfly" class="stage">🦋</div>
+            </div>
+
+            <h1>Yara</h1>
+            <p class="tagline">Your Personal Advocate is Evolving.</p>
+
+            <div class="input-group">
+                <input type="email" placeholder="Enter email for updates..." aria-label="Email for newsletter">
+                <button class="btn-primary" onclick="alert('Thank you! You have been added to the waitlist.')">Notify Me</button>
+            </div>
+
+            <button class="btn-link" onclick="switchView('login-view')">Invited Users Login</button>
+        </div>
+
+
+        <div id="login-view" class="view-section">
+            <div class="morph-wrapper" style="height: 80px; margin-bottom: 20px;">
+                <div class="stage" style="opacity: 1; font-size: 3rem;">🦋</div>
+            </div>
+            <h2>Welcome Back</h2>
+            <p>Please sign in to access the beta.</p>
+            
+            <div class="input-group">
+                <input type="email" id="login-email" placeholder="Email Address">
+                <input type="password" id="login-password" placeholder="Password">
+            </div>
+
+            <button class="btn-primary" onclick="handleLogin()">Sign In</button>
+            <button class="btn-link" onclick="switchView('coming-soon-view')">← Back to Home</button>
+        </div>
+
+
+        <div id="questionnaire-view" class="view-section">
+            <div style="width: 100%; text-align: left;">
+                <h2>Help Yara Learn</h2>
+                
+                <div id="q-step-1" class="q-step">
+                    <p class="step-indicator">Step 1 of 3</p>
+                    <p>What is the primary challenge you are facing today?</p>
+                    <textarea placeholder="Describe your situation..."></textarea>
+                    <button class="btn-primary" onclick="nextQStep(2)">Next</button>
+                </div>
+
+                <div id="q-step-2" class="q-step" style="display: none;">
+                    <p class="step-indicator">Step 2 of 3</p>
+                    <p>How do you currently handle this issue?</p>
+                    <textarea placeholder="I currently..."></textarea>
+                    <button class="btn-primary" onclick="nextQStep(3)">Next</button>
+                </div>
+
+                <div id="q-step-3" class="q-step" style="display: none;">
+                    <p class="step-indicator">Step 3 of 3</p>
+                    <p>What is your ideal outcome?</p>
+                    <textarea placeholder="I hope to achieve..."></textarea>
+                    <button class="btn-primary" onclick="finishQuestionnaire()">Complete</button>
+                </div>
+            </div>
+        </div>
+
+
+        <div id="completion-view" class="view-section">
+            <div class="morph-wrapper">
+                <div class="glow-bg"></div>
+                <div class="stage" style="opacity: 1; animation: none; transform: scale(1.2);">🦋</div>
+            </div>
+            <h1>Thank You</h1>
+            <p>Your input is helping Yara take flight. Your advocate is preparing your profile.</p>
+            
+            <button class="btn-primary" onclick="handleSubmitData()">Submit Data</button>
+        </div>
+
+    </div>
+
+    <script>
+        // --- Navigation Helper ---
+        function switchView(viewId) {
+            // Hide all views
+            document.querySelectorAll('.view-section').forEach(view => {
+                view.classList.remove('active');
+            });
+            // Show requested view
+            document.getElementById(viewId).classList.add('active');
+        }
+
+        // --- Login Logic ---
+        function loginUser() {
+            // Placeholder: In production, validate API here
+            console.log("User logged in.");
+            return true;
+        }
+
+        function handleLogin() {
+            const email = document.getElementById('login-email').value;
+            const pass = document.getElementById('login-password').value;
+
+            if(email && pass) {
+                const success = loginUser();
+                if(success) {
+                    switchView('questionnaire-view');
+                }
+            } else {
+                alert("Please enter placeholder credentials.");
+            }
+        }
+
+        // --- Questionnaire Logic ---
+        function nextQStep(stepNumber) {
+            // Hide all steps
+            document.querySelectorAll('.q-step').forEach(step => step.style.display = 'none');
+            // Show specific step
+            document.getElementById('q-step-' + stepNumber).style.display = 'block';
+        }
+
+        function finishQuestionnaire() {
+            switchView('completion-view');
+        }
+
+        // --- Submission Logic ---
+        function submitQuestionnaireData(data) {
+            // Placeholder: Send data to backend
+            console.log("Data submitted:", data);
+            alert("Data successfully submitted to Yara!");
+            // Reset to home
+            location.reload();
+        }
+
+        function handleSubmitData() {
+            // Collect dummy data
+            const data = {
+                timestamp: new Date(),
+                status: "complete"
+            };
+            submitQuestionnaireData(data);
+        }
+    </script>
+</body>
+</html>
