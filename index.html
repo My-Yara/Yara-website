@@ -728,8 +728,8 @@
             <p class="hero-tagline">Your advocate that negotiates, protects, and acts on your behalf.</p>
 
             <div class="newsletter-form">
-                <input type="email" placeholder="Enter your email..." aria-label="Newsletter Email">
-                <button class="btn-primary" onclick="alert('You are on the waitlist!')">Notify Me</button>
+                <input type="email" id="early-access-email" placeholder="Enter your email..." aria-label="Newsletter Email">
+                <button class="btn-primary" onclick="startEarlyAccess()">Get Early Access</button>
             </div>
         </div>
 
@@ -796,11 +796,27 @@
         </div>
     </div>
 
+    <!-- Early Access Questionnaire Modal -->
+    <div id="early-access-modal" class="modal-overlay">
+        <div class="glass-card">
+            <button class="close-btn" onclick="closeEarlyAccessModal()">&times;</button>
+
+            <div class="survey-progress-text" id="ea-step-text">STEP 1 OF 3</div>
+
+            <div id="ea-content">
+                <!-- Step content will be injected here -->
+            </div>
+        </div>
+    </div>
+
     <!-- Load Survey Data -->
     <script src="survey-questions.js"></script>
 
     <!-- Load Survey App -->
     <script src="survey-app.js"></script>
+
+    <!-- Load Early Access App -->
+    <script src="early-access.js"></script>
 
     <script>
         // --- Modal Helper Functions ---
