@@ -64,7 +64,7 @@ class YaraSurveyApp {
 
         try {
             // Call authentication function
-            const response = await fetch('/.netlify/functions/authenticate', {
+            const response = await fetch('https://yara-survey-api.netlify.app/.netlify/functions/authenticate', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -664,7 +664,7 @@ class YaraSurveyApp {
 
         try {
             // Submit to Netlify function
-            const response = await fetch('/.netlify/functions/submit-response', {
+            const response = await fetch('https://yara-survey-api.netlify.app/.netlify/functions/submit-response', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
