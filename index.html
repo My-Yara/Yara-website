@@ -3,19 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yara - Your Personal Advocate</title>
+    <title>Yara - Optimize Every Dollar. Protect Every Right.</title>
     <style>
         /* --- CSS VARIABLES & RESET --- */
         :root {
-            --primary-blue: #5b86e5;
-            --primary-hover: #4a75d4;
-            --soft-purple: #e6e9f0;
-            --bg-gradient: linear-gradient(135deg, #ffffff 0%, #f3f4f8 50%, #e0c3fc 100%);
-            --text-main: #2d3748;
-            --text-muted: #718096;
-            --card-bg: rgba(255, 255, 255, 0.65);
-            --glass-border: rgba(255, 255, 255, 0.8);
+            /* Palette based on Swift Code & Image analysis */
+            --primary-accent: #5F5FF8; /* Vibrant blue-purple for buttons/highlights */
+            --primary-hover: #4a4ac7;
+            
+            /* Swift Code Gradient Background */
+            --bg-gradient: linear-gradient(135deg, #e0ebff 0%, #e8def7 100%);
+            
+            --text-main: #1a202c; /* Deep black/gray for contrast on light bg */
+            --text-muted: #4a5568;
+            
+            /* Glassmorphism variables */
+            --card-bg: rgba(255, 255, 255, 0.75);
+            --glass-border: rgba(255, 255, 255, 0.9);
             --shadow-soft: 0 20px 40px rgba(100, 100, 111, 0.1);
+            
             --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
         }
 
@@ -28,6 +34,16 @@
             color: var(--text-main);
             overflow-x: hidden;
             position: relative;
+        }
+
+        /* --- SHARED SVG STYLING --- */
+        /* Ensures all icons follow the minimalist line-art style of Image 3 */
+        .line-art-icon {
+            fill: none;
+            stroke: var(--text-main);
+            stroke-width: 8;
+            stroke-linecap: round;
+            stroke-linejoin: round;
         }
 
         /* --- NAVIGATION --- */
@@ -45,26 +61,31 @@
         .logo {
             font-size: 1.8rem;
             font-weight: 800;
-            color: var(--primary-blue);
+            color: var(--text-main);
             letter-spacing: -0.5px;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 15px;
+        }
+
+        .logo svg {
+            height: 40px;
+            width: auto;
         }
         
         .nav-btn {
             padding: 10px 24px;
             border-radius: 30px;
-            border: 1px solid var(--primary-blue);
-            color: var(--primary-blue);
+            border: 2px solid var(--primary-accent);
+            color: var(--primary-accent);
             background: transparent;
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
             transition: all 0.3s ease;
         }
 
         .nav-btn:hover {
-            background: var(--primary-blue);
+            background: var(--primary-accent);
             color: white;
         }
 
@@ -74,21 +95,22 @@
             flex-direction: row;
             align-items: center;
             justify-content: space-between;
-            height: calc(100vh - 80px); /* Minus nav height */
-            padding: 0 60px;
+            min-height: calc(100vh - 100px);
+            padding: 40px 60px;
             max-width: 1400px;
             margin: 0 auto;
         }
 
         .hero-content {
-            width: 50%;
+            width: 45%;
             padding-right: 50px;
             animation: slideInLeft 1s ease;
+            z-index: 2;
         }
 
         .hero-visual {
-            width: 50%;
-            height: 100%;
+            width: 55%;
+            height: 600px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -96,29 +118,29 @@
         }
 
         h1 {
-            font-size: 4rem;
-            font-weight: 800;
+            font-size: 3.8rem;
+            font-weight: 900;
             line-height: 1.1;
-            margin-bottom: 20px;
-            background: linear-gradient(90deg, #5b86e5, #9b5de5);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            margin-bottom: 25px;
+            color: var(--text-main);
         }
 
         .hero-tagline {
             font-size: 1.5rem;
             color: var(--text-muted);
             margin-bottom: 40px;
-            font-weight: 400;
+            font-weight: 500;
+            max-width: 90%;
         }
 
         /* --- NEWSLETTER FORM --- */
         .newsletter-form {
             display: flex;
             gap: 15px;
-            max-width: 500px;
-            background: white;
+            max-width: 480px;
+            background: var(--card-bg);
             padding: 8px;
+            border: 1px solid var(--glass-border);
             border-radius: 50px;
             box-shadow: var(--shadow-soft);
         }
@@ -127,51 +149,61 @@
             flex: 1;
             border: none;
             padding: 15px 25px;
-            border-radius: 40px;
+            background: transparent;
             outline: none;
             font-size: 1rem;
+            color: var(--text-main);
         }
+        
+        .newsletter-form input::placeholder { color: #999; }
 
         .btn-primary {
-            background: var(--primary-blue);
+            background: var(--primary-accent);
             color: white;
             border: none;
             padding: 15px 35px;
             border-radius: 40px;
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
-            transition: transform 0.2s;
+            transition: transform 0.2s, background-color 0.2s;
             white-space: nowrap;
+            box-shadow: 0 4px 15px rgba(95, 95, 248, 0.3);
         }
         
         .btn-primary:hover {
             background: var(--primary-hover);
-            transform: scale(1.05);
+            transform: translateY(-2px);
         }
 
-        /* --- METAMORPHOSIS ANIMATION (Large Desktop Version) --- */
+        /* --- METAMORPHOSIS ANIMATION (Line Art Theme) --- */
         .morph-stage {
             position: absolute;
-            width: 300px;
-            height: 300px;
+            width: 350px;
+            height: 350px;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 8rem;
             opacity: 0;
             animation-duration: 9s; /* 3 seconds per stage */
             animation-iteration-count: infinite;
         }
+        
+        .morph-stage svg {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 5px 15px rgba(95, 95, 248, 0.2));
+        }
 
-        /* Glow Effect */
+        /* Glow Effect - Updated colors */
         .bg-glow {
             position: absolute;
-            width: 400px;
-            height: 400px;
-            background: radial-gradient(circle, rgba(200,180,255,0.4) 0%, rgba(255,255,255,0) 70%);
+            width: 500px;
+            height: 500px;
+            /* Glow matching the Swift gradient and accent */
+            background: radial-gradient(circle, rgba(224, 235, 255, 0.8) 0%, rgba(232, 222, 247, 0.5) 40%, rgba(255,255,255,0) 70%);
             border-radius: 50%;
             z-index: -1;
-            animation: pulse 3s infinite alternate;
+            animation: pulse 4s infinite alternate ease-in-out;
         }
 
         /* Animation Keyframes */
@@ -179,40 +211,32 @@
         #stage-pupa      { animation-name: cycle-pupa; }
         #stage-butterfly { animation-name: cycle-butterfly; }
 
-        /* SVG Styling for Pupa */
-        .pupa-svg {
-            width: 150px;
-            height: 150px;
-            fill: #a8b26c; /* Natural green/brown */
-            filter: drop-shadow(0 10px 10px rgba(0,0,0,0.1));
-        }
-
         @keyframes cycle-larva {
             0%, 25% { opacity: 1; transform: translateY(0) scale(1); }
             30%, 100% { opacity: 0; transform: translateY(20px) scale(0.8); }
         }
 
         @keyframes cycle-pupa {
-            0%, 25% { opacity: 0; transform: translateY(-20px); }
-            33%, 58% { opacity: 1; transform: translateY(0); }
-            66%, 100% { opacity: 0; transform: translateY(20px); }
+            0%, 25% { opacity: 0; transform: translateY(-20px) scale(0.8); }
+            33%, 58% { opacity: 1; transform: translateY(0) scale(1); }
+            66%, 100% { opacity: 0; transform: translateY(20px) scale(0.8); }
         }
 
         @keyframes cycle-butterfly {
-            0%, 58% { opacity: 0; transform: scale(0.5) translateY(20px); }
-            66%, 91% { opacity: 1; transform: scale(1.2) translateY(0); filter: drop-shadow(0 0 20px var(--primary-blue)); }
-            100% { opacity: 0; transform: scale(1.5) translateY(-20px); }
+            0%, 58% { opacity: 0; transform: scale(0.8) translateY(20px); }
+            66%, 91% { opacity: 1; transform: scale(1.1) translateY(0); filter: drop-shadow(0 0 25px rgba(95, 95, 248, 0.6)); }
+            100% { opacity: 0; transform: scale(1.2) translateY(-20px); }
         }
 
-        @keyframes pulse { from { transform: scale(1); } to { transform: scale(1.1); } }
+        @keyframes pulse { from { transform: scale(1); opacity: 0.7; } to { transform: scale(1.2); opacity: 1; } }
         @keyframes slideInLeft { from { opacity: 0; transform: translateX(-30px); } to { opacity: 1; transform: translateX(0); } }
 
-        /* --- MODAL / CARD SYSTEM (For Login & Questionnaire) --- */
+        /* --- MODAL / CARD SYSTEM --- */
         .modal-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(255,255,255,0.8);
-            backdrop-filter: blur(8px);
+            background: rgba(224, 235, 255, 0.5); /* Light blue tint */
+            backdrop-filter: blur(12px);
             z-index: 100;
             display: none;
             justify-content: center;
@@ -221,10 +245,7 @@
             transition: opacity 0.3s ease;
         }
 
-        .modal-overlay.active {
-            display: flex;
-            opacity: 1;
-        }
+        .modal-overlay.active { display: flex; opacity: 1; }
 
         .glass-card {
             background: var(--card-bg);
@@ -241,42 +262,46 @@
 
         @keyframes popUp { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
-        /* Modal Typography */
-        .glass-card h2 { margin-bottom: 15px; color: var(--primary-blue); }
-        .glass-card p { color: var(--text-muted); margin-bottom: 25px; line-height: 1.5; }
+        .glass-card h2 { margin-bottom: 15px; color: var(--text-main); font-weight: 800; }
+        .glass-card p { color: var(--text-muted); margin-bottom: 25px; line-height: 1.6; }
 
-        /* Inputs in Modal */
         .glass-input {
             width: 100%;
-            padding: 15px;
+            padding: 16px;
             margin-bottom: 15px;
-            border-radius: 12px;
-            border: 1px solid #e2e8f0;
-            background: rgba(255,255,255,0.9);
+            border-radius: 15px;
+            border: 2px solid transparent;
+            background: rgba(255,255,255,0.8);
             font-size: 1rem;
             outline: none;
+            transition: all 0.3s;
+            color: var(--text-main);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
         }
         
-        .glass-input:focus { border-color: var(--primary-blue); box-shadow: 0 0 0 3px rgba(91, 134, 229, 0.1); }
-        
+        .glass-input:focus { border-color: var(--primary-accent); background: white; }
         textarea.glass-input { height: 120px; resize: none; }
 
         .close-btn {
             position: absolute;
             top: 20px; right: 20px;
             background: none; border: none;
-            font-size: 1.5rem; cursor: pointer; color: #aaa;
+            font-size: 1.8rem; cursor: pointer; color: var(--text-muted);
+            transition: color 0.2s;
         }
+        .close-btn:hover { color: var(--text-main); }
 
-        .step-indicator { font-size: 0.8rem; text-transform: uppercase; color: #aaa; letter-spacing: 1px; margin-bottom: 10px; }
+        .step-indicator { font-size: 0.8rem; text-transform: uppercase; color: var(--primary-accent); font-weight: 700; letter-spacing: 1px; margin-bottom: 10px; }
 
         /* Responsive Tweaks */
-        @media (max-width: 768px) {
-            .hero-container { flex-direction: column-reverse; justify-content: center; text-align: center; }
+        @media (max-width: 968px) {
+            .hero-container { flex-direction: column-reverse; justify-content: center; text-align: center; padding-top: 20px; }
             .hero-content, .hero-visual { width: 100%; padding: 0; }
-            .hero-visual { height: 40vh; }
-            h1 { font-size: 2.5rem; }
+            .hero-visual { height: 50vh; }
+            h1 { font-size: 2.8rem; }
+            .hero-tagline { margin: 0 auto 30px auto; }
             .newsletter-form { margin: 0 auto; }
+            nav { padding: 20px 30px; }
         }
     </style>
 </head>
@@ -284,38 +309,61 @@
 
     <nav>
         <div class="logo">
-            <span style="font-size: 1.5rem;">🦋</span> Yara
+            <svg class="line-art-icon" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                 <path d="M50,70 C20,70 10,100 10,120 C10,150 35,170 65,170 C95,170 95,140 95,140" />
+                 <path d="M150,70 C180,70 190,100 190,120 C190,150 165,170 135,170 C105,170 105,140 105,140" />
+                 <path d="M95,140 L105,140" stroke-width="12"/>
+                 <circle cx="85" cy="80" r="8" fill="var(--text-main)" stroke="none"/>
+                 <circle cx="115" cy="80" r="8" fill="var(--text-main)" stroke="none"/>
+            </svg>
+            Yara
         </div>
-        <button class="nav-btn" onclick="openModal('login-modal')">Invited Login</button>
+        <button class="nav-btn" onclick="openModal('login-modal')">Login</button>
     </nav>
 
     <main class="hero-container">
         
         <div class="hero-content">
-            <h1>Your Personal Advocate<br>is Evolving.</h1>
-            <p class="hero-tagline">Your advocate that negotiates, protects, and acts on your behalf.</p>
+            <h1>Optimize Every Dollar.<br>Protect Every Right.</h1>
+            <p class="hero-tagline">Yara uses advanced AI to ensure you get the most out of your opportunities while safeguarding your interests.</p>
             
             <div class="newsletter-form">
-                <input type="email" placeholder="Enter your email..." aria-label="Newsletter Email">
-                <button class="btn-primary" onclick="alert('You are on the waitlist!')">Notify Me</button>
+                <input type="email" placeholder="Enter email for early access..." aria-label="Newsletter Email">
+                <button class="btn-primary" onclick="alert('Thanks for joining the Yara waitlist!')">Get Early Access</button>
             </div>
         </div>
 
         <div class="hero-visual">
             <div class="bg-glow"></div>
             
-            <div id="stage-larva" class="morph-stage">🐛</div>
-            
-            <div id="stage-pupa" class="morph-stage">
-                <svg class="pupa-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M40,5 Q50,0 60,5" stroke="#8d6e63" stroke-width="4" fill="none" stroke-linecap="round"/>
-                    <line x1="50" y1="5" x2="50" y2="15" stroke="#fff" stroke-width="2" />
-                    <path d="M50,15 C65,25 65,55 50,85 C35,55 35,25 50,15 Z" fill="#b5c99a" />
-                    <path d="M40,35 Q50,40 60,35 M42,45 Q50,50 58,45 M45,55 Q50,58 55,55" stroke="#fff" stroke-width="1" fill="none" opacity="0.6"/>
+            <div id="stage-larva" class="morph-stage">
+                <svg class="line-art-icon" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M20,120 Q40,100 60,120 Q80,140 100,120 Q120,100 140,120 Q160,140 180,120" />
+                     <circle cx="30" cy="120" r="5" fill="var(--text-main)" stroke="none"/>
+                     <circle cx="70" cy="120" r="5" fill="var(--text-main)" stroke="none"/>
+                     <circle cx="110" cy="120" r="5" fill="var(--text-main)" stroke="none"/>
+                     <circle cx="150" cy="120" r="5" fill="var(--text-main)" stroke="none"/>
                 </svg>
             </div>
             
-            <div id="stage-butterfly" class="morph-stage">🦋</div>
+            <div id="stage-pupa" class="morph-stage">
+                <svg class="line-art-icon" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M80,20 Q100,10 120,20" stroke-width="6"/>
+                    <line x1="100" y1="20" x2="100" y2="40" stroke-width="4" />
+                    <path d="M100,40 C130,60 130,120 100,180 C70,120 70,60 100,40 Z" />
+                    <path d="M85,80 Q100,90 115,80 M88,110 Q100,120 112,110" stroke-width="4" opacity="0.6"/>
+                </svg>
+            </div>
+            
+            <div id="stage-butterfly" class="morph-stage">
+                 <svg class="line-art-icon" style="stroke-width: 6;" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                 <path d="M50,60 C20,60 10,90 10,110 C10,140 35,160 65,160 C95,160 95,130 95,130" />
+                 <path d="M150,60 C180,60 190,90 190,110 C190,140 165,160 135,160 C105,160 105,130 105,130" />
+                 <path d="M95,130 L105,130" stroke-width="10"/>
+                 <circle cx="85" cy="70" r="7" fill="var(--text-main)" stroke="none"/>
+                 <circle cx="115" cy="70" r="7" fill="var(--text-main)" stroke="none"/>
+            </svg>
+            </div>
         </div>
 
     </main>
@@ -324,8 +372,15 @@
     <div id="login-modal" class="modal-overlay">
         <div class="glass-card">
             <button class="close-btn" onclick="closeModal('login-modal')">&times;</button>
+            
+            <svg class="line-art-icon" style="height: 60px; margin-bottom: 20px;" viewBox="0 0 200 200">
+                 <path d="M50,70 C20,70 10,100 10,120 C10,150 35,170 65,170 C95,170 95,140 95,140" />
+                 <path d="M150,70 C180,70 190,100 190,120 C190,150 165,170 135,170 C105,170 105,140 105,140" />
+                 <path d="M95,140 L105,140" stroke-width="12"/>
+            </svg>
+
             <h2>Welcome Back</h2>
-            <p>Please sign in to access your dashboard.</p>
+            <p>Sign in to continue optimizing your world.</p>
             
             <input type="email" id="login-email" class="glass-input" placeholder="Email Address">
             <input type="password" id="login-password" class="glass-input" placeholder="Password">
@@ -340,33 +395,35 @@
             
             <div id="q-step-1" class="q-step">
                 <p class="step-indicator">Step 1 of 3</p>
-                <h2>Current Challenge</h2>
-                <p>What is the primary challenge you are facing today?</p>
-                <textarea class="glass-input" placeholder="Describe your situation..."></textarea>
+                <h2>Financial Goals</h2>
+                <p>What is your primary goal for optimizing your finances?</p>
+                <textarea class="glass-input" placeholder="e.g., Reduce expenses, maximize savings..."></textarea>
                 <button class="btn-primary" style="width:100%" onclick="nextQStep(2)">Next</button>
             </div>
 
             <div id="q-step-2" class="q-step" style="display: none;">
                 <p class="step-indicator">Step 2 of 3</p>
-                <h2>Current Approach</h2>
-                <p>How do you currently handle this issue?</p>
-                <textarea class="glass-input" placeholder="I currently..."></textarea>
+                <h2>Rights & Protection</h2>
+                <p>Are there specific areas where you feel your rights need better protection?</p>
+                <textarea class="glass-input" placeholder="e.g., Tenant rights, consumer contracts..."></textarea>
                 <button class="btn-primary" style="width:100%" onclick="nextQStep(3)">Next</button>
             </div>
 
             <div id="q-step-3" class="q-step" style="display: none;">
                 <p class="step-indicator">Step 3 of 3</p>
                 <h2>Ideal Outcome</h2>
-                <p>What do you hope to achieve with Yara?</p>
-                <textarea class="glass-input" placeholder="I hope to..."></textarea>
+                <p>What does success look like for you with Yara?</p>
+                <textarea class="glass-input" placeholder="I hope to achieve..."></textarea>
                 <button class="btn-primary" style="width:100%" onclick="finishQuestionnaire()">Complete Setup</button>
             </div>
 
-             <div id="q-step-final" class="q-step" style="display: none; text-align: center;">
-                <div style="font-size: 4rem; margin-bottom: 20px;">✨</div>
+             <div id="q-step-final" class="q-step" style="display: none; text-align: center; padding-top: 20px;">
+                 <svg class="line-art-icon" style="height: 80px; margin-bottom: 20px; stroke: var(--primary-accent);" viewBox="0 0 100 100">
+                    <polyline points="20 50 40 70 80 30" />
+                </svg>
                 <h2>You're All Set</h2>
-                <p>Yara is analyzing your inputs and preparing your dashboard.</p>
-                <button class="btn-primary" style="width:100%" onclick="handleSubmitData()">Submit Data</button>
+                <p>Yara is analyzing your inputs and preparing your personalized dashboard.</p>
+                <button class="btn-primary" style="width:100%" onclick="handleSubmitData()">Go to Dashboard</button>
             </div>
 
         </div>
@@ -374,7 +431,6 @@
 
 
     <script>
-        // --- Modal Logic ---
         function openModal(id) {
             document.getElementById(id).classList.add('active');
         }
@@ -383,31 +439,19 @@
             document.getElementById(id).classList.remove('active');
         }
 
-        // --- Login Placeholder ---
-        function loginUser() {
-            // Placeholder for actual backend auth
-            return true;
-        }
-
         function handleLogin() {
             const email = document.getElementById('login-email').value;
             const pass = document.getElementById('login-password').value;
             if(email && pass) {
                 closeModal('login-modal');
-                // Simulate slight delay then open questionnaire
-                setTimeout(() => {
-                    openModal('questionnaire-modal');
-                }, 300);
+                setTimeout(() => { openModal('questionnaire-modal'); }, 300);
             } else {
-                alert("Please enter test credentials.");
+                alert("Please enter any email and password to demo the flow.");
             }
         }
 
-        // --- Questionnaire Logic ---
         function nextQStep(step) {
-            // Hide all steps
             document.querySelectorAll('.q-step').forEach(el => el.style.display = 'none');
-            // Show targeted step
             document.getElementById('q-step-' + step).style.display = 'block';
         }
 
@@ -415,15 +459,9 @@
             nextQStep('final');
         }
 
-        // --- Submission Placeholder ---
-        function submitQuestionnaireData(data) {
-            console.log("Submitting:", data);
-            alert("Welcome to Yara! (Demo Complete)");
-            location.reload();
-        }
-
         function handleSubmitData() {
-            submitQuestionnaireData({ completed: true, timestamp: Date.now() });
+            alert("Demo Complete! Redirecting to dashboard...");
+            location.reload();
         }
     </script>
 </body>
