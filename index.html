@@ -3,18 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yara - Your Personal Advocate</title>
+    <title>Yara - Optimize Every Dollar. Protect Every Right.</title>
     <style>
         /* --- CSS VARIABLES & RESET --- */
         :root {
-            --primary-blue: #5b86e5;
-            --primary-hover: #4a75d4;
-            --soft-purple: #e6e9f0;
-            --bg-gradient: linear-gradient(135deg, #ffffff 0%, #f3f4f8 50%, #e0c3fc 100%);
-            --text-main: #2d3748;
-            --text-muted: #718096;
-            --card-bg: rgba(255, 255, 255, 0.65);
-            --glass-border: rgba(255, 255, 255, 0.8);
+            --primary-accent: #5F5FF8;
+            --primary-hover: #4a4ac7;
+            --bg-gradient: linear-gradient(135deg, #e0ebff 0%, #e8def7 100%);
+            --text-main: #1a202c;
+            --text-muted: #4a5568;
+            --card-bg: rgba(255, 255, 255, 0.75);
+            --glass-border: rgba(255, 255, 255, 0.9);
             --shadow-soft: 0 20px 40px rgba(100, 100, 111, 0.1);
             --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
         }
@@ -45,26 +44,35 @@
         .logo {
             font-size: 1.8rem;
             font-weight: 800;
-            color: var(--primary-blue);
+            color: var(--text-main);
             letter-spacing: -0.5px;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 15px;
+            height: 50px; /* Fixed height for alignment */
+        }
+
+        /* --- IMAGE STYLING --- */
+        .brand-img {
+            height: 100%;
+            width: auto;
+            object-fit: contain;
+            display: block;
         }
 
         .nav-btn {
             padding: 10px 24px;
             border-radius: 30px;
-            border: 1px solid var(--primary-blue);
-            color: var(--primary-blue);
+            border: 2px solid var(--primary-accent);
+            color: var(--primary-accent);
             background: transparent;
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
             transition: all 0.3s ease;
         }
 
         .nav-btn:hover {
-            background: var(--primary-blue);
+            background: var(--primary-accent);
             color: white;
         }
 
@@ -74,51 +82,61 @@
             flex-direction: row;
             align-items: center;
             justify-content: space-between;
-            height: calc(100vh - 80px);
-            padding: 0 60px;
+            min-height: calc(100vh - 100px);
+            padding: 40px 60px;
             max-width: 1400px;
             margin: 0 auto;
         }
 
         .hero-content {
-            width: 50%;
+            width: 45%;
             padding-right: 50px;
             animation: slideInLeft 1s ease;
+            z-index: 2;
         }
 
         .hero-visual {
-            width: 50%;
-            height: 100%;
+            width: 55%;
+            height: 600px;
             display: flex;
             justify-content: center;
             align-items: center;
             position: relative;
         }
 
+        /* --- SHARED SVG STYLING (For Larva/Pupa/Icons) --- */
+        .line-art-icon {
+            fill: none;
+            stroke: var(--text-main);
+            stroke-width: 12;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
         h1 {
-            font-size: 4rem;
-            font-weight: 800;
+            font-size: 3.8rem;
+            font-weight: 900;
             line-height: 1.1;
-            margin-bottom: 20px;
-            background: linear-gradient(90deg, #5b86e5, #9b5de5);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            margin-bottom: 25px;
+            color: var(--text-main);
         }
 
         .hero-tagline {
             font-size: 1.5rem;
             color: var(--text-muted);
             margin-bottom: 40px;
-            font-weight: 400;
+            font-weight: 500;
+            max-width: 90%;
         }
 
         /* --- NEWSLETTER FORM --- */
         .newsletter-form {
             display: flex;
             gap: 15px;
-            max-width: 500px;
-            background: white;
+            max-width: 480px;
+            background: var(--card-bg);
             padding: 8px;
+            border: 1px solid var(--glass-border);
             border-radius: 50px;
             box-shadow: var(--shadow-soft);
         }
@@ -127,26 +145,30 @@
             flex: 1;
             border: none;
             padding: 15px 25px;
-            border-radius: 40px;
+            background: transparent;
             outline: none;
             font-size: 1rem;
+            color: var(--text-main);
         }
 
+        .newsletter-form input::placeholder { color: #999; }
+
         .btn-primary {
-            background: var(--primary-blue);
+            background: var(--primary-accent);
             color: white;
             border: none;
             padding: 15px 35px;
             border-radius: 40px;
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
-            transition: transform 0.2s;
+            transition: transform 0.2s, background-color 0.2s;
             white-space: nowrap;
+            box-shadow: 0 4px 15px rgba(95, 95, 248, 0.3);
         }
 
         .btn-primary:hover {
             background: var(--primary-hover);
-            transform: scale(1.05);
+            transform: translateY(-2px);
         }
 
         .btn-primary:disabled {
@@ -156,8 +178,8 @@
 
         .btn-secondary {
             background: transparent;
-            color: var(--primary-blue);
-            border: 2px solid var(--primary-blue);
+            color: var(--primary-accent);
+            border: 2px solid var(--primary-accent);
             padding: 12px 30px;
             border-radius: 40px;
             font-weight: 600;
@@ -166,7 +188,7 @@
         }
 
         .btn-secondary:hover {
-            background: var(--primary-blue);
+            background: var(--primary-accent);
             color: white;
         }
 
@@ -189,37 +211,43 @@
         /* --- METAMORPHOSIS ANIMATION --- */
         .morph-stage {
             position: absolute;
-            width: 300px;
-            height: 300px;
+            width: 350px;
+            height: 350px;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 8rem;
             opacity: 0;
             animation-duration: 9s;
             animation-iteration-count: infinite;
         }
 
+        /* Specific sizing for the image inside the animation */
+        .morph-stage img {
+            width: 80%; /* Prevent it from touching edges */
+            height: 80%;
+            object-fit: contain;
+            filter: drop-shadow(0 5px 15px rgba(95, 95, 248, 0.2));
+        }
+
+        .morph-stage svg {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 5px 15px rgba(95, 95, 248, 0.2));
+        }
+
         .bg-glow {
             position: absolute;
-            width: 400px;
-            height: 400px;
-            background: radial-gradient(circle, rgba(200,180,255,0.4) 0%, rgba(255,255,255,0) 70%);
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(224, 235, 255, 0.8) 0%, rgba(232, 222, 247, 0.5) 40%, rgba(255,255,255,0) 70%);
             border-radius: 50%;
             z-index: -1;
-            animation: pulse 3s infinite alternate;
+            animation: pulse 4s infinite alternate ease-in-out;
         }
 
         #stage-larva     { animation-name: cycle-larva; }
         #stage-pupa      { animation-name: cycle-pupa; }
         #stage-butterfly { animation-name: cycle-butterfly; }
-
-        .pupa-svg {
-            width: 150px;
-            height: 150px;
-            fill: #a8b26c;
-            filter: drop-shadow(0 10px 10px rgba(0,0,0,0.1));
-        }
 
         @keyframes cycle-larva {
             0%, 25% { opacity: 1; transform: translateY(0) scale(1); }
@@ -227,26 +255,26 @@
         }
 
         @keyframes cycle-pupa {
-            0%, 25% { opacity: 0; transform: translateY(-20px); }
-            33%, 58% { opacity: 1; transform: translateY(0); }
-            66%, 100% { opacity: 0; transform: translateY(20px); }
+            0%, 25% { opacity: 0; transform: translateY(-20px) scale(0.8); }
+            33%, 58% { opacity: 1; transform: translateY(0) scale(1); }
+            66%, 100% { opacity: 0; transform: translateY(20px) scale(0.8); }
         }
 
         @keyframes cycle-butterfly {
-            0%, 58% { opacity: 0; transform: scale(0.5) translateY(20px); }
-            66%, 91% { opacity: 1; transform: scale(1.2) translateY(0); filter: drop-shadow(0 0 20px var(--primary-blue)); }
-            100% { opacity: 0; transform: scale(1.5) translateY(-20px); }
+            0%, 58% { opacity: 0; transform: scale(0.8) translateY(20px); }
+            66%, 91% { opacity: 1; transform: scale(1.1) translateY(0); filter: drop-shadow(0 0 25px rgba(95, 95, 248, 0.6)); }
+            100% { opacity: 0; transform: scale(1.2) translateY(-20px); }
         }
 
-        @keyframes pulse { from { transform: scale(1); } to { transform: scale(1.1); } }
+        @keyframes pulse { from { transform: scale(1); opacity: 0.7; } to { transform: scale(1.2); opacity: 1; } }
         @keyframes slideInLeft { from { opacity: 0; transform: translateX(-30px); } to { opacity: 1; transform: translateX(0); } }
 
         /* --- MODAL SYSTEM --- */
         .modal-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(255,255,255,0.8);
-            backdrop-filter: blur(8px);
+            background: rgba(224, 235, 255, 0.6);
+            backdrop-filter: blur(12px);
             z-index: 100;
             display: none;
             justify-content: center;
@@ -277,7 +305,7 @@
 
         @keyframes popUp { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
-        .glass-card h2 { margin-bottom: 15px; color: var(--primary-blue); }
+        .glass-card h2 { margin-bottom: 15px; color: var(--primary-accent); }
         .glass-card p { color: var(--text-muted); margin-bottom: 25px; line-height: 1.5; }
 
         .glass-input {
@@ -291,7 +319,7 @@
             outline: none;
         }
 
-        .glass-input:focus { border-color: var(--primary-blue); box-shadow: 0 0 0 3px rgba(91, 134, 229, 0.1); }
+        .glass-input:focus { border-color: var(--primary-accent); box-shadow: 0 0 0 3px rgba(91, 134, 229, 0.1); }
 
         .close-btn {
             position: absolute;
@@ -328,7 +356,7 @@
 
         .survey-progress-fill {
             height: 100%;
-            background: linear-gradient(90deg, var(--primary-blue), #9b5de5);
+            background: linear-gradient(90deg, var(--primary-accent), #9b5de5);
             transition: width 0.5s ease;
             position: relative;
         }
@@ -367,7 +395,7 @@
         }
 
         .section-label {
-            background: var(--primary-blue);
+            background: var(--primary-accent);
             color: white;
             padding: 4px 12px;
             border-radius: 20px;
@@ -415,7 +443,7 @@
         }
 
         .option-card:hover {
-            border-color: var(--primary-blue);
+            border-color: var(--primary-accent);
             background: rgba(91, 134, 229, 0.05);
         }
 
@@ -432,7 +460,7 @@
 
         .option-label {
             font-weight: 700;
-            color: var(--primary-blue);
+            color: var(--primary-accent);
             min-width: 25px;
         }
 
@@ -449,7 +477,7 @@
         }
 
         .scenario-title {
-            color: var(--primary-blue);
+            color: var(--primary-accent);
             margin-bottom: 10px;
             font-size: 1.1rem;
         }
@@ -487,7 +515,7 @@
         }
 
         .form-select:focus, .form-input:focus, .form-textarea:focus {
-            border-color: var(--primary-blue);
+            border-color: var(--primary-accent);
             box-shadow: 0 0 0 3px rgba(91, 134, 229, 0.1);
         }
 
@@ -529,7 +557,7 @@
             border-radius: 8px;
             background: white;
             font-weight: 600;
-            color: var(--primary-blue);
+            color: var(--primary-accent);
         }
 
         .ranking-text, .scale-text {
@@ -602,7 +630,7 @@
 
         .info-item strong {
             display: block;
-            color: var(--primary-blue);
+            color: var(--primary-accent);
             margin-bottom: 8px;
             font-size: 1.1rem;
         }
@@ -678,7 +706,7 @@
 
         .stat strong {
             display: block;
-            color: var(--primary-blue);
+            color: var(--primary-accent);
             font-size: 1.5rem;
             margin-bottom: 5px;
         }
@@ -694,17 +722,19 @@
         }
 
         .final-comments h3 {
-            color: var(--primary-blue);
+            color: var(--primary-accent);
             margin-bottom: 10px;
         }
 
         /* Responsive */
-        @media (max-width: 768px) {
-            .hero-container { flex-direction: column-reverse; justify-content: center; text-align: center; }
+        @media (max-width: 968px) {
+            .hero-container { flex-direction: column-reverse; justify-content: center; text-align: center; padding-top: 20px; }
             .hero-content, .hero-visual { width: 100%; padding: 0; }
-            .hero-visual { height: 40vh; }
-            h1 { font-size: 2.5rem; }
+            .hero-visual { height: 50vh; }
+            h1 { font-size: 2.8rem; }
+            .hero-tagline { margin: 0 auto 30px auto; }
             .newsletter-form { margin: 0 auto; }
+            nav { padding: 20px 30px; }
             .glass-card { padding: 30px 20px; }
             .survey-info, .progress-stats { grid-template-columns: 1fr; }
             .question-navigation { flex-direction: column; }
@@ -716,19 +746,20 @@
 
     <nav>
         <div class="logo">
-            <span style="font-size: 1.5rem;">🦋</span> Yara
+            <img src="yara_logo.png" alt="Yara Butterfly" class="brand-img" style="height: 50px;">
+            Yara
         </div>
-        <button class="nav-btn" onclick="openModal('login-modal')">Invited Login</button>
+        <button class="nav-btn" onclick="openModal('login-modal')">Login</button>
     </nav>
 
     <main class="hero-container">
 
         <div class="hero-content">
-            <h1>Your Personal Advocate<br>is Evolving.</h1>
-            <p class="hero-tagline">Your advocate that negotiates, protects, and acts on your behalf.</p>
+            <h1>Optimize Every Dollar.<br>Protect Every Right.</h1>
+            <p class="hero-tagline">Yara uses advanced AI to ensure you get the most out of your opportunities while safeguarding your interests.</p>
 
             <div class="newsletter-form">
-                <input type="email" id="early-access-email" placeholder="Enter your email..." aria-label="Newsletter Email">
+                <input type="email" id="early-access-email" placeholder="Enter email for early access..." aria-label="Newsletter Email">
                 <button class="btn-primary" onclick="startEarlyAccess()">Get Early Access</button>
             </div>
         </div>
@@ -736,18 +767,25 @@
         <div class="hero-visual">
             <div class="bg-glow"></div>
 
-            <div id="stage-larva" class="morph-stage">🐛</div>
-
-            <div id="stage-pupa" class="morph-stage">
-                <svg class="pupa-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M40,5 Q50,0 60,5" stroke="#8d6e63" stroke-width="4" fill="none" stroke-linecap="round"/>
-                    <line x1="50" y1="5" x2="50" y2="15" stroke="#fff" stroke-width="2" />
-                    <path d="M50,15 C65,25 65,55 50,85 C35,55 35,25 50,15 Z" fill="#b5c99a" />
-                    <path d="M40,35 Q50,40 60,35 M42,45 Q50,50 58,45 M45,55 Q50,58 55,55" stroke="#fff" stroke-width="1" fill="none" opacity="0.6"/>
+            <div id="stage-larva" class="morph-stage">
+                <svg class="line-art-icon" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M40,110 Q55,90 70,110 Q85,130 100,110 Q115,90 130,110 Q145,130 160,110" stroke-width="14" fill="none" stroke-linecap="round" />
+                    <path d="M165,105 C175,100 185,110 180,120" stroke-width="14" stroke-linecap="round" />
                 </svg>
             </div>
 
-            <div id="stage-butterfly" class="morph-stage">🦋</div>
+            <div id="stage-pupa" class="morph-stage">
+                <svg class="line-art-icon" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M80,30 Q100,20 120,30" stroke-width="8"/>
+                    <line x1="100" y1="30" x2="100" y2="50" stroke-width="6" />
+                    <path d="M100,50 C135,75 135,135 100,170 C65,135 65,75 100,50 Z" />
+                    <path d="M82,90 Q100,100 118,90 M85,120 Q100,130 115,120" stroke-width="6" opacity="0.6"/>
+                </svg>
+            </div>
+
+            <div id="stage-butterfly" class="morph-stage">
+                <img src="yara_logo.png" alt="Yara Butterfly" class="brand-img">
+            </div>
         </div>
 
     </main>
