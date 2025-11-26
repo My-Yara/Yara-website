@@ -388,8 +388,7 @@ class YaraSurveyApp {
         question.scenarios.forEach((scenario, index) => {
             html += `
                 <div class="scenario-container">
-                    <h3 class="scenario-title">Scenario ${String.fromCharCode(65 + index)}</h3>
-                    <p class="scenario-description">${scenario.description}</p>
+                    <h3 class="scenario-title">${scenario.label || `Scenario ${String.fromCharCode(65 + index)}`}</h3>
 
                     <div class="scenario-fields">
             `;
