@@ -11,6 +11,9 @@ class YaraSurveyApp {
         this.surveyData = {};
         this.startTime = null;
 
+        // Test mode: Enable with ?test=true in URL
+        this.testMode = new URLSearchParams(window.location.search).get('test') === 'true';
+
         // Initialize
         this.init();
     }
@@ -169,6 +172,7 @@ class YaraSurveyApp {
 
         const welcomeHTML = `
             <div class="survey-welcome">
+                ${this.testMode ? '<div style="background: #ff6b00; color: white; padding: 10px; border-radius: 8px; margin-bottom: 20px; font-weight: bold;">🧪 TEST MODE ACTIVE - Auto-fill enabled</div>' : ''}
                 <div style="font-size: 4rem; margin-bottom: 20px;">🦋</div>
                 <h2>Welcome to the Yara Stakeholder Survey</h2>
                 <p>Thank you for helping train Yara's personality and negotiation skills!</p>
@@ -289,6 +293,7 @@ class YaraSurveyApp {
 
         let html = `
             <div class="question-container">
+                ${this.testMode ? '<div style="background: #ff6b00; color: white; padding: 5px 10px; border-radius: 5px; margin-bottom: 10px; font-size: 0.85rem; font-weight: bold;">🧪 TEST MODE</div>' : ''}
                 <div class="question-header">
                     <span class="question-number">Question ${currentNum} of ${totalQuestions}</span>
                     <span class="section-label">${sectionLabel}</span>
@@ -338,7 +343,9 @@ class YaraSurveyApp {
                     `<button type="button" class="btn-secondary" onclick="surveyApp.previousQuestion()">← Previous</button>` :
                     '<div></div>'}
                 <button type="button" class="btn-tertiary" onclick="surveyApp.saveAndExit()">Save & Exit</button>
-                <button type="submit" class="btn-primary">Next →</button>
+                ${this.testMode ?
+                    `<button type="button" class="btn-primary" onclick="surveyApp.autoFillAndNext()" style="background: #ff6b00;">🧪 Auto-Fill & Next</button>` :
+                    `<button type="submit" class="btn-primary">Next →</button>`}
             </div>
         `;
 
@@ -560,6 +567,82 @@ class YaraSurveyApp {
     }
 
     /**
+     * Auto-fill current question with test data (TEST MODE ONLY)
+     */
+    autoFillAndNext() {
+        if (!this.testMode) return;
+
+        const questions = this.getCurrentSectionQuestions();
+        const question = questions[this.currentQuestionIndex];
+        const questionData = {};
+
+        // Generate test data based on question type
+        switch (question.type) {
+            case 'multiple-choice':
+            case 'single-choice':
+                questionData.choice = question.options[0].id || 'A';
+                break;
+
+            case 'ranking':
+                const items = question.capabilities || question.insights || [];
+                items.forEach((item, index) => {
+                    questionData[`rank_${item.id}`] = (index + 1).toString();
+                });
+                break;
+
+            case 'multi-scenario':
+                question.scenarios.forEach(scenario => {
+                    scenario.fields.forEach(field => {
+                        const fieldName = `${scenario.id}_${field.name}`;
+                        if (field.type === 'select') {
+                            questionData[fieldName] = field.options[0];
+                        } else if (field.type === 'textarea') {
+                            questionData[fieldName] = 'Test response for automated testing';
+                        } else if (field.type === 'number') {
+                            questionData[fieldName] = '50';
+                        }
+                    });
+                });
+                break;
+
+            case 'scale-rating':
+                question.versions.forEach(version => {
+                    questionData[`rating_${version.id}`] = '3';
+                });
+                break;
+
+            case 'open-ended':
+                // Open-ended questions have no main input, just follow-ups
+                break;
+        }
+
+        // Fill in follow-up questions
+        if (question.followUp) {
+            question.followUp.forEach(followUp => {
+                if (followUp.type === 'select') {
+                    questionData[followUp.name] = followUp.options[0];
+                } else if (followUp.type === 'textarea') {
+                    questionData[followUp.name] = 'Test response for automated testing';
+                } else if (followUp.type === 'number') {
+                    questionData[followUp.name] = '100';
+                } else if (followUp.type === 'text') {
+                    questionData[followUp.name] = 'Test text';
+                }
+            });
+        }
+
+        // Save answer
+        const questionId = this.getCurrentQuestionId();
+        this.surveyData[questionId] = questionData;
+
+        // Save progress
+        this.saveProgress();
+
+        // Move to next question
+        this.nextQuestion();
+    }
+
+    /**
      * Handle question form submission
      */
     handleQuestionSubmit(event) {
@@ -683,6 +766,13 @@ class YaraSurveyApp {
         `;
 
         this.showSurveyModal(html);
+
+        // Auto-advance in test mode
+        if (this.testMode) {
+            setTimeout(() => {
+                this.continueSurvey();
+            }, 500);
+        }
     }
 
     /**
