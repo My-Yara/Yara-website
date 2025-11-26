@@ -829,10 +829,8 @@ class YaraSurveyApp {
      * Update progress bar
      */
     updateProgressBar() {
-        const totalQuestions = 25;
-        const currentNum = this.currentSection === 'A' ?
-            this.currentQuestionIndex + 1 :
-            this.currentQuestionIndex + 16;
+        const totalQuestions = SURVEY_QUESTIONS.metadata.totalQuestions;
+        const currentNum = this.getCurrentQuestionNumber();
 
         const progress = (currentNum / totalQuestions) * 100;
 
