@@ -622,11 +622,43 @@ class YaraSurveyApp {
     }
 
     /**
+     * Calculate remaining time based on incomplete sections
+     */
+    calculateRemainingTime() {
+        const sections = SURVEY_QUESTIONS.metadata.sections;
+        let remainingMinutes = 0;
+
+        // Check which sections are remaining
+        if (this.currentSection === 'strategic') {
+            // All sections remain
+            remainingMinutes = parseInt(sections.strategic.time) +
+                             parseInt(sections.A.time) +
+                             parseInt(sections.B.time) +
+                             parseInt(sections.C.time);
+        } else if (this.currentSection === 'A') {
+            // Sections A, B, C remain
+            remainingMinutes = parseInt(sections.A.time) +
+                             parseInt(sections.B.time) +
+                             parseInt(sections.C.time);
+        } else if (this.currentSection === 'B') {
+            // Sections B, C remain
+            remainingMinutes = parseInt(sections.B.time) +
+                             parseInt(sections.C.time);
+        } else if (this.currentSection === 'C') {
+            // Only section C remains
+            remainingMinutes = parseInt(sections.C.time);
+        }
+
+        return remainingMinutes;
+    }
+
+    /**
      * Show section transition
      */
     showSectionTransition(completedSection, nextSection) {
         const currentNum = this.getCurrentQuestionNumber() - 1; // Subtract 1 since we're transitioning
         const totalQuestions = SURVEY_QUESTIONS.metadata.totalQuestions;
+        const remainingTime = this.calculateRemainingTime();
 
         const html = `
             <div class="section-transition">
@@ -643,7 +675,7 @@ class YaraSurveyApp {
                         <span>Questions Complete</span>
                     </div>
                     <div class="stat">
-                        <strong>~${Math.ceil((totalQuestions - currentNum) * 1.5)} minutes</strong>
+                        <strong>~${remainingTime} minutes</strong>
                         <span>Remaining</span>
                     </div>
                 </div>
