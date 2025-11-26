@@ -200,25 +200,50 @@ class YaraSurveyApp {
      * Begin the survey
      */
     beginSurvey() {
-        this.currentSection = 'A';
+        this.currentSection = 'strategic';
         this.currentQuestionIndex = 0;
         this.renderCurrentQuestion();
+    }
+
+    /**
+     * Get current section's questions
+     */
+    getCurrentSectionQuestions() {
+        switch (this.currentSection) {
+            case 'strategic':
+                return SURVEY_QUESTIONS.strategicPrioritization.questions;
+            case 'A':
+                return SURVEY_QUESTIONS.sectionA.questions;
+            case 'B':
+                return SURVEY_QUESTIONS.sectionB.questions;
+            case 'C':
+                return SURVEY_QUESTIONS.sectionC.questions;
+            default:
+                return [];
+        }
     }
 
     /**
      * Render current question
      */
     renderCurrentQuestion() {
-        const questions = this.currentSection === 'A' ?
-            SURVEY_QUESTIONS.sectionA.questions :
-            SURVEY_QUESTIONS.sectionB.questions;
-
+        const questions = this.getCurrentSectionQuestions();
         const question = questions[this.currentQuestionIndex];
 
         if (!question) {
-            // Check if we need to move to section B
-            if (this.currentSection === 'A') {
-                this.showSectionTransition();
+            // Move to next section
+            if (this.currentSection === 'strategic') {
+                this.currentSection = 'A';
+                this.currentQuestionIndex = 0;
+                this.showSectionTransition('Strategic Feature Prioritization', 'SECTION A: Core Decisions');
+            } else if (this.currentSection === 'A') {
+                this.currentSection = 'B';
+                this.currentQuestionIndex = 0;
+                this.showSectionTransition('Section A', 'SECTION B: Tactical Skills');
+            } else if (this.currentSection === 'B') {
+                this.currentSection = 'C';
+                this.currentQuestionIndex = 0;
+                this.showSectionTransition('Section B', 'SECTION C: Refinements & Edge Cases');
             } else {
                 // Survey complete
                 this.showSurveyComplete();
@@ -232,24 +257,47 @@ class YaraSurveyApp {
     }
 
     /**
+     * Calculate current absolute question number
+     */
+    getCurrentQuestionNumber() {
+        let num = 1;
+        if (this.currentSection === 'strategic') {
+            num = this.currentQuestionIndex + 1;
+        } else if (this.currentSection === 'A') {
+            num = SURVEY_QUESTIONS.strategicPrioritization.questions.length + this.currentQuestionIndex + 1;
+        } else if (this.currentSection === 'B') {
+            num = SURVEY_QUESTIONS.strategicPrioritization.questions.length +
+                  SURVEY_QUESTIONS.sectionA.questions.length +
+                  this.currentQuestionIndex + 1;
+        } else if (this.currentSection === 'C') {
+            num = SURVEY_QUESTIONS.strategicPrioritization.questions.length +
+                  SURVEY_QUESTIONS.sectionA.questions.length +
+                  SURVEY_QUESTIONS.sectionB.questions.length +
+                  this.currentQuestionIndex + 1;
+        }
+        return num;
+    }
+
+    /**
      * Generate HTML for a question based on its type
      */
     generateQuestionHTML(question) {
-        const totalQuestions = 25;
-        const currentNum = this.currentSection === 'A' ?
-            this.currentQuestionIndex + 1 :
-            this.currentQuestionIndex + 16;
+        const totalQuestions = SURVEY_QUESTIONS.metadata.totalQuestions;
+        const currentNum = this.getCurrentQuestionNumber();
+
+        const sectionLabel = this.currentSection === 'strategic' ? 'Strategic' : `Section ${this.currentSection}`;
 
         let html = `
             <div class="question-container">
                 <div class="question-header">
                     <span class="question-number">Question ${currentNum} of ${totalQuestions}</span>
-                    <span class="section-label">Section ${this.currentSection}</span>
+                    <span class="section-label">${sectionLabel}</span>
                 </div>
 
                 <h2 class="question-title">${question.title}</h2>
 
                 ${question.context ? `<div class="question-context">${question.context.replace(/\n/g, '<br>')}</div>` : ''}
+                ${question.scenario ? `<div class="question-context">${question.scenario.replace(/\n/g, '<br>')}</div>` : ''}
         `;
 
         // Generate fields based on question type
@@ -257,7 +305,8 @@ class YaraSurveyApp {
 
         switch (question.type) {
             case 'single-choice':
-                html += this.generateSingleChoice(question);
+            case 'multiple-choice':
+                html += this.generateMultipleChoice(question);
                 break;
             case 'multi-scenario':
                 html += this.generateMultiScenario(question);
@@ -299,21 +348,28 @@ class YaraSurveyApp {
     }
 
     /**
-     * Generate single choice question
+     * Generate multiple choice question
      */
-    generateSingleChoice(question) {
-        let html = `
-            <div class="question-prompt">${question.question}</div>
-            <div class="options-container">
-        `;
+    generateMultipleChoice(question) {
+        let html = '';
+
+        if (question.question) {
+            html += `<div class="question-prompt"><strong>${question.question}</strong></div>`;
+        }
+
+        html += `<div class="options-container">`;
 
         question.options.forEach((option, index) => {
+            const optionLabel = option.id || String.fromCharCode(65 + index);
             html += `
                 <label class="option-card">
-                    <input type="radio" name="choice" value="${option.id}" required>
+                    <input type="radio" name="choice" value="${optionLabel}" required>
                     <div class="option-content">
-                        <span class="option-label">${String.fromCharCode(65 + index)}</span>
-                        <span class="option-text">${option.text}</span>
+                        <div class="option-header">
+                            <span class="option-label">Option ${optionLabel}</span>
+                            <span class="option-text"><strong>${option.text}</strong></span>
+                        </div>
+                        ${option.detail ? `<div class="option-detail">${option.detail}</div>` : ''}
                     </div>
                 </label>
             `;
@@ -355,24 +411,31 @@ class YaraSurveyApp {
      * Generate ranking question
      */
     generateRanking(question) {
-        let html = `
-            <div class="question-prompt">${question.question}</div>
-            <div class="ranking-container">
-        `;
+        let html = '';
 
-        question.versions.forEach((version, index) => {
+        if (question.context) {
+            html += `<div class="question-prompt">${question.context}</div>`;
+        }
+
+        html += `<div class="ranking-container">`;
+
+        // Handle both capabilities and insights
+        const items = question.capabilities || question.insights || [];
+        const itemCount = items.length;
+
+        items.forEach((item, index) => {
             html += `
                 <div class="ranking-item">
                     <div class="ranking-header">
-                        <strong>${version.label}</strong>
-                        <select name="rank_${version.id}" required class="ranking-select">
+                        <strong>${item.name}</strong>
+                        <select name="rank_${item.id}" required class="ranking-select">
                             <option value="">Rank...</option>
-                            <option value="1">1 (Best)</option>
-                            <option value="2">2</option>
-                            <option value="3">3 (Worst)</option>
+                            ${Array.from({length: itemCount}, (_, i) => `
+                                <option value="${i + 1}">${i + 1}${i === 0 ? ' (Most critical)' : i === itemCount - 1 ? ' (Least critical)' : ''}</option>
+                            `).join('')}
                         </select>
                     </div>
-                    <p class="ranking-text">${version.text}</p>
+                    <p class="ranking-text">${item.description || item.example || ''}</p>
                 </div>
             `;
         });
@@ -418,13 +481,9 @@ class YaraSurveyApp {
     generateOpenEnded(question) {
         let html = `<div class="open-ended-container">`;
 
-        if (question.question) {
-            html += `<div class="question-prompt">${question.question}</div>`;
-        }
-
-        question.fields.forEach(field => {
-            html += this.generateField(field);
-        });
+        // For open-ended questions, the scenario is shown in the main HTML
+        // and followUp questions are handled by the main generateQuestionHTML function
+        // So we just need a placeholder here
 
         html += `</div>`;
         return html;
@@ -549,10 +608,15 @@ class YaraSurveyApp {
     previousQuestion() {
         if (this.currentQuestionIndex > 0) {
             this.currentQuestionIndex--;
+        } else if (this.currentSection === 'A') {
+            this.currentSection = 'strategic';
+            this.currentQuestionIndex = SURVEY_QUESTIONS.strategicPrioritization.questions.length - 1;
         } else if (this.currentSection === 'B') {
-            // Go back to last question of section A
             this.currentSection = 'A';
             this.currentQuestionIndex = SURVEY_QUESTIONS.sectionA.questions.length - 1;
+        } else if (this.currentSection === 'C') {
+            this.currentSection = 'B';
+            this.currentQuestionIndex = SURVEY_QUESTIONS.sectionB.questions.length - 1;
         }
         this.renderCurrentQuestion();
     }
@@ -560,7 +624,10 @@ class YaraSurveyApp {
     /**
      * Show section transition
      */
-    showSectionTransition() {
+    showSectionTransition(completedSection, nextSection) {
+        const currentNum = this.getCurrentQuestionNumber() - 1; // Subtract 1 since we're transitioning
+        const totalQuestions = SURVEY_QUESTIONS.metadata.totalQuestions;
+
         const html = `
             <div class="section-transition">
                 <div class="transition-animation">
@@ -568,20 +635,20 @@ class YaraSurveyApp {
                     <div class="butterfly">🦋</div>
                 </div>
                 <h2>Excellent Progress!</h2>
-                <p>You've completed Section A: Core Decision Trees</p>
-                <p class="transition-message">Now let's refine Yara's personality and handle edge cases.</p>
+                <p>You've completed ${completedSection}</p>
+                <p class="transition-message">Next: ${nextSection}</p>
                 <div class="progress-stats">
                     <div class="stat">
-                        <strong>15 of 25</strong>
+                        <strong>${currentNum} of ${totalQuestions}</strong>
                         <span>Questions Complete</span>
                     </div>
                     <div class="stat">
-                        <strong>~10 minutes</strong>
+                        <strong>~${Math.ceil((totalQuestions - currentNum) * 1.5)} minutes</strong>
                         <span>Remaining</span>
                     </div>
                 </div>
                 <button class="btn-primary" onclick="surveyApp.continueSurvey()" style="width:100%; margin-top: 20px;">
-                    Continue to Section B →
+                    Continue →
                 </button>
             </div>
         `;
@@ -590,11 +657,9 @@ class YaraSurveyApp {
     }
 
     /**
-     * Continue to section B
+     * Continue to next section
      */
     continueSurvey() {
-        this.currentSection = 'B';
-        this.currentQuestionIndex = 0;
         this.renderCurrentQuestion();
     }
 
