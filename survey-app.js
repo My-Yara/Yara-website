@@ -587,9 +587,7 @@ class YaraSurveyApp {
      * Get current question ID
      */
     getCurrentQuestionId() {
-        const questions = this.currentSection === 'A' ?
-            SURVEY_QUESTIONS.sectionA.questions :
-            SURVEY_QUESTIONS.sectionB.questions;
+        const questions = this.getCurrentSectionQuestions();
         return questions[this.currentQuestionIndex].id;
     }
 
@@ -621,17 +619,17 @@ class YaraSurveyApp {
     }
 
     /**
-     * Calculate remaining time based on incomplete sections
+     * Calculate remaining time for sections still to complete
+     * Includes the section you're about to start
      */
     calculateRemainingTime() {
         const sections = SURVEY_QUESTIONS.metadata.sections;
         let remainingMinutes = 0;
 
-        // Check which sections are remaining
+        // Calculate time for remaining sections (including current section we're starting)
         if (this.currentSection === 'strategic') {
-            // All sections remain
-            remainingMinutes = parseInt(sections.strategic.time) +
-                             parseInt(sections.A.time) +
+            // Sections A, B, C remain (strategic is separate, not counted in main 26 min)
+            remainingMinutes = parseInt(sections.A.time) +
                              parseInt(sections.B.time) +
                              parseInt(sections.C.time);
         } else if (this.currentSection === 'A') {
@@ -796,7 +794,12 @@ class YaraSurveyApp {
                 body: JSON.stringify(surveySubmission)
             });
 
-            const result = await response.json();
+            let result;
+            try {
+                result = await response.json();
+            } catch (parseError) {
+                throw new Error(`Server returned invalid response. Status: ${response.status}`);
+            }
 
             if (response.ok) {
                 // Clear saved progress
@@ -805,15 +808,29 @@ class YaraSurveyApp {
                 // Show success
                 this.showSubmissionSuccess();
             } else {
-                throw new Error(result.message || 'Submission failed');
+                const errorMessage = result.message || result.details || 'Unknown error occurred';
+                throw new Error(`Submission failed: ${errorMessage}`);
             }
         } catch (error) {
             console.error('Submission error:', error);
-            alert('Failed to submit survey. Please try again.');
+
+            // Show detailed error to user
+            const errorDiv = document.createElement('div');
+            errorDiv.style.cssText = 'background: #fee; border: 1px solid #f88; padding: 15px; border-radius: 8px; margin-top: 20px; color: #c00;';
+            errorDiv.innerHTML = `
+                <h4 style="margin: 0 0 10px 0;">❌ Submission Failed</h4>
+                <p style="margin: 0; font-size: 0.9rem;">${error.message}</p>
+                <p style="margin: 10px 0 0 0; font-size: 0.85rem;">Please try again or contact support if the issue persists.</p>
+            `;
+
+            const modal = document.querySelector('.survey-complete');
+            if (modal) {
+                modal.appendChild(errorDiv);
+            }
 
             if (submitBtn) {
                 submitBtn.disabled = false;
-                submitBtn.textContent = 'Submit Survey';
+                submitBtn.textContent = 'Retry Submit';
             }
         }
     }
