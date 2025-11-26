@@ -726,19 +726,65 @@
             margin-bottom: 10px;
         }
 
-        /* Responsive */
+        /* Responsive - Tablets and below */
         @media (max-width: 968px) {
-            .hero-container { flex-direction: column-reverse; justify-content: center; text-align: center; padding-top: 20px; }
+            .hero-container {
+                flex-direction: column-reverse;
+                justify-content: flex-start;
+                text-align: center;
+                padding: 20px 30px;
+                min-height: auto;
+            }
             .hero-content, .hero-visual { width: 100%; padding: 0; }
-            .hero-visual { height: 50vh; }
-            h1 { font-size: 2.8rem; }
-            .hero-tagline { margin: 0 auto 30px auto; }
-            .newsletter-form { margin: 0 auto; }
+            .hero-content { padding-bottom: 30px; }
+            .hero-visual { height: 400px; margin-bottom: 20px; }
+            h1 { font-size: 2.8rem; line-height: 1.2; }
+            .hero-tagline { margin: 0 auto 30px auto; max-width: 100%; }
+            .newsletter-form { margin: 0 auto; max-width: 100%; }
             nav { padding: 20px 30px; }
-            .glass-card { padding: 30px 20px; }
+            .logo { height: 40px; font-size: 1.5rem; }
+            .logo img { height: 40px; }
+            .glass-card { padding: 30px 20px; max-width: 90%; }
             .survey-info, .progress-stats { grid-template-columns: 1fr; }
             .question-navigation { flex-direction: column; }
             .question-navigation button { width: 100%; }
+            .morph-stage { width: 280px; height: 280px; }
+            .bg-glow { width: 350px; height: 350px; }
+        }
+
+        /* Responsive - Mobile phones */
+        @media (max-width: 768px) {
+            .hero-container { padding: 15px 20px; }
+            .hero-visual { height: 300px; margin-bottom: 15px; }
+            h1 { font-size: 2.2rem; margin-bottom: 20px; }
+            .hero-tagline { font-size: 1.2rem; margin-bottom: 25px; }
+            nav { padding: 15px 20px; }
+            .logo { height: 35px; font-size: 1.3rem; gap: 10px; }
+            .logo img { height: 35px; }
+            .nav-btn { padding: 8px 20px; font-size: 0.9rem; }
+            .newsletter-form {
+                flex-direction: column;
+                padding: 15px;
+                max-width: 100%;
+            }
+            .newsletter-form input {
+                padding: 12px 20px;
+                margin-bottom: 10px;
+                text-align: center;
+            }
+            .btn-primary { width: 100%; padding: 12px 20px; }
+            .glass-card { padding: 25px 15px; }
+            .morph-stage { width: 220px; height: 220px; }
+            .bg-glow { width: 280px; height: 280px; }
+        }
+
+        /* Responsive - Small phones */
+        @media (max-width: 480px) {
+            h1 { font-size: 1.8rem; }
+            .hero-tagline { font-size: 1rem; }
+            .hero-visual { height: 250px; }
+            .morph-stage { width: 180px; height: 180px; }
+            .bg-glow { width: 220px; height: 220px; }
         }
     </style>
 </head>
