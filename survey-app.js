@@ -164,6 +164,9 @@ class YaraSurveyApp {
      * Show survey welcome screen
      */
     showSurveyWelcome() {
+        const meta = SURVEY_QUESTIONS.metadata;
+        const sectionCount = Object.keys(meta.sections).length;
+
         const welcomeHTML = `
             <div class="survey-welcome">
                 <div style="font-size: 4rem; margin-bottom: 20px;">🦋</div>
@@ -171,11 +174,11 @@ class YaraSurveyApp {
                 <p>Thank you for helping train Yara's personality and negotiation skills!</p>
                 <div class="survey-info">
                     <div class="info-item">
-                        <strong>📊 25 Questions</strong>
-                        <p>In two sections</p>
+                        <strong>📊 ${meta.totalQuestions} Questions</strong>
+                        <p>In ${sectionCount} sections</p>
                     </div>
                     <div class="info-item">
-                        <strong>⏱️ 20-25 Minutes</strong>
+                        <strong>⏱️ ${meta.estimatedTime}</strong>
                         <p>Estimated time</p>
                     </div>
                     <div class="info-item">
