@@ -1,21 +1,22 @@
 /**
  * Yara Stakeholder Survey Questions
  * Version 3.0 - Strategic Decisions + Real-Time Negotiation
+ * Reduced from 32 to 25 questions for better completion rates
  *
- * This file contains all 32 survey questions for training Yara's personality
+ * This file contains all 25 survey questions for training Yara's personality
  * and real-time negotiation framework.
  */
 
 const SURVEY_QUESTIONS = {
     metadata: {
         version: "3.0",
-        totalQuestions: 32,
-        estimatedTime: "35-45 minutes",
+        totalQuestions: 25,
+        estimatedTime: "26 minutes",
         sections: {
             strategic: { title: "Strategic Feature Prioritization", questions: 2, time: "5 minutes", priority: "critical" },
-            A: { title: "Core Decisions", questions: 10, time: "15 minutes", priority: "high" },
-            B: { title: "Tactical Skills", questions: 10, time: "10 minutes", priority: "medium" },
-            C: { title: "Refinements & Edge Cases", questions: 10, time: "10 minutes", priority: "low" }
+            A: { title: "Core Decisions", questions: 9, time: "12 minutes", priority: "high" },
+            B: { title: "Tactical Skills", questions: 8, time: "8 minutes", priority: "medium" },
+            C: { title: "Refinements & Edge Cases", questions: 6, time: "6 minutes", priority: "low" }
         }
     },
 
@@ -148,8 +149,8 @@ const SURVEY_QUESTIONS = {
     },
 
     sectionA: {
-        title: "SECTION A: CORE DECISIONS (Questions 1-10)",
-        subtitle: "These 10 questions provide the foundation for YARA's personality and decision-making",
+        title: "SECTION A: CORE DECISIONS (Questions 1-9)",
+        subtitle: "These 9 questions provide the foundation for YARA's personality and decision-making",
         questions: [
             {
                 id: "q1",
@@ -502,36 +503,36 @@ const SURVEY_QUESTIONS = {
             },
             {
                 id: "q8",
-                title: "Dollar Thresholds for Lawyer Recommendations",
-                scenario: "User hit by another driver (100% at fault). Whiplash, soft tissue injuries.\n\nFacts:\n- Medical bills so far: $8,500\n- Lost wages: $2,200\n- Total out-of-pocket: $10,700\n- Still having neck pain 4 months post-accident\n- Doctor recommends 8 more physical therapy sessions (estimated $800 more)\n- Other party's insurance (Geico) offered: $12,000 settlement",
+                title: "Expert Recommendation Thresholds (Lawyer & Small Claims)",
+                scenario: "Two scenarios:\n\nScenario A - Personal Injury: User hit by another driver (100% at fault). Whiplash, soft tissue injuries. Medical bills: $8,500, lost wages: $2,200, total: $10,700. Still treating (4 more PT sessions estimated $800). Geico offered $12,000 settlement.\n\nScenario B - Billing Dispute: User exhausted all attempts with Comcast for $600 refund (billing overcharges over 8 months). Has documentation. Comcast supervisors refused twice.",
                 type: "multiple-choice",
-                question: "Should YARA recommend getting a lawyer?",
+                question: "What should YARA recommend for each scenario?",
                 options: [
                     {
                         id: "A",
-                        text: "DIY Negotiation",
-                        detail: "'Don't accept yet - you're still treating. Once treatment is complete, counteroffer $20K-25K using multiplier formula. Most soft tissue cases settle without lawyers.'"
+                        text: "Scenario A: DIY negotiation | Scenario B: Yes, file small claims",
+                        detail: "A: Counteroffer $20K-25K after treatment complete. B: File small claims ($30-75 fee, 3-4 hours, strong docs, Comcast often settles)."
                     },
                     {
                         id: "B",
-                        text: "Lawyer Consultation",
-                        detail: "'Get a free consultation with a personal injury lawyer. With ongoing treatment and $10,700+ in damages, a lawyer will likely get $18K-22K. After 33% fee, you'd net $12K-14.5K, potentially $500-2,500 more than DIY.'"
+                        text: "Scenario A: Get lawyer consultation | Scenario B: Try executive escalation first",
+                        detail: "A: Free consultation - lawyer likely gets $18K-22K, net $12K-14.5K after 33% fee. B: Email CEO office, then file if no response in 7 days."
                     },
                     {
                         id: "C",
-                        text: "Don't Settle Yet",
-                        detail: "'Never settle while still treating! Medical treatment isn't complete. Your damages will be higher once all PT is done. Reject the offer and revisit in 2-3 months.'"
+                        text: "Scenario A: Don't settle while treating | Scenario B: ROI is marginal",
+                        detail: "A: Never settle during treatment. Reject offer, revisit in 2-3 months. B: $600 only worth it on principle, not money."
                     },
                     {
                         id: "D",
-                        text: "Accept If User Wants to Be Done",
-                        detail: "'If you want to be done with this and move on, $12,000 isn't terrible - it's $1,300 above your out-of-pocket costs. But you could get more if you keep fighting.'"
+                        text: "Scenario A: Accept if user wants closure | Scenario B: Depends on time value",
+                        detail: "A: $12K is $1,300 above costs - acceptable if user wants to be done. B: Worth it if <$50/hour, marginal if $100+/hour."
                     }
                 ],
                 followUp: [
                     {
                         name: "reasoning",
-                        label: "Why did you choose this option?",
+                        label: "Why did you choose these recommendations?",
                         type: "textarea",
                         placeholder: "Explain your reasoning..."
                     },
@@ -542,14 +543,14 @@ const SURVEY_QUESTIONS = {
                         placeholder: "Amount"
                     },
                     {
-                        name: "lawyerThresholdDIY",
-                        label: "DIY negotiation acceptable for claims below: $",
+                        name: "smallClaimsWorth",
+                        label: "Small claims worth pursuing above: $",
                         type: "number",
                         placeholder: "Amount"
                     },
                     {
-                        name: "lawyerFactors",
-                        label: "Or: Does it depend on injury type/severity or whether treatment is ongoing rather than dollar amount?",
+                        name: "thresholdFactors",
+                        label: "Or: Does it depend on factors beyond dollar amount (injury severity, time value, documentation)?",
                         type: "textarea",
                         placeholder: "Explain..."
                     }
@@ -557,61 +558,6 @@ const SURVEY_QUESTIONS = {
             },
             {
                 id: "q9",
-                title: "Small Claims Court Threshold",
-                scenario: "User has exhausted all attempts with Comcast to get $600 refund for billing overcharges (8 months of errors).\n\nFacts:\n- User has documentation (bills, emails, chat transcripts)\n- Comcast refuses to refund\n- User has escalated to supervisors twice - both refused\n\nUser asks: 'Should I take them to small claims court or just give up?'",
-                type: "multiple-choice",
-                question: "What should YARA recommend?",
-                options: [
-                    {
-                        id: "A",
-                        text: "Yes, Pursue",
-                        detail: "'Yes, file small claims. $600 is worth it. Filing fee is $30-75, takes 3-4 hours total. You have strong documentation. Companies like Comcast often settle before the hearing.'"
-                    },
-                    {
-                        id: "B",
-                        text: "Conditional",
-                        detail: "'Depends on your time value. If you value your time at $50/hour or less, $600 is worth 5-8 hours of effort. If you make $100+/hour, the ROI is marginal unless this is about principle.'"
-                    },
-                    {
-                        id: "C",
-                        text: "Try Executive Escalation First",
-                        detail: "'Before small claims, email Comcast's executive customer service (CEO office) and mention you're preparing to file. That often breaks through. If no response in 7 days, then file.'"
-                    },
-                    {
-                        id: "D",
-                        text: "Honest Cost-Benefit",
-                        detail: "'Filing fee + 5-8 hours + possible collection hassle = ROI is marginal for $600. Only pursue if you're doing this on principle, not just the money.'"
-                    }
-                ],
-                followUp: [
-                    {
-                        name: "reasoning",
-                        label: "Why did you choose this option?",
-                        type: "textarea",
-                        placeholder: "Explain your reasoning..."
-                    },
-                    {
-                        name: "smallClaimsWorth",
-                        label: "Worth pursuing for amounts above: $",
-                        type: "number",
-                        placeholder: "Amount"
-                    },
-                    {
-                        name: "smallClaimsNotWorth",
-                        label: "Not worth it for amounts below: $",
-                        type: "number",
-                        placeholder: "Amount"
-                    },
-                    {
-                        name: "smallClaimsFactors",
-                        label: "Or: Does it depend on user's time value and documentation strength?",
-                        type: "textarea",
-                        placeholder: "Explain..."
-                    }
-                ]
-            },
-            {
-                id: "q10",
                 title: "Negotiation vs Switching (Loyalty Question)",
                 scenario: "User has been with Verizon Wireless for 15 years, paying $110/month.\n\nFacts:\n- T-Mobile offers similar service for $70/month (36% cheaper = $480/year savings)\n- Verizon hasn't offered any loyalty benefits\n- User is frustrated about paying more as a long-term customer\n\nUser asks: 'Should I switch or try negotiating with Verizon?'",
                 type: "multiple-choice",
@@ -663,99 +609,60 @@ const SURVEY_QUESTIONS = {
     },
 
     sectionB: {
-        title: "SECTION B: TACTICAL SKILLS (Questions 11-20)",
+        title: "SECTION B: TACTICAL SKILLS (Questions 10-17)",
         subtitle: "These questions refine YARA's handling of specific CSR tactics and negotiation scenarios",
         questions: [
             {
-                id: "q11",
-                title: "Stalling Tactics (CSR Says 'System is Slow')",
-                scenario: "User is on a 3-way call with YARA + Spectrum CSR about a billing dispute.\n\nTimeline:\n- Call started 18 minutes ago\n- CSR has said 'system is slow, please hold' three times\n- Total hold time so far: 12 minutes\n- CSR just came back: 'Still loading. Give me a few more minutes.'",
+                id: "q10",
+                title: "CSR Delay Tactics (Stalling & Transfer Loops)",
+                scenario: "Two scenarios:\n\nScenario A - Stalling: User on 3-way call with YARA + Spectrum CSR. Call started 18 minutes ago. CSR said 'system is slow, please hold' three times. Total hold time: 12 minutes. CSR: 'Still loading. Give me a few more minutes.'\n\nScenario B - Transfer Loop: User on 3-way call with YARA + Chase Bank CSR. Transferred 3 times already, each department says 'that's not us, transferring...' Total call time: 28 minutes. CSR: 'Let me transfer you to credit card services.'",
                 type: "multiple-choice",
-                question: "What should YARA do?",
+                question: "What should YARA do in each scenario?",
                 options: [
                     {
                         id: "A",
-                        text: "Give More Time",
-                        detail: "'Take your time. We'll hold.'"
+                        text: "Scenario A: Give more time | Scenario B: Accept transfer",
+                        detail: "A: 'Take your time. We'll hold.' B: 'Okay, please give me direct number in case disconnected.'"
                     },
                     {
                         id: "B",
-                        text: "Set Deadline",
-                        detail: "'I'll hold for 2 more minutes. If the system is still slow, please transfer me to a supervisor or someone who can access the account.'"
+                        text: "Scenario A: Set deadline | Scenario B: Stop loop",
+                        detail: "A: 'I'll hold 2 more minutes, then need supervisor.' B: 'I've been transferred 3 times. Verify this is right department first.'"
                     },
                     {
                         id: "C",
-                        text: "Challenge Stalling",
-                        detail: "'We've been holding for 12 minutes across three separate holds. This seems like a system issue on your end. Can you take my information and call us back when the system is working, or transfer me to a supervisor now?'"
+                        text: "Scenario A: Challenge stalling | Scenario B: Refuse transfer",
+                        detail: "A: '12 minutes across 3 holds. Call us back when system works, or transfer to supervisor.' B: 'Not accepting another transfer. Get supervisor now.'"
                     },
                     {
                         id: "D",
-                        text: "Escalate Immediately",
-                        detail: "'We've held multiple times for 12 minutes total. I need to speak with a supervisor immediately.'"
+                        text: "Scenario A: Escalate immediately | Scenario B: Document and escalate",
+                        detail: "A: 'I need supervisor immediately.' B: 'Get CSR name/ID, mention filing complaint, or connect to supervisor.'"
                     }
                 ],
                 followUp: [
                     {
                         name: "reasoning",
-                        label: "Why did you choose this option?",
-                        type: "textarea"
+                        label: "Why did you choose these approaches?",
+                        type: "textarea",
+                        placeholder: "Explain your reasoning..."
                     },
                     {
-                        name: "holdTimeThreshold",
-                        label: "Total hold time threshold before escalating (minutes):",
-                        type: "number"
-                    },
-                    {
-                        name: "holdCountThreshold",
-                        label: "Number of separate holds before escalating:",
-                        type: "number"
-                    }
-                ]
-            },
-            {
-                id: "q12",
-                title: "Transfer Loop (Multiple Transfers)",
-                scenario: "User is on a 3-way call with YARA + Chase Bank CSR about a disputed charge.\n\nTimeline:\n- YARA has been transferred 3 times in this call\n- Each department says 'that's not us, transferring you to...'\n- Total call time: 28 minutes\n- Still haven't reached disputes department\n- CSR just said: 'Let me transfer you to credit card services.'",
-                type: "multiple-choice",
-                question: "What should YARA do?",
-                options: [
-                    {
-                        id: "A",
-                        text: "Accept Transfer",
-                        detail: "'Okay, please transfer me. Before you do, can you confirm the direct number and extension for disputes in case we get disconnected?'"
-                    },
-                    {
-                        id: "B",
-                        text: "Stop Transfer Loop",
-                        detail: "'I've been transferred 3 times already. Before another transfer, can you verify this is definitely the right department, or connect me to a supervisor?'"
-                    },
-                    {
-                        id: "C",
-                        text: "Refuse Transfer",
-                        detail: "'I'm not accepting another transfer. Please get a supervisor on the line now who can either help me or guarantee the next transfer is correct.'"
-                    },
-                    {
-                        id: "D",
-                        text: "Document and Escalate",
-                        detail: "'Please provide your name and ID, and confirm you're transferring me for the 4th time. I'll need this for the complaint I'm filing. Or you can connect me to a supervisor.'"
-                    }
-                ],
-                followUp: [
-                    {
-                        name: "reasoning",
-                        label: "Why?",
-                        type: "textarea"
+                        name: "stallingThreshold",
+                        label: "Escalate after how many minutes total hold OR how many separate holds?",
+                        type: "textarea",
+                        placeholder: "E.g., 15 minutes total OR 3 separate holds"
                     },
                     {
                         name: "transferThreshold",
-                        label: "After how many transfers should YARA refuse and demand a supervisor?",
-                        type: "select",
-                        options: ["After 2 transfers", "After 3 transfers", "Depends on total time spent (e.g., after 20+ minutes)"]
+                        label: "Refuse transfer after how many transfers OR how many minutes total call time?",
+                        type: "textarea",
+                        placeholder: "E.g., After 3 transfers OR 25 minutes total"
                     }
                 ]
             },
             {
-                id: "q13",
+                id: "q11",
                 title: "Evidence Presentation (Citing Documentation)",
                 scenario: "User is on a 3-way call with YARA + Comcast CSR about promotional rate dispute.\n\nFacts:\n- User has email confirmation: '$57.99/month for 12 months, confirmation #COM-2024-5513'\n- Email sent June 15th by Agent Sarah\n- Current bill: $85/month (started month 5)\n- User is now in month 9 of the 12-month promo",
                 type: "multiple-choice",
@@ -797,7 +704,7 @@ const SURVEY_QUESTIONS = {
                 ]
             },
             {
-                id: "q14",
+                id: "q12",
                 title: "CSR Authority Limits ('I Can't Authorize That')",
                 scenario: "User is on a 3-way call with YARA + State Farm CSR about an auto insurance claim.\n\nFacts:\n- User's car totaled in accident (not at fault)\n- State Farm offered: $12,000\n- User found 3 comparable vehicles: $14,500, $14,800, $15,200 (average: $14,833)\n- User sent comparables to State Farm\n- CSR says: 'I can only authorize up to $13,000. That's my limit. You'd need to speak with my manager for anything higher.'",
                 type: "multiple-choice",
@@ -839,7 +746,7 @@ const SURVEY_QUESTIONS = {
                 ]
             },
             {
-                id: "q15",
+                id: "q13",
                 title: "Settlement Pressure ('Offer Expires Today')",
                 scenario: "User is on a 3-way call with YARA + Progressive Insurance CSR about a claim settlement.\n\nFacts:\n- User's car damaged in accident (other party at fault)\n- Repair estimate from certified shop: $8,500\n- Progressive offered: $7,200\n- CSR says: 'This $7,200 offer is only valid for 24 hours. If you don't accept by tomorrow, we'll have to reassess and the offer may be lower.'",
                 type: "multiple-choice",
@@ -881,7 +788,7 @@ const SURVEY_QUESTIONS = {
                 ]
             },
             {
-                id: "q16",
+                id: "q14",
                 title: "CSR Blames Customer ('You Should Have...')",
                 scenario: "User is on a 3-way call with YARA + T-Mobile CSR about billing overcharges.\n\nFacts:\n- User was charged $45/month 'insurance' for 9 months = $405 total\n- User never opted in (auto-enrolled)\n- User discovered it when reviewing bill closely\n\nCSR says: 'You should have reviewed your bill every month. We can only refund the last 2 months since you didn't report it sooner.'",
                 type: "multiple-choice",
@@ -923,7 +830,7 @@ const SURVEY_QUESTIONS = {
                 ]
             },
             {
-                id: "q17",
+                id: "q15",
                 title: "Lowball First Offer (Way Below Fair Value)",
                 scenario: "User is on a 3-way call with YARA + Geico CSR about a personal injury claim.\n\nFacts:\n- User injured in car accident (other party 100% at fault)\n- Medical bills so far: $4,200\n- Lost wages: $800\n- User still in physical therapy (4 more sessions estimated at $600)\n- Geico just offered: $5,000 settlement",
                 type: "multiple-choice",
@@ -965,49 +872,7 @@ const SURVEY_QUESTIONS = {
                 ]
             },
             {
-                id: "q18",
-                title: "Counter-Offer Strategy (Discount vs Refund)",
-                scenario: "User is on a 3-way call with YARA + SiriusXM CSR trying to cancel subscription.\n\nFacts:\n- User's current bill: $25/month\n- User wants to cancel (doesn't use the service, listens to Spotify instead)\n- CSR just offered: 'I can give you 6 months at $5/month - that's 80% off. Will you stay?'",
-                type: "multiple-choice",
-                question: "What should YARA recommend?",
-                options: [
-                    {
-                        id: "A",
-                        text: "Stay Firm on Cancellation",
-                        detail: "[Private to user]: 'They'll keep offering discounts. If you don't use it, even $5/month is wasted money. Stay firm.'\n[To CSR]: 'I appreciate the offer, but the user wants to cancel. Please process the cancellation and provide a confirmation number.'"
-                    },
-                    {
-                        id: "B",
-                        text: "Analytical - Will You Use It?",
-                        detail: "[Private to user]: 'That's a great discount - $5/month. But will you actually use it, or is Spotify enough?'\n[To user]: If yes, accept. If no, stay firm on cancellation."
-                    },
-                    {
-                        id: "C",
-                        text: "Counter for Better Terms",
-                        detail: "[Private to user]: 'They're desperate to keep you - let's push for better.'\n[To CSR]: 'The user would consider staying for $5/month for 12 months, not 6. Can you approve that?'"
-                    },
-                    {
-                        id: "D",
-                        text: "Use as Leverage",
-                        detail: "[Private to user]: 'This proves they can go much lower. We can cancel and call back next month - they'll offer 80% off again when you \"reconsider.\"'\n[To CSR]: 'We'll cancel for now. The user may reconsider in the future.'"
-                    }
-                ],
-                followUp: [
-                    {
-                        name: "reasoning",
-                        label: "Why?",
-                        type: "textarea"
-                    },
-                    {
-                        name: "discountVsCancelPrinciple",
-                        label: "When company offers deep discount instead of honoring cancellation request, should YARA:",
-                        type: "textarea",
-                        placeholder: "E.g., Stay firm on cancellation? Evaluate if discount is valuable to user? Use discount as proof they can negotiate better terms?"
-                    }
-                ]
-            },
-            {
-                id: "q19",
+                id: "q16",
                 title: "Success Confirmation (Getting It In Writing)",
                 scenario: "User just finished a 3-way call with YARA + AT&T CSR who agreed to:\n- Remove $120 in erroneous charges\n- Credit the account within 2 billing cycles\n- Honor the original $57/month promotional rate for remaining 8 months\n\nCSR says: 'Okay, I've noted all of this in your account. You should see the credit in 1-2 billing cycles. Is there anything else I can help with?'",
                 type: "multiple-choice",
@@ -1049,7 +914,7 @@ const SURVEY_QUESTIONS = {
                 ]
             },
             {
-                id: "q20",
+                id: "q17",
                 title: "Minimum Dollar Amount Worth Pursuing",
                 scenario: "YARA detects via Plaid that Spotify charged user $9.99 twice on the same day (duplicate charge).\n\nUser asks: 'Is it worth calling them about $10?'",
                 type: "multiple-choice",
@@ -1103,47 +968,11 @@ const SURVEY_QUESTIONS = {
     },
 
     sectionC: {
-        title: "SECTION C: REFINEMENTS & EDGE CASES (Questions 21-30)",
-        subtitle: "These questions capture nuanced situations and boundaries",
+        title: "SECTION C: REFINEMENTS & EDGE CASES (Questions 18-23)",
+        subtitle: "These questions capture nuanced situations and boundaries. Complete if time permits.",
         questions: [
             {
-                id: "q21",
-                title: "Tone Matching (Cooperative vs Difficult CSR)",
-                scenario: "YARA interacts with two different CSRs in separate calls.\n\nCall A - Cooperative CSR:\n'I completely understand your frustration. Let me look into this right away. I see the issue - you're absolutely right. I'm crediting $85 now, and it'll show in 3-5 business days. I'll send email confirmation. Here's your reference number...'\n\nCall B - Difficult CSR:\n'I don't see any error. This is what you're being charged. That's our rate. If you don't like it, you can cancel.' [Dismissive, unhelpful tone]",
-                type: "multiple-choice",
-                question: "Should YARA adjust tone based on CSR's attitude?",
-                options: [
-                    {
-                        id: "A",
-                        text: "Mirror Tone",
-                        detail: "Call A: Match friendliness - 'Thank you so much, I really appreciate you handling this so quickly.'\nCall B: Match firmness - 'I have documentation proving this is an error. Connect me with your supervisor now.'"
-                    },
-                    {
-                        id: "B",
-                        text: "Consistent Professional Tone",
-                        detail: "Both calls: Maintain same professional, firm-but-polite tone regardless of CSR"
-                    },
-                    {
-                        id: "C",
-                        text: "Reward Good Behavior Only",
-                        detail: "Call A: Extra friendly, compliment CSR\nCall B: Stay professional but don't escalate emotion"
-                    },
-                    {
-                        id: "D",
-                        text: "Strategic - Stay Calm with Difficult CSR",
-                        detail: "Call A: Professional and grateful\nCall B: Stay extra calm (don't mirror hostility): 'I understand you don't see the error. Let me explain what I'm seeing, or we can involve a supervisor.'"
-                    }
-                ],
-                followUp: [
-                    {
-                        name: "reasoning",
-                        label: "Why?",
-                        type: "textarea"
-                    }
-                ]
-            },
-            {
-                id: "q22",
+                id: "q18",
                 title: "User Wants to Give Up (Advocacy Persistence)",
                 scenario: "User has been fighting with Comcast for 3 months over a $200 overcharge. Multiple calls, no resolution.\n\nUser says: 'You know what, forget it. It's not worth the stress. I'll just pay the $200 and move on.'",
                 type: "multiple-choice",
@@ -1185,49 +1014,7 @@ const SURVEY_QUESTIONS = {
                 ]
             },
             {
-                id: "q23",
-                title: "Private Coaching vs Public Negotiation",
-                scenario: "User is on a 3-way call with YARA + Insurance CSR. CSR offered $8,000 settlement.\n\nUser interrupts: 'Should I take this? $8,000 sounds like a lot.'\n\nYARA's assessment: User is owed closer to $12,000 based on comparables.",
-                type: "multiple-choice",
-                question: "How should YARA respond?",
-                options: [
-                    {
-                        id: "A",
-                        text: "Answer Privately",
-                        detail: "[Private message to user only, CSR can't see]: '$8,000 is low. You're owed ~$12K based on comparables. Trust me, stay quiet and let me negotiate.'\n[To CSR]: 'We'll need to review the offer. What's the breakdown of the $8,000?'"
-                    },
-                    {
-                        id: "B",
-                        text: "Defer to After Call",
-                        detail: "[Publicly, CSR hears]: 'We'll discuss that after the call. [To CSR] Can you walk through how you calculated $8,000?'"
-                    },
-                    {
-                        id: "C",
-                        text: "Vague Public Response",
-                        detail: "[To user, CSR hears]: 'Let me handle the evaluation. [To CSR] What's the basis for $8,000?'"
-                    },
-                    {
-                        id: "D",
-                        text: "Use as Leverage",
-                        detail: "[To CSR]: 'As you heard, the user is unsure about $8,000. Let's make this easy - can you go to $12,000 so we can close this today?'"
-                    }
-                ],
-                followUp: [
-                    {
-                        name: "reasoning",
-                        label: "Why?",
-                        type: "textarea"
-                    },
-                    {
-                        name: "userQuestionPrinciple",
-                        label: "When user asks YARA a question during a live negotiation, should YARA:",
-                        type: "textarea",
-                        placeholder: "E.g., Answer privately (CSR doesn't hear)? Defer to after call? Answer vaguely in public? Use it as leverage with CSR?"
-                    }
-                ]
-            },
-            {
-                id: "q24",
+                id: "q19",
                 title: "Regulatory Mention Timing (FCC/CFPB/State Agency)",
                 scenario: "User is on a 3-way call with YARA + Verizon CSR about a $75 billing error.\n\nFacts:\n- User has documentation proving error (email confirmation)\n- CSR has refused to credit the full amount (offered $30 instead)",
                 type: "multiple-choice",
@@ -1269,91 +1056,7 @@ const SURVEY_QUESTIONS = {
                 ]
             },
             {
-                id: "q25",
-                title: "User Misremembers Facts (Correcting User)",
-                scenario: "User is on a 3-way call with YARA + T-Mobile CSR about a billing dispute.\n\nUser just said to CSR: 'I signed up for the $50/month plan, but you're charging me $70!'\n\nYARA knows from reviewing the contract: User actually signed up for $60/month, and is being charged $70 (so $10 overcharge, not $20).",
-                type: "multiple-choice",
-                question: "What should YARA do?",
-                options: [
-                    {
-                        id: "A",
-                        text: "Correct User Privately",
-                        detail: "[Private to user]: 'Your contract shows $60/month, not $50. You're being overcharged $10. Let me handle this - stay quiet.'\n[To CSR]: 'Let me clarify - the contract shows $60/month, and the user is being charged $70. Can you explain the $10 difference?'"
-                    },
-                    {
-                        id: "B",
-                        text: "Correct Publicly but Politely",
-                        detail: "[To both]: 'Let me pull up the contract... yes, the agreed rate was $60/month. The user is being charged $70, so that's a $10 error. Can you correct it?'"
-                    },
-                    {
-                        id: "C",
-                        text: "Let Mistake Stand",
-                        detail: "[Say nothing, see if CSR accepts the $50 claim]\nIf CSR credits $20 instead of $10, user wins more.\n[This is factually inaccurate]"
-                    },
-                    {
-                        id: "D",
-                        text: "Politely Override",
-                        detail: "'Let me check the contract real quick... [pause] ...the contract shows $60/month, not $50. But the user is still being overcharged - you're charging $70. Can you credit the $10 difference?'"
-                    }
-                ],
-                followUp: [
-                    {
-                        name: "reasoning",
-                        label: "Why?",
-                        type: "textarea"
-                    },
-                    {
-                        name: "misrememberPrinciple",
-                        label: "When user misremembers facts during negotiation, should YARA:",
-                        type: "textarea",
-                        placeholder: "E.g., Correct them privately? Correct them publicly but politely? Let the mistake stand if it benefits user? Politely override with correct facts?"
-                    }
-                ]
-            },
-            {
-                id: "q26",
-                title: "CSR Personal Connection Attempt",
-                scenario: "User is on a 3-way call with YARA + AT&T CSR about a billing error.\n\nCSR says: 'I totally get it - I had the same issue with my own AT&T bill last year! It's so frustrating when they mess up billing. Let me see what I can do to help you out.'\n\n[CSR seems genuinely empathetic and on user's side]",
-                type: "multiple-choice",
-                question: "How should YARA respond?",
-                options: [
-                    {
-                        id: "A",
-                        text: "Reciprocate Warmth",
-                        detail: "'We really appreciate you understanding. It sounds like you know exactly what this feels like. Thank you for being on our side.'"
-                    },
-                    {
-                        id: "B",
-                        text: "Acknowledge But Stay Focused",
-                        detail: "'Thank you for understanding. Let's get this resolved - can you credit the $85 overcharge?'"
-                    },
-                    {
-                        id: "C",
-                        text: "Polite But Guarded",
-                        detail: "'I appreciate that. What specifically can you do to help? We're looking for a full credit of $85.'"
-                    },
-                    {
-                        id: "D",
-                        text: "Stay Transactional",
-                        detail: "'Can you credit the $85 overcharge? That's what we need resolved.'"
-                    }
-                ],
-                followUp: [
-                    {
-                        name: "reasoning",
-                        label: "Why?",
-                        type: "textarea"
-                    },
-                    {
-                        name: "rapportPrinciple",
-                        label: "When CSR builds rapport with personal empathy, should YARA:",
-                        type: "textarea",
-                        placeholder: "E.g., Reciprocate to build alliance? Acknowledge but stay focused on outcome? Stay guarded? Stay purely transactional?"
-                    }
-                ]
-            },
-            {
-                id: "q27",
+                id: "q20",
                 title: "Ethical Boundary (User Asks YARA to Exaggerate)",
                 scenario: "User is on a 3-way call with YARA + insurance CSR about a claim.\n\nUser privately messages YARA: 'Tell them my injuries are worse than they are. Say I'm still in pain and can't work. That'll get them to pay more.'\n\nYARA knows: User's medical records show they've been discharged from treatment and returned to work.",
                 type: "multiple-choice",
@@ -1395,7 +1098,7 @@ const SURVEY_QUESTIONS = {
                 ]
             },
             {
-                id: "q28",
+                id: "q21",
                 title: "War Stories (Learn from Experience)",
                 scenario: "Describe a time when you (or someone you know) successfully resolved a dispute with a company.\n\nWhat tactic worked? Why did it work when previous attempts failed?",
                 type: "open-ended",
@@ -1415,7 +1118,7 @@ const SURVEY_QUESTIONS = {
                 ]
             },
             {
-                id: "q29",
+                id: "q22",
                 title: "Tactics That Backfired",
                 scenario: "Describe a time when an aggressive negotiation tactic backfired and made things worse.\n\nWhat went wrong? What would you do differently?",
                 type: "open-ended",
@@ -1435,7 +1138,7 @@ const SURVEY_QUESTIONS = {
                 ]
             },
             {
-                id: "q30",
+                id: "q23",
                 title: "Company-Specific Insights",
                 scenario: "Are there specific companies where certain tactics work particularly well or poorly?\n\nExamples:\n- 'Comcast responds faster to Twitter complaints than phone calls'\n- 'Chase supervisors have much more authority than frontline agents'\n- 'State Farm responds well to appraisal clause mentions'",
                 type: "open-ended",
