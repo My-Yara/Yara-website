@@ -689,14 +689,28 @@ class YaraSurveyApp {
      * Render final comments section
      */
     renderFinalComments() {
+        // v3.0 survey doesn't have finalComments, make it optional
+        if (SURVEY_QUESTIONS.finalComments) {
+            return `
+                <div class="final-comments">
+                    <h3>Additional Insights (Optional)</h3>
+                    <p>${SURVEY_QUESTIONS.finalComments.question}</p>
+                    <textarea
+                        id="final-comments"
+                        class="form-textarea"
+                        placeholder="${SURVEY_QUESTIONS.finalComments.placeholder}"
+                        rows="5"
+                    ></textarea>
+                </div>
+            `;
+        }
         return `
             <div class="final-comments">
                 <h3>Additional Insights (Optional)</h3>
-                <p>${SURVEY_QUESTIONS.finalComments.question}</p>
                 <textarea
                     id="final-comments"
                     class="form-textarea"
-                    placeholder="${SURVEY_QUESTIONS.finalComments.placeholder}"
+                    placeholder="Any additional thoughts, examples, or insights you'd like to share?"
                     rows="5"
                 ></textarea>
             </div>
