@@ -683,6 +683,17 @@ class YaraSurveyApp {
         `;
 
         this.showSurveyModal(html);
+
+        // Update progress bar to show completion
+        const totalQuestions = SURVEY_QUESTIONS.metadata.totalQuestions;
+        const progressBar = document.getElementById('survey-progress-bar');
+        if (progressBar) {
+            progressBar.style.width = '100%';
+        }
+        const progressText = document.getElementById('survey-progress-text');
+        if (progressText) {
+            progressText.textContent = `${totalQuestions} of ${totalQuestions}`;
+        }
     }
 
     /**
@@ -793,6 +804,17 @@ class YaraSurveyApp {
         `;
 
         this.showSurveyModal(html);
+
+        // Update progress bar to show completion
+        const totalQuestions = SURVEY_QUESTIONS.metadata.totalQuestions;
+        const progressBar = document.getElementById('survey-progress-bar');
+        if (progressBar) {
+            progressBar.style.width = '100%';
+        }
+        const progressText = document.getElementById('survey-progress-text');
+        if (progressText) {
+            progressText.textContent = `${totalQuestions} of ${totalQuestions}`;
+        }
     }
 
     /**
