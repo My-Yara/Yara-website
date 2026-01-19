@@ -3,18 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yara - Optimize Every Dollar. Protect Every Right.</title>
+    <title>Yara - Your Personal AI Advocate</title>
     <style>
         /* --- CSS VARIABLES & RESET --- */
         :root {
-            --primary-accent: #5F5FF8;
-            --primary-hover: #4a4ac7;
+            --primary-accent: #6A0DAD;
+            --primary-hover: #580B91;
+            --secondary-purple: #9235D5;
+            --cta-blue: #007AFF;
             --bg-gradient: linear-gradient(135deg, #e0ebff 0%, #e8def7 100%);
             --text-main: #1a202c;
             --text-muted: #4a5568;
             --card-bg: rgba(255, 255, 255, 0.75);
             --glass-border: rgba(255, 255, 255, 0.9);
-            --shadow-soft: 0 20px 40px rgba(100, 100, 111, 0.1);
+            --shadow-soft: 0 2px 8px rgba(0, 0, 0, 0.08);
+            --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.08);
+            --spring-ease: cubic-bezier(0.175, 0.885, 0.32, 1.275);
             --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
         }
 
@@ -62,13 +66,13 @@
 
         .nav-btn {
             padding: 10px 24px;
-            border-radius: 30px;
+            border-radius: 28px;
             border: 2px solid var(--primary-accent);
             color: var(--primary-accent);
             background: transparent;
             font-weight: 700;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.3s var(--spring-ease);
         }
 
         .nav-btn:hover {
@@ -97,20 +101,11 @@
 
         .hero-visual {
             width: 55%;
-            height: 600px;
             display: flex;
             justify-content: center;
             align-items: center;
             position: relative;
-        }
-
-        /* --- SHARED SVG STYLING (For Larva/Pupa/Icons) --- */
-        .line-art-icon {
-            fill: none;
-            stroke: var(--text-main);
-            stroke-width: 12;
-            stroke-linecap: round;
-            stroke-linejoin: round;
+            padding: 20px;
         }
 
         h1 {
@@ -154,20 +149,20 @@
         .newsletter-form input::placeholder { color: #999; }
 
         .btn-primary {
-            background: var(--primary-accent);
+            background: var(--cta-blue);
             color: white;
             border: none;
             padding: 15px 35px;
-            border-radius: 40px;
+            border-radius: 28px;
             font-weight: 700;
             cursor: pointer;
-            transition: transform 0.2s, background-color 0.2s;
+            transition: transform 0.2s var(--spring-ease), background-color 0.2s;
             white-space: nowrap;
-            box-shadow: 0 4px 15px rgba(95, 95, 248, 0.3);
+            box-shadow: 0 4px 15px rgba(0, 122, 255, 0.3);
         }
 
         .btn-primary:hover {
-            background: var(--primary-hover);
+            background: #0056b3;
             transform: translateY(-2px);
         }
 
@@ -181,10 +176,10 @@
             color: var(--primary-accent);
             border: 2px solid var(--primary-accent);
             padding: 12px 30px;
-            border-radius: 40px;
+            border-radius: 28px;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.2s var(--spring-ease);
         }
 
         .btn-secondary:hover {
@@ -197,10 +192,10 @@
             color: var(--text-muted);
             border: 1px solid #e2e8f0;
             padding: 12px 30px;
-            border-radius: 40px;
+            border-radius: 28px;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.2s var(--spring-ease);
         }
 
         .btn-tertiary:hover {
@@ -208,31 +203,11 @@
             border-color: var(--text-muted);
         }
 
-        /* --- METAMORPHOSIS ANIMATION --- */
-        .morph-stage {
-            position: absolute;
-            width: 350px;
-            height: 350px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            opacity: 0;
-            animation-duration: 9s;
-            animation-iteration-count: infinite;
-        }
-
-        /* Specific sizing for the image inside the animation */
-        .morph-stage img {
-            width: 80%; /* Prevent it from touching edges */
-            height: 80%;
-            object-fit: contain;
-            filter: drop-shadow(0 5px 15px rgba(95, 95, 248, 0.2));
-        }
-
-        .morph-stage svg {
+        /* --- STATIC HERO VISUAL --- */
+        .imbalance-graphic {
             width: 100%;
-            height: 100%;
-            filter: drop-shadow(0 5px 15px rgba(95, 95, 248, 0.2));
+            max-width: 350px;
+            height: auto;
         }
 
         .bg-glow {
@@ -243,27 +218,6 @@
             border-radius: 50%;
             z-index: -1;
             animation: pulse 4s infinite alternate ease-in-out;
-        }
-
-        #stage-larva     { animation-name: cycle-larva; }
-        #stage-pupa      { animation-name: cycle-pupa; }
-        #stage-butterfly { animation-name: cycle-butterfly; }
-
-        @keyframes cycle-larva {
-            0%, 25% { opacity: 1; transform: translateY(0) scale(1); }
-            30%, 100% { opacity: 0; transform: translateY(20px) scale(0.8); }
-        }
-
-        @keyframes cycle-pupa {
-            0%, 25% { opacity: 0; transform: translateY(-20px) scale(0.8); }
-            33%, 58% { opacity: 1; transform: translateY(0) scale(1); }
-            66%, 100% { opacity: 0; transform: translateY(20px) scale(0.8); }
-        }
-
-        @keyframes cycle-butterfly {
-            0%, 58% { opacity: 0; transform: scale(0.8) translateY(20px); }
-            66%, 91% { opacity: 1; transform: scale(1.1) translateY(0); filter: drop-shadow(0 0 25px rgba(95, 95, 248, 0.6)); }
-            100% { opacity: 0; transform: scale(1.2) translateY(-20px); }
         }
 
         @keyframes pulse { from { transform: scale(1); opacity: 0.7; } to { transform: scale(1.2); opacity: 1; } }
@@ -292,14 +246,14 @@
         .glass-card {
             background: var(--card-bg);
             border: 1px solid var(--glass-border);
-            box-shadow: var(--shadow-soft);
+            box-shadow: var(--shadow-card);
             width: 100%;
             max-width: 500px;
             padding: 40px;
-            border-radius: 30px;
+            border-radius: 24px;
             text-align: center;
             position: relative;
-            animation: popUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            animation: popUp 0.4s var(--spring-ease);
             margin: 20px;
         }
 
@@ -319,7 +273,7 @@
             outline: none;
         }
 
-        .glass-input:focus { border-color: var(--primary-accent); box-shadow: 0 0 0 3px rgba(91, 134, 229, 0.1); }
+        .glass-input:focus { border-color: var(--primary-accent); box-shadow: 0 0 0 3px rgba(106, 13, 173, 0.1); }
 
         .close-btn {
             position: absolute;
@@ -444,7 +398,7 @@
 
         .option-card:hover {
             border-color: var(--primary-accent);
-            background: rgba(91, 134, 229, 0.05);
+            background: rgba(106, 13, 173, 0.05);
         }
 
         .option-card input[type="radio"] {
@@ -519,7 +473,7 @@
 
         .form-select:focus, .form-input:focus, .form-textarea:focus {
             border-color: var(--primary-accent);
-            box-shadow: 0 0 0 3px rgba(91, 134, 229, 0.1);
+            box-shadow: 0 0 0 3px rgba(106, 13, 173, 0.1);
         }
 
         .form-textarea {
@@ -753,7 +707,7 @@
             }
             .hero-content, .hero-visual { width: 100%; padding: 0; }
             .hero-content { padding-bottom: 30px; }
-            .hero-visual { height: 400px; margin-bottom: 20px; }
+            .hero-visual { height: auto; margin-bottom: 20px; }
             h1 { font-size: 2.8rem; line-height: 1.2; }
             .hero-tagline { margin: 0 auto 30px auto; max-width: 100%; }
             .newsletter-form { margin: 0 auto; max-width: 100%; }
@@ -764,14 +718,14 @@
             .survey-info, .progress-stats { grid-template-columns: 1fr; }
             .question-navigation { flex-direction: column; }
             .question-navigation button { width: 100%; }
-            .morph-stage { width: 280px; height: 280px; }
+            .imbalance-graphic { max-width: 280px; }
             .bg-glow { width: 350px; height: 350px; }
         }
 
         /* Responsive - Mobile phones */
         @media (max-width: 768px) {
             .hero-container { padding: 15px 20px; }
-            .hero-visual { height: 300px; margin-bottom: 15px; }
+            .hero-visual { height: auto; margin-bottom: 15px; }
             h1 { font-size: 2.2rem; margin-bottom: 20px; }
             .hero-tagline { font-size: 1.2rem; margin-bottom: 25px; }
             nav { padding: 15px 20px; }
@@ -790,7 +744,7 @@
             }
             .btn-primary { width: 100%; padding: 12px 20px; }
             .glass-card { padding: 25px 15px; }
-            .morph-stage { width: 220px; height: 220px; }
+            .imbalance-graphic { max-width: 220px; }
             .bg-glow { width: 280px; height: 280px; }
         }
 
@@ -798,8 +752,8 @@
         @media (max-width: 480px) {
             h1 { font-size: 1.8rem; }
             .hero-tagline { font-size: 1rem; }
-            .hero-visual { height: 250px; }
-            .morph-stage { width: 180px; height: 180px; }
+            .hero-visual { height: auto; }
+            .imbalance-graphic { max-width: 180px; }
             .bg-glow { width: 220px; height: 220px; }
         }
     </style>
@@ -817,8 +771,8 @@
     <main class="hero-container">
 
         <div class="hero-content">
-            <h1>Optimize Every Dollar.<br>Protect Every Right.</h1>
-            <p class="hero-tagline">Yara uses advanced AI to ensure you get the most out of your opportunities while safeguarding your interests.</p>
+            <h1>Your Personal<br>AI Advocate</h1>
+            <p class="hero-tagline">Yara connects to your accounts, understands your bills, and takes action—disputing charges, finding savings, recovering money you're owed.</p>
 
             <div class="newsletter-form">
                 <input type="email" id="early-access-email" placeholder="Enter email for early access..." aria-label="Newsletter Email">
@@ -829,25 +783,81 @@
         <div class="hero-visual">
             <div class="bg-glow"></div>
 
-            <div id="stage-larva" class="morph-stage">
-                <svg class="line-art-icon" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M40,110 Q55,90 70,110 Q85,130 100,110 Q115,90 130,110 Q145,130 160,110" stroke-width="14" fill="none" stroke-linecap="round" />
-                    <path d="M165,105 C175,100 185,110 180,120" stroke-width="14" stroke-linecap="round" />
-                </svg>
-            </div>
+            <svg class="imbalance-graphic" viewBox="0 0 400 360" xmlns="http://www.w3.org/2000/svg">
+                <!-- Background panels -->
+                <rect x="10" y="20" width="170" height="200" rx="16" fill="#f8f4fc" stroke="#6A0DAD" stroke-width="2" opacity="0.8"/>
+                <rect x="220" y="20" width="170" height="200" rx="16" fill="#fff5f5" stroke="#e53e3e" stroke-width="2" opacity="0.8"/>
 
-            <div id="stage-pupa" class="morph-stage">
-                <svg class="line-art-icon" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M80,30 Q100,20 120,30" stroke-width="8"/>
-                    <line x1="100" y1="30" x2="100" y2="50" stroke-width="6" />
-                    <path d="M100,50 C135,75 135,135 100,170 C65,135 65,75 100,50 Z" />
-                    <path d="M82,90 Q100,100 118,90 M85,120 Q100,130 115,120" stroke-width="6" opacity="0.6"/>
-                </svg>
-            </div>
+                <!-- Enterprise Side (Left) -->
+                <text x="95" y="50" font-family="system-ui, sans-serif" font-size="14" font-weight="700" fill="#6A0DAD" text-anchor="middle">ENTERPRISES</text>
 
-            <div id="stage-butterfly" class="morph-stage">
-                <img src="yara_logo.png" alt="Yara Butterfly" class="brand-img">
-            </div>
+                <!-- AI Robot Icon -->
+                <circle cx="50" cy="85" r="14" fill="#6A0DAD" opacity="0.15"/>
+                <text x="50" y="90" font-size="16" text-anchor="middle">🤖</text>
+                <text x="75" y="90" font-family="system-ui, sans-serif" font-size="11" fill="#4a5568">AI Pricing</text>
+
+                <!-- Sync Icon -->
+                <circle cx="50" cy="125" r="14" fill="#6A0DAD" opacity="0.15"/>
+                <text x="50" y="130" font-size="16" text-anchor="middle">🔄</text>
+                <text x="75" y="130" font-family="system-ui, sans-serif" font-size="11" fill="#4a5568">AI Retention</text>
+
+                <!-- Chart Icon -->
+                <circle cx="50" cy="165" r="14" fill="#6A0DAD" opacity="0.15"/>
+                <text x="50" y="170" font-size="16" text-anchor="middle">📊</text>
+                <text x="75" y="170" font-family="system-ui, sans-serif" font-size="11" fill="#4a5568">AI Optimization</text>
+
+                <!-- Data/Analytics Icon -->
+                <circle cx="50" cy="195" r="12" fill="#6A0DAD" opacity="0.15"/>
+                <text x="50" y="200" font-size="14" text-anchor="middle">⚡</text>
+                <text x="75" y="200" font-family="system-ui, sans-serif" font-size="10" fill="#4a5568">24/7 Automation</text>
+
+                <!-- Consumer Side (Right) -->
+                <text x="305" y="50" font-family="system-ui, sans-serif" font-size="14" font-weight="700" fill="#e53e3e" text-anchor="middle">CONSUMERS</text>
+
+                <!-- Manual clipboard -->
+                <circle cx="250" cy="85" r="14" fill="#e53e3e" opacity="0.15"/>
+                <text x="250" y="90" font-size="16" text-anchor="middle">📋</text>
+                <text x="275" y="90" font-family="system-ui, sans-serif" font-size="11" fill="#4a5568">Manual Work</text>
+
+                <!-- Phone support -->
+                <circle cx="250" cy="125" r="14" fill="#e53e3e" opacity="0.15"/>
+                <text x="250" y="130" font-size="16" text-anchor="middle">📞</text>
+                <text x="275" y="130" font-family="system-ui, sans-serif" font-size="11" fill="#4a5568">Hold Forever</text>
+
+                <!-- Confused -->
+                <circle cx="250" cy="165" r="14" fill="#e53e3e" opacity="0.15"/>
+                <text x="250" y="170" font-size="16" text-anchor="middle">😰</text>
+                <text x="275" y="170" font-family="system-ui, sans-serif" font-size="11" fill="#4a5568">Complex Portals</text>
+
+                <!-- Time -->
+                <circle cx="250" cy="195" r="12" fill="#e53e3e" opacity="0.15"/>
+                <text x="250" y="200" font-size="14" text-anchor="middle">⏰</text>
+                <text x="275" y="200" font-family="system-ui, sans-serif" font-size="10" fill="#4a5568">Hours Wasted</text>
+
+                <!-- VS divider -->
+                <text x="200" y="120" font-family="system-ui, sans-serif" font-size="16" font-weight="800" fill="#718096" text-anchor="middle">vs</text>
+
+                <!-- Arrow pointing down to Yara -->
+                <path d="M200 150 L200 235" stroke="#6A0DAD" stroke-width="2" stroke-dasharray="6,4" opacity="0.6"/>
+                <polygon points="200,250 192,235 208,235" fill="#6A0DAD" opacity="0.6"/>
+
+                <!-- Yara solution area -->
+                <rect x="100" y="260" width="200" height="85" rx="20" fill="url(#yaraGradient)" stroke="#6A0DAD" stroke-width="2"/>
+
+                <!-- Gradient definition -->
+                <defs>
+                    <linearGradient id="yaraGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#f8f4fc;stop-opacity:1" />
+                        <stop offset="100%" style="stop-color:#e8def7;stop-opacity:1" />
+                    </linearGradient>
+                </defs>
+
+                <!-- Yara butterfly logo centered -->
+                <image href="yara_butterfly.png" x="165" y="268" width="70" height="50" preserveAspectRatio="xMidYMid meet"/>
+
+                <!-- Yara text -->
+                <text x="200" y="335" font-family="system-ui, sans-serif" font-size="14" font-weight="800" fill="#6A0DAD" text-anchor="middle">YARA LEVELS THE FIELD</text>
+            </svg>
         </div>
 
     </main>
