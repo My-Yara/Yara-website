@@ -206,7 +206,7 @@
         /* --- STATIC HERO VISUAL --- */
         .imbalance-graphic {
             width: 100%;
-            max-width: 350px;
+            max-width: 520px;
             height: auto;
         }
 
@@ -718,7 +718,7 @@
             .survey-info, .progress-stats { grid-template-columns: 1fr; }
             .question-navigation { flex-direction: column; }
             .question-navigation button { width: 100%; }
-            .imbalance-graphic { max-width: 280px; }
+            .imbalance-graphic { max-width: 480px; }
             .bg-glow { width: 350px; height: 350px; }
         }
 
@@ -744,7 +744,7 @@
             }
             .btn-primary { width: 100%; padding: 12px 20px; }
             .glass-card { padding: 25px 15px; }
-            .imbalance-graphic { max-width: 220px; }
+            .imbalance-graphic { max-width: 400px; }
             .bg-glow { width: 280px; height: 280px; }
         }
 
@@ -753,7 +753,7 @@
             h1 { font-size: 1.8rem; }
             .hero-tagline { font-size: 1rem; }
             .hero-visual { height: auto; }
-            .imbalance-graphic { max-width: 180px; }
+            .imbalance-graphic { max-width: 320px; }
             .bg-glow { width: 220px; height: 220px; }
         }
     </style>
@@ -783,80 +783,64 @@
         <div class="hero-visual">
             <div class="bg-glow"></div>
 
-            <svg class="imbalance-graphic" viewBox="0 0 400 360" xmlns="http://www.w3.org/2000/svg">
-                <!-- Background panels -->
-                <rect x="10" y="20" width="170" height="200" rx="16" fill="#f8f4fc" stroke="#6A0DAD" stroke-width="2" opacity="0.8"/>
-                <rect x="220" y="20" width="170" height="200" rx="16" fill="#fff5f5" stroke="#e53e3e" stroke-width="2" opacity="0.8"/>
+            <svg class="imbalance-graphic" viewBox="0 0 520 290" xmlns="http://www.w3.org/2000/svg">
+                <!-- Center dividing line -->
+                <line x1="260" y1="20" x2="260" y2="260" stroke="#cbd5e0" stroke-width="1"/>
 
-                <!-- Enterprise Side (Left) -->
-                <text x="95" y="50" font-family="system-ui, sans-serif" font-size="14" font-weight="700" fill="#6A0DAD" text-anchor="middle">ENTERPRISES</text>
+                <!-- === LEFT SIDE: ENTERPRISES === -->
+                <!-- Main circle -->
+                <circle cx="170" cy="140" r="55" fill="#6A0DAD"/>
+                <text x="170" y="145" font-family="system-ui, sans-serif" font-size="13" font-weight="600" fill="white" text-anchor="middle">Enterprises</text>
 
-                <!-- AI Robot Icon -->
-                <circle cx="50" cy="85" r="14" fill="#6A0DAD" opacity="0.15"/>
-                <text x="50" y="90" font-size="16" text-anchor="middle">🤖</text>
-                <text x="75" y="90" font-family="system-ui, sans-serif" font-size="11" fill="#4a5568">AI Pricing</text>
+                <!-- AI-driven pricing (top) -->
+                <line x1="170" y1="85" x2="170" y2="55" stroke="#cbd5e0" stroke-width="1"/>
+                <line x1="170" y1="55" x2="75" y2="55" stroke="#cbd5e0" stroke-width="1"/>
+                <circle cx="75" cy="55" r="16" fill="#f7fafc" stroke="#e2e8f0" stroke-width="1"/>
+                <text x="75" y="60" font-size="12" text-anchor="middle">🏷️</text>
+                <text x="75" y="32" font-family="system-ui, sans-serif" font-size="9" fill="#4a5568" text-anchor="middle">AI-driven pricing</text>
 
-                <!-- Sync Icon -->
-                <circle cx="50" cy="125" r="14" fill="#6A0DAD" opacity="0.15"/>
-                <text x="50" y="130" font-size="16" text-anchor="middle">🔄</text>
-                <text x="75" y="130" font-family="system-ui, sans-serif" font-size="11" fill="#4a5568">AI Retention</text>
+                <!-- AI-retention engines (middle-left) -->
+                <line x1="115" y1="140" x2="50" y2="140" stroke="#cbd5e0" stroke-width="1"/>
+                <circle cx="50" cy="140" r="16" fill="#f7fafc" stroke="#e2e8f0" stroke-width="1"/>
+                <text x="50" y="145" font-size="12" text-anchor="middle">👤</text>
+                <text x="50" y="112" font-family="system-ui, sans-serif" font-size="9" fill="#4a5568" text-anchor="middle">AI-retention</text>
+                <text x="50" y="123" font-family="system-ui, sans-serif" font-size="9" fill="#4a5568" text-anchor="middle">engines</text>
 
-                <!-- Chart Icon -->
-                <circle cx="50" cy="165" r="14" fill="#6A0DAD" opacity="0.15"/>
-                <text x="50" y="170" font-size="16" text-anchor="middle">📊</text>
-                <text x="75" y="170" font-family="system-ui, sans-serif" font-size="11" fill="#4a5568">AI Optimization</text>
+                <!-- AI IVR and deflection (bottom) -->
+                <line x1="170" y1="195" x2="170" y2="225" stroke="#cbd5e0" stroke-width="1"/>
+                <line x1="170" y1="225" x2="75" y2="225" stroke="#cbd5e0" stroke-width="1"/>
+                <circle cx="75" cy="225" r="16" fill="#f7fafc" stroke="#e2e8f0" stroke-width="1"/>
+                <text x="75" y="230" font-size="12" text-anchor="middle">📵</text>
+                <text x="75" y="250" font-family="system-ui, sans-serif" font-size="9" fill="#4a5568" text-anchor="middle">AI IVR and</text>
+                <text x="75" y="261" font-family="system-ui, sans-serif" font-size="9" fill="#4a5568" text-anchor="middle">deflection</text>
 
-                <!-- Data/Analytics Icon -->
-                <circle cx="50" cy="195" r="12" fill="#6A0DAD" opacity="0.15"/>
-                <text x="50" y="200" font-size="14" text-anchor="middle">⚡</text>
-                <text x="75" y="200" font-family="system-ui, sans-serif" font-size="10" fill="#4a5568">24/7 Automation</text>
+                <!-- === RIGHT SIDE: CONSUMERS === -->
+                <!-- Main circle -->
+                <circle cx="350" cy="140" r="55" fill="#6A0DAD"/>
+                <text x="350" y="133" font-family="system-ui, sans-serif" font-size="13" font-weight="600" fill="white" text-anchor="middle">Consumers &amp;</text>
+                <text x="350" y="150" font-family="system-ui, sans-serif" font-size="13" font-weight="600" fill="white" text-anchor="middle">Small Businesses</text>
 
-                <!-- Consumer Side (Right) -->
-                <text x="305" y="50" font-family="system-ui, sans-serif" font-size="14" font-weight="700" fill="#e53e3e" text-anchor="middle">CONSUMERS</text>
+                <!-- Manual comparisons (top) -->
+                <line x1="350" y1="85" x2="350" y2="55" stroke="#cbd5e0" stroke-width="1"/>
+                <line x1="350" y1="55" x2="445" y2="55" stroke="#cbd5e0" stroke-width="1"/>
+                <circle cx="445" cy="55" r="16" fill="#f7fafc" stroke="#e2e8f0" stroke-width="1"/>
+                <text x="445" y="60" font-size="12" text-anchor="middle">⚖️</text>
+                <text x="445" y="32" font-family="system-ui, sans-serif" font-size="9" fill="#4a5568" text-anchor="middle">Manual comparisons</text>
 
-                <!-- Manual clipboard -->
-                <circle cx="250" cy="85" r="14" fill="#e53e3e" opacity="0.15"/>
-                <text x="250" y="90" font-size="16" text-anchor="middle">📋</text>
-                <text x="275" y="90" font-family="system-ui, sans-serif" font-size="11" fill="#4a5568">Manual Work</text>
+                <!-- Fragmented Portals (middle-right) -->
+                <line x1="405" y1="140" x2="470" y2="140" stroke="#cbd5e0" stroke-width="1"/>
+                <circle cx="470" cy="140" r="16" fill="#f7fafc" stroke="#e2e8f0" stroke-width="1"/>
+                <text x="470" y="145" font-size="12" text-anchor="middle">🔲</text>
+                <text x="470" y="112" font-family="system-ui, sans-serif" font-size="9" fill="#4a5568" text-anchor="middle">Fragmented</text>
+                <text x="470" y="123" font-family="system-ui, sans-serif" font-size="9" fill="#4a5568" text-anchor="middle">Portals</text>
 
-                <!-- Phone support -->
-                <circle cx="250" cy="125" r="14" fill="#e53e3e" opacity="0.15"/>
-                <text x="250" y="130" font-size="16" text-anchor="middle">📞</text>
-                <text x="275" y="130" font-family="system-ui, sans-serif" font-size="11" fill="#4a5568">Hold Forever</text>
-
-                <!-- Confused -->
-                <circle cx="250" cy="165" r="14" fill="#e53e3e" opacity="0.15"/>
-                <text x="250" y="170" font-size="16" text-anchor="middle">😰</text>
-                <text x="275" y="170" font-family="system-ui, sans-serif" font-size="11" fill="#4a5568">Complex Portals</text>
-
-                <!-- Time -->
-                <circle cx="250" cy="195" r="12" fill="#e53e3e" opacity="0.15"/>
-                <text x="250" y="200" font-size="14" text-anchor="middle">⏰</text>
-                <text x="275" y="200" font-family="system-ui, sans-serif" font-size="10" fill="#4a5568">Hours Wasted</text>
-
-                <!-- VS divider -->
-                <text x="200" y="120" font-family="system-ui, sans-serif" font-size="16" font-weight="800" fill="#718096" text-anchor="middle">vs</text>
-
-                <!-- Arrow pointing down to Yara -->
-                <path d="M200 150 L200 235" stroke="#6A0DAD" stroke-width="2" stroke-dasharray="6,4" opacity="0.6"/>
-                <polygon points="200,250 192,235 208,235" fill="#6A0DAD" opacity="0.6"/>
-
-                <!-- Yara solution area -->
-                <rect x="100" y="260" width="200" height="85" rx="20" fill="url(#yaraGradient)" stroke="#6A0DAD" stroke-width="2"/>
-
-                <!-- Gradient definition -->
-                <defs>
-                    <linearGradient id="yaraGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" style="stop-color:#f8f4fc;stop-opacity:1" />
-                        <stop offset="100%" style="stop-color:#e8def7;stop-opacity:1" />
-                    </linearGradient>
-                </defs>
-
-                <!-- Yara butterfly logo centered -->
-                <image href="yara_butterfly.png" x="165" y="268" width="70" height="50" preserveAspectRatio="xMidYMid meet"/>
-
-                <!-- Yara text -->
-                <text x="200" y="335" font-family="system-ui, sans-serif" font-size="14" font-weight="800" fill="#6A0DAD" text-anchor="middle">YARA LEVELS THE FIELD</text>
+                <!-- Endless support loops (bottom) -->
+                <line x1="350" y1="195" x2="350" y2="225" stroke="#cbd5e0" stroke-width="1"/>
+                <line x1="350" y1="225" x2="445" y2="225" stroke="#cbd5e0" stroke-width="1"/>
+                <circle cx="445" cy="225" r="16" fill="#f7fafc" stroke="#e2e8f0" stroke-width="1"/>
+                <text x="445" y="230" font-size="12" text-anchor="middle">📞</text>
+                <text x="445" y="250" font-family="system-ui, sans-serif" font-size="9" fill="#4a5568" text-anchor="middle">Endless support</text>
+                <text x="445" y="261" font-family="system-ui, sans-serif" font-size="9" fill="#4a5568" text-anchor="middle">loops</text>
             </svg>
         </div>
 
