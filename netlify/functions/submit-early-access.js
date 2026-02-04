@@ -56,7 +56,11 @@ exports.handler = async (event, context) => {
         };
     }
 
-    // 1. Encrypt the response data before saving
+    // 1. Get client IP address from Netlify headers
+    const clientIp = event.headers['x-nf-client-connection-ip'] || event.headers['client-ip'] || 'unknown';
+    data.ipAddress = clientIp;
+
+    // 2. Encrypt the response data before saving
     const plaintext = JSON.stringify(data);
     const encryptedContent = encryptData(plaintext, ENCRYPTION_KEY);
 

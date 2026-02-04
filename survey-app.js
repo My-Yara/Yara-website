@@ -58,6 +58,10 @@ class YaraSurveyApp {
         const errorEl = document.getElementById('login-error');
         const submitBtn = event.target.querySelector('button[type="submit"]');
 
+        // Store credentials for subsequent API calls
+        this.adminEmail = email;
+        this.adminPassword = password;
+
         // Clear previous errors
         if (errorEl) errorEl.textContent = '';
 
@@ -85,9 +89,9 @@ class YaraSurveyApp {
                 // Close login modal
                 this.closeModal('login-modal');
 
-                // Show welcome message
+                // Show Admin Dashboard (Waitlist Management)
                 setTimeout(() => {
-                    this.startSurvey();
+                    this.showAdminDashboard();
                 }, 300);
             } else {
                 // Authentication failed
@@ -105,6 +109,174 @@ class YaraSurveyApp {
             submitBtn.disabled = false;
             submitBtn.textContent = 'Sign In';
         }
+    }
+
+    /**
+     * Show Admin Dashboard for Waitlist Management
+     */
+    async showAdminDashboard() {
+        const dashboardHTML = `
+            <div class="admin-dashboard" style="text-align: left; max-width: 900px; margin: 0 auto;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; border-bottom: 2px solid #f0f0f0; padding-bottom: 15px;">
+                    <h2 style="margin: 0; color: var(--primary-accent);">Waitlist Management</h2>
+                    <div style="display: flex; gap: 10px;">
+                        <button class="btn-tertiary" onclick="surveyApp.startSurvey()" style="padding: 8px 15px; font-size: 0.9rem;">Take Survey</button>
+                        <button class="btn-secondary" onclick="location.reload()" style="padding: 8px 15px; font-size: 0.9rem;">Logout</button>
+                    </div>
+                </div>
+
+                <div id="waitlist-container">
+                    <div style="text-align: center; padding: 40px;">
+                        <div style="font-size: 2rem; margin-bottom: 10px;">⏳</div>
+                        <p>Loading waitlist signups...</p>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        this.showSurveyModal(dashboardHTML);
+        this.fetchWaitlist();
+    }
+
+    /**
+     * Fetch waitlist data from the server
+     */
+    async fetchWaitlist() {
+        const container = document.getElementById('waitlist-container');
+        
+        try {
+            const response = await fetch('https://yara-survey-api.netlify.app/.netlify/functions/list-waitlist', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    email: this.adminEmail,
+                    password: this.adminPassword
+                })
+            });
+
+            if (!response.ok) throw new Error('Failed to fetch waitlist');
+
+            const waitlist = await response.json();
+            this.renderWaitlist(waitlist);
+
+        } catch (error) {
+            console.error('Error fetching waitlist:', error);
+            container.innerHTML = `
+                <div style="background: #fff5f5; border: 1px solid #feb2b2; padding: 20px; border-radius: 12px; color: #c53030;">
+                    <p><strong>Error:</strong> ${error.message}</p>
+                    <button class="btn-primary" onclick="surveyApp.fetchWaitlist()" style="margin-top: 10px;">Retry</button>
+                </div>
+            `;
+        }
+    }
+
+    /**
+     * Render the waitlist table
+     */
+    renderWaitlist(waitlist) {
+        const container = document.getElementById('waitlist-container');
+        
+        if (waitlist.length === 0) {
+            container.innerHTML = '<p style="text-align: center; padding: 40px; color: #718096;">No waitlist signups found.</p>';
+            return;
+        }
+
+        let tableHTML = `
+            <div style="overflow-x: auto;">
+                <table style="width: 100%; border-collapse: collapse; font-size: 0.9rem;">
+                    <thead>
+                        <tr style="background: #f7fafc; text-align: left;">
+                            <th style="padding: 12px; border-bottom: 2px solid #edf2f7;">User / Date</th>
+                            <th style="padding: 12px; border-bottom: 2px solid #edf2f7;">Details</th>
+                            <th style="padding: 12px; border-bottom: 2px solid #edf2f7;">Status</th>
+                            <th style="padding: 12px; border-bottom: 2px solid #edf2f7;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+        `;
+
+        waitlist.forEach((entry, index) => {
+            const date = new Date(entry.timestamp).toLocaleDateString();
+            const isApproved = entry.status === 'approved';
+            
+            tableHTML += `
+                <tr style="border-bottom: 1px solid #edf2f7;">
+                    <td style="padding: 12px;">
+                        <div style="font-weight: 600; color: var(--text-main);">${entry.email}</div>
+                        <div style="font-size: 0.75rem; color: #a0aec0;">${date} • IP: ${entry.ipAddress || 'Unknown'}</div>
+                    </td>
+                    <td style="padding: 12px;">
+                        <div style="max-width: 300px; font-size: 0.8rem; color: #4a5568;">
+                            <strong>Goal:</strong> ${this.truncate(entry.financialGoals, 60)}
+                        </div>
+                    </td>
+                    <td style="padding: 12px;">
+                        <span style="display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 0.75rem; font-weight: 600; 
+                            ${isApproved ? 'background: #c6f6d5; color: #22543d;' : 'background: #ebf4ff; color: #2a4365;'}">
+                            ${isApproved ? 'Approved' : 'Pending'}
+                        </span>
+                    </td>
+                    <td style="padding: 12px;">
+                        ${isApproved ? 
+                            '<span style="color: #48bb78; font-size: 1.2rem;">✓</span>' : 
+                            `<button id="btn-approve-${index}" class="btn-primary" 
+                                onclick="surveyApp.approveTester('${entry.email}', '${entry.filename}', '${entry.sha}', ${index})" 
+                                style="padding: 6px 12px; font-size: 0.8rem;">Approve</button>`
+                        }
+                    </td>
+                </tr>
+            `;
+        });
+
+        tableHTML += `</tbody></table></div>`;
+        container.innerHTML = tableHTML;
+    }
+
+    /**
+     * Approve a tester
+     */
+    async approveTester(userEmail, filename, sha, index) {
+        const btn = document.getElementById(`btn-approve-${index}`);
+        if (!btn) return;
+
+        if (!confirm(`Approve ${userEmail} for TestFlight beta?`)) return;
+
+        btn.disabled = true;
+        btn.textContent = 'Approving...';
+
+        try {
+            const response = await fetch('https://yara-survey-api.netlify.app/.netlify/functions/approve-tester', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    adminEmail: this.adminEmail,
+                    adminPassword: this.adminPassword,
+                    userEmail: userEmail,
+                    filename: filename,
+                    sha: sha
+                })
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                // Refresh list to show updated status
+                await this.fetchWaitlist();
+                alert(`Successfully approved ${userEmail}! They will receive a TestFlight invite from Apple.`);
+            } else {
+                throw new Error(result.message || 'Approval failed');
+            }
+        } catch (error) {
+            console.error('Error approving tester:', error);
+            alert(`Error: ${error.message}`);
+            btn.disabled = false;
+            btn.textContent = 'Approve';
+        }
+    }
+
+    truncate(str, length) {
+        if (!str) return '';
+        return str.length > length ? str.substring(0, length) + '...' : str;
     }
 
     /**
