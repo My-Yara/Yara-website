@@ -71,7 +71,7 @@ class YaraSurveyApp {
 
         try {
             // Call authentication function
-            const response = await fetch('/.netlify/functions/authenticate', {
+            const response = await fetch('https://yara-survey-api.netlify.app/.netlify/functions/authenticate', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -145,7 +145,7 @@ class YaraSurveyApp {
         const container = document.getElementById('waitlist-container');
         
         try {
-            const response = await fetch('/.netlify/functions/list-waitlist', {
+            const response = await fetch('https://yara-survey-api.netlify.app/.netlify/functions/list-waitlist', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -245,7 +245,7 @@ class YaraSurveyApp {
         btn.textContent = 'Approving...';
 
         try {
-            const response = await fetch('/.netlify/functions/approve-tester', {
+            const response = await fetch('https://yara-survey-api.netlify.app/.netlify/functions/approve-tester', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -1048,7 +1048,7 @@ class YaraSurveyApp {
 
         try {
             // Submit to Netlify function
-            const response = await fetch('/.netlify/functions/submit-response', {
+            const response = await fetch('https://yara-survey-api.netlify.app/.netlify/functions/submit-response', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

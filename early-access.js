@@ -128,7 +128,7 @@ class EarlyAccessApp {
                 </div>
             `;
 
-            const response = await fetch('/.netlify/functions/submit-early-access', {
+            const response = await fetch('https://yara-survey-api.netlify.app/.netlify/functions/submit-early-access', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
