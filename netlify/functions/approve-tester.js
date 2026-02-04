@@ -16,9 +16,8 @@ const IV_LENGTH = 16;
 // App Store Connect Config
 const ASC_ISSUER_ID = process.env.ASC_ISSUER_ID;
 const ASC_KEY_ID = process.env.ASC_KEY_ID;
-const ASC_PRIVATE_KEY = process.env.ASC_PRIVATE_KEY?.replace(/
-/g, '
-');
+// Use split/join to avoid regex syntax issues during deployment
+const ASC_PRIVATE_KEY = process.env.ASC_PRIVATE_KEY ? process.env.ASC_PRIVATE_KEY.split('\\n').join('\n') : null;
 const ASC_BETA_GROUP_ID = process.env.ASC_BETA_GROUP_ID;
 
 // CORS headers
@@ -77,7 +76,7 @@ exports.handler = async (event, context) => {
                     type: 'betaTesters',
                     attributes: {
                         email: userEmail,
-                        firstName: 'Yara', // Default names if not provided
+                        firstName: 'Yara',
                         lastName: 'Beta'
                     },
                     relationships: {
@@ -95,7 +94,7 @@ exports.handler = async (event, context) => {
         const ascResult = await ascResponse.json();
 
         if (!ascResponse.ok) {
-            // If already exists (409), that's fine, we still want to mark as approved in our DB
+            // 409 Conflict means tester already exists
             if (ascResponse.status !== 409) {
                 console.error('App Store Connect API Error:', ascResult);
                 return {
@@ -107,8 +106,6 @@ exports.handler = async (event, context) => {
         }
 
         // 3. Update status in GitHub
-        // Fetch current content to ensure we have the latest data
-        const getFileUrl = `https://api.appstoreconnect.apple.com/v1/betaTesters`; // Placeholder, we actually use filename from request
         const githubUrl = `https://api.github.com/repos/${GITHUB_ORG}/${DATA_REPO}/contents/${filename}`;
         
         const githubGetResponse = await fetch(githubUrl, {
