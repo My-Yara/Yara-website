@@ -56,9 +56,14 @@ exports.handler = async (event, context) => {
         };
     }
 
-    // 1. Get client IP address from Netlify headers
+    // 1. Get client IP and location from Netlify headers
     const clientIp = event.headers['x-nf-client-connection-ip'] || event.headers['client-ip'] || 'unknown';
+    const city = event.headers['x-bb-city'] || 'Unknown City';
+    const region = event.headers['x-bb-region'] || 'Unknown Region';
+    const country = event.headers['x-bb-country'] || 'Unknown Country';
+    
     data.ipAddress = clientIp;
+    data.location = `${city}, ${region}, ${country}`;
 
     // 2. Encrypt the response data before saving
     const plaintext = JSON.stringify(data);

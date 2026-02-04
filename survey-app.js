@@ -203,7 +203,9 @@ class YaraSurveyApp {
                 <tr style="border-bottom: 1px solid #edf2f7;">
                     <td style="padding: 12px;">
                         <div style="font-weight: 600; color: var(--text-main);">${entry.email}</div>
-                        <div style="font-size: 0.75rem; color: #a0aec0;">${date} • IP: ${entry.ipAddress || 'Unknown'}</div>
+                        <div style="font-size: 0.75rem; color: #a0aec0;">${date}</div>
+                        <div style="font-size: 0.75rem; color: #a0aec0;">IP: ${entry.ipAddress || 'Unknown'}</div>
+                        <div style="font-size: 0.75rem; color: #718096; font-style: italic;">${entry.location || 'Location pending...'}</div>
                     </td>
                     <td style="padding: 12px;">
                         <div style="max-width: 300px; font-size: 0.8rem; color: #4a5568;">
