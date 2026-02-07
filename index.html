@@ -740,6 +740,11 @@
         }
         .feature-card p { font-size: clamp(15px, 1.8vw, 18px); }
 
+        /* Mobile phone - hidden on desktop, shown on mobile */
+        .mobile-phone {
+            display: none;
+        }
+
         /* Final Section */
         .final-section {
             min-height: 60vh;
@@ -846,19 +851,128 @@
             .nav { padding: 0 20px; }
         }
 
-        /* Mobile (<768px) - Simplified */
+        /* Mobile (<768px) - Full-bleed colored sections with inline screenshots */
         @media (max-width: 767px) {
-            .iphone-wrapper {
-                width: 260px;
-                height: 564px;
-            }
             .phone-column {
                 display: none;
             }
+            .nav {
+                height: 56px;
+            }
+            .page-wrapper {
+                padding-top: 56px;
+                padding-bottom: 60px;
+                flex-direction: column;
+            }
+            .content-column {
+                padding: 0;
+            }
+
+            /* Each section becomes a full-bleed colored block */
+            .content-section {
+                min-height: auto;
+                padding: 60px 24px;
+                max-width: 100%;
+                text-align: center;
+            }
+
+            /* Feature cards become transparent — section IS the card */
+            .content-section .feature-card {
+                background: transparent !important;
+                box-shadow: none;
+                border-radius: 0;
+                padding: 0;
+                margin-bottom: 0;
+            }
+
+            /* Full-bleed colored backgrounds per section */
+            #sec-hero {
+                padding: 80px 24px 60px;
+            }
+            #sec-problem {
+                background: linear-gradient(135deg, #F5F5F7 0%, #E8E8ED 100%);
+            }
+            #sec-f1 {
+                background: linear-gradient(135deg, #E8F4FD 0%, #D0EBFF 100%);
+            }
+            #sec-f2 {
+                background: linear-gradient(135deg, #E6F7EE 0%, #C6F0D4 100%);
+            }
+            #sec-f3 {
+                background: linear-gradient(135deg, #F3E8FD 0%, #E4D1FC 100%);
+            }
+            #sec-privacy {
+                background: linear-gradient(135deg, #1D1D1F 0%, #2C2C2E 100%);
+            }
+            #sec-privacy .feature-card h2,
+            #sec-privacy .feature-card p {
+                color: #FFFFFF;
+            }
+            #sec-privacy .feature-card p {
+                opacity: 0.8;
+            }
+
+            /* Mobile phone — exact desktop frame, scaled down via transform */
+            .mobile-phone {
+                display: block;
+                width: 190px;
+                height: 412px;
+                margin: 28px auto 0;
+            }
+            .mobile-phone .iphone-wrapper {
+                width: 340px !important;
+                height: 738px !important;
+                transform: scale(0.559);
+                transform-origin: top left;
+            }
+            /* Fix text-align inheritance from centered mobile sections */
+            .mobile-phone .iphone-screen {
+                text-align: left;
+            }
+            /* Remove visual line between suggestions and input bar */
+            .mobile-phone .chat-suggestions {
+                background: #fff;
+                overflow-x: hidden;
+            }
+
+            /* What's Next section */
+            #sec-future {
+                padding: 60px 24px;
+                text-align: center;
+            }
+            #sec-future > h2,
+            #sec-future > p {
+                padding: 0;
+            }
+            .future-cards {
+                flex-direction: column;
+                gap: 16px;
+                margin-top: 24px;
+            }
+            .future-cards .feature-card {
+                background: linear-gradient(135deg, #FFF3E0 0%, #FFE0B2 100%) !important;
+                box-shadow: 0 4px 24px rgba(0,0,0,0.06) !important;
+                border-radius: 20px !important;
+                padding: 28px 24px !important;
+                margin-bottom: 0;
+                text-align: center;
+            }
+            .future-cards .feature-card.teal {
+                background: linear-gradient(135deg, #E0F7FA 0%, #B2EBF2 100%) !important;
+            }
+
+            /* Final section */
+            .final-section {
+                min-height: auto;
+                padding: 60px 24px 120px;
+                text-align: center;
+            }
+
+            /* CTA pill — full width on mobile */
             .fixed-cta {
-                left: 20px; right: 20px;
+                left: 16px; right: 16px;
                 transform: none;
-                bottom: 16px;
+                bottom: 12px;
             }
             .cta-container {
                 flex-direction: column;
@@ -871,24 +985,16 @@
                 padding: 10px;
             }
             .cta-container button { width: 100%; }
-            .future-cards { flex-direction: column; }
-            .future-cards .feature-card { margin-bottom: 20px; }
-            .content-section {
-                padding: 40px 0;
-            }
-            .nav {
-                height: 56px;
-            }
-            .page-wrapper {
-                padding-top: 56px;
-            }
-        }
 
-        /* Small Mobile (<480px) */
-        @media (max-width: 479px) {
-            .iphone-wrapper {
-                width: 240px;
-                height: 520px;
+            /* Fade-in animation for mobile sections — applied via JS only */
+            .mobile-animate {
+                opacity: 0;
+                transform: translateY(30px);
+                transition: opacity 0.6s ease, transform 0.6s ease;
+            }
+            .mobile-animate.mobile-visible {
+                opacity: 1;
+                transform: translateY(0);
             }
         }
     </style>
@@ -916,6 +1022,41 @@
                 <div class="feature-card gray">
                     <h2>Level the playing field.</h2>
                     <p>Enterprises have AI. Now you do too.</p>
+                    <div class="mobile-phone">
+                        <div class="iphone-wrapper">
+                            <div class="iphone-frame">
+                                <div class="iphone-screen">
+                                    <div class="status-bar"><span class="time">9:41</span></div>
+                                    <div class="dynamic-island"></div>
+                                    <div class="screen-content leveling-screen active">
+                                        <div class="chat-header">
+                                            <div class="chat-header-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="16" y2="12"/><line x1="4" y1="17" x2="12" y2="17"/></svg></div>
+                                            <img src="yara_butterfly.png" alt="Yara">
+                                            <div class="chat-header-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg></div>
+                                        </div>
+                                        <div class="leveling-content">
+                                            <div class="leveling-greeting"><h2>Hi, I'm Yara</h2><p>Your trusted AI Advocate</p></div>
+                                            <div class="leveling-help-title">I can help you:</div>
+                                            <div class="leveling-item"><div class="leveling-check"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div><span>Track your household spend and help you optimize your expenses</span></div>
+                                            <div class="leveling-item"><div class="leveling-check"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div><span>Manage service issues related to third parties you deal with</span></div>
+                                            <div class="leveling-item"><div class="leveling-check"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div><span>Assist you to negotiate with third parties</span></div>
+                                            <div class="leveling-item"><div class="leveling-check"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div><span>And lots of other tasks as well!</span></div>
+                                            <div class="leveling-cta"><span class="leveling-cta-icon">&#10022;</span><span>Try one of my suggestions below to get started</span></div>
+                                        </div>
+                                        <div class="chat-suggestions">
+                                            <div class="chat-suggestion"><span class="chat-suggestion-icon"><span style="color:white;font-weight:700;font-size:12px;">?</span></span> What do you do?</div>
+                                            <div class="chat-suggestion"><span class="chat-suggestion-icon"><svg viewBox="0 0 24 24" fill="white"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm-1 2l5 5h-5V4zm-3 12v-2h4v2h-4zm4-4H8v-2h6v2z"/></svg></span> Review My Bill</div>
+                                            <div class="chat-suggestion"><span class="chat-suggestion-icon"><svg viewBox="0 0 24 24" fill="white"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg></span> Optimize</div>
+                                        </div>
+                                        <div class="chat-input-bar"><div class="plus">+</div><div class="chat-input">Ask Yara...</div><div class="mic-btn"><svg viewBox="0 0 24 24" fill="white"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/><path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg></div><div class="waveform-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 6v12M8 8v8M4 10v4M16 8v8M20 10v4"/></svg></div></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="iphone-btn-vol-up"></div>
+                            <div class="iphone-btn-vol-down"></div>
+                            <div class="iphone-btn-power"></div>
+                        </div>
+                    </div>
                 </div>
             </section>
 
@@ -924,6 +1065,36 @@
                 <div class="feature-card blue">
                     <h2>Financial Intelligence.</h2>
                     <p>Connect securely via Plaid. Ask anything about your spending. Get instant, accurate answers.</p>
+                    <div class="mobile-phone">
+                        <div class="iphone-wrapper">
+                            <div class="iphone-frame">
+                                <div class="iphone-screen">
+                                    <div class="status-bar"><span class="time">9:41</span></div>
+                                    <div class="dynamic-island"></div>
+                                    <div class="screen-content chat-screen active">
+                                        <div class="chat-header">
+                                            <div class="chat-header-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="16" y2="12"/><line x1="4" y1="17" x2="12" y2="17"/></svg></div>
+                                            <img src="yara_butterfly.png" alt="Yara">
+                                            <div class="chat-header-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg></div>
+                                        </div>
+                                        <div class="chat-messages">
+                                            <div class="chat-bubble user" style="opacity:1;transform:none;">Can you show me my uber transactions?</div>
+                                            <div class="chat-bubble yara" style="opacity:1;transform:none;">I found 2 Uber transactions:<br>- January 26, 2026: $42.50 at Uber (Travel)<br>- January 14, 2026: $72.00 at Uber Eats (Food and Drink)<div class="chat-actions"><span>👍</span><span>👎</span><span>📋</span></div></div>
+                                        </div>
+                                        <div class="chat-suggestions">
+                                            <div class="chat-suggestion"><span class="chat-suggestion-icon"><span style="color:white;font-weight:700;font-size:12px;">?</span></span> What do you do?</div>
+                                            <div class="chat-suggestion"><span class="chat-suggestion-icon"><svg viewBox="0 0 24 24" fill="white"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm-1 2l5 5h-5V4zm-3 12v-2h4v2h-4zm4-4H8v-2h6v2z"/></svg></span> Review My Bill</div>
+                                            <div class="chat-suggestion"><span class="chat-suggestion-icon"><svg viewBox="0 0 24 24" fill="white"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg></span> Optimize</div>
+                                        </div>
+                                        <div class="chat-input-bar"><div class="plus">+</div><div class="chat-input">Ask Yara...</div><div class="mic-btn"><svg viewBox="0 0 24 24" fill="white"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/><path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg></div><div class="waveform-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 6v12M8 8v8M4 10v4M16 8v8M20 10v4"/></svg></div></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="iphone-btn-vol-up"></div>
+                            <div class="iphone-btn-vol-down"></div>
+                            <div class="iphone-btn-power"></div>
+                        </div>
+                    </div>
                 </div>
             </section>
 
@@ -932,6 +1103,34 @@
                 <div class="feature-card green">
                     <h2>Verified Savings.</h2>
                     <p>Our models verify every recommendation for mathematical accuracy. No hallucinations. Just savings.</p>
+                    <div class="mobile-phone">
+                        <div class="iphone-wrapper">
+                            <div class="iphone-frame">
+                                <div class="iphone-screen">
+                                    <div class="status-bar"><span class="time">9:41</span></div>
+                                    <div class="dynamic-island"></div>
+                                    <div class="screen-content savings-screen active">
+                                        <div class="savings-header">
+                                            <div class="chat-header-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="16" y2="12"/><line x1="4" y1="17" x2="12" y2="17"/></svg></div>
+                                            <img src="yara_butterfly.png" alt="Yara">
+                                            <div class="chat-header-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg></div>
+                                        </div>
+                                        <div class="savings-title">✨ Your Personalized Recommendations</div>
+                                        <div class="savings-subtitle">We found 3 plans that match your preferences</div>
+                                        <div class="savings-list">
+                                            <div class="savings-card" style="opacity:1;transform:none;"><div class="savings-card-header"><div><div class="savings-card-provider">T-Mobile USA</div><div class="savings-card-plan">Magenta MAX</div></div><div class="savings-card-match">⭐ 81%</div></div><div class="savings-card-price">$70/mo</div><div class="savings-card-actions"><div class="savings-btn outline">More Info</div><div class="savings-btn filled">View Plan</div></div></div>
+                                            <div class="savings-card" style="opacity:1;transform:none;"><div class="savings-card-header"><div><div class="savings-card-provider">AT&T Mobility</div><div class="savings-card-plan">Unlimited Starter</div></div><div class="savings-card-match">⭐ 44%</div></div><div class="savings-card-price">$61/mo</div><div class="savings-card-actions"><div class="savings-btn outline">More Info</div><div class="savings-btn filled">View Plan</div></div></div>
+                                            <div class="savings-card" style="opacity:1;transform:none;"><div class="savings-card-header"><div><div class="savings-card-provider">AT&T Mobility</div><div class="savings-card-plan">Unlimited Extra</div></div><div class="savings-card-match">⭐ 40%</div></div><div class="savings-card-price">$66/mo</div><div class="savings-card-actions"><div class="savings-btn outline">More Info</div><div class="savings-btn filled">View Plan</div></div></div>
+                                        </div>
+                                        <div class="chat-input-bar"><div class="plus">+</div><div class="chat-input">Ask Yara...</div><div class="mic-btn"><svg viewBox="0 0 24 24" fill="white"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/><path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg></div></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="iphone-btn-vol-up"></div>
+                            <div class="iphone-btn-vol-down"></div>
+                            <div class="iphone-btn-power"></div>
+                        </div>
+                    </div>
                 </div>
             </section>
 
@@ -940,6 +1139,39 @@
                 <div class="feature-card purple">
                     <h2>Silent Assistant.</h2>
                     <p>On calls, Yara provides the data you need from your records. Real-time advocacy when it matters most.</p>
+                    <div class="mobile-phone">
+                        <div class="iphone-wrapper">
+                            <div class="iphone-frame">
+                                <div class="iphone-screen">
+                                    <div class="status-bar"><span class="time">9:41</span></div>
+                                    <div class="dynamic-island"></div>
+                                    <div class="screen-content call-screen active">
+                                        <div class="call-header">
+                                            <div class="chat-header-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="16" y2="12"/><line x1="4" y1="17" x2="12" y2="17"/></svg></div>
+                                            <span class="call-status">Speaking...</span>
+                                            <div class="chat-header-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg></div>
+                                        </div>
+                                        <div class="call-banner" style="opacity:1;transform:none;">
+                                            <div class="call-banner-phone"><svg viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg></div>
+                                            <span class="call-banner-num">+18003310500</span>
+                                            <span class="call-banner-time">27:40</span>
+                                            <span class="call-banner-badge">Msgs private</span>
+                                        </div>
+                                        <div class="chat-messages call-messages">
+                                            <div class="chat-bubble user" style="opacity:1;transform:none;">Call ATT</div>
+                                            <div class="chat-bubble yara" style="opacity:1;transform:none;">I'm setting up the call with AT&T now.<div class="chat-actions"><span>👍</span><span>👎</span><span>📋</span></div></div>
+                                            <div class="chat-bubble user" style="opacity:1;transform:none;">What is the promotional credit I get for ATT</div>
+                                            <div class="chat-bubble yara" style="opacity:1;transform:none;">You receive a promotional credit of $2.78, which is applied to your Apple Watch equipment financing.<div class="chat-actions"><span>👍</span><span>👎</span><span>📋</span></div></div>
+                                        </div>
+                                        <div class="call-input-bar"><div class="plus">+</div><div class="call-input">Ask Yara pri...</div><div class="call-btns"><div class="call-btn mic"><svg viewBox="0 0 24 24" fill="white"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/><path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg></div><div class="call-btn speaker"><svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg></div><div class="call-btn keypad"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="4" height="4" rx="1"/><rect x="10" y="4" width="4" height="4" rx="1"/><rect x="16" y="4" width="4" height="4" rx="1"/><rect x="4" y="10" width="4" height="4" rx="1"/><rect x="10" y="10" width="4" height="4" rx="1"/><rect x="16" y="10" width="4" height="4" rx="1"/><rect x="4" y="16" width="4" height="4" rx="1"/><rect x="10" y="16" width="4" height="4" rx="1"/><rect x="16" y="16" width="4" height="4" rx="1"/></svg></div><div class="call-btn end"><svg viewBox="0 0 24 24"><path d="M12 9c-1.6 0-3.15.25-4.6.72v3.1c0 .39-.23.74-.56.9-.98.49-1.87 1.12-2.66 1.85-.18.18-.43.28-.7.28-.28 0-.53-.11-.71-.29L.29 13.08c-.18-.17-.29-.42-.29-.7 0-.28.11-.53.29-.71C3.34 8.78 7.46 7 12 7s8.66 1.78 11.71 4.67c.18.18.29.43.29.71 0 .28-.11.53-.29.71l-2.48 2.48c-.18.18-.43.29-.71.29-.27 0-.52-.11-.7-.28-.79-.74-1.68-1.36-2.66-1.85-.33-.16-.56-.5-.56-.9v-3.1C15.15 9.25 13.6 9 12 9z"/></svg></div></div></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="iphone-btn-vol-up"></div>
+                            <div class="iphone-btn-vol-down"></div>
+                            <div class="iphone-btn-power"></div>
+                        </div>
+                    </div>
                 </div>
             </section>
 
@@ -1333,7 +1565,7 @@
             }
 
             function resetCards() {
-                gsap.set('.savings-card', { opacity: 0, x: -20 });
+                gsap.set('.phone-column .savings-card', { opacity: 0, x: -20 });
             }
 
             // Level Playing Field - show leveling screen
@@ -1462,22 +1694,39 @@
             });
             fadeOutTl.to(iphone, { opacity: 0, scale: 0.9, duration: 1 });
 
-            // Feature cards entrance
-            gsap.utils.toArray('.feature-card').forEach(card => {
-                gsap.fromTo(card,
-                    { opacity: 0, y: 40 },
-                    {
-                        opacity: 1, y: 0,
-                        scrollTrigger: {
-                            trigger: card,
-                            start: 'top 80%',
-                            end: 'top 50%',
-                            scrub: true
+            // Feature cards entrance (desktop only — mobile uses IntersectionObserver on sections)
+            if (window.innerWidth >= 768) {
+                gsap.utils.toArray('.feature-card').forEach(card => {
+                    gsap.fromTo(card,
+                        { opacity: 0, y: 40 },
+                        {
+                            opacity: 1, y: 0,
+                            scrollTrigger: {
+                                trigger: card,
+                                start: 'top 80%',
+                                end: 'top 50%',
+                                scrub: true
+                            }
                         }
-                    }
-                );
-            });
+                    );
+                });
+            }
         });
+
+        // Mobile: fade-in sections on scroll (IntersectionObserver, no GSAP needed)
+        // Content is visible by default; animation is progressive enhancement
+        if (window.matchMedia('(max-width: 767px)').matches) {
+            const mobileSections = document.querySelectorAll('.content-section, .final-section');
+            mobileSections.forEach(section => section.classList.add('mobile-animate'));
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('mobile-visible');
+                    }
+                });
+            }, { threshold: 0.1 });
+            mobileSections.forEach(section => observer.observe(section));
+        }
     </script>
 </body>
 </html>
