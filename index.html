@@ -4,922 +4,1481 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Yara - Your Personal AI Advocate</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">
     <style>
-        /* --- CSS VARIABLES & RESET --- */
         :root {
-            --primary-accent: #6A0DAD;
-            --primary-hover: #580B91;
-            --secondary-purple: #9235D5;
+            --font-display: 'Plus Jakarta Sans', -apple-system, sans-serif;
+            --font-body: 'Inter', -apple-system, sans-serif;
+            --bg-color: #FFFFFF;
+            --text-primary: #1D1D1F;
+            --text-secondary: #6E6E73;
             --cta-blue: #007AFF;
-            --bg-gradient: linear-gradient(135deg, #e0ebff 0%, #e8def7 100%);
-            --text-main: #1a202c;
-            --text-muted: #4a5568;
-            --card-bg: rgba(255, 255, 255, 0.75);
-            --glass-border: rgba(255, 255, 255, 0.9);
-            --shadow-soft: 0 2px 8px rgba(0, 0, 0, 0.08);
-            --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.08);
-            --spring-ease: cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            --cta-blue-hover: #0062CC;
+            --yara-purple: #6A0DAD;
+            --success-green: #34C759;
+            --user-bubble-start: #0085FF;
+            --user-bubble-end: #0061E6;
+            --yara-bubble: #F0F0F5;
         }
-
         * { box-sizing: border-box; margin: 0; padding: 0; }
-
+        html { scroll-behavior: smooth; }
         body {
-            font-family: var(--font-family);
-            background: var(--bg-gradient);
-            min-height: 100vh;
-            color: var(--text-main);
+            font-family: var(--font-body);
+            background: var(--bg-color);
+            color: var(--text-primary);
             overflow-x: hidden;
-            position: relative;
+            -webkit-font-smoothing: antialiased;
         }
+        h1, h2 { font-family: var(--font-display); letter-spacing: -0.02em; line-height: 1.1; }
+        h1 { font-size: clamp(40px, 6vw, 72px); font-weight: 800; }
+        h2 { font-size: clamp(32px, 5vw, 56px); font-weight: 700; }
+        p { font-size: clamp(16px, 2vw, 20px); line-height: 1.6; color: var(--text-secondary); }
 
-        /* --- NAVIGATION --- */
-        nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px 60px;
-            max-width: 1400px;
-            margin: 0 auto;
-            position: relative;
-            z-index: 10;
+        /* Navigation */
+        .nav {
+            position: fixed; top: 0; left: 0; right: 0; height: 64px;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 0 40px; background: rgba(255,255,255,0.85);
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(0,0,0,0.05); z-index: 1000;
         }
-
-        .logo {
-            font-size: 1.8rem;
-            font-weight: 800;
-            color: var(--text-main);
-            letter-spacing: -0.5px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            height: 50px; /* Fixed height for alignment */
-        }
-
-        /* --- IMAGE STYLING --- */
-        .brand-img {
-            height: 100%;
-            width: auto;
-            object-fit: contain;
-            display: block;
-        }
-
+        .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+        .nav-logo img { height: 32px; }
+        .nav-logo span { font-family: var(--font-display); font-size: 20px; font-weight: 700; color: var(--text-primary); }
         .nav-btn {
-            padding: 10px 24px;
-            border-radius: 28px;
-            border: 2px solid var(--primary-accent);
-            color: var(--primary-accent);
-            background: transparent;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s var(--spring-ease);
+            padding: 8px 20px; border-radius: 20px; border: 1.5px solid var(--yara-purple);
+            color: var(--yara-purple); background: transparent; font-size: 15px; font-weight: 600;
+            cursor: pointer; transition: all 0.3s;
         }
+        .nav-btn:hover { background: var(--yara-purple); color: white; }
 
-        .nav-btn:hover {
-            background: var(--primary-accent);
-            color: white;
+        /* Fixed Bottom CTA - Apple-style floating pill */
+        .fixed-cta {
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+            z-index: 2000; padding: 0;
         }
+        .cta-container {
+            max-width: 440px; margin: 0 auto;
+            display: flex; gap: 8px; align-items: center;
+            background: rgba(255,255,255,0.95); backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 30px; padding: 6px 6px 6px 20px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.12), 0 0 0 1px rgba(0,0,0,0.06);
+        }
+        .cta-container input {
+            flex: 1; border: none; background: transparent; font-size: 16px;
+            font-family: var(--font-body); outline: none; min-width: 0;
+        }
+        .cta-container button {
+            padding: 14px 28px; background: var(--cta-blue); color: white;
+            border: none; border-radius: 25px; font-size: 16px; font-weight: 600;
+            cursor: pointer; white-space: nowrap; transition: background 0.3s;
+        }
+        .cta-container button:hover { background: var(--cta-blue-hover); }
 
-        /* --- MAIN HERO SECTION (Desktop) --- */
-        .hero-container {
+        /* Split Layout */
+        .page-wrapper {
             display: flex;
-            flex-direction: row;
+            min-height: 100vh;
+            padding-top: 64px;
+            padding-bottom: 80px;
+        }
+
+        /* Left Column - Scrolling Content */
+        .content-column {
+            flex: 1;
+            padding: 0 5%;
+        }
+
+        /* Right Column - Sticky Phone */
+        .phone-column {
+            width: 45%;
+            position: sticky;
+            top: 64px;
+            height: calc(100vh - 64px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            perspective: 1500px;
+            padding: 20px;
+            overflow: visible;
+        }
+
+        /* Content Sections */
+        .content-section {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 80px 0;
+            max-width: 560px;
+        }
+        .content-section h1, .content-section h2 { margin-bottom: 20px; }
+        .content-section p { margin-bottom: 24px; }
+
+        /* iPhone Frame - Realistic iPhone 15 Pro */
+        .iphone-wrapper {
+            width: 340px;
+            height: 738px;
+            position: relative;
+            transform-style: preserve-3d;
+            flex-shrink: 0;
+        }
+        .iphone-frame {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(145deg, #3A3A3C, #1D1D1F, #2C2C2E);
+            border-radius: 50px;
+            padding: 4px;
+            box-shadow:
+                inset 0 0 0 1px rgba(255,255,255,0.15),
+                0 25px 50px -12px rgba(0,0,0,0.35);
+            backface-visibility: hidden;
+        }
+        .iphone-screen {
+            width: 100%;
+            height: 100%;
+            background: #fff;
+            border-radius: 46px;
+            overflow: hidden;
+            position: relative;
+            backface-visibility: hidden;
+        }
+        /* Physical Side Buttons */
+        .iphone-btn-vol-up, .iphone-btn-vol-down, .iphone-btn-power {
+            position: absolute;
+            background: linear-gradient(145deg, #3A3A3C, #2C2C2E);
+            z-index: 5;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.3);
+        }
+        .iphone-btn-vol-up {
+            width: 4px; height: 32px;
+            left: -3px; top: 120px;
+            border-radius: 2px 0 0 2px;
+        }
+        .iphone-btn-vol-down {
+            width: 4px; height: 32px;
+            left: -3px; top: 162px;
+            border-radius: 2px 0 0 2px;
+        }
+        .iphone-btn-power {
+            width: 4px; height: 50px;
+            right: -3px; top: 140px;
+            border-radius: 0 2px 2px 0;
+        }
+        /* Dynamic Island - Pill shape at top */
+        .dynamic-island {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 28px;
+            background: #000;
+            border-radius: 16px;
+            z-index: 100;
+        }
+        /* iOS Status Bar */
+        .status-bar {
+            position: absolute;
+            top: 16px;
+            left: 0;
+            right: 0;
+            height: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 28px;
+            font-size: 13px;
+            font-weight: 600;
+            z-index: 50;
+        }
+        .status-bar .time { color: #000; font-weight: 600; }
+        .iphone-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(145deg, #2C2C2E, #1D1D1F);
+            border-radius: 50px;
+            transform: rotateY(180deg);
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            box-shadow: inset 0 0 60px rgba(255,255,255,0.05);
+            padding: 30px;
+        }
+        .iphone-back .shield-icon {
+            width: 70px;
+            height: 70px;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #007AFF, #5856D6);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .iphone-back .shield-icon svg { width: 40px; height: 40px; fill: white; }
+        .iphone-back h3 { color: white; font-size: 24px; font-weight: 700; margin-bottom: 12px; font-family: var(--font-display); }
+        .iphone-back p { color: rgba(255,255,255,0.6); font-size: 14px; line-height: 1.5; }
+
+        /* Screen Content */
+        .screen-content {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            display: flex;
+            flex-direction: column;
+        }
+        .screen-content.active { opacity: 1; }
+
+        /* Welcome Screen - Spacious like iOS */
+        .welcome-screen {
+            padding: 58px 24px 24px;
+            background: #fff;
+        }
+        .welcome-progress {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+        .welcome-progress span {
+            flex: 1;
+            height: 3px;
+            background: #E5E5E5;
+            border-radius: 2px;
+        }
+        .welcome-progress span.active { background: #1D1D1F; }
+        .welcome-content {
+            text-align: center;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 30px 0;
+        }
+        .welcome-content img {
+            width: 60px;
+            height: 60px;
+            margin-bottom: 24px;
+        }
+        .welcome-content h2 {
+            font-size: 26px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: var(--text-primary);
+        }
+        .welcome-content .tagline {
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+        }
+        .welcome-content .sub {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+        .sso-section {
+            margin-top: auto;
+            width: 100%;
+            background: #F5F5F7;
+            border-radius: 16px;
+            padding: 6px;
+        }
+        .sso-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding: 14px 18px;
+            background: #fff;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .sso-btn:last-child { margin-bottom: 0; }
+        .sso-btn:hover { background: #FAFAFA; }
+        .sso-btn svg { width: 22px; height: 22px; }
+        .sso-footer {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 11px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+        .sso-footer a { color: var(--text-secondary); text-decoration: underline; }
+
+        /* Chat Screen - Spacious like iOS */
+        .chat-screen { background: #fff; }
+        .chat-header {
+            display: flex;
             align-items: center;
             justify-content: space-between;
-            min-height: calc(100vh - 100px);
-            padding: 40px 60px;
-            max-width: 1400px;
-            margin: 0 auto;
+            padding: 55px 20px 16px;
         }
-
-        .hero-content {
-            width: 45%;
-            padding-right: 50px;
-            animation: slideInLeft 1s ease;
-            z-index: 2;
-        }
-
-        .hero-visual {
-            width: 55%;
+        .chat-header img { width: 30px; height: 30px; }
+        .chat-header-icon {
+            width: 28px;
+            height: 28px;
             display: flex;
-            justify-content: center;
             align-items: center;
-            position: relative;
-            padding: 20px;
+            justify-content: center;
+            color: #1D1D1F;
         }
-
-        h1 {
-            font-size: 3.8rem;
-            font-weight: 900;
-            line-height: 1.1;
-            margin-bottom: 25px;
-            color: var(--text-main);
-        }
-
-        .hero-tagline {
-            font-size: 1.5rem;
-            color: var(--text-muted);
-            margin-bottom: 40px;
-            font-weight: 500;
-            max-width: 90%;
-        }
-
-        /* --- NEWSLETTER FORM --- */
-        .newsletter-form {
-            display: flex;
-            gap: 15px;
-            max-width: 480px;
-            background: var(--card-bg);
-            padding: 8px;
-            border: 1px solid var(--glass-border);
-            border-radius: 50px;
-            box-shadow: var(--shadow-soft);
-        }
-
-        .newsletter-form input {
+        .chat-messages {
             flex: 1;
-            border: none;
-            padding: 15px 25px;
+            padding: 16px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            overflow: hidden;
+        }
+        /* User bubble - light blue pill like iOS */
+        .chat-bubble {
+            max-width: 90%;
+            font-size: 14px;
+            line-height: 1.45;
+            opacity: 0;
+            transform: scale(0.9) translateY(10px);
+        }
+        .chat-bubble.visible {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .chat-bubble.user {
+            align-self: flex-end;
+            background: #E3F2FD;
+            color: var(--text-primary);
+            padding: 10px 16px;
+            border-radius: 18px;
+            border: 1px solid #BBDEFB;
+        }
+        /* Yara response - plain text like iOS, no bubble */
+        .chat-bubble.yara {
+            align-self: flex-start;
             background: transparent;
-            outline: none;
-            font-size: 1rem;
-            color: var(--text-main);
+            color: var(--text-primary);
+            padding: 0;
+        }
+        .chat-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 8px;
+        }
+        .chat-actions span {
+            font-size: 14px;
+            color: #C7C7CC;
+            cursor: pointer;
+        }
+        .chat-suggestions {
+            display: flex;
+            gap: 10px;
+            padding: 12px 20px;
+            overflow-x: auto;
+        }
+        .chat-suggestion {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            background: #fff;
+            border: 1px solid #E5E5EA;
+            border-radius: 20px;
+            font-size: 12px;
+            color: var(--cta-blue);
+            white-space: nowrap;
+            font-weight: 500;
+        }
+        .chat-input-bar {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 14px 24px;
+            background: #fff;
+        }
+        .chat-input-bar .plus {
+            width: 32px;
+            height: 32px;
+            background: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: #8E8E93;
+            font-weight: 300;
+        }
+        .chat-input {
+            flex: 1;
+            padding: 10px 16px;
+            background: #F5F5F7;
+            border-radius: 24px;
+            font-size: 14px;
+            color: #8E8E93;
+        }
+        .mic-btn {
+            width: 38px;
+            height: 38px;
+            background: var(--cta-blue);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .mic-btn svg { width: 20px; height: 20px; fill: white; }
+        .waveform-btn {
+            width: 38px;
+            height: 38px;
+            background: #F5F5F7;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .waveform-btn svg { width: 22px; height: 22px; fill: var(--cta-blue); }
+
+        /* Quick action button icons */
+        .chat-suggestion-icon {
+            width: 20px; height: 20px;
+            background: var(--cta-blue);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+        }
+        .chat-suggestion-icon svg { width: 11px; height: 11px; }
+
+        /* Leveling Screen - "Hi, I'm Yara" intro */
+        .leveling-screen { background: #fff; }
+        .leveling-content {
+            flex: 1;
+            padding: 12px 20px;
+            display: flex;
+            flex-direction: column;
+        }
+        .leveling-greeting {
+            text-align: center;
+            margin-bottom: 12px;
+        }
+        .leveling-greeting h2 {
+            font-size: 20px; font-weight: 700;
+            margin-bottom: 4px;
+            color: var(--text-primary);
+        }
+        .leveling-greeting p {
+            font-size: 13px; color: var(--text-secondary);
+            line-height: 1.4;
+        }
+        .leveling-help-title {
+            font-size: 13px; font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--text-primary);
+        }
+        .leveling-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 10px;
+            font-size: 12px;
+            line-height: 1.4;
+            color: var(--text-secondary);
+        }
+        .leveling-check {
+            width: 18px; height: 18px;
+            background: var(--cta-blue);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+        .leveling-check svg { width: 10px; height: 10px; fill: white; }
+        .leveling-cta {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 12px;
+            font-size: 12px;
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+        .leveling-cta-icon {
+            color: var(--cta-blue);
+            font-size: 14px;
         }
 
-        .newsletter-form input::placeholder { color: #999; }
-
-        .btn-primary {
+        /* Savings Screen - Spacious like iOS */
+        .savings-screen { background: #fff; }
+        .savings-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 55px 20px 16px;
+        }
+        .savings-header img { width: 30px; height: 30px; }
+        .savings-title {
+            padding: 12px 18px 4px;
+            font-size: 14px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-primary);
+        }
+        .savings-subtitle {
+            padding: 0 18px 10px;
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+        .savings-list {
+            padding: 0 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            flex: 1;
+            overflow: hidden;
+        }
+        .savings-card {
+            background: #fff;
+            border: 1px solid #E5E5EA;
+            border-radius: 14px;
+            padding: 14px;
+            opacity: 0;
+            transform: translateX(-20px);
+        }
+        .savings-card.visible {
+            opacity: 1;
+            transform: translateX(0);
+            transition: all 0.35s ease-out;
+        }
+        .savings-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 4px;
+        }
+        .savings-card-provider {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        .savings-card-plan {
+            font-size: 11px;
+            color: var(--text-secondary);
+            margin-top: 2px;
+        }
+        .savings-card-match {
+            font-size: 11px;
+            color: var(--cta-blue);
+            font-weight: 500;
+        }
+        .savings-card-price {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin: 6px 0 10px;
+        }
+        .savings-card-actions {
+            display: flex;
+            gap: 10px;
+        }
+        .savings-btn {
+            flex: 1;
+            padding: 10px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            text-align: center;
+            cursor: pointer;
+        }
+        .savings-btn.outline {
+            border: 1.5px solid var(--cta-blue);
+            color: var(--cta-blue);
+            background: transparent;
+        }
+        .savings-btn.filled {
             background: var(--cta-blue);
             color: white;
             border: none;
-            padding: 15px 35px;
-            border-radius: 28px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: transform 0.2s var(--spring-ease), background-color 0.2s;
-            white-space: nowrap;
-            box-shadow: 0 4px 15px rgba(0, 122, 255, 0.3);
         }
 
-        .btn-primary:hover {
-            background: #0056b3;
-            transform: translateY(-2px);
+        /* Call Screen - Spacious like iOS */
+        .call-screen { background: #fff; }
+        .call-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 55px 20px 16px;
         }
-
-        .btn-primary:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
+        .call-status {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-primary);
         }
-
-        .btn-secondary {
-            background: transparent;
-            color: var(--primary-accent);
-            border: 2px solid var(--primary-accent);
-            padding: 12px 30px;
-            border-radius: 28px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s var(--spring-ease);
+        .call-banner {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 0 14px 14px;
+            padding: 8px 12px;
+            background: #E8F5E9;
+            border-radius: 12px;
+            opacity: 0;
+            transform: translateY(-10px);
         }
-
-        .btn-secondary:hover {
-            background: var(--primary-accent);
-            color: white;
+        .call-banner.visible {
+            opacity: 1;
+            transform: translateY(0);
+            transition: all 0.4s ease;
         }
-
-        .btn-tertiary {
-            background: transparent;
-            color: var(--text-muted);
-            border: 1px solid #e2e8f0;
-            padding: 12px 30px;
-            border-radius: 28px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s var(--spring-ease);
-        }
-
-        .btn-tertiary:hover {
-            background: #f7fafc;
-            border-color: var(--text-muted);
-        }
-
-        /* --- STATIC HERO VISUAL --- */
-        .imbalance-graphic {
-            width: 100%;
-            max-width: 520px;
-            height: auto;
-        }
-
-        .bg-glow {
-            position: absolute;
-            width: 500px;
-            height: 500px;
-            background: radial-gradient(circle, rgba(224, 235, 255, 0.8) 0%, rgba(232, 222, 247, 0.5) 40%, rgba(255,255,255,0) 70%);
+        .call-banner-phone {
+            width: 20px;
+            height: 20px;
+            background: var(--success-green);
             border-radius: 50%;
-            z-index: -1;
-            animation: pulse 4s infinite alternate ease-in-out;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
+        .call-banner-phone svg { width: 11px; fill: white; }
+        .call-banner-num {
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--success-green);
+        }
+        .call-banner-time {
+            font-size: 12px;
+            color: var(--success-green);
+            font-weight: 500;
+        }
+        .call-banner-badge {
+            font-size: 11px;
+            padding: 4px 10px;
+            background: #F5F5F7;
+            border-radius: 6px;
+            color: #8E8E93;
+            font-weight: 500;
+            margin-left: auto;
+        }
+        .call-messages {
+            flex: 1;
+            padding: 0 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            overflow: hidden;
+        }
+        .call-input-bar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 14px 24px;
+        }
+        .call-input {
+            flex: 1;
+            padding: 10px 16px;
+            background: #F5F5F7;
+            border-radius: 24px;
+            font-size: 13px;
+            color: #8E8E93;
+        }
+        .call-btns {
+            display: flex;
+            gap: 10px;
+        }
+        .call-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .call-btn svg { width: 16px; height: 16px; }
+        .call-btn.mic { background: #FF3B30; }
+        .call-btn.mic svg { fill: white; }
+        .call-btn.speaker { background: var(--success-green); }
+        .call-btn.speaker svg { fill: white; }
+        .call-btn.keypad { background: #F5F5F7; }
+        .call-btn.keypad svg { fill: #1D1D1F; }
+        .call-btn.end { background: #FF3B30; }
+        .call-btn.end svg { fill: white; }
 
-        @keyframes pulse { from { transform: scale(1); opacity: 0.7; } to { transform: scale(1.2); opacity: 1; } }
-        @keyframes slideInLeft { from { opacity: 0; transform: translateX(-30px); } to { opacity: 1; transform: translateX(0); } }
+        /* Feature Cards */
+        .feature-card {
+            padding: 36px;
+            border-radius: 28px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+            margin-bottom: 20px;
+        }
+        .feature-card.blue { background: linear-gradient(135deg, #E8F4FD 0%, #D0EBFF 100%); }
+        .feature-card.green { background: linear-gradient(135deg, #E6F7EE 0%, #C6F0D4 100%); }
+        .feature-card.purple { background: linear-gradient(135deg, #F3E8FD 0%, #E4D1FC 100%); }
+        .feature-card.gray { background: linear-gradient(135deg, #F5F5F7 0%, #E8E8ED 100%); }
+        .feature-card.orange { background: linear-gradient(135deg, #FFF3E0 0%, #FFE0B2 100%); }
+        .feature-card.teal { background: linear-gradient(135deg, #E0F7FA 0%, #B2EBF2 100%); }
+        .feature-card h2 { font-size: clamp(28px, 4vw, 44px); margin-bottom: 16px; }
 
-        /* --- MODAL SYSTEM --- */
+        /* Future section - side by side cards */
+        #sec-future { max-width: 100%; }
+        .future-cards {
+            display: flex;
+            gap: 20px;
+        }
+        .future-cards .feature-card {
+            flex: 1;
+            margin-bottom: 0;
+        }
+        .feature-card p { font-size: clamp(15px, 1.8vw, 18px); }
+
+        /* Final Section */
+        .final-section {
+            min-height: 60vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 80px 0 150px;
+        }
+        .final-section h2 { margin-bottom: 16px; }
+
+        /* Modals */
         .modal-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(224, 235, 255, 0.6);
-            backdrop-filter: blur(12px);
-            z-index: 100;
+            background: rgba(255,255,255,0.9);
+            backdrop-filter: blur(15px);
+            z-index: 3000;
             display: none;
-            justify-content: center;
             align-items: center;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            overflow-y: auto;
+            justify-content: center;
         }
-
-        .modal-overlay.active {
-            display: flex;
-            opacity: 1;
-        }
-
+        .modal-overlay.active { display: flex; }
         .glass-card {
-            background: var(--card-bg);
-            border: 1px solid var(--glass-border);
-            box-shadow: var(--shadow-card);
-            width: 100%;
-            max-width: 500px;
+            background: #fff;
             padding: 40px;
             border-radius: 24px;
-            text-align: center;
+            width: 90%;
+            max-width: 480px;
             position: relative;
-            animation: popUp 0.4s var(--spring-ease);
-            margin: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.12);
         }
-
-        @keyframes popUp { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-
-        .glass-card h2 { margin-bottom: 15px; color: var(--primary-accent); }
-        .glass-card p { color: var(--text-muted); margin-bottom: 25px; line-height: 1.5; }
-
-        .glass-input {
-            width: 100%;
-            padding: 15px;
-            margin-bottom: 15px;
-            border-radius: 12px;
-            border: 1px solid #e2e8f0;
-            background: rgba(255,255,255,0.9);
-            font-size: 1rem;
-            outline: none;
-        }
-
-        .glass-input:focus { border-color: var(--primary-accent); box-shadow: 0 0 0 3px rgba(106, 13, 173, 0.1); }
-
         .close-btn {
             position: absolute;
-            top: 20px; right: 20px;
-            background: none; border: none;
-            font-size: 1.5rem; cursor: pointer; color: #aaa;
-        }
-
-        .error-message {
-            color: #e53e3e;
-            font-size: 0.9rem;
-            margin-top: -10px;
-            margin-bottom: 15px;
-            text-align: left;
-        }
-
-        /* --- SURVEY MODAL STYLES --- */
-        #survey-modal .glass-card {
-            max-width: 700px;
-            text-align: left;
-            max-height: 85vh;
-            overflow-y: auto;
-        }
-
-        .survey-progress-bar {
-            width: 100%;
-            height: 8px;
-            background: #e2e8f0;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .survey-progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--primary-accent), #9b5de5);
-            transition: width 0.5s ease;
-            position: relative;
-        }
-
-        .survey-progress-fill::after {
-            content: '🦋';
-            position: absolute;
-            right: -15px;
-            top: -10px;
-            font-size: 1.5rem;
-        }
-
-        .survey-progress-text {
-            text-align: center;
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            margin-bottom: 20px;
-        }
-
-        .modal-content-inner {
-            /* Container for dynamic content */
-        }
-
-        /* Survey Components */
-        .question-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-
-        .question-number {
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            font-weight: 600;
-        }
-
-        .section-label {
-            background: var(--primary-accent);
-            color: white;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
-        }
-
-        .question-title {
-            font-size: 1.5rem;
-            color: var(--text-main);
-            margin-bottom: 15px;
-        }
-
-        .question-context {
-            background: #f7fafc;
-            padding: 15px;
-            border-radius: 12px;
-            margin-bottom: 20px;
-            line-height: 1.6;
-            color: var(--text-main);
-            font-size: 0.95rem;
-        }
-
-        .question-prompt {
-            font-weight: 600;
-            margin-bottom: 15px;
-            color: var(--text-main);
-        }
-
-        .options-container {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-
-        .option-card {
-            display: flex;
-            align-items: flex-start;
-            padding: 15px;
-            border: 2px solid #e2e8f0;
-            border-radius: 12px;
+            top: 16px; right: 16px;
+            font-size: 24px;
+            background: none;
+            border: none;
+            color: #999;
             cursor: pointer;
-            transition: all 0.2s;
         }
-
-        .option-card:hover {
-            border-color: var(--primary-accent);
-            background: rgba(106, 13, 173, 0.05);
-        }
-
-        .option-card input[type="radio"] {
-            margin-right: 12px;
-            margin-top: 3px;
-        }
-
-        .option-content {
-            display: flex;
-            gap: 10px;
-            flex: 1;
-        }
-
-        .option-label {
-            font-weight: 700;
-            color: var(--primary-accent);
-            min-width: 25px;
-        }
-
-        .option-text {
-            flex: 1;
-            line-height: 1.5;
-        }
-
-        .scenario-container {
-            background: #f7fafc;
-            padding: 20px;
+        .glass-input {
+            width: 100%;
+            padding: 14px 18px;
+            margin-bottom: 14px;
+            border: 1px solid #E5E5E5;
             border-radius: 12px;
-            margin-bottom: 20px;
-        }
-
-        .scenario-title {
-            color: var(--primary-accent);
-            margin-bottom: 10px;
-            font-size: 1.1rem;
-        }
-
-        .scenario-description {
-            margin-bottom: 15px;
-            line-height: 1.6;
-        }
-
-        .scenario-fields {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .form-field {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .field-label {
-            font-weight: 600;
-            color: var(--text-main);
-            font-size: 0.95rem;
-        }
-
-        .form-select, .form-input, .form-textarea {
-            padding: 12px;
-            border: 1px solid #e2e8f0;
-            border-radius: 8px;
-            font-size: 16px; /* Prevent iOS auto-zoom */
+            font-size: 16px;
+            font-family: var(--font-body);
             outline: none;
-            background: white;
-            width: 100%;
-            -webkit-appearance: none; /* Remove iOS default styling */
-            appearance: none;
         }
+        .glass-input:focus { border-color: var(--cta-blue); }
 
-        .form-select:focus, .form-input:focus, .form-textarea:focus {
-            border-color: var(--primary-accent);
-            box-shadow: 0 0 0 3px rgba(106, 13, 173, 0.1);
-        }
+        /* Responsive - Based on plan breakpoints */
 
-        .form-textarea {
-            min-height: 100px;
-            resize: vertical;
-            font-family: inherit;
-            line-height: 1.5;
-        }
-
-        /* iOS-specific: Improve textarea experience on mobile */
-        @media screen and (max-width: 768px) {
-            .form-textarea {
-                min-height: 120px;
-                font-size: 16px; /* Prevent auto-zoom on iOS */
+        /* Desktop Large (≥1440px) - Full experience */
+        @media (min-width: 1440px) {
+            .iphone-wrapper {
+                width: 360px;
+                height: 780px;
             }
-
-            .form-select, .form-input {
-                font-size: 16px; /* Prevent auto-zoom on iOS */
+            .phone-column {
+                width: 45%;
             }
         }
 
-        .follow-up-section {
-            margin-top: 25px;
-            padding-top: 25px;
-            border-top: 2px solid #e2e8f0;
-        }
-
-        .ranking-container, .scale-container {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-
-        .ranking-item, .scale-item {
-            background: #f7fafc;
-            padding: 15px;
-            border-radius: 12px;
-        }
-
-        .ranking-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-
-        .ranking-select {
-            padding: 8px 12px;
-            border: 1px solid #e2e8f0;
-            border-radius: 8px;
-            background: white;
-            font-weight: 600;
-            color: var(--primary-accent);
-        }
-
-        .ranking-text, .scale-text {
-            font-size: 0.95rem;
-            line-height: 1.5;
-            color: var(--text-main);
-        }
-
-        .scale-options {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 10px;
-            margin-top: 15px;
-        }
-
-        .scale-label {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            font-weight: 600;
-        }
-
-        .scale-radio {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            cursor: pointer;
-        }
-
-        .scale-radio input {
-            margin-bottom: 5px;
-        }
-
-        .scale-value {
-            font-size: 0.9rem;
-            font-weight: 600;
-            color: var(--text-main);
-        }
-
-        .radio-option {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 10px;
-            cursor: pointer;
-        }
-
-        .question-navigation {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 15px;
-            margin-top: 30px;
-        }
-
-        /* Survey Info Cards */
-        .survey-info {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
-            margin: 30px 0;
-        }
-
-        .info-item {
-            text-align: center;
-            padding: 20px;
-            background: #f7fafc;
-            border-radius: 12px;
-        }
-
-        .info-item strong {
-            display: block;
-            color: var(--primary-accent);
-            margin-bottom: 8px;
-            font-size: 1.1rem;
-        }
-
-        .info-item p {
-            margin: 0;
-            font-size: 0.9rem;
-        }
-
-        .survey-note {
-            background: #fff3cd;
-            padding: 12px;
-            border-radius: 8px;
-            font-size: 0.9rem;
-            margin-top: 20px;
-        }
-
-        /* Section Transition */
-        .section-transition {
-            text-align: center;
-        }
-
-        .transition-animation {
-            position: relative;
-            height: 100px;
-            margin-bottom: 30px;
-        }
-
-        .cocoon, .butterfly {
-            font-size: 4rem;
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
-        }
-
-        .cocoon {
-            animation: fadeOut 2s forwards;
-        }
-
-        .butterfly {
-            animation: fadeInFly 2s 1s forwards;
-            opacity: 0;
-        }
-
-        @keyframes fadeOut {
-            0% { opacity: 1; transform: translateX(-50%) scale(1); }
-            100% { opacity: 0; transform: translateX(-50%) scale(0.5); }
-        }
-
-        @keyframes fadeInFly {
-            0% { opacity: 0; transform: translateX(-50%) translateY(20px) scale(0.5); }
-            100% { opacity: 1; transform: translateX(-50%) translateY(0) scale(1.2); }
-        }
-
-        .transition-message {
-            font-size: 1.1rem;
-            margin-bottom: 30px;
-        }
-
-        .progress-stats {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            margin: 30px 0;
-        }
-
-        .stat {
-            text-align: center;
-            padding: 20px;
-            background: #f7fafc;
-            border-radius: 12px;
-        }
-
-        .stat strong {
-            display: block;
-            color: var(--primary-accent);
-            font-size: 1.5rem;
-            margin-bottom: 5px;
-        }
-
-        .stat span {
-            color: var(--text-muted);
-            font-size: 0.9rem;
-        }
-
-        /* Final Comments */
-        .final-comments {
-            margin: 30px 0;
-        }
-
-        .final-comments h3 {
-            color: var(--primary-accent);
-            margin-bottom: 10px;
-        }
-
-        /* Responsive - Tablets and below */
-        @media (max-width: 968px) {
-            .hero-container {
-                flex-direction: column-reverse;
-                justify-content: flex-start;
-                text-align: center;
-                padding: 20px 30px;
-                min-height: auto;
+        /* Desktop (1024px - 1439px) - Full experience */
+        @media (min-width: 1024px) and (max-width: 1439px) {
+            .iphone-wrapper {
+                width: 320px;
+                height: 694px;
             }
-            .hero-content, .hero-visual { width: 100%; padding: 0; }
-            .hero-content { padding-bottom: 30px; }
-            .hero-visual { height: auto; margin-bottom: 20px; }
-            h1 { font-size: 2.8rem; line-height: 1.2; }
-            .hero-tagline { margin: 0 auto 30px auto; max-width: 100%; }
-            .newsletter-form { margin: 0 auto; max-width: 100%; }
-            nav { padding: 20px 30px; }
-            .logo { height: 40px; font-size: 1.5rem; }
-            .logo img { height: 40px; }
-            .glass-card { padding: 30px 20px; max-width: 90%; }
-            .survey-info, .progress-stats { grid-template-columns: 1fr; }
-            .question-navigation { flex-direction: column; }
-            .question-navigation button { width: 100%; }
-            .imbalance-graphic { max-width: 480px; }
-            .bg-glow { width: 350px; height: 350px; }
+            .phone-column {
+                width: 45%;
+            }
         }
 
-        /* Responsive - Mobile phones */
-        @media (max-width: 768px) {
-            .hero-container { padding: 15px 20px; }
-            .hero-visual { height: auto; margin-bottom: 15px; }
-            h1 { font-size: 2.2rem; margin-bottom: 20px; }
-            .hero-tagline { font-size: 1.2rem; margin-bottom: 25px; }
-            nav { padding: 15px 20px; }
-            .logo { height: 35px; font-size: 1.3rem; gap: 10px; }
-            .logo img { height: 35px; }
-            .nav-btn { padding: 8px 20px; font-size: 0.9rem; }
-            .newsletter-form {
+        /* Tablet (768px - 1023px) - Phone above content */
+        @media (max-width: 1023px) {
+            .page-wrapper {
                 flex-direction: column;
-                padding: 15px;
-                max-width: 100%;
             }
-            .newsletter-form input {
-                padding: 12px 20px;
-                margin-bottom: 10px;
+            .phone-column {
+                width: 100%;
+                position: relative;
+                top: 0;
+                height: auto;
+                min-height: 600px;
+                padding: 40px 20px;
+                order: -1;
+            }
+            .content-column {
+                padding: 0 20px;
+            }
+            .content-section {
+                min-height: auto;
+                padding: 60px 0;
+                max-width: 100%;
                 text-align: center;
             }
-            .btn-primary { width: 100%; padding: 12px 20px; }
-            .glass-card { padding: 25px 15px; }
-            .imbalance-graphic { max-width: 400px; }
-            .bg-glow { width: 280px; height: 280px; }
+            .iphone-wrapper {
+                width: 280px;
+                height: 607px;
+            }
+            .nav { padding: 0 20px; }
         }
 
-        /* Responsive - Small phones */
-        @media (max-width: 480px) {
-            h1 { font-size: 1.8rem; }
-            .hero-tagline { font-size: 1rem; }
-            .hero-visual { height: auto; }
-            .imbalance-graphic { max-width: 320px; }
-            .bg-glow { width: 220px; height: 220px; }
+        /* Mobile (<768px) - Simplified */
+        @media (max-width: 767px) {
+            .iphone-wrapper {
+                width: 260px;
+                height: 564px;
+            }
+            .phone-column {
+                min-height: 480px;
+                padding: 30px 20px;
+            }
+            .fixed-cta {
+                left: 20px; right: 20px;
+                transform: none;
+                bottom: 16px;
+            }
+            .cta-container {
+                flex-direction: column;
+                padding: 12px;
+                border-radius: 20px;
+                width: 100%;
+            }
+            .cta-container input {
+                text-align: center;
+                padding: 10px;
+            }
+            .cta-container button { width: 100%; }
+            .future-cards { flex-direction: column; }
+            .future-cards .feature-card { margin-bottom: 20px; }
+            .content-section {
+                padding: 40px 0;
+            }
+            .nav {
+                height: 56px;
+            }
+            .page-wrapper {
+                padding-top: 56px;
+            }
+        }
+
+        /* Small Mobile (<480px) */
+        @media (max-width: 479px) {
+            .iphone-wrapper {
+                width: 240px;
+                height: 520px;
+            }
         }
     </style>
 </head>
 <body>
-
-    <nav>
-        <div class="logo">
-            <img src="yara_logo.png" alt="Yara Butterfly" class="brand-img" style="height: 50px;">
-            Yara
-        </div>
+    <nav class="nav">
+        <a href="#" class="nav-logo">
+            <img src="yara_butterfly_highres.png" alt="Yara">
+            <span>Yara</span>
+        </a>
         <button class="nav-btn" onclick="openModal('login-modal')">Login</button>
     </nav>
 
-    <main class="hero-container">
+    <div class="page-wrapper">
+        <!-- Left: Scrolling Content -->
+        <div class="content-column">
+            <!-- Hero -->
+            <section class="content-section" id="sec-hero">
+                <h1>Your Personal<br>AI Advocate</h1>
+                <p>Connecting accounts. Reviewing bills. Saving you money.</p>
+            </section>
 
-        <div class="hero-content">
-            <h1>Your Personal<br>AI Advocate</h1>
-            <p class="hero-tagline">Yara connects to your accounts, understands your bills, and takes action by disputing charges, finding savings, recovering money you're owed.</p>
+            <!-- Level Playing Field -->
+            <section class="content-section" id="sec-problem">
+                <div class="feature-card gray">
+                    <h2>Level the playing field.</h2>
+                    <p>Enterprises have AI. Now you do too.</p>
+                </div>
+            </section>
 
-            <div class="newsletter-form">
-                <input type="email" id="early-access-email" placeholder="Enter email for early access..." aria-label="Newsletter Email">
-                <button class="btn-primary" onclick="startEarlyAccess()">Get Early Access</button>
+            <!-- Financial Intelligence -->
+            <section class="content-section" id="sec-f1">
+                <div class="feature-card blue">
+                    <h2>Financial Intelligence.</h2>
+                    <p>Connect securely via Plaid. Ask anything about your spending. Get instant, accurate answers.</p>
+                </div>
+            </section>
+
+            <!-- Verified Savings -->
+            <section class="content-section" id="sec-f2">
+                <div class="feature-card green">
+                    <h2>Verified Savings.</h2>
+                    <p>Our models verify every recommendation for mathematical accuracy. No hallucinations. Just savings.</p>
+                </div>
+            </section>
+
+            <!-- Silent Assistant -->
+            <section class="content-section" id="sec-f3">
+                <div class="feature-card purple">
+                    <h2>Silent Assistant.</h2>
+                    <p>On calls, Yara provides the data you need from your records. Real-time advocacy when it matters most.</p>
+                </div>
+            </section>
+
+            <!-- Privacy -->
+            <section class="content-section" id="sec-privacy">
+                <div class="feature-card gray">
+                    <h2>Security on Device.</h2>
+                    <p>Zero data persistence. Because your financial life is nobody else's business.</p>
+                </div>
+            </section>
+
+            <!-- What's Next -->
+            <section class="content-section" id="sec-future">
+                <h2>What's Next</h2>
+                <p>Yara is learning to act on your behalf.</p>
+                <div class="future-cards">
+                    <div class="feature-card orange">
+                        <h2>Web Navigation.</h2>
+                        <p>Yara will browse websites, fill forms, and take action for you — switching plans, claiming refunds, canceling subscriptions.</p>
+                    </div>
+                    <div class="feature-card teal">
+                        <h2>Voice Advocacy.</h2>
+                        <p>Yara will handle customer service calls end-to-end. No more hold music. No more repeating yourself.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Final CTA -->
+            <section class="final-section" id="sec-final">
+                <h2>Ready to take control?</h2>
+                <p>Be among the first to experience AI that works for you.</p>
+            </section>
+        </div>
+
+        <!-- Right: Sticky Phone -->
+        <div class="phone-column">
+            <div class="iphone-wrapper" id="iphone">
+                <div class="iphone-frame" id="iphone-front">
+                    <div class="iphone-screen">
+                        <!-- iOS Status Bar -->
+                        <div class="status-bar">
+                            <span class="time">9:41</span>
+                        </div>
+                        <!-- Dynamic Island -->
+                        <div class="dynamic-island"></div>
+
+                        <!-- Welcome Screen -->
+                        <div class="screen-content welcome-screen active" id="screen-welcome">
+                            <div class="welcome-progress">
+                                <span class="active"></span><span></span><span></span>
+                            </div>
+                            <div class="welcome-content">
+                                <img src="yara_butterfly_highres.png" alt="Yara">
+                                <h2>Welcome to Yara</h2>
+                                <p class="tagline">AI you can trust</p>
+                                <p class="sub">Reducing your cognitive load</p>
+                            </div>
+                            <div class="sso-section">
+                                <div class="sso-btn">
+                                    <svg viewBox="0 0 24 24"><path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/></svg>
+                                    Continue with Apple
+                                </div>
+                                <div class="sso-btn">
+                                    <svg viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+                                    Continue with Google
+                                </div>
+                                <div class="sso-btn">
+                                    <svg viewBox="0 0 23 23"><path fill="#f25022" d="M0 0h11v11H0z"/><path fill="#00a4ef" d="M0 12h11v11H0z"/><path fill="#7fba00" d="M12 0h11v11H12z"/><path fill="#ffb900" d="M12 12h11v11H12z"/></svg>
+                                    Continue with Microsoft
+                                </div>
+                            </div>
+                            <div class="sso-footer">
+                                <a href="#">Terms of Service</a> · <a href="#">Privacy Policy</a><br>
+                                By signing up, you agree to our Terms and Privacy Policy
+                            </div>
+                        </div>
+
+                        <!-- Leveling Screen - Hi, I'm Yara -->
+                        <div class="screen-content leveling-screen" id="screen-leveling">
+                            <div class="chat-header">
+                                <div class="chat-header-icon">
+                                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="16" y2="12"/><line x1="4" y1="17" x2="12" y2="17"/></svg>
+                                </div>
+                                <img src="yara_butterfly_highres.png" alt="Yara">
+                                <div class="chat-header-icon">
+                                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
+                                </div>
+                            </div>
+                            <div class="leveling-content">
+                                <div class="leveling-greeting">
+                                    <h2>Hi, I'm Yara</h2>
+                                    <p>Your trusted AI Advocate</p>
+                                </div>
+                                <div class="leveling-help-title">I can help you:</div>
+                                <div class="leveling-item">
+                                    <div class="leveling-check"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>
+                                    <span>Track your household spend and help you optimize your expenses</span>
+                                </div>
+                                <div class="leveling-item">
+                                    <div class="leveling-check"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>
+                                    <span>Manage service issues related to third parties you deal with</span>
+                                </div>
+                                <div class="leveling-item">
+                                    <div class="leveling-check"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>
+                                    <span>Assist you to negotiate with third parties</span>
+                                </div>
+                                <div class="leveling-item">
+                                    <div class="leveling-check"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>
+                                    <span>And lots of other tasks as well!</span>
+                                </div>
+                                <div class="leveling-cta">
+                                    <span class="leveling-cta-icon">&#10022;</span>
+                                    <span>Try one of my suggestions below to get started</span>
+                                </div>
+                            </div>
+                            <div class="chat-suggestions">
+                                <div class="chat-suggestion"><span class="chat-suggestion-icon"><span style="color:white;font-weight:700;font-size:12px;">?</span></span> What do you do?</div>
+                                <div class="chat-suggestion"><span class="chat-suggestion-icon"><svg viewBox="0 0 24 24" fill="white"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm-1 2l5 5h-5V4zm-3 12v-2h4v2h-4zm4-4H8v-2h6v2z"/></svg></span> Review My Bill</div>
+                                <div class="chat-suggestion"><span class="chat-suggestion-icon"><svg viewBox="0 0 24 24" fill="white"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg></span> Optimize</div>
+                            </div>
+                            <div class="chat-input-bar">
+                                <div class="plus">+</div>
+                                <div class="chat-input">Ask Yara...</div>
+                                <div class="mic-btn">
+                                    <svg viewBox="0 0 24 24" fill="white"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/><path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg>
+                                </div>
+                                <div class="waveform-btn">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 6v12M8 8v8M4 10v4M16 8v8M20 10v4"/></svg>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Chat Screen -->
+                        <div class="screen-content chat-screen" id="screen-chat">
+                            <div class="chat-header">
+                                <div class="chat-header-icon">
+                                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="16" y2="12"/><line x1="4" y1="17" x2="12" y2="17"/></svg>
+                                </div>
+                                <img src="yara_butterfly_highres.png" alt="Yara">
+                                <div class="chat-header-icon">
+                                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
+                                </div>
+                            </div>
+                            <div class="chat-messages">
+                                <div class="chat-bubble user" id="chat-user-1">Can you show me my uber transactions?</div>
+                                <div class="chat-bubble yara" id="chat-yara-1">
+                                    I found 2 Uber transactions:<br>
+                                    - January 26, 2026: $42.50 at Uber (Travel)<br>
+                                    - January 14, 2026: $72.00 at Uber Eats (Food and Drink)
+                                    <div class="chat-actions">
+                                        <span>👍</span><span>👎</span><span>📋</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="chat-suggestions">
+                                <div class="chat-suggestion"><span class="chat-suggestion-icon"><span style="color:white;font-weight:700;font-size:12px;">?</span></span> What do you do?</div>
+                                <div class="chat-suggestion"><span class="chat-suggestion-icon"><svg viewBox="0 0 24 24" fill="white"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm-1 2l5 5h-5V4zm-3 12v-2h4v2h-4zm4-4H8v-2h6v2z"/></svg></span> Review My Bill</div>
+                                <div class="chat-suggestion"><span class="chat-suggestion-icon"><svg viewBox="0 0 24 24" fill="white"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg></span> Optimize</div>
+                            </div>
+                            <div class="chat-input-bar">
+                                <div class="plus">+</div>
+                                <div class="chat-input">Ask Yara...</div>
+                                <div class="mic-btn">
+                                    <svg viewBox="0 0 24 24" fill="white"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/><path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg>
+                                </div>
+                                <div class="waveform-btn">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 6v12M8 8v8M4 10v4M16 8v8M20 10v4"/></svg>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Savings Screen -->
+                        <div class="screen-content savings-screen" id="screen-savings">
+                            <div class="savings-header">
+                                <div class="chat-header-icon">
+                                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="16" y2="12"/><line x1="4" y1="17" x2="12" y2="17"/></svg>
+                                </div>
+                                <img src="yara_butterfly_highres.png" alt="Yara">
+                                <div class="chat-header-icon">
+                                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
+                                </div>
+                            </div>
+                            <div class="savings-title">✨ Your Personalized Recommendations</div>
+                            <div class="savings-subtitle">We found 3 plans that match your preferences</div>
+                            <div class="savings-list">
+                                <div class="savings-card" id="sav-1">
+                                    <div class="savings-card-header">
+                                        <div>
+                                            <div class="savings-card-provider">T-Mobile USA</div>
+                                            <div class="savings-card-plan">Magenta MAX</div>
+                                        </div>
+                                        <div class="savings-card-match">⭐ 81%</div>
+                                    </div>
+                                    <div class="savings-card-price">$70/mo</div>
+                                    <div class="savings-card-actions">
+                                        <div class="savings-btn outline">More Info</div>
+                                        <div class="savings-btn filled">View Plan</div>
+                                    </div>
+                                </div>
+                                <div class="savings-card" id="sav-2">
+                                    <div class="savings-card-header">
+                                        <div>
+                                            <div class="savings-card-provider">AT&T Mobility</div>
+                                            <div class="savings-card-plan">Unlimited Starter</div>
+                                        </div>
+                                        <div class="savings-card-match">⭐ 44%</div>
+                                    </div>
+                                    <div class="savings-card-price">$61/mo</div>
+                                    <div class="savings-card-actions">
+                                        <div class="savings-btn outline">More Info</div>
+                                        <div class="savings-btn filled">View Plan</div>
+                                    </div>
+                                </div>
+                                <div class="savings-card" id="sav-3">
+                                    <div class="savings-card-header">
+                                        <div>
+                                            <div class="savings-card-provider">AT&T Mobility</div>
+                                            <div class="savings-card-plan">Unlimited Extra</div>
+                                        </div>
+                                        <div class="savings-card-match">⭐ 40%</div>
+                                    </div>
+                                    <div class="savings-card-price">$66/mo</div>
+                                    <div class="savings-card-actions">
+                                        <div class="savings-btn outline">More Info</div>
+                                        <div class="savings-btn filled">View Plan</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="chat-input-bar">
+                                <div class="plus">+</div>
+                                <div class="chat-input">Ask Yara...</div>
+                                <div class="mic-btn">
+                                    <svg viewBox="0 0 24 24" fill="white"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/><path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Call Screen -->
+                        <div class="screen-content call-screen" id="screen-call">
+                            <div class="call-header">
+                                <div class="chat-header-icon">
+                                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="16" y2="12"/><line x1="4" y1="17" x2="12" y2="17"/></svg>
+                                </div>
+                                <span class="call-status">Speaking...</span>
+                                <div class="chat-header-icon">
+                                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
+                                </div>
+                            </div>
+                            <div class="call-banner" id="call-banner">
+                                <div class="call-banner-phone">
+                                    <svg viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+                                </div>
+                                <span class="call-banner-num">+18003310500</span>
+                                <span class="call-banner-time">27:40</span>
+                                <span class="call-banner-badge">Msgs private</span>
+                            </div>
+                            <div class="chat-messages call-messages">
+                                <div class="chat-bubble user" id="call-user-1">Call ATT</div>
+                                <div class="chat-bubble yara" style="opacity:1;transform:none;">I'm setting up the call with AT&T now.
+                                    <div class="chat-actions"><span>👍</span><span>👎</span><span>📋</span></div>
+                                </div>
+                                <div class="chat-bubble user" id="call-user-2">What is the promotional credit I get for ATT</div>
+                                <div class="chat-bubble yara" id="call-yara-1">You receive a promotional credit of $2.78, which is applied to your Apple Watch equipment financing.
+                                    <div class="chat-actions"><span>👍</span><span>👎</span><span>📋</span></div>
+                                </div>
+                            </div>
+                            <div class="call-input-bar">
+                                <div class="plus">+</div>
+                                <div class="call-input">Ask Yara pri...</div>
+                                <div class="call-btns">
+                                    <div class="call-btn mic">
+                                        <svg viewBox="0 0 24 24" fill="white"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/><path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg>
+                                    </div>
+                                    <div class="call-btn speaker">
+                                        <svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+                                    </div>
+                                    <div class="call-btn keypad">
+                                        <svg viewBox="0 0 24 24"><rect x="4" y="4" width="4" height="4" rx="1"/><rect x="10" y="4" width="4" height="4" rx="1"/><rect x="16" y="4" width="4" height="4" rx="1"/><rect x="4" y="10" width="4" height="4" rx="1"/><rect x="10" y="10" width="4" height="4" rx="1"/><rect x="16" y="10" width="4" height="4" rx="1"/><rect x="4" y="16" width="4" height="4" rx="1"/><rect x="10" y="16" width="4" height="4" rx="1"/><rect x="16" y="16" width="4" height="4" rx="1"/></svg>
+                                    </div>
+                                    <div class="call-btn end">
+                                        <svg viewBox="0 0 24 24"><path d="M12 9c-1.6 0-3.15.25-4.6.72v3.1c0 .39-.23.74-.56.9-.98.49-1.87 1.12-2.66 1.85-.18.18-.43.28-.7.28-.28 0-.53-.11-.71-.29L.29 13.08c-.18-.17-.29-.42-.29-.7 0-.28.11-.53.29-.71C3.34 8.78 7.46 7 12 7s8.66 1.78 11.71 4.67c.18.18.29.43.29.71 0 .28-.11.53-.29.71l-2.48 2.48c-.18.18-.43.29-.71.29-.27 0-.52-.11-.7-.28-.79-.74-1.68-1.36-2.66-1.85-.33-.16-.56-.5-.56-.9v-3.1C15.15 9.25 13.6 9 12 9z"/></svg>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="iphone-back">
+                    <div class="shield-icon">
+                        <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/></svg>
+                    </div>
+                    <h3>Total Privacy</h3>
+                    <p>Your data never leaves your device. Zero persistence. Zero tracking.</p>
+                </div>
+                <!-- Physical Side Buttons -->
+                <div class="iphone-btn-vol-up"></div>
+                <div class="iphone-btn-vol-down"></div>
+                <div class="iphone-btn-power"></div>
             </div>
         </div>
+    </div>
 
-        <div class="hero-visual">
-            <div class="bg-glow"></div>
-
-            <svg class="imbalance-graphic" viewBox="0 0 520 290" xmlns="http://www.w3.org/2000/svg">
-                <!-- Center dividing line -->
-                <line x1="260" y1="20" x2="260" y2="260" stroke="#cbd5e0" stroke-width="1"/>
-
-                <!-- === LEFT SIDE: ENTERPRISES === -->
-                <!-- Main circle -->
-                <circle cx="170" cy="140" r="55" fill="#6A0DAD"/>
-                <text x="170" y="145" font-family="system-ui, sans-serif" font-size="13" font-weight="600" fill="white" text-anchor="middle">Enterprises</text>
-
-                <!-- AI-driven pricing (top) -->
-                <line x1="170" y1="85" x2="170" y2="55" stroke="#cbd5e0" stroke-width="1"/>
-                <line x1="170" y1="55" x2="75" y2="55" stroke="#cbd5e0" stroke-width="1"/>
-                <circle cx="75" cy="55" r="16" fill="#f7fafc" stroke="#e2e8f0" stroke-width="1"/>
-                <text x="75" y="60" font-size="12" text-anchor="middle">🏷️</text>
-                <text x="75" y="32" font-family="system-ui, sans-serif" font-size="9" fill="#4a5568" text-anchor="middle">AI-driven pricing</text>
-
-                <!-- AI-retention engines (middle-left) -->
-                <line x1="115" y1="140" x2="50" y2="140" stroke="#cbd5e0" stroke-width="1"/>
-                <circle cx="50" cy="140" r="16" fill="#f7fafc" stroke="#e2e8f0" stroke-width="1"/>
-                <text x="50" y="145" font-size="12" text-anchor="middle">👤</text>
-                <text x="50" y="112" font-family="system-ui, sans-serif" font-size="9" fill="#4a5568" text-anchor="middle">AI-retention</text>
-                <text x="50" y="123" font-family="system-ui, sans-serif" font-size="9" fill="#4a5568" text-anchor="middle">engines</text>
-
-                <!-- AI IVR and deflection (bottom) -->
-                <line x1="170" y1="195" x2="170" y2="225" stroke="#cbd5e0" stroke-width="1"/>
-                <line x1="170" y1="225" x2="75" y2="225" stroke="#cbd5e0" stroke-width="1"/>
-                <circle cx="75" cy="225" r="16" fill="#f7fafc" stroke="#e2e8f0" stroke-width="1"/>
-                <text x="75" y="230" font-size="12" text-anchor="middle">📵</text>
-                <text x="75" y="250" font-family="system-ui, sans-serif" font-size="9" fill="#4a5568" text-anchor="middle">AI IVR and</text>
-                <text x="75" y="261" font-family="system-ui, sans-serif" font-size="9" fill="#4a5568" text-anchor="middle">deflection</text>
-
-                <!-- === RIGHT SIDE: CONSUMERS === -->
-                <!-- Main circle -->
-                <circle cx="350" cy="140" r="55" fill="#6A0DAD"/>
-                <text x="350" y="145" font-family="system-ui, sans-serif" font-size="13" font-weight="600" fill="white" text-anchor="middle">Consumers</text>
-
-                <!-- Manual comparisons (top) -->
-                <line x1="350" y1="85" x2="350" y2="55" stroke="#cbd5e0" stroke-width="1"/>
-                <line x1="350" y1="55" x2="445" y2="55" stroke="#cbd5e0" stroke-width="1"/>
-                <circle cx="445" cy="55" r="16" fill="#f7fafc" stroke="#e2e8f0" stroke-width="1"/>
-                <text x="445" y="60" font-size="12" text-anchor="middle">⚖️</text>
-                <text x="445" y="32" font-family="system-ui, sans-serif" font-size="9" fill="#4a5568" text-anchor="middle">Manual comparisons</text>
-
-                <!-- Fragmented Portals (middle-right) -->
-                <line x1="405" y1="140" x2="470" y2="140" stroke="#cbd5e0" stroke-width="1"/>
-                <circle cx="470" cy="140" r="16" fill="#f7fafc" stroke="#e2e8f0" stroke-width="1"/>
-                <text x="470" y="145" font-size="12" text-anchor="middle">🔲</text>
-                <text x="470" y="112" font-family="system-ui, sans-serif" font-size="9" fill="#4a5568" text-anchor="middle">Fragmented</text>
-                <text x="470" y="123" font-family="system-ui, sans-serif" font-size="9" fill="#4a5568" text-anchor="middle">Portals</text>
-
-                <!-- Endless support loops (bottom) -->
-                <line x1="350" y1="195" x2="350" y2="225" stroke="#cbd5e0" stroke-width="1"/>
-                <line x1="350" y1="225" x2="445" y2="225" stroke="#cbd5e0" stroke-width="1"/>
-                <circle cx="445" cy="225" r="16" fill="#f7fafc" stroke="#e2e8f0" stroke-width="1"/>
-                <text x="445" y="230" font-size="12" text-anchor="middle">📞</text>
-                <text x="445" y="250" font-family="system-ui, sans-serif" font-size="9" fill="#4a5568" text-anchor="middle">Endless support</text>
-                <text x="445" y="261" font-family="system-ui, sans-serif" font-size="9" fill="#4a5568" text-anchor="middle">loops</text>
-            </svg>
+    <!-- Fixed Bottom CTA -->
+    <div class="fixed-cta">
+        <div class="cta-container">
+            <input type="email" id="early-access-email" placeholder="Email Address" required>
+            <button onclick="startEarlyAccess()">Join the Waitlist</button>
         </div>
+    </div>
 
-    </main>
-
-    <!-- Login Modal -->
+    <!-- Modals -->
     <div id="login-modal" class="modal-overlay">
         <div class="glass-card">
             <button class="close-btn" onclick="closeModal('login-modal')">&times;</button>
-            <h2>Welcome Back</h2>
-            <p>Please sign in to access the stakeholder survey.</p>
-
+            <h2 style="margin-bottom:24px;font-family:var(--font-display);">Admin Login</h2>
             <form id="login-form">
-                <input type="email" id="login-email" class="glass-input" placeholder="Email Address" required>
+                <input type="email" id="login-email" class="glass-input" placeholder="Email" required>
                 <input type="password" id="login-password" class="glass-input" placeholder="Password" required>
-                <div id="login-error" class="error-message"></div>
-                <button type="submit" class="btn-primary" style="width:100%">Sign In</button>
+                <div id="login-error" style="color:red;margin-bottom:10px;font-size:14px;"></div>
+                <button type="submit" style="width:100%;padding:14px;background:var(--cta-blue);color:white;border:none;border-radius:12px;font-size:16px;font-weight:600;cursor:pointer;">Sign In</button>
             </form>
         </div>
     </div>
-
-    <!-- Resume Survey Modal -->
-    <div id="resume-modal" class="modal-overlay">
-        <div class="glass-card">
-            <h2>Welcome Back!</h2>
-            <p>We found your saved progress. Would you like to continue where you left off?</p>
-            <div style="display: flex; gap: 15px; margin-top: 20px;">
-                <button class="btn-secondary" onclick="surveyApp.startFresh()" style="flex: 1">Start Fresh</button>
-                <button class="btn-primary" onclick="surveyApp.resumeSurvey()" style="flex: 1">Resume</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Survey Modal -->
     <div id="survey-modal" class="modal-overlay">
-        <div class="glass-card">
+        <div class="glass-card" style="max-width:800px;text-align:left;">
             <button class="close-btn" onclick="surveyApp.saveAndExit()">&times;</button>
-
-            <div class="survey-progress-bar">
-                <div id="survey-progress-bar" class="survey-progress-fill" style="width: 0%"></div>
-            </div>
-            <div id="survey-progress-text" class="survey-progress-text">Question 0 of 25</div>
-
-            <div class="modal-content-inner">
-                <!-- Dynamic survey content will be injected here -->
-            </div>
+            <div id="survey-progress-text" style="margin-bottom:10px;font-weight:600;"></div>
+            <div class="modal-content-inner"></div>
         </div>
     </div>
-
-    <!-- Early Access Questionnaire Modal -->
     <div id="early-access-modal" class="modal-overlay">
         <div class="glass-card">
             <button class="close-btn" onclick="closeEarlyAccessModal()">&times;</button>
-
-            <div class="survey-progress-text" id="ea-step-text">STEP 1 OF 3</div>
-
-            <div id="ea-content">
-                <!-- Step content will be injected here -->
-            </div>
+            <div id="ea-step-text" style="margin-bottom:20px;color:var(--text-secondary);"></div>
+            <div id="ea-content"></div>
         </div>
     </div>
 
-    <!-- Load Survey Data -->
     <script src="survey-questions.js"></script>
-
-    <!-- Load Survey App -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
     <script src="survey-app.js"></script>
-
-    <!-- Load Early Access App -->
     <script src="early-access.js"></script>
-
     <script>
-        // --- Modal Helper Functions ---
-        function openModal(id) {
-            document.getElementById(id).classList.add('active');
-        }
+        function openModal(id) { document.getElementById(id).classList.add('active'); }
+        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
 
-        function closeModal(id) {
-            document.getElementById(id).classList.remove('active');
-        }
+        document.addEventListener('DOMContentLoaded', () => {
+            gsap.registerPlugin(ScrollTrigger);
+            const iphone = document.getElementById('iphone');
+            const screens = {
+                welcome: document.getElementById('screen-welcome'),
+                leveling: document.getElementById('screen-leveling'),
+                chat: document.getElementById('screen-chat'),
+                savings: document.getElementById('screen-savings'),
+                call: document.getElementById('screen-call')
+            };
+
+            function setScreen(name) {
+                Object.values(screens).forEach(s => s.classList.remove('active'));
+                if (screens[name]) screens[name].classList.add('active');
+            }
+
+            function animateBubble(id, delay) {
+                const el = document.getElementById(id);
+                if (el) {
+                    gsap.to(el, {
+                        opacity: 1, scale: 1, y: 0,
+                        duration: 0.4, delay: delay || 0,
+                        ease: 'back.out(1.5)'
+                    });
+                }
+            }
+
+            function resetBubbles(ids) {
+                ids.forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) gsap.set(el, { opacity: 0, scale: 0.9, y: 10 });
+                });
+            }
+
+            function animateCard(id, delay) {
+                const el = document.getElementById(id);
+                if (el) {
+                    gsap.to(el, {
+                        opacity: 1, x: 0,
+                        duration: 0.35, delay: delay || 0,
+                        ease: 'power2.out'
+                    });
+                }
+            }
+
+            function resetCards() {
+                gsap.set('.savings-card', { opacity: 0, x: -20 });
+            }
+
+            // Level Playing Field - show leveling screen
+            ScrollTrigger.create({
+                trigger: '#sec-problem',
+                start: 'top 45%',
+                onEnter: () => setScreen('leveling'),
+                onLeaveBack: () => setScreen('welcome')
+            });
+
+            // Financial Intelligence - show chat, user bubble first
+            ScrollTrigger.create({
+                trigger: '#sec-f1',
+                start: 'top 45%',
+                onEnter: () => {
+                    setScreen('chat');
+                    resetBubbles(['chat-user-1', 'chat-yara-1']);
+                    setTimeout(() => animateBubble('chat-user-1', 0), 150);
+                },
+                onLeaveBack: () => setScreen('leveling')
+            });
+
+            // Financial Intelligence - Yara response when card is well centered
+            ScrollTrigger.create({
+                trigger: '#sec-f1',
+                start: 'top 25%',
+                onEnter: () => {
+                    animateBubble('chat-yara-1', 0);
+                }
+            });
+
+            // Verified Savings - show savings, staggered cards
+            ScrollTrigger.create({
+                trigger: '#sec-f2',
+                start: 'top 45%',
+                onEnter: () => {
+                    setScreen('savings');
+                    resetCards();
+                    setTimeout(() => animateCard('sav-1', 0), 150);
+                },
+                onLeaveBack: () => {
+                    setScreen('chat');
+                    resetBubbles(['chat-user-1', 'chat-yara-1']);
+                    setTimeout(() => {
+                        animateBubble('chat-user-1', 0);
+                        animateBubble('chat-yara-1', 0.2);
+                    }, 150);
+                }
+            });
+
+            // Savings card 2 appears
+            ScrollTrigger.create({
+                trigger: '#sec-f2',
+                start: 'top 35%',
+                onEnter: () => animateCard('sav-2', 0)
+            });
+
+            // Savings card 3 appears when card is well centered
+            ScrollTrigger.create({
+                trigger: '#sec-f2',
+                start: 'top 25%',
+                onEnter: () => animateCard('sav-3', 0)
+            });
+
+            // Silent Assistant - show call
+            ScrollTrigger.create({
+                trigger: '#sec-f3',
+                start: 'top 45%',
+                onEnter: () => {
+                    setScreen('call');
+                    gsap.to('#call-banner', { opacity: 1, y: 0, duration: 0.4 });
+                    resetBubbles(['call-user-1', 'call-user-2', 'call-yara-1']);
+                    setTimeout(() => {
+                        animateBubble('call-user-1', 0);
+                        animateBubble('call-user-2', 0.4);
+                        animateBubble('call-yara-1', 0.8);
+                    }, 300);
+                },
+                onLeaveBack: () => {
+                    setScreen('savings');
+                    resetCards();
+                    setTimeout(() => {
+                        animateCard('sav-1', 0);
+                        animateCard('sav-2', 0.15);
+                        animateCard('sav-3', 0.3);
+                    }, 150);
+                }
+            });
+
+            // Privacy - 3D flip with front face hidden at midpoint
+            const iphoneFront = document.getElementById('iphone-front');
+            const flipTl = gsap.timeline({
+                scrollTrigger: {
+                    trigger: '#sec-privacy',
+                    start: 'top 50%',
+                    end: 'top 20%',
+                    scrub: true,
+                    onLeaveBack: () => {
+                        // Restore front face when scrolling back up past the flip
+                        gsap.set(iphoneFront, { visibility: 'visible' });
+                    }
+                }
+            });
+            flipTl
+                .to(iphone, { rotateY: 90, duration: 0.5, ease: 'none' })
+                .set(iphoneFront, { visibility: 'hidden' })
+                .to(iphone, { rotateY: 180, duration: 0.5, ease: 'none' });
+
+            // Fade phone out AFTER Security on Device section leaves the screen
+            // preserve-3d breaks parent opacity cascading, so hide buttons via direct DOM
+            const sideButtons = iphone.querySelectorAll('.iphone-btn-vol-up, .iphone-btn-vol-down, .iphone-btn-power');
+            const fadeOutTl = gsap.timeline({
+                scrollTrigger: {
+                    trigger: '#sec-privacy',
+                    start: 'bottom 50%',
+                    end: 'bottom 20%',
+                    scrub: true,
+                    onEnter: () => {
+                        sideButtons.forEach(btn => btn.style.display = 'none');
+                    },
+                    onLeaveBack: () => {
+                        sideButtons.forEach(btn => btn.style.display = '');
+                        gsap.set(iphone, { opacity: 1, scale: 1 });
+                    }
+                }
+            });
+            fadeOutTl.to(iphone, { opacity: 0, scale: 0.9, duration: 1 });
+
+            // Feature cards entrance
+            gsap.utils.toArray('.feature-card').forEach(card => {
+                gsap.fromTo(card,
+                    { opacity: 0, y: 40 },
+                    {
+                        opacity: 1, y: 0,
+                        scrollTrigger: {
+                            trigger: card,
+                            start: 'top 80%',
+                            end: 'top 50%',
+                            scrub: true
+                        }
+                    }
+                );
+            });
+        });
     </script>
 </body>
 </html>
