@@ -18,64 +18,57 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 
   <style>
-    /* ─── Reset & Base ─────────────────────────────────────────────── */
+    /* ─── Reset & Base ──────────────────────────────────────────────── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    html {
-      scroll-behavior: smooth;
-      overflow-x: hidden;
-    }
+    html { overflow-x: hidden; }
 
     body {
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      background-color: #0a0a0f;
+      background-color: #0D0D12;
       color: #ffffff;
       overflow-x: hidden;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
     }
 
-    /* ─── Design Tokens ────────────────────────────────────────────── */
+    /* ─── Design Tokens ─────────────────────────────────────────────── */
     :root {
-      --bg-base:     #0a0a0f;
-      --bg-elevated: #0d1628;
-      --violet:      #7c3aed;
-      --teal:        #06b6d4;
-      --blue:        #3b82f6;
-      --pink:        #ec4899;
-      --text-dim:    #333344;
-      --text-mid:    #888899;
-      --text-bright: #ffffff;
-      --glass-bg:    rgba(255,255,255,0.05);
-      --glass-border:rgba(255,255,255,0.10);
-      --radius-card: 24px;
+      --bg-base:      #0D0D12;
+      --bg-card:      #1A1A24;
+      --purple:       #8B5CF6;
+      --teal:         #06B6D4;
+      --green:        #22C55E;
+      --orange:       #F59E0B;
+      --text-dim:     #333344;
+      --text-mid:     #6B6B88;
+      --glass-border: rgba(255,255,255,0.08);
+      --radius-card:  20px;
     }
 
-    /* ─── Aurora Gradient Text ─────────────────────────────────────── */
-    .aurora-text {
-      background: linear-gradient(135deg, #7c3aed 0%, #3b82f6 40%, #06b6d4 100%);
+    /* ─── Gradient Text ─────────────────────────────────────────────── */
+    .grad-text {
+      background: linear-gradient(135deg, #8B5CF6 0%, #06B6D4 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
     }
 
-    .aurora-text-warm {
-      background: linear-gradient(135deg, #ec4899 0%, #7c3aed 50%, #3b82f6 100%);
+    .grad-text-green {
+      background: linear-gradient(135deg, #22C55E 0%, #06B6D4 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
     }
 
-    /* ─── Glass Card ───────────────────────────────────────────────── */
+    /* ─── Glass Card ────────────────────────────────────────────────── */
     .glass {
-      background: var(--glass-bg);
+      background: #1A1A24;
       border: 1px solid var(--glass-border);
-      backdrop-filter: blur(24px);
-      -webkit-backdrop-filter: blur(24px);
       border-radius: var(--radius-card);
     }
 
-    /* ─── Noise Overlay ────────────────────────────────────────────── */
+    /* ─── Noise Overlay ─────────────────────────────────────────────── */
     body::after {
       content: '';
       position: fixed;
@@ -83,22 +76,234 @@
       background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
       pointer-events: none;
       z-index: 9999;
-      opacity: 0.4;
+      opacity: 0.35;
     }
 
-    /* ─── Section Spacing ──────────────────────────────────────────── */
-    section { position: relative; overflow: hidden; }
-
-    /* ─── Orb ──────────────────────────────────────────────────────── */
+    /* ─── Orb ───────────────────────────────────────────────────────── */
     .orb {
       position: absolute;
       border-radius: 50%;
-      filter: blur(80px);
+      filter: blur(90px);
       will-change: transform;
       pointer-events: none;
     }
 
-    /* ─── SECTION 1: Hero ──────────────────────────────────────────── */
+    /* ─── Section shared ────────────────────────────────────────────── */
+    section { position: relative; overflow: hidden; }
+
+    /* ─── Nav ───────────────────────────────────────────────────────── */
+    #nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 1000;
+      padding: 18px 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: background 0.4s, border-color 0.4s;
+      border-bottom: 1px solid transparent;
+    }
+
+    #nav.scrolled {
+      background: rgba(13,13,18,0.85);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border-color: rgba(255,255,255,0.06);
+    }
+
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 20px;
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      color: #fff;
+      text-decoration: none;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 36px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 14px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.45);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: #fff; }
+
+    /* ─── Buttons ───────────────────────────────────────────────────── */
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 32px;
+      background: #8B5CF6;
+      border-radius: 100px;
+      font-size: 15px;
+      font-weight: 600;
+      color: #fff;
+      cursor: pointer;
+      border: none;
+      text-decoration: none;
+      letter-spacing: -0.01em;
+      transition: opacity 0.2s, transform 0.2s, box-shadow 0.3s;
+    }
+    .btn-primary:hover { opacity: 0.9; transform: scale(1.02); }
+
+    .btn-ghost {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 32px;
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 100px;
+      font-size: 15px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.75);
+      cursor: pointer;
+      text-decoration: none;
+      letter-spacing: -0.01em;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .btn-ghost:hover { border-color: rgba(255,255,255,0.4); color: #fff; }
+
+    .btn-pulse {
+      animation: pulse-glow 2.8s ease-in-out infinite;
+    }
+    @keyframes pulse-glow {
+      0%, 100% { box-shadow: 0 0 20px rgba(139,92,246,0.4), 0 0 40px rgba(139,92,246,0.15); }
+      50%       { box-shadow: 0 0 40px rgba(139,92,246,0.7), 0 0 80px rgba(6,182,212,0.2); }
+    }
+
+    /* ─── Scroll indicator ──────────────────────────────────────────── */
+    #scroll-indicator {
+      position: absolute;
+      bottom: 44px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      opacity: 0.45;
+    }
+    #scroll-indicator span {
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.5);
+    }
+    .scroll-arrow {
+      width: 18px; height: 18px;
+      border-right: 1.5px solid rgba(255,255,255,0.4);
+      border-bottom: 1.5px solid rgba(255,255,255,0.4);
+      transform: rotate(45deg);
+      animation: bounce-arrow 1.6s ease-in-out infinite;
+    }
+    @keyframes bounce-arrow {
+      0%, 100% { transform: rotate(45deg) translateY(0); }
+      50%       { transform: rotate(45deg) translateY(5px); }
+    }
+
+    /* ─── Section eyebrow ───────────────────────────────────────────── */
+    .eyebrow {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: #8B5CF6;
+      margin-bottom: 20px;
+    }
+
+    /* ─── Phone Frame ───────────────────────────────────────────────── */
+    .phone-frame {
+      width: 270px;
+      height: 540px;
+      background: #0a0a12;
+      border-radius: 44px;
+      border: 1.5px solid rgba(255,255,255,0.1);
+      position: relative;
+      overflow: hidden;
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,0.04),
+        0 48px 100px rgba(0,0,0,0.9),
+        inset 0 1px 0 rgba(255,255,255,0.07);
+      flex-shrink: 0;
+    }
+
+    /* Dynamic island */
+    .phone-frame::before {
+      content: '';
+      position: absolute;
+      top: 14px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 96px; height: 28px;
+      background: #000;
+      border-radius: 20px;
+      z-index: 20;
+    }
+
+    /* Side power button */
+    .phone-frame::after {
+      content: '';
+      position: absolute;
+      top: 108px; right: -3px;
+      width: 3px; height: 64px;
+      background: rgba(255,255,255,0.07);
+      border-radius: 2px;
+    }
+
+    .phone-screen {
+      position: absolute;
+      inset: 0;
+      padding: 60px 18px 22px;
+    }
+
+    .phone-status {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.55);
+      margin-bottom: 14px;
+      padding: 0 2px;
+    }
+
+    /* ─── Chat Bubbles ──────────────────────────────────────────────── */
+    .chat-user {
+      background: #8B5CF6;
+      color: #fff;
+      padding: 9px 13px;
+      border-radius: 16px 16px 4px 16px;
+      font-size: 12px;
+      line-height: 1.45;
+      margin-left: auto;
+      max-width: 82%;
+      display: table;
+      margin-bottom: 7px;
+    }
+    .chat-ai {
+      background: rgba(255,255,255,0.07);
+      color: rgba(255,255,255,0.9);
+      padding: 9px 13px;
+      border-radius: 16px 16px 16px 4px;
+      font-size: 12px;
+      line-height: 1.45;
+      max-width: 88%;
+      margin-bottom: 7px;
+    }
+
+    /* ─── SECTION 1: HERO ───────────────────────────────────────────── */
     #hero {
       min-height: 100vh;
       display: flex;
@@ -106,130 +311,213 @@
       align-items: center;
       justify-content: center;
       text-align: center;
-      padding: 120px 24px 80px;
+      padding: 130px 24px 100px;
     }
 
-    #hero-wordmark {
-      font-size: clamp(120px, 22vw, 240px);
+    #hero-headline {
+      font-size: clamp(52px, 8vw, 104px);
       font-weight: 900;
       letter-spacing: -0.04em;
-      line-height: 0.85;
-      will-change: transform;
-      background: linear-gradient(135deg, #ffffff 0%, rgba(255,255,255,0.7) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    #hero-subtitle {
-      margin-top: 32px;
-      font-size: clamp(18px, 2.5vw, 24px);
-      font-weight: 400;
-      color: rgba(255,255,255,0.55);
-      letter-spacing: -0.01em;
-      max-width: 520px;
-      opacity: 0;
-    }
-
-    #hero-cta {
-      margin-top: 48px;
-      opacity: 0;
-      transform: translateY(20px);
-    }
-
-    .btn-primary {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      padding: 16px 36px;
-      background: linear-gradient(135deg, #7c3aed, #06b6d4);
-      border-radius: 100px;
-      font-size: 16px;
-      font-weight: 600;
-      color: #fff;
-      cursor: pointer;
-      border: none;
-      transition: opacity 0.2s, transform 0.2s;
-      text-decoration: none;
-      letter-spacing: -0.01em;
-    }
-    .btn-primary:hover { opacity: 0.85; transform: scale(1.03); }
-
-    #hero-phone {
-      margin-top: 64px;
-      opacity: 0;
-      transform: translateY(60px) scale(0.95);
+      line-height: 1.0;
+      max-width: 900px;
       will-change: transform, opacity;
     }
 
-    /* ─── Phone Frame Shared ───────────────────────────────────────── */
-    .phone-frame {
-      width: 260px;
-      height: 520px;
-      background: #0d0d18;
-      border-radius: 40px;
-      border: 1.5px solid rgba(255,255,255,0.12);
-      position: relative;
-      overflow: hidden;
-      box-shadow:
-        0 0 0 1px rgba(255,255,255,0.06),
-        0 40px 120px rgba(0,0,0,0.8),
-        inset 0 1px 0 rgba(255,255,255,0.08);
+    #hero-subtitle {
+      margin-top: 28px;
+      font-size: clamp(17px, 2vw, 21px);
+      font-weight: 400;
+      color: rgba(255,255,255,0.48);
+      letter-spacing: -0.01em;
+      max-width: 600px;
+      line-height: 1.6;
+      opacity: 0;
+      transform: translateY(18px);
     }
 
-    /* Notch */
-    .phone-frame::before {
-      content: '';
-      position: absolute;
-      top: 14px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 90px;
-      height: 26px;
-      background: #000;
+    #hero-cta {
+      margin-top: 44px;
+      display: flex;
+      gap: 14px;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: center;
+      opacity: 0;
+      transform: translateY(18px);
+    }
+
+    /* ─── SECTION 2: FEATURE CARDS ──────────────────────────────────── */
+    #feature-cards {
+      padding: 160px 24px;
+      background: #0D0D12;
+    }
+
+    .cards-section-header {
+      text-align: center;
+      margin-bottom: 72px;
+    }
+
+    .bento-grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      grid-auto-rows: auto;
+      gap: 18px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    /* Card sizing */
+    .bento-card { position: relative; }
+    .bento-lg { grid-column: span 7; }
+    .bento-md { grid-column: span 5; }
+    .bento-sm { grid-column: span 4; }
+    .bento-sm2 { grid-column: span 5; }
+    .bento-sm3 { grid-column: span 3; }
+
+    @media (max-width: 900px) {
+      .bento-lg, .bento-md, .bento-sm, .bento-sm2, .bento-sm3 {
+        grid-column: span 12;
+      }
+    }
+
+    .feat-card {
+      background: #1A1A24;
+      border: 1px solid rgba(255,255,255,0.07);
       border-radius: 20px;
-      z-index: 10;
+      padding: 32px;
+      opacity: 0;
+      transform: translateY(36px);
+      will-change: transform, opacity;
+      overflow: hidden;
+      cursor: default;
+      transition: border-color 0.3s;
+    }
+    .feat-card:hover { border-color: rgba(139,92,246,0.25); }
+
+    .feat-card-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
     }
 
-    /* Side button */
-    .phone-frame::after {
-      content: '';
-      position: absolute;
-      top: 100px;
-      right: -4px;
+    .feat-card-title {
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      margin-bottom: 10px;
+    }
+
+    .feat-card-body {
+      font-size: 14px;
+      color: rgba(255,255,255,0.4);
+      line-height: 1.6;
+    }
+
+    /* Waveform bars (card 1) */
+    .waveform {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      height: 40px;
+      margin: 20px 0 12px;
+    }
+    .wave-bar {
       width: 4px;
-      height: 60px;
-      background: rgba(255,255,255,0.08);
       border-radius: 2px;
+      background: #06B6D4;
+      animation: wave-anim 1.4s ease-in-out infinite;
+    }
+    @keyframes wave-anim {
+      0%, 100% { transform: scaleY(0.3); opacity: 0.4; }
+      50%       { transform: scaleY(1);   opacity: 1; }
     }
 
-    /* Phone screen areas */
-    .phone-screen {
-      position: absolute;
-      inset: 0;
-      padding: 60px 16px 24px;
-      transition: opacity 0.5s ease, transform 0.5s ease;
+    /* Notification pill (card 2) */
+    .notif-pill {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 14px;
+      padding: 10px 14px;
+      margin-bottom: 8px;
+      font-size: 12px;
     }
+    .notif-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
 
-    /* Status bar sim */
-    .phone-status {
+    /* Savings comparison (card 3) */
+    .insurer-row {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-size: 10px;
-      font-weight: 600;
-      color: rgba(255,255,255,0.6);
-      margin-bottom: 16px;
-      padding: 0 4px;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      font-size: 13px;
+    }
+    .price-strike { text-decoration: line-through; color: rgba(255,255,255,0.3); }
+    .price-new { color: #22C55E; font-weight: 700; }
+
+    /* Task checkmarks (card 5) */
+    .task-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 7px 0;
+      font-size: 12px;
+      color: rgba(255,255,255,0.7);
+    }
+    .task-check {
+      width: 18px; height: 18px;
+      border-radius: 50%;
+      background: rgba(34,197,94,0.15);
+      border: 1px solid rgba(34,197,94,0.3);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
     }
 
-    /* ─── SECTION 2: Feature Showcase ─────────────────────────────── */
-    #feature-showcase {
-      height: 400vh;
+    /* Zero counters (card 6) */
+    .zero-stat {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+    .zero-num {
+      font-size: 36px;
+      font-weight: 900;
+      letter-spacing: -0.04em;
+    }
+    .zero-label {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.35);
+    }
+
+    /* Coming soon badge */
+    .coming-badge {
+      display: inline-flex;
+      padding: 3px 10px;
+      border-radius: 100px;
+      background: rgba(245,158,11,0.12);
+      border: 1px solid rgba(245,158,11,0.25);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #F59E0B;
+    }
+
+    /* ─── SCROLLYTELLING SHARED ─────────────────────────────────────── */
+    .scrolly-container {
       position: relative;
     }
 
-    #feature-sticky {
+    .scrolly-sticky {
       position: sticky;
       top: 0;
       height: 100vh;
@@ -238,105 +526,176 @@
       align-items: center;
       max-width: 1200px;
       margin: 0 auto;
-      padding: 0 48px;
+      padding: 0 60px;
       gap: 80px;
+      overflow: hidden;
     }
 
-    /* Left phone side */
-    #showcase-phone-wrap {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .showcase-phone {
-      width: 280px;
-      height: 560px;
-    }
-
-    /* Screen layers - stack them */
-    .showcase-screen {
-      position: absolute;
-      inset: 0;
-      padding: 64px 16px 24px;
-      opacity: 0;
-      transition: opacity 0.4s ease;
-    }
-    .showcase-screen.active { opacity: 1; }
-
-    /* Right text side */
-    #showcase-text-wrap {
+    .scrolly-text-side {
       position: relative;
-      height: 400px;
-    }
-
-    .feature-panel {
-      position: absolute;
-      inset: 0;
       display: flex;
       flex-direction: column;
       justify-content: center;
-      opacity: 0;
-      transform: translateY(30px);
-      transition: opacity 0.4s ease, transform 0.4s ease;
-    }
-    .feature-panel.active {
-      opacity: 1;
-      transform: translateY(0);
+      height: 100%;
     }
 
-    .feature-label {
-      font-size: 12px;
-      font-weight: 600;
-      letter-spacing: 0.12em;
+    .scrolly-header {
+      margin-bottom: 32px;
+      flex-shrink: 0;
+    }
+
+    .scrolly-panels-container {
+      position: relative;
+      min-height: 200px;
+      flex-shrink: 0;
+    }
+
+    .scrolly-text-panel {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+      pointer-events: none;
+    }
+    .scrolly-text-panel.active {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    .scrolly-panel-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
       text-transform: uppercase;
-      color: var(--teal);
+      color: #8B5CF6;
       margin-bottom: 16px;
     }
 
-    .feature-title {
-      font-size: clamp(32px, 4vw, 48px);
+    .scrolly-panel-title {
+      font-size: clamp(22px, 2.5vw, 32px);
       font-weight: 800;
       letter-spacing: -0.03em;
-      line-height: 1.1;
-      margin-bottom: 20px;
+      line-height: 1.15;
+      margin-bottom: 14px;
     }
 
-    .feature-body {
-      font-size: 17px;
-      font-weight: 400;
-      color: rgba(255,255,255,0.5);
-      line-height: 1.65;
+    .scrolly-panel-body {
+      font-size: 15px;
+      color: rgba(255,255,255,0.45);
+      line-height: 1.6;
       max-width: 420px;
     }
 
+    .scrolly-phone-side {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+    }
+
+    .scrolly-phone-screens {
+      position: relative;
+    }
+
+    .scrolly-screen {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+    .scrolly-screen.active { opacity: 1; }
+
     /* Progress dots */
-    #showcase-progress {
+    .scrolly-dots {
       position: absolute;
       right: -48px;
       top: 50%;
       transform: translateY(-50%);
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 10px;
     }
 
-    .progress-dot {
-      width: 6px;
-      height: 6px;
+    .sdot {
+      width: 5px; height: 5px;
       border-radius: 50%;
       background: rgba(255,255,255,0.2);
-      transition: background 0.3s, transform 0.3s;
-      cursor: pointer;
+      transition: background 0.3s, transform 0.3s, height 0.3s;
     }
-    .progress-dot.active {
-      background: #7c3aed;
-      transform: scale(1.5);
+    .sdot.active {
+      background: #8B5CF6;
+      transform: scale(1.6);
     }
 
-    /* ─── SECTION 3: Stats ─────────────────────────────────────────── */
+    /* Phone opportunity card */
+    .opp-card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 14px;
+      padding: 13px;
+      margin-bottom: 8px;
+    }
+    .opp-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 2px 8px;
+      border-radius: 100px;
+      margin-bottom: 7px;
+    }
+    .opp-name { font-size: 13px; font-weight: 700; color: rgba(255,255,255,0.9); margin-bottom: 4px; }
+    .opp-detail { font-size: 11px; color: rgba(255,255,255,0.4); line-height: 1.5; }
+    .opp-savings { font-size: 16px; font-weight: 900; letter-spacing: -0.02em; margin-top: 6px; }
+
+    /* Call advocacy phone card */
+    .call-banner {
+      background: rgba(34,197,94,0.08);
+      border: 1px solid rgba(34,197,94,0.2);
+      border-radius: 12px;
+      padding: 8px 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .call-yara-msg {
+      background: rgba(139,92,246,0.08);
+      border: 1px solid rgba(139,92,246,0.15);
+      border-radius: 14px;
+      padding: 12px;
+      margin-top: 10px;
+      font-size: 11px;
+      color: rgba(255,255,255,0.75);
+      line-height: 1.5;
+    }
+
+    .comp-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 7px 10px;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.04);
+      margin-bottom: 5px;
+      font-size: 11px;
+    }
+
+    /* ─── SECTION 5: STATS ──────────────────────────────────────────── */
     #stats {
-      padding: 160px 24px;
+      padding: 180px 24px;
+      background: #0D0D12;
       text-align: center;
     }
 
@@ -349,89 +708,38 @@
     }
 
     @media (max-width: 768px) {
-      .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 32px; }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 40px; }
     }
 
-    .stat-number {
-      font-size: clamp(48px, 7vw, 80px);
+    .stat-num {
+      font-size: clamp(60px, 8vw, 88px);
       font-weight: 900;
-      letter-spacing: -0.04em;
+      letter-spacing: -0.05em;
       line-height: 1;
     }
 
-    .stat-label {
-      margin-top: 10px;
-      font-size: 14px;
+    .stat-lbl {
+      margin-top: 12px;
+      font-size: 13px;
       font-weight: 500;
-      color: rgba(255,255,255,0.4);
-      letter-spacing: 0.05em;
+      color: rgba(255,255,255,0.35);
+      letter-spacing: 0.04em;
       text-transform: uppercase;
     }
 
-    /* ─── SECTION 4: Feature Cards ─────────────────────────────────── */
-    #feature-cards {
-      padding: 160px 24px;
-    }
-
-    .cards-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 24px;
-      max-width: 1100px;
-      margin: 80px auto 0;
-    }
-
-    @media (max-width: 900px) {
-      .cards-grid { grid-template-columns: repeat(2, 1fr); }
-    }
-    @media (max-width: 600px) {
-      .cards-grid { grid-template-columns: 1fr; }
-    }
-
-    .feature-card {
-      padding: 36px;
-      opacity: 0;
-      transform: translateY(40px) scale(0.95);
-      will-change: transform, opacity;
-    }
-
-    .card-icon {
-      width: 52px;
-      height: 52px;
-      border-radius: 16px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 24px;
-      margin-bottom: 24px;
-    }
-
-    .card-title {
-      font-size: 20px;
-      font-weight: 700;
-      letter-spacing: -0.02em;
-      margin-bottom: 10px;
-    }
-
-    .card-body {
-      font-size: 15px;
-      color: rgba(255,255,255,0.45);
-      line-height: 1.6;
-    }
-
-    /* ─── SECTION 5: Text Highlight ────────────────────────────────── */
+    /* ─── SECTION 6: TEXT HIGHLIGHT ─────────────────────────────────── */
     #text-highlight {
-      padding: 200px 24px;
+      padding: 220px 24px;
       display: flex;
       flex-direction: column;
       align-items: center;
     }
 
     #highlight-paragraph {
-      font-size: clamp(28px, 4.5vw, 54px);
+      font-size: clamp(26px, 4vw, 50px);
       font-weight: 700;
       letter-spacing: -0.03em;
-      line-height: 1.2;
+      line-height: 1.25;
       max-width: 900px;
       text-align: center;
     }
@@ -439,45 +747,60 @@
     #highlight-paragraph .word {
       display: inline-block;
       color: var(--text-dim);
-      transition: color 0.1s;
-      margin-right: 0.25em;
+      margin-right: 0.22em;
       will-change: color;
     }
 
-    /* ─── SECTION 6: Gradient BG Transition ────────────────────────── */
+    /* ─── SECTION 7: GRADIENT BG TRANSITION ─────────────────────────── */
     #gradient-transition {
-      padding: 160px 24px;
+      padding: 180px 24px;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      transition: background-color 0s; /* GSAP handles this */
     }
 
-    .gradient-cards {
+    .security-cards {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 24px;
-      max-width: 1000px;
-      margin: 60px auto 0;
+      gap: 20px;
+      max-width: 900px;
+      margin: 72px auto 0;
     }
 
     @media (max-width: 700px) {
-      .gradient-cards { grid-template-columns: 1fr; }
-      #feature-sticky { grid-template-columns: 1fr; padding: 0 24px; }
-      #showcase-phone-wrap { display: none; }
-      #showcase-progress { right: 0; top: auto; bottom: -40px; flex-direction: row; transform: none; left: 50%; transform: translateX(-50%); }
+      .security-cards { grid-template-columns: 1fr; }
     }
 
-    .gradient-card {
-      padding: 32px;
+    .sec-card {
+      padding: 36px 28px;
       opacity: 0;
-      transform: translateY(30px);
+      transform: translateY(28px);
+      text-align: center;
     }
 
-    /* ─── SECTION 7: CTA ───────────────────────────────────────────── */
-    #cta {
+    .sec-badge {
+      font-size: 44px;
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      margin-bottom: 10px;
+    }
+
+    .sec-title {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .sec-body {
+      font-size: 14px;
+      color: rgba(255,255,255,0.4);
+      line-height: 1.6;
+    }
+
+    /* ─── SECTION 8: FINAL CTA ───────────────────────────────────────── */
+    #final-cta {
       padding: 120px 24px 160px;
       display: flex;
       align-items: center;
@@ -487,15 +810,15 @@
 
     #cta-inner {
       border-radius: 40px;
-      padding: 100px 60px;
-      max-width: 900px;
+      padding: 100px 64px;
+      max-width: 860px;
       width: 100%;
       text-align: center;
-      background: linear-gradient(135deg, rgba(124,58,237,0.35) 0%, rgba(6,182,212,0.15) 100%);
-      border: 1px solid rgba(124,58,237,0.3);
+      background: linear-gradient(135deg, rgba(139,92,246,0.18) 0%, rgba(6,182,212,0.08) 100%);
+      border: 1px solid rgba(139,92,246,0.22);
       backdrop-filter: blur(40px);
       -webkit-backdrop-filter: blur(40px);
-      transform: scale(0.8);
+      transform: scale(0.85);
       opacity: 0;
       will-change: transform, opacity;
       position: relative;
@@ -505,296 +828,86 @@
     #cta-inner::before {
       content: '';
       position: absolute;
-      top: -50%;
-      left: -50%;
-      width: 200%;
-      height: 200%;
-      background: radial-gradient(ellipse at center, rgba(124,58,237,0.15) 0%, transparent 60%);
+      top: -40%;
+      left: -20%;
+      width: 140%;
+      height: 140%;
+      background: radial-gradient(ellipse at 40% 30%, rgba(139,92,246,0.12), transparent 55%);
       pointer-events: none;
     }
 
     .cta-headline {
-      font-size: clamp(36px, 6vw, 68px);
+      font-size: clamp(44px, 6.5vw, 76px);
       font-weight: 900;
       letter-spacing: -0.04em;
-      line-height: 1.05;
-      margin-bottom: 20px;
+      line-height: 1.0;
+      margin-bottom: 22px;
     }
 
-    .cta-subheadline {
+    .cta-sub {
       font-size: 18px;
-      color: rgba(255,255,255,0.5);
-      margin-bottom: 48px;
-      line-height: 1.6;
+      color: rgba(255,255,255,0.45);
+      margin-bottom: 52px;
+      line-height: 1.65;
     }
 
-    .btn-pulse {
-      animation: pulse-glow 2.5s ease-in-out infinite;
-    }
-
-    @keyframes pulse-glow {
-      0%, 100% { box-shadow: 0 0 30px rgba(124,58,237,0.4), 0 0 60px rgba(6,182,212,0.2); }
-      50%       { box-shadow: 0 0 50px rgba(124,58,237,0.7), 0 0 100px rgba(6,182,212,0.4); }
-    }
-
-    /* ─── Nav ──────────────────────────────────────────────────────── */
-    #nav {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      z-index: 1000;
-      padding: 20px 48px;
+    .email-row {
       display: flex;
-      align-items: center;
-      justify-content: space-between;
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border-bottom: 1px solid transparent;
-      transition: border-color 0.3s, background 0.3s;
-    }
-
-    #nav.scrolled {
-      background: rgba(10,10,15,0.8);
-      border-color: rgba(255,255,255,0.06);
-    }
-
-    .nav-logo {
-      font-size: 22px;
-      font-weight: 900;
-      letter-spacing: -0.04em;
-      background: linear-gradient(135deg, #fff, rgba(255,255,255,0.7));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    .nav-links {
-      display: flex;
-      gap: 32px;
-      list-style: none;
-    }
-
-    .nav-links a {
-      font-size: 14px;
-      font-weight: 500;
-      color: rgba(255,255,255,0.5);
-      text-decoration: none;
-      transition: color 0.2s;
-    }
-    .nav-links a:hover { color: #fff; }
-
-    /* ─── Section Label ────────────────────────────────────────────── */
-    .section-eyebrow {
-      font-size: 12px;
-      font-weight: 600;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: rgba(124,58,237,0.8);
-      margin-bottom: 16px;
-    }
-
-    .section-headline {
-      font-size: clamp(36px, 5.5vw, 64px);
-      font-weight: 800;
-      letter-spacing: -0.03em;
-      line-height: 1.05;
-    }
-
-    /* ─── Chat Bubbles (Screen 1) ──────────────────────────────────── */
-    .chat-bubble {
-      border-radius: 18px;
-      padding: 10px 14px;
-      font-size: 12px;
-      line-height: 1.45;
-      margin-bottom: 8px;
-      max-width: 80%;
-    }
-    .chat-user {
-      background: linear-gradient(135deg, #7c3aed, #3b82f6);
-      color: #fff;
-      margin-left: auto;
-      border-bottom-right-radius: 4px;
-    }
-    .chat-ai {
-      background: rgba(255,255,255,0.08);
-      color: rgba(255,255,255,0.85);
-      border-bottom-left-radius: 4px;
-    }
-
-    /* ─── Bar Chart (Screen 2) ─────────────────────────────────────── */
-    .spend-bar-row {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 12px;
-    }
-    .spend-label { font-size: 10px; color: rgba(255,255,255,0.5); width: 56px; text-align: right; flex-shrink: 0; }
-    .spend-bar-bg { flex: 1; height: 8px; background: rgba(255,255,255,0.06); border-radius: 4px; overflow: hidden; }
-    .spend-bar-fill { height: 100%; border-radius: 4px; }
-    .spend-value { font-size: 10px; color: rgba(255,255,255,0.4); width: 36px; }
-
-    /* ─── Transaction List (Screen 3) ─────────────────────────────── */
-    .tx-row {
-      display: flex;
-      align-items: center;
       gap: 10px;
-      padding: 10px 0;
-      border-bottom: 1px solid rgba(255,255,255,0.05);
-    }
-    .tx-icon {
-      width: 32px; height: 32px;
-      border-radius: 10px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 14px;
-      flex-shrink: 0;
-    }
-    .tx-name { font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.85); }
-    .tx-date { font-size: 10px; color: rgba(255,255,255,0.35); }
-    .tx-amount { font-size: 12px; font-weight: 700; margin-left: auto; }
-
-    /* ─── Insights Cards (Screen 4) ────────────────────────────────── */
-    .insight-card {
-      padding: 14px;
-      border-radius: 14px;
-      margin-bottom: 10px;
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.06);
-    }
-    .insight-title { font-size: 11px; color: rgba(255,255,255,0.45); margin-bottom: 4px; }
-    .insight-value { font-size: 20px; font-weight: 800; letter-spacing: -0.03em; }
-    .insight-trend {
-      font-size: 10px; margin-top: 2px;
-      display: flex; align-items: center; gap: 3px;
-    }
-
-    /* ─── Divider ──────────────────────────────────────────────────── */
-    .divider {
-      width: 1px;
-      height: 80px;
-      background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.1), transparent);
+      justify-content: center;
+      flex-wrap: wrap;
+      max-width: 500px;
       margin: 0 auto;
     }
 
-    /* ─── Scroll indicator ─────────────────────────────────────────── */
-    #scroll-indicator {
-      position: absolute;
-      bottom: 48px;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 8px;
-      opacity: 0.5;
-    }
-    #scroll-indicator span {
-      font-size: 11px;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: rgba(255,255,255,0.5);
-    }
-    .scroll-arrow {
-      width: 20px;
-      height: 20px;
-      border-right: 1.5px solid rgba(255,255,255,0.4);
-      border-bottom: 1.5px solid rgba(255,255,255,0.4);
-      transform: rotate(45deg);
-      animation: bounce-arrow 1.5s ease-in-out infinite;
-    }
-    @keyframes bounce-arrow {
-      0%, 100% { transform: rotate(45deg) translateY(0); opacity: 0.5; }
-      50%       { transform: rotate(45deg) translateY(5px); opacity: 1; }
-    }
-
-    /* ─── Floating label ───────────────────────────────────────────── */
-    .section-tag {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 6px 16px;
+    .email-input {
+      flex: 1;
+      min-width: 220px;
+      padding: 15px 20px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
       border-radius: 100px;
-      background: rgba(124,58,237,0.12);
-      border: 1px solid rgba(124,58,237,0.25);
-      font-size: 12px;
-      font-weight: 600;
-      color: rgba(124,58,237,0.9);
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-      margin-bottom: 24px;
+      font-size: 15px;
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+      outline: none;
+      transition: border-color 0.2s;
     }
+    .email-input::placeholder { color: rgba(255,255,255,0.3); }
+    .email-input:focus { border-color: rgba(139,92,246,0.5); }
 
-    /* ─── Plan comparison cards (Screen 2) ─────────────────────────── */
-    .plan-card {
-      padding: 10px 12px;
-      border-radius: 12px;
-      margin-bottom: 8px;
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.06);
-    }
-    .plan-card.recommended {
-      border-color: rgba(124,58,237,0.4);
-      background: rgba(124,58,237,0.08);
-    }
-    .plan-name { font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.9); }
-    .plan-price { font-size: 16px; font-weight: 800; letter-spacing: -0.03em; margin: 2px 0; }
-    .plan-stars { font-size: 10px; color: #f59e0b; }
-
-    /* ─── Call screen (Screen 3) ───────────────────────────────────── */
-    .call-avatar {
-      width: 64px;
-      height: 64px;
-      border-radius: 50%;
+    /* ─── Footer ─────────────────────────────────────────────────────── */
+    footer {
+      padding: 44px 48px;
+      border-top: 1px solid rgba(255,255,255,0.06);
       display: flex;
+      justify-content: space-between;
       align-items: center;
-      justify-content: center;
-      margin: 0 auto 10px;
-      font-size: 28px;
-    }
-    .data-overlay {
-      padding: 10px 12px;
-      border-radius: 12px;
-      background: rgba(124,58,237,0.12);
-      border: 1px solid rgba(124,58,237,0.25);
-      margin-top: 12px;
+      flex-wrap: wrap;
+      gap: 20px;
     }
 
-    /* ─── Shield visual (Screen 4) ────────────────────────────────── */
-    .shield-icon {
-      width: 72px;
-      height: 72px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 12px;
-      background: linear-gradient(135deg, rgba(16,185,129,0.2), rgba(6,182,212,0.15));
-      border: 1px solid rgba(16,185,129,0.3);
-    }
-    .privacy-bullet {
+    .footer-brand {
       display: flex;
       align-items: center;
       gap: 8px;
-      padding: 6px 0;
-      font-size: 11px;
-      color: rgba(255,255,255,0.7);
-    }
-    .privacy-bullet .check {
-      width: 16px;
-      height: 16px;
-      border-radius: 50%;
-      background: rgba(16,185,129,0.2);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
+      font-size: 18px;
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      color: #fff;
     }
 
-    /* ─── Mobile nav hide ──────────────────────────────────────────── */
-    @media (max-width: 640px) {
+    /* ─── Mobile responsive ──────────────────────────────────────────── */
+    @media (max-width: 768px) {
+      #nav { padding: 18px 24px; }
       .nav-links { display: none; }
-      #nav { padding: 20px 24px; }
-      #feature-sticky { padding: 0 24px; }
+      .scrolly-sticky { grid-template-columns: 1fr; padding: 0 24px; gap: 40px; }
+      .scrolly-phone-side { display: none; }
+      .scrolly-dots { display: none; }
+      .bento-grid { grid-template-columns: 1fr; }
+      .bento-lg, .bento-md, .bento-sm, .bento-sm2, .bento-sm3 { grid-column: span 1; }
+      footer { padding: 36px 24px; }
+      #cta-inner { padding: 60px 32px; }
     }
   </style>
 </head>
@@ -804,14 +917,16 @@
      NAVIGATION
 ════════════════════════════════════════════════════════════════ -->
 <nav id="nav">
-  <div class="nav-logo" style="display:flex;align-items:center;gap:8px;"><img src="yara_butterfly.png" alt="Yara" style="width:28px;height:28px;mix-blend-mode:screen;">yara</div>
+  <a href="#" class="nav-brand">
+    <img src="yara_butterfly.png" alt="Yara" style="width:28px;height:28px;mix-blend-mode:screen;">
+    yara
+  </a>
   <ul class="nav-links">
-    <li><a href="#feature-showcase">Features</a></li>
+    <li><a href="#feature-cards">Features</a></li>
+    <li><a href="#fin-scrolly">How It Works</a></li>
     <li><a href="#stats">About</a></li>
-    <li><a href="#feature-cards">Platform</a></li>
-    <li><a href="#cta">Waitlist</a></li>
   </ul>
-  <a href="#cta" class="btn-primary" style="padding: 10px 24px; font-size: 14px;">Join the Waitlist</a>
+  <a href="#final-cta" class="btn-primary" style="padding: 10px 22px; font-size: 13px;">Join the Waitlist</a>
 </nav>
 
 
@@ -821,54 +936,29 @@
 <section id="hero">
 
   <!-- Background orbs -->
-  <div class="orb" id="orb1" style="width:600px;height:600px;background:radial-gradient(circle,rgba(124,58,237,0.35),transparent 70%);top:-100px;left:-200px;"></div>
-  <div class="orb" id="orb2" style="width:500px;height:500px;background:radial-gradient(circle,rgba(6,182,212,0.25),transparent 70%);top:200px;right:-150px;"></div>
-  <div class="orb" id="orb3" style="width:400px;height:400px;background:radial-gradient(circle,rgba(59,130,246,0.2),transparent 70%);bottom:0;left:30%;"></div>
-  <div class="orb" id="orb4" style="width:300px;height:300px;background:radial-gradient(circle,rgba(236,72,153,0.18),transparent 70%);top:30%;right:10%;"></div>
+  <div class="orb" id="orb1" style="width:700px;height:700px;background:radial-gradient(circle,rgba(139,92,246,0.3),transparent 70%);top:-180px;left:-250px;"></div>
+  <div class="orb" id="orb2" style="width:550px;height:550px;background:radial-gradient(circle,rgba(6,182,212,0.22),transparent 70%);top:120px;right:-180px;"></div>
+  <div class="orb" id="orb3" style="width:380px;height:380px;background:radial-gradient(circle,rgba(139,92,246,0.15),transparent 70%);bottom:-60px;left:35%;"></div>
 
-  <!-- Wordmark -->
-  <div id="hero-wordmark">yara</div>
+  <!-- Headline -->
+  <h1 id="hero-headline">
+    Your Personal<br>
+    <span class="grad-text">AI Advocate</span>
+  </h1>
 
   <!-- Subtitle -->
-  <p id="hero-subtitle">Your Personal AI Advocate</p>
+  <p id="hero-subtitle">
+    Every company you pay uses AI to optimize what they charge you.<br>
+    Yara is the AI that fights back across every bill, subscription, and policy you have.
+  </p>
 
-  <!-- CTA -->
+  <!-- CTAs -->
   <div id="hero-cta">
-    <a href="#cta" class="btn-primary btn-pulse">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
-      Join the Waitlist
-    </a>
+    <a href="#feature-cards" class="btn-primary btn-pulse">See What Yara Does</a>
+    <a href="#fin-scrolly" class="btn-ghost">How It Works</a>
   </div>
 
-  <!-- Hero phone -->
-  <div id="hero-phone">
-    <div class="phone-frame">
-      <!-- Ambient glow -->
-      <div style="position:absolute;inset:-1px;border-radius:40px;background:linear-gradient(135deg,rgba(124,58,237,0.3),rgba(6,182,212,0.15));filter:blur(20px);z-index:-1;"></div>
-
-      <!-- Screen content -->
-      <div style="padding:64px 16px 20px;height:100%;display:flex;flex-direction:column;gap:0;">
-        <div style="font-size:11px;font-weight:600;color:rgba(255,255,255,0.3);text-align:center;margin-bottom:12px;">yara</div>
-
-        <div class="chat-bubble chat-ai" style="max-width:90%;">
-          Hi there! I'm connected to your accounts. What would you like to know?
-        </div>
-        <div class="chat-bubble chat-user">Show me my Uber transactions</div>
-        <div class="chat-bubble chat-ai">I found 2 Uber transactions: <span style="color:#7c3aed;font-weight:700;">UberEats $42.50</span> (Food & Dining, Nov 15) and <span style="color:#06b6d4;font-weight:700;">Uber ride $72.00</span> (Transportation, Nov 12).</div>
-        <div class="chat-bubble chat-user">Can I save on my phone bill?</div>
-        <div class="chat-bubble chat-ai" style="max-width:90%;">Yes! I found a plan that could save you <span style="color:#10b981;font-weight:700;">$14/month</span>. Want me to show you the comparison?</div>
-
-        <!-- Input sim -->
-        <div style="margin-top:auto;background:rgba(255,255,255,0.06);border-radius:20px;padding:10px 14px;display:flex;align-items:center;gap:8px;border:1px solid rgba(255,255,255,0.08);">
-          <span style="font-size:11px;color:rgba(255,255,255,0.25);flex:1;">Ask yara anything...</span>
-          <div style="width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,#7c3aed,#06b6d4);display:flex;align-items:center;justify-content:center;">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="white"><path d="M12 2a3 3 0 0 1 3 3v7a3 3 0 0 1-6 0V5a3 3 0 0 1 3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
+  <!-- Scroll indicator -->
   <div id="scroll-indicator">
     <span>Scroll</span>
     <div class="scroll-arrow"></div>
@@ -877,218 +967,556 @@
 
 
 <!-- ════════════════════════════════════════════════════════════════
-     SECTION 2 — PINNED FEATURE SHOWCASE
+     SECTION 2 — FEATURE CARDS (Staggered Bento Grid)
 ════════════════════════════════════════════════════════════════ -->
-<section id="feature-showcase">
-  <div id="feature-sticky">
+<section id="feature-cards">
 
-    <!-- LEFT: Phone -->
-    <div id="showcase-phone-wrap">
-      <div class="phone-frame showcase-phone" style="position:relative;">
+  <div style="max-width:1100px;margin:0 auto;">
 
-        <!-- Screen 1: Financial Intelligence — Conversation -->
-        <div class="showcase-screen active" id="screen-1">
-          <div class="phone-status">
-            <span>9:41</span>
-            <div style="display:flex;gap:5px;align-items:center;">
-              <svg width="12" height="9" viewBox="0 0 24 18" fill="rgba(255,255,255,0.6)"><rect x="0" y="6" width="4" height="12" rx="1"/><rect x="6" y="4" width="4" height="14" rx="1"/><rect x="12" y="1" width="4" height="17" rx="1"/><rect x="18" y="0" width="4" height="18" rx="1" opacity="0.3"/></svg>
-              <svg width="12" height="9" viewBox="0 0 24 16" fill="rgba(255,255,255,0.6)"><rect x="0" y="3" width="20" height="10" rx="3" stroke="rgba(255,255,255,0.6)" stroke-width="1.5" fill="none"/><rect x="20" y="6" width="3" height="4" rx="1" fill="rgba(255,255,255,0.4)"/><rect x="1.5" y="4.5" width="12" height="7" rx="1.5" fill="rgba(255,255,255,0.6)"/></svg>
-            </div>
-          </div>
-          <div style="font-size:14px;font-weight:700;text-align:center;margin-bottom:16px;color:rgba(255,255,255,0.9);">yara</div>
-          <div style="display:flex;flex-direction:column;gap:8px;">
-            <div class="chat-bubble chat-ai">Hi! What would you like to know about your spending?</div>
-            <div class="chat-bubble chat-user">Show me my Uber transactions</div>
-            <div class="chat-bubble chat-ai" style="max-width:95%;">I found 2 Uber transactions:<br><br><span style="color:#7c3aed;font-weight:700;">UberEats</span> — $42.50<br><span style="font-size:10px;color:rgba(255,255,255,0.4);">Food & Dining, Nov 15</span><br><br><span style="color:#06b6d4;font-weight:700;">Uber ride</span> — $72.00<br><span style="font-size:10px;color:rgba(255,255,255,0.4);">Transportation, Nov 12</span></div>
-          </div>
-        </div>
-
-        <!-- Screen 2: Verified Savings — Plan Comparison -->
-        <div class="showcase-screen" id="screen-2">
-          <div class="phone-status"><span>9:41</span><span style="font-size:10px;color:rgba(255,255,255,0.4);">Savings</span></div>
-          <div style="font-size:14px;font-weight:700;margin-bottom:4px;">Plan Comparison</div>
-          <div style="font-size:11px;color:rgba(255,255,255,0.35);margin-bottom:16px;">Verified recommendations for your usage</div>
-
-          <div class="plan-card recommended">
-            <div style="display:flex;justify-content:space-between;align-items:center;">
-              <div class="plan-name">T-Mobile Essentials</div>
-              <div style="font-size:9px;padding:2px 8px;border-radius:100px;background:rgba(124,58,237,0.2);color:#7c3aed;font-weight:600;">BEST MATCH</div>
-            </div>
-            <div class="plan-price aurora-text">$61<span style="font-size:11px;font-weight:400;">/mo</span></div>
-            <div class="plan-stars">&#9733;&#9733;&#9733;&#9733;&#9734;</div>
-          </div>
-
-          <div class="plan-card">
-            <div class="plan-name">AT&T Value Plus</div>
-            <div class="plan-price" style="color:rgba(255,255,255,0.8);">$65<span style="font-size:11px;font-weight:400;">/mo</span></div>
-            <div class="plan-stars">&#9733;&#9733;&#9733;&#9733;&#9734;</div>
-          </div>
-
-          <div class="plan-card">
-            <div class="plan-name">AT&T Premium</div>
-            <div class="plan-price" style="color:rgba(255,255,255,0.8);">$70<span style="font-size:11px;font-weight:400;">/mo</span></div>
-            <div class="plan-stars">&#9733;&#9733;&#9733;&#9734;&#9734;</div>
-          </div>
-
-          <div style="margin-top:12px;padding:10px;border-radius:10px;background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.15);">
-            <div style="font-size:10px;color:#10b981;font-weight:600;">MATHEMATICALLY VERIFIED</div>
-            <div style="font-size:10px;color:rgba(255,255,255,0.4);margin-top:2px;">All savings calculations independently verified</div>
-          </div>
-        </div>
-
-        <!-- Screen 3: Silent Assistant — Call Screen -->
-        <div class="showcase-screen" id="screen-3">
-          <div class="phone-status"><span>9:41</span><span style="font-size:10px;color:rgba(255,255,255,0.4);">On Call</span></div>
-
-          <div style="text-align:center;margin-top:16px;">
-            <div class="call-avatar" style="background:linear-gradient(135deg,rgba(59,130,246,0.3),rgba(6,182,212,0.2));border:1px solid rgba(59,130,246,0.3);">
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.8)" stroke-width="1.5"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-            </div>
-            <div style="font-size:16px;font-weight:700;color:rgba(255,255,255,0.9);">AT&T</div>
-            <div style="font-size:11px;color:rgba(255,255,255,0.35);margin-top:2px;">Customer Service</div>
-            <div style="font-size:12px;color:#10b981;margin-top:6px;font-weight:600;">12:34 connected</div>
-          </div>
-
-          <div class="data-overlay" style="margin-top:20px;">
-            <div style="font-size:9px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:rgba(124,58,237,0.8);margin-bottom:8px;">yara Live Data</div>
-            <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.05);">
-              <span style="font-size:11px;color:rgba(255,255,255,0.5);">Promotional credit</span>
-              <span style="font-size:13px;font-weight:700;color:#10b981;">$2.78</span>
-            </div>
-            <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.05);">
-              <span style="font-size:11px;color:rgba(255,255,255,0.5);">Current plan</span>
-              <span style="font-size:11px;font-weight:600;color:rgba(255,255,255,0.8);">Unlimited Elite</span>
-            </div>
-            <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;">
-              <span style="font-size:11px;color:rgba(255,255,255,0.5);">Monthly charge</span>
-              <span style="font-size:11px;font-weight:600;color:rgba(255,255,255,0.8);">$85.00</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Screen 4: Security on Device — Shield Visual -->
-        <div class="showcase-screen" id="screen-4">
-          <div class="phone-status"><span>9:41</span><span style="font-size:10px;color:rgba(255,255,255,0.4);">Security</span></div>
-
-          <div style="text-align:center;margin-top:12px;">
-            <div class="shield-icon">
-              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4" stroke="#10b981" stroke-width="2"/></svg>
-            </div>
-            <div style="font-size:18px;font-weight:800;letter-spacing:-0.03em;background:linear-gradient(135deg,#10b981,#06b6d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Total Privacy</div>
-            <div style="font-size:10px;color:rgba(255,255,255,0.35);margin-top:4px;">Your data never leaves this device</div>
-          </div>
-
-          <div style="margin-top:20px;padding:0 4px;">
-            <div class="privacy-bullet">
-              <div class="check"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
-              Zero data persistence on servers
-            </div>
-            <div class="privacy-bullet">
-              <div class="check"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
-              All processing happens on-device
-            </div>
-            <div class="privacy-bullet">
-              <div class="check"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
-              Zero tracking or analytics
-            </div>
-            <div class="privacy-bullet">
-              <div class="check"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
-              End-to-end encrypted connections
-            </div>
-            <div class="privacy-bullet">
-              <div class="check"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
-              Your data is never sold
-            </div>
-          </div>
-        </div>
-
-      </div>
+    <div class="cards-section-header">
+      <div class="eyebrow" id="fc-eyebrow" style="opacity:0;">Platform</div>
+      <h2 id="fc-headline" style="font-size:clamp(36px,5vw,60px);font-weight:900;letter-spacing:-0.04em;opacity:0;">
+        Everything you need.<br>Nothing you don't.
+      </h2>
     </div>
 
-    <!-- RIGHT: Feature text panels + progress -->
-    <div style="position:relative;">
-      <div id="showcase-text-wrap">
+    <div class="bento-grid">
 
-        <div class="feature-panel active" id="panel-1">
-          <div class="section-tag">01 — Financial Intelligence</div>
-          <h2 class="feature-title">Financial Intelligence</h2>
-          <p class="feature-body">Connect securely via Plaid. Ask anything about your spending. Get instant, accurate answers.</p>
+      <!-- Card 1: Financial Intelligence (large) -->
+      <div class="bento-card bento-lg">
+        <div class="feat-card" id="fc0" style="height:100%;">
+          <div class="feat-card-label" style="color:#06B6D4;">Financial Intelligence</div>
+          <div class="feat-card-title">Knows every dollar<br>you spend.</div>
+          <div class="feat-card-body" style="max-width:360px;">Connect your accounts via Plaid. Ask anything. Yara analyzes every transaction across every account in real time.</div>
+          <!-- Waveform visual -->
+          <div class="waveform" style="margin-top:28px;">
+            <!-- 28 bars with staggered animation delays -->
+            <div class="wave-bar" style="height:60%;animation-delay:0s;"></div>
+            <div class="wave-bar" style="height:80%;animation-delay:0.08s;"></div>
+            <div class="wave-bar" style="height:45%;animation-delay:0.16s;"></div>
+            <div class="wave-bar" style="height:90%;animation-delay:0.24s;"></div>
+            <div class="wave-bar" style="height:60%;animation-delay:0.32s;"></div>
+            <div class="wave-bar" style="height:100%;animation-delay:0.4s;"></div>
+            <div class="wave-bar" style="height:70%;animation-delay:0.48s;"></div>
+            <div class="wave-bar" style="height:55%;animation-delay:0.56s;"></div>
+            <div class="wave-bar" style="height:85%;animation-delay:0.64s;"></div>
+            <div class="wave-bar" style="height:40%;animation-delay:0.72s;"></div>
+            <div class="wave-bar" style="height:75%;animation-delay:0.8s;"></div>
+            <div class="wave-bar" style="height:95%;animation-delay:0.88s;"></div>
+            <div class="wave-bar" style="height:60%;animation-delay:0.96s;"></div>
+            <div class="wave-bar" style="height:50%;animation-delay:1.04s;"></div>
+            <div class="wave-bar" style="height:80%;animation-delay:1.12s;"></div>
+            <div class="wave-bar" style="height:65%;animation-delay:1.2s;"></div>
+            <div class="wave-bar" style="height:100%;animation-delay:1.28s;"></div>
+            <div class="wave-bar" style="height:70%;animation-delay:1.36s;"></div>
+            <div class="wave-bar" style="height:45%;animation-delay:1.44s;"></div>
+            <div class="wave-bar" style="height:88%;animation-delay:1.52s;"></div>
+            <div class="wave-bar" style="height:55%;animation-delay:1.6s;"></div>
+            <div class="wave-bar" style="height:75%;animation-delay:1.68s;"></div>
+            <div class="wave-bar" style="height:90%;animation-delay:1.76s;"></div>
+            <div class="wave-bar" style="height:60%;animation-delay:1.84s;"></div>
+            <div class="wave-bar" style="height:40%;animation-delay:1.92s;"></div>
+            <div class="wave-bar" style="height:80%;animation-delay:2.0s;"></div>
+            <div class="wave-bar" style="height:65%;animation-delay:2.08s;"></div>
+            <div class="wave-bar" style="height:50%;animation-delay:2.16s;"></div>
+          </div>
+          <div style="font-size:11px;color:rgba(6,182,212,0.7);font-weight:600;letter-spacing:0.08em;text-transform:uppercase;">Listening and providing data...</div>
         </div>
-
-        <div class="feature-panel" id="panel-2">
-          <div class="section-tag" style="color:rgba(6,182,212,0.9);background:rgba(6,182,212,0.1);border-color:rgba(6,182,212,0.25);">02 — Verified Savings</div>
-          <h2 class="feature-title">Verified Savings</h2>
-          <p class="feature-body">Our models verify every recommendation for mathematical accuracy. No hallucinations. Just savings.</p>
-        </div>
-
-        <div class="feature-panel" id="panel-3">
-          <div class="section-tag" style="color:rgba(16,185,129,0.9);background:rgba(16,185,129,0.1);border-color:rgba(16,185,129,0.25);">03 — Silent Assistant</div>
-          <h2 class="feature-title">Silent Assistant</h2>
-          <p class="feature-body">On calls, Yara provides the data you need from your records. Real-time advocacy when it matters most.</p>
-        </div>
-
-        <div class="feature-panel" id="panel-4">
-          <div class="section-tag" style="color:rgba(236,72,153,0.9);background:rgba(236,72,153,0.1);border-color:rgba(236,72,153,0.25);">04 — Security on Device</div>
-          <h2 class="feature-title">Security on Device</h2>
-          <p class="feature-body">Zero data persistence. Your data never leaves your device. Zero persistence. Zero tracking.</p>
-        </div>
-
       </div>
 
-      <!-- Progress dots -->
-      <div id="showcase-progress" style="position:absolute;right:-60px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:12px;">
-        <div class="progress-dot active" data-index="0"></div>
-        <div class="progress-dot" data-index="1"></div>
-        <div class="progress-dot" data-index="2"></div>
-        <div class="progress-dot" data-index="3"></div>
+      <!-- Card 2: Always Watching -->
+      <div class="bento-card bento-md">
+        <div class="feat-card" id="fc1" style="height:100%;">
+          <div class="feat-card-label" style="color:#8B5CF6;">Always Watching</div>
+          <div class="feat-card-title">Alerts before<br>you're surprised.</div>
+          <div style="margin-top:20px;">
+            <div class="notif-pill">
+              <div class="notif-dot" style="background:#F59E0B;"></div>
+              <div>
+                <div style="font-weight:700;color:rgba(255,255,255,0.9);">Insurance Renewal Alert</div>
+                <div style="color:rgba(255,255,255,0.4);font-size:11px;margin-top:1px;">Your State Farm policy renews in 14 days. Rate increased 22%.</div>
+              </div>
+            </div>
+            <div class="notif-pill">
+              <div class="notif-dot" style="background:#EF4444;"></div>
+              <div>
+                <div style="font-weight:700;color:rgba(255,255,255,0.9);">APR Increase Detected</div>
+                <div style="color:rgba(255,255,255,0.4);font-size:11px;margin-top:1px;">Chase Sapphire raised your APR from 19.24% to 24.99%.</div>
+              </div>
+            </div>
+            <div class="notif-pill">
+              <div class="notif-dot" style="background:#8B5CF6;"></div>
+              <div>
+                <div style="font-weight:700;color:rgba(255,255,255,0.9);">Unused Subscription</div>
+                <div style="color:rgba(255,255,255,0.4);font-size:11px;margin-top:1px;">Paramount+ — 0 streams in 90 days. $11.99/mo.</div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
+
+      <!-- Card 3: Verified Savings -->
+      <div class="bento-card bento-sm">
+        <div class="feat-card" id="fc2" style="height:100%;">
+          <div class="feat-card-label" style="color:#22C55E;">Verified Savings</div>
+          <div class="feat-card-title">Real numbers.<br>Real savings.</div>
+          <div style="margin-top:18px;">
+            <div class="insurer-row">
+              <span style="color:rgba(255,255,255,0.6);">Progressive</span>
+              <div style="display:flex;gap:8px;align-items:center;">
+                <span class="price-new">$129/mo</span>
+              </div>
+            </div>
+            <div class="insurer-row">
+              <span style="color:rgba(255,255,255,0.6);">Allstate</span>
+              <span style="color:rgba(255,255,255,0.45);">$145/mo</span>
+            </div>
+            <div class="insurer-row" style="border:0;">
+              <span style="color:rgba(255,255,255,0.6);">Geico</span>
+              <span class="price-strike">$168/mo</span>
+            </div>
+          </div>
+          <div style="margin-top:16px;padding:10px 12px;border-radius:12px;background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.15);">
+            <div style="font-size:10px;color:#22C55E;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;">Potential savings</div>
+            <div style="font-size:20px;font-weight:900;letter-spacing:-0.03em;color:#22C55E;margin-top:3px;">$468/year</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 4: Real-Time Advocacy -->
+      <div class="bento-card bento-sm2">
+        <div class="feat-card" id="fc3" style="height:100%;">
+          <div class="feat-card-label" style="color:#8B5CF6;">Real-Time Advocacy</div>
+          <div class="feat-card-title">On your side<br>on every call.</div>
+          <div class="feat-card-body">Yara listens privately and surfaces relevant data in real time — so you always negotiate from strength.</div>
+          <!-- Mini waveform in purple -->
+          <div class="waveform" style="margin-top:20px;">
+            <div class="wave-bar" style="background:#8B5CF6;height:70%;animation-delay:0s;"></div>
+            <div class="wave-bar" style="background:#8B5CF6;height:40%;animation-delay:0.1s;"></div>
+            <div class="wave-bar" style="background:#8B5CF6;height:90%;animation-delay:0.2s;"></div>
+            <div class="wave-bar" style="background:#8B5CF6;height:55%;animation-delay:0.3s;"></div>
+            <div class="wave-bar" style="background:#8B5CF6;height:100%;animation-delay:0.4s;"></div>
+            <div class="wave-bar" style="background:#8B5CF6;height:65%;animation-delay:0.5s;"></div>
+            <div class="wave-bar" style="background:#8B5CF6;height:80%;animation-delay:0.6s;"></div>
+            <div class="wave-bar" style="background:#8B5CF6;height:50%;animation-delay:0.7s;"></div>
+            <div class="wave-bar" style="background:#8B5CF6;height:75%;animation-delay:0.8s;"></div>
+            <div class="wave-bar" style="background:#8B5CF6;height:40%;animation-delay:0.9s;"></div>
+            <div class="wave-bar" style="background:#8B5CF6;height:85%;animation-delay:1.0s;"></div>
+            <div class="wave-bar" style="background:#8B5CF6;height:60%;animation-delay:1.1s;"></div>
+          </div>
+          <div style="font-size:11px;color:rgba(139,92,246,0.7);font-weight:600;letter-spacing:0.08em;text-transform:uppercase;">Listening and providing data...</div>
+        </div>
+      </div>
+
+      <!-- Card 5: Takes Action -->
+      <div class="bento-card bento-sm3">
+        <div class="feat-card" id="fc4" style="height:100%;">
+          <div class="feat-card-label" style="color:#22C55E;">Takes Action</div>
+          <div class="feat-card-title">Done for you.</div>
+          <div style="margin-top:20px;">
+            <div class="task-row">
+              <div class="task-check">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#22C55E" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
+              Switched insurance carrier
+            </div>
+            <div class="task-row">
+              <div class="task-check">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#22C55E" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
+              Disputed overdraft fee
+            </div>
+            <div class="task-row">
+              <div class="task-check">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#22C55E" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
+              Switched to cheaper plan
+            </div>
+            <div class="task-row">
+              <div class="task-check">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#22C55E" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
+              Cancelled unused subs
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 6: Security on Device -->
+      <div class="bento-card bento-sm2">
+        <div class="feat-card" id="fc5" style="height:100%;">
+          <div class="feat-card-label" style="color:#06B6D4;">Security On Device</div>
+          <div class="feat-card-title">Your data stays<br>yours. Always.</div>
+          <div style="display:flex;justify-content:space-around;margin-top:28px;">
+            <div class="zero-stat">
+              <div class="zero-num grad-text">0</div>
+              <div class="zero-label">Data<br>Stored</div>
+            </div>
+            <div class="zero-stat">
+              <div class="zero-num grad-text">0</div>
+              <div class="zero-label">Trackers</div>
+            </div>
+            <div class="zero-stat">
+              <div class="zero-num grad-text">0</div>
+              <div class="zero-label">Third<br>Parties</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 7: Web Navigation -->
+      <div class="bento-card bento-sm3">
+        <div class="feat-card" id="fc6" style="height:100%;position:relative;">
+          <div style="position:absolute;top:20px;right:20px;"><span class="coming-badge">Coming Soon</span></div>
+          <div class="feat-card-label" style="color:#F59E0B;">Web Navigation</div>
+          <div class="feat-card-title">Yara acts<br>for you.</div>
+          <div class="feat-card-body">Browses the web, fills forms, and completes tasks on your behalf — so you never have to hold on hold again.</div>
+        </div>
+      </div>
+
     </div>
-
   </div>
 </section>
 
 
 <!-- ════════════════════════════════════════════════════════════════
-     SECTION 3 — COUNTING STATS
+     SECTION 3 — FINANCIAL INTELLIGENCE SCROLLYTELLING (PINNED)
 ════════════════════════════════════════════════════════════════ -->
-<section id="stats" style="background:linear-gradient(180deg,#0a0a0f 0%,#0d0d1a 100%);">
-  <div style="max-width:1100px;margin:0 auto;text-align:center;padding:0 24px;">
+<div id="fin-scrolly" style="height:400vh;position:relative;background:#0D0D12;">
 
-    <!-- Orbs -->
-    <div class="orb" style="width:400px;height:400px;background:radial-gradient(circle,rgba(124,58,237,0.15),transparent 70%);top:0;left:-100px;"></div>
-    <div class="orb" style="width:300px;height:300px;background:radial-gradient(circle,rgba(6,182,212,0.12),transparent 70%);bottom:0;right:-50px;"></div>
+  <!-- Section label above sticky frame -->
+  <div style="position:absolute;top:0;left:0;right:0;height:100vh;pointer-events:none;z-index:0;">
+    <!-- just acts as scroll space -->
+  </div>
 
-    <div class="section-eyebrow" id="stats-eyebrow" style="opacity:0;">By the numbers</div>
-    <h2 class="section-headline" id="stats-headline" style="opacity:0;">Built for privacy.<br>Powered by intelligence.</h2>
+  <div id="fin-sticky" class="scrolly-sticky">
+
+    <!-- LEFT: text panels -->
+    <div class="scrolly-text-side">
+
+      <!-- Section header -->
+      <div class="scrolly-header">
+        <div class="eyebrow">Financial Intelligence</div>
+        <h2 style="font-size:clamp(26px,3vw,38px);font-weight:900;letter-spacing:-0.04em;line-height:1.1;max-width:440px;">
+          Knows Your Money.<br>
+          <span class="grad-text">Finds the Waste.</span>
+        </h2>
+        <p style="margin-top:12px;font-size:15px;color:rgba(255,255,255,0.4);line-height:1.6;max-width:380px;">
+          Connect your accounts securely. Yara analyzes your spending across every category and tells you exactly where you're overpaying.
+        </p>
+      </div>
+
+      <!-- Step panels (swap in/out) -->
+      <div class="scrolly-panels-container">
+        <div class="scrolly-text-panel active" id="fin-panel-0">
+          <div class="scrolly-panel-label">Step 1 of 4</div>
+          <div class="scrolly-panel-title">Ask one question.<br>Get a full audit.</div>
+          <div class="scrolly-panel-body">One message surfaces every overpayment across every account — auto, subscriptions, phone, utilities — in seconds.</div>
+        </div>
+
+        <div class="scrolly-text-panel" id="fin-panel-1">
+          <div class="scrolly-panel-label">Step 2 of 4</div>
+          <div class="scrolly-panel-title">Auto insurance is the #1 overpayment.</div>
+          <div class="scrolly-panel-body">Yara compares your coverage to 40+ carriers instantly. Average driver overpays by $468/year without knowing it.</div>
+        </div>
+
+        <div class="scrolly-text-panel" id="fin-panel-2">
+          <div class="scrolly-panel-label">Step 3 of 4</div>
+          <div class="scrolly-panel-title">The average person wastes $240/year on subscriptions.</div>
+          <div class="scrolly-panel-body">Yara tracks every streaming service, app, and recurring charge — and flags the ones you've stopped using.</div>
+        </div>
+
+        <div class="scrolly-text-panel" id="fin-panel-3">
+          <div class="scrolly-panel-label">Step 4 of 4</div>
+          <div class="scrolly-panel-title">Paying for data you don't use?</div>
+          <div class="scrolly-panel-body">Yara matches your actual monthly usage to the cheapest available plan. No more overpaying for unlimited when you use 8GB.</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- RIGHT: phone -->
+    <div class="scrolly-phone-side">
+      <div style="position:relative;">
+        <div class="phone-frame" style="position:relative;">
+          <!-- Phone glow -->
+          <div style="position:absolute;inset:-2px;border-radius:46px;background:linear-gradient(135deg,rgba(139,92,246,0.25),rgba(6,182,212,0.1));filter:blur(24px);z-index:-1;pointer-events:none;"></div>
+
+          <!-- Screen 0: Initial question -->
+          <div class="scrolly-screen phone-screen active" id="fin-screen-0">
+            <div class="phone-status">
+              <span>9:41</span>
+              <span style="font-size:10px;color:rgba(255,255,255,0.35);">yara</span>
+            </div>
+            <div style="font-size:13px;font-weight:700;text-align:center;margin-bottom:16px;color:rgba(255,255,255,0.9);">Financial Review</div>
+            <div class="chat-user">Where am I overpaying?</div>
+            <div class="chat-ai" style="margin-top:4px;">
+              I analyzed your last 90 days across all accounts. Found <strong style="color:#22C55E;">4 opportunities</strong> to save.
+              <div style="margin-top:10px;padding:10px;border-radius:12px;background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.15);">
+                <div style="font-size:11px;color:#22C55E;font-weight:700;">Total potential savings</div>
+                <div style="font-size:22px;font-weight:900;letter-spacing:-0.03em;color:#22C55E;">$85/month</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Screen 1: Auto insurance -->
+          <div class="scrolly-screen phone-screen" id="fin-screen-1">
+            <div class="phone-status"><span>9:41</span><span style="font-size:10px;color:rgba(255,255,255,0.35);">Opportunity 1/4</span></div>
+            <div class="opp-card">
+              <div class="opp-tag" style="background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.2);color:#F59E0B;">
+                <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                Overpaying
+              </div>
+              <div class="opp-name">Auto Insurance — Geico</div>
+              <div class="opp-detail">You're paying $168/mo for comparable coverage available from $129/mo with Progressive.</div>
+              <div class="opp-savings" style="color:#22C55E;">Save $468/year</div>
+            </div>
+            <div class="chat-ai">
+              I found 3 carriers that match your coverage level at a lower price. Want me to start the switch?
+            </div>
+          </div>
+
+          <!-- Screen 2: Subscriptions -->
+          <div class="scrolly-screen phone-screen" id="fin-screen-2">
+            <div class="phone-status"><span>9:41</span><span style="font-size:10px;color:rgba(255,255,255,0.35);">Opportunity 2/4</span></div>
+            <div class="opp-card">
+              <div class="opp-tag" style="background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.2);color:#8B5CF6;">
+                <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="9" x2="15" y2="15"/><line x1="15" y1="9" x2="9" y2="15"/></svg>
+                Unused
+              </div>
+              <div class="opp-name">Streaming Subscriptions</div>
+              <div class="opp-detail">3 active streaming services, $47/mo total. Paramount+ used once in 90 days.</div>
+              <div class="opp-savings" style="color:#22C55E;">Save $11.99/mo</div>
+            </div>
+            <div class="chat-ai">
+              Paramount+ last viewed Nov 3rd. You're paying $11.99/mo for a service you're not using. Cancel?
+            </div>
+          </div>
+
+          <!-- Screen 3: Phone plan -->
+          <div class="scrolly-screen phone-screen" id="fin-screen-3">
+            <div class="phone-status"><span>9:41</span><span style="font-size:10px;color:rgba(255,255,255,0.35);">Opportunity 3/4</span></div>
+            <div class="opp-card">
+              <div class="opp-tag" style="background:rgba(6,182,212,0.1);border:1px solid rgba(6,182,212,0.2);color:#06B6D4;">
+                <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07"/><path d="M2 2l20 20"/></svg>
+                Overplan
+              </div>
+              <div class="opp-name">Phone Plan — Unlimited</div>
+              <div class="opp-detail">Paying $85/mo for Unlimited. Your actual usage: 8GB/mo avg. A 15GB plan costs $61/mo.</div>
+              <div class="opp-savings" style="color:#22C55E;">Save $24/mo</div>
+            </div>
+            <div class="chat-ai">
+              You've used under 10GB every month for 6 months. You're paying $24/mo for data you'll never use.
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Progress dots -->
+        <div class="scrolly-dots" id="fin-dots">
+          <div class="sdot active" data-scrolly="fin" data-i="0"></div>
+          <div class="sdot" data-scrolly="fin" data-i="1"></div>
+          <div class="sdot" data-scrolly="fin" data-i="2"></div>
+          <div class="sdot" data-scrolly="fin" data-i="3"></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════════════════════════════
+     SECTION 4 — CALL ADVOCACY SCROLLYTELLING (PINNED)
+════════════════════════════════════════════════════════════════ -->
+<div id="call-scrolly" style="height:400vh;position:relative;background:#0D0D12;">
+
+  <div id="call-sticky" class="scrolly-sticky">
+
+    <!-- LEFT: text panels -->
+    <div class="scrolly-text-side">
+
+      <!-- Section header -->
+      <div class="scrolly-header">
+        <div class="eyebrow">Call Advocacy</div>
+        <h2 style="font-size:clamp(26px,3vw,38px);font-weight:900;letter-spacing:-0.04em;line-height:1.1;max-width:440px;">
+          Your Secret Weapon<br>
+          <span class="grad-text">On Every Call.</span>
+        </h2>
+        <p style="margin-top:12px;font-size:15px;color:rgba(255,255,255,0.4);line-height:1.6;max-width:380px;">
+          When you need to call any company, Yara listens privately and gives you the ammunition you need.
+        </p>
+      </div>
+
+      <!-- Step panels (swap in/out) -->
+      <div class="scrolly-panels-container">
+        <div class="scrolly-text-panel active" id="call-panel-0">
+          <div class="scrolly-panel-label">Step 1 of 4</div>
+          <div class="scrolly-panel-title">Yara listens.<br>You talk.</div>
+          <div class="scrolly-panel-body">Start a call and Yara quietly listens in the background. It surfaces your account data, policy terms, and relevant facts in real time.</div>
+        </div>
+
+        <div class="scrolly-text-panel" id="call-panel-1">
+          <div class="scrolly-panel-label">Step 2 of 4</div>
+          <div class="scrolly-panel-title">Instant market comparison while you're on the phone.</div>
+          <div class="scrolly-panel-body">Know exactly what competitors charge before you say a word. Walk into every negotiation with the data companies don't want you to have.</div>
+        </div>
+
+        <div class="scrolly-text-panel" id="call-panel-2">
+          <div class="scrolly-panel-label">Step 3 of 4</div>
+          <div class="scrolly-panel-title">Yara coaches you with specific counter-offers.</div>
+          <div class="scrolly-panel-body">When they make an offer, Yara tells you if it's good and exactly what to push back with. No guessing. No leaving money on the table.</div>
+        </div>
+
+        <div class="scrolly-text-panel" id="call-panel-3">
+          <div class="scrolly-panel-label">Step 4 of 4</div>
+          <div class="scrolly-panel-title">Average user saves $320 per call.</div>
+          <div class="scrolly-panel-body">Yara turns every customer service call into a negotiation you win. The company has AI. Now so do you.</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- RIGHT: phone -->
+    <div class="scrolly-phone-side">
+      <div style="position:relative;">
+        <div class="phone-frame" style="position:relative;">
+          <!-- Phone glow -->
+          <div style="position:absolute;inset:-2px;border-radius:46px;background:linear-gradient(135deg,rgba(34,197,94,0.2),rgba(139,92,246,0.1));filter:blur(24px);z-index:-1;pointer-events:none;"></div>
+
+          <!-- Screen 0: Call starts -->
+          <div class="scrolly-screen phone-screen active" id="call-screen-0">
+            <div class="phone-status"><span>9:41</span><span style="font-size:10px;color:#22C55E;">8:23</span></div>
+            <div class="call-banner">
+              <div style="width:8px;height:8px;border-radius:50%;background:#22C55E;animation:pulse-dot 1.5s ease-in-out infinite;"></div>
+              <span style="font-size:12px;font-weight:700;color:rgba(255,255,255,0.9);">State Farm</span>
+              <span style="margin-left:auto;font-size:10px;padding:2px 8px;border-radius:100px;background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.5);">Private</span>
+            </div>
+            <style>@keyframes pulse-dot { 0%,100%{opacity:1;transform:scale(1);}50%{opacity:0.5;transform:scale(1.3);} }</style>
+            <div class="call-yara-msg">
+              <div style="font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#8B5CF6;margin-bottom:7px;">Yara — Listening</div>
+              They quoted <strong style="color:#F59E0B;">$1,840/year</strong> for renewal. That's <strong style="color:#EF4444;">12% higher</strong> than last year's $1,640. Your driving record is clean — you have leverage.
+            </div>
+          </div>
+
+          <!-- Screen 1: Competitor quotes -->
+          <div class="scrolly-screen phone-screen" id="call-screen-1">
+            <div class="phone-status"><span>9:41</span><span style="font-size:10px;color:#22C55E;">12:07</span></div>
+            <div class="call-banner">
+              <div style="width:8px;height:8px;border-radius:50%;background:#22C55E;animation:pulse-dot 1.5s ease-in-out infinite;"></div>
+              <span style="font-size:12px;font-weight:700;color:rgba(255,255,255,0.9);">State Farm</span>
+            </div>
+            <div class="call-yara-msg" style="margin-bottom:10px;">
+              <div style="font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#8B5CF6;margin-bottom:7px;">Competitor Quotes</div>
+              <div class="comp-row">
+                <span style="color:rgba(255,255,255,0.8);">USAA</span>
+                <span style="color:#22C55E;font-weight:700;">$1,420</span>
+              </div>
+              <div class="comp-row">
+                <span style="color:rgba(255,255,255,0.8);">Lemonade</span>
+                <span style="color:#22C55E;font-weight:700;">$1,380</span>
+              </div>
+              <div class="comp-row">
+                <span style="color:rgba(255,255,255,0.8);">Allstate</span>
+                <span style="color:rgba(255,255,255,0.5);">$1,510</span>
+              </div>
+            </div>
+            <div class="call-yara-msg">
+              Mention the USAA quote. State Farm has a "price match consideration" policy for clean-record customers.
+            </div>
+          </div>
+
+          <!-- Screen 2: Counter offer -->
+          <div class="scrolly-screen phone-screen" id="call-screen-2">
+            <div class="phone-status"><span>9:41</span><span style="font-size:10px;color:#22C55E;">18:44</span></div>
+            <div class="call-banner">
+              <div style="width:8px;height:8px;border-radius:50%;background:#22C55E;animation:pulse-dot 1.5s ease-in-out infinite;"></div>
+              <span style="font-size:12px;font-weight:700;color:rgba(255,255,255,0.9);">State Farm</span>
+            </div>
+            <div class="chat-user" style="font-size:11px;">They offered $1,680. Is that good?</div>
+            <div class="call-yara-msg">
+              <div style="font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#8B5CF6;margin-bottom:7px;">Yara Analysis</div>
+              Still <strong style="color:#EF4444;">$260 above USAA</strong>. Push for $1,500 — cite your 6-year claim-free history and the USAA quote. Retention reps have authority to go lower.
+            </div>
+          </div>
+
+          <!-- Screen 3: Result -->
+          <div class="scrolly-screen phone-screen" id="call-screen-3">
+            <div class="phone-status"><span>9:41</span><span style="font-size:10px;color:rgba(255,255,255,0.35);">Call ended</span></div>
+            <div style="text-align:center;padding-top:20px;">
+              <div style="width:64px;height:64px;border-radius:50%;background:rgba(34,197,94,0.12);border:1px solid rgba(34,197,94,0.3);display:flex;align-items:center;justify-content:center;margin:0 auto 14px;">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#22C55E" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
+              <div style="font-size:13px;font-weight:700;color:rgba(255,255,255,0.9);margin-bottom:4px;">Negotiation Complete</div>
+              <div style="font-size:11px;color:rgba(255,255,255,0.4);">State Farm Auto Insurance</div>
+            </div>
+            <div style="margin-top:20px;padding:16px;border-radius:14px;background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.2);text-align:center;">
+              <div style="font-size:10px;color:#22C55E;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:6px;">Final result</div>
+              <div style="font-size:28px;font-weight:900;letter-spacing:-0.04em;color:#22C55E;">$1,520/year</div>
+              <div style="font-size:12px;color:rgba(255,255,255,0.5);margin-top:4px;">You saved <strong style="color:#22C55E;">$320</strong> from their opening offer</div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Progress dots -->
+        <div class="scrolly-dots" id="call-dots">
+          <div class="sdot active" data-scrolly="call" data-i="0"></div>
+          <div class="sdot" data-scrolly="call" data-i="1"></div>
+          <div class="sdot" data-scrolly="call" data-i="2"></div>
+          <div class="sdot" data-scrolly="call" data-i="3"></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════════════════════════════
+     SECTION 5 — COUNTING STATS
+════════════════════════════════════════════════════════════════ -->
+<section id="stats">
+
+  <div class="orb" style="width:500px;height:500px;background:radial-gradient(circle,rgba(139,92,246,0.14),transparent 70%);top:0;left:-100px;"></div>
+  <div class="orb" style="width:400px;height:400px;background:radial-gradient(circle,rgba(6,182,212,0.1),transparent 70%);bottom:0;right:-80px;"></div>
+
+  <div style="max-width:1100px;margin:0 auto;padding:0 24px;">
+    <div style="text-align:center;">
+      <div class="eyebrow" id="stats-eyebrow" style="opacity:0;">By the numbers</div>
+      <h2 id="stats-headline" style="font-size:clamp(36px,5vw,60px);font-weight:900;letter-spacing:-0.04em;opacity:0;">
+        Built for privacy.<br>Powered by intelligence.
+      </h2>
+    </div>
 
     <div class="stats-grid">
 
       <div class="stat-item" style="opacity:0;transform:translateY(40px);">
-        <div class="stat-number aurora-text">
-          <span class="count-val" data-target="4" data-suffix="" data-is-float="false" data-decimals="0">0</span>
+        <div class="stat-num grad-text">
+          <span class="ctr" data-target="4" data-suffix="">0</span>
         </div>
-        <div class="stat-label">Core AI Features</div>
+        <div class="stat-lbl">Core AI Features</div>
       </div>
 
       <div class="stat-item" style="opacity:0;transform:translateY(40px);">
-        <div class="stat-number aurora-text-warm">
-          <span class="count-val" data-target="0" data-suffix="" data-is-float="false" data-decimals="0">0</span>
+        <div class="stat-num" style="background:linear-gradient(135deg,#8B5CF6,#22C55E);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">
+          <span class="ctr" data-target="0" data-suffix="">0</span>
         </div>
-        <div class="stat-label">Data Stored on Servers</div>
+        <div class="stat-lbl">Data Stored on Servers</div>
       </div>
 
       <div class="stat-item" style="opacity:0;transform:translateY(40px);">
-        <div class="stat-number" style="background:linear-gradient(135deg,#f59e0b,#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">
-          <span class="count-val" data-target="100" data-suffix="%" data-is-float="false" data-decimals="0">0</span>
+        <div class="stat-num" style="background:linear-gradient(135deg,#F59E0B,#22C55E);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">
+          <span class="ctr" data-target="100" data-suffix="%">0</span>
         </div>
-        <div class="stat-label">On-Device Processing</div>
+        <div class="stat-lbl">On-Device Processing</div>
       </div>
 
       <div class="stat-item" style="opacity:0;transform:translateY(40px);">
-        <div class="stat-number" style="background:linear-gradient(135deg,#10b981,#06b6d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">
-          <span class="count-val" data-target="12000" data-suffix="+" data-display-format="compact">0</span>
+        <div class="stat-num" style="background:linear-gradient(135deg,#06B6D4,#8B5CF6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">
+          <span class="ctr" data-target="12" data-suffix="k+">0</span>
         </div>
-        <div class="stat-label">Supported Banks via Plaid</div>
+        <div class="stat-lbl">Supported Banks via Plaid</div>
       </div>
 
     </div>
@@ -1097,131 +1525,53 @@
 
 
 <!-- ════════════════════════════════════════════════════════════════
-     SECTION 4 — STAGGERED FEATURE CARDS
+     SECTION 6 — TEXT HIGHLIGHT ON SCROLL
 ════════════════════════════════════════════════════════════════ -->
-<section id="feature-cards" style="background:#0a0a0f;">
-  <div style="max-width:1100px;margin:0 auto;text-align:center;padding:0 24px;">
+<section id="text-highlight" style="background:linear-gradient(180deg,#0D0D12 0%,#0a0a10 100%);">
 
-    <!-- Orb -->
-    <div class="orb" style="width:600px;height:600px;background:radial-gradient(circle,rgba(59,130,246,0.1),transparent 70%);top:50%;left:50%;transform:translate(-50%,-50%);"></div>
+  <div class="orb" style="width:600px;height:600px;background:radial-gradient(circle,rgba(139,92,246,0.1),transparent 70%);top:-100px;right:-100px;"></div>
 
-    <div class="section-eyebrow" id="cards-eyebrow" style="opacity:0;">Platform</div>
-    <h2 class="section-headline" id="cards-headline" style="opacity:0;">Everything you need.<br>Nothing you don't.</h2>
-
-    <div class="cards-grid">
-
-      <div class="glass feature-card" id="card-0">
-        <div class="card-icon" style="background:linear-gradient(135deg,rgba(124,58,237,0.25),rgba(59,130,246,0.15));border:1px solid rgba(124,58,237,0.2);">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-        </div>
-        <div class="card-title">Financial Intelligence</div>
-        <div class="card-body">Ask anything about your spending</div>
-      </div>
-
-      <div class="glass feature-card" id="card-1">
-        <div class="card-icon" style="background:linear-gradient(135deg,rgba(6,182,212,0.2),rgba(59,130,246,0.15));border:1px solid rgba(6,182,212,0.2);">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#06b6d4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-        </div>
-        <div class="card-title">Verified Savings</div>
-        <div class="card-body">Mathematically verified recommendations</div>
-      </div>
-
-      <div class="glass feature-card" id="card-2">
-        <div class="card-icon" style="background:linear-gradient(135deg,rgba(16,185,129,0.2),rgba(6,182,212,0.15));border:1px solid rgba(16,185,129,0.2);">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-        </div>
-        <div class="card-title">Silent Assistant</div>
-        <div class="card-body">Real-time data during calls</div>
-      </div>
-
-      <div class="glass feature-card" id="card-3">
-        <div class="card-icon" style="background:linear-gradient(135deg,rgba(245,158,11,0.2),rgba(236,72,153,0.1));border:1px solid rgba(245,158,11,0.2);">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-        </div>
-        <div class="card-title">Security on Device</div>
-        <div class="card-body">Zero data persistence</div>
-      </div>
-
-      <div class="glass feature-card" id="card-4">
-        <div class="card-icon" style="background:linear-gradient(135deg,rgba(236,72,153,0.2),rgba(124,58,237,0.1));border:1px solid rgba(236,72,153,0.2);">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ec4899" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-        </div>
-        <div class="card-title">Web Navigation</div>
-        <div class="card-body">Browse, fill forms, take action for you<br><span style="font-size:11px;color:rgba(124,58,237,0.7);font-weight:600;">Coming Soon</span></div>
-      </div>
-
-      <div class="glass feature-card" id="card-5">
-        <div class="card-icon" style="background:linear-gradient(135deg,rgba(59,130,246,0.2),rgba(124,58,237,0.1));border:1px solid rgba(59,130,246,0.2);">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 1 3 3v7a3 3 0 0 1-6 0V5a3 3 0 0 1 3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/></svg>
-        </div>
-        <div class="card-title">Voice Advocacy</div>
-        <div class="card-body">Handle customer service calls end-to-end<br><span style="font-size:11px;color:rgba(59,130,246,0.7);font-weight:600;">Coming Soon</span></div>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-
-<!-- ════════════════════════════════════════════════════════════════
-     SECTION 5 — TEXT HIGHLIGHT ON SCROLL
-════════════════════════════════════════════════════════════════ -->
-<section id="text-highlight" style="background:linear-gradient(180deg,#0a0a0f 0%,#080812 100%);">
-
-  <!-- Orbs -->
-  <div class="orb" style="width:500px;height:500px;background:radial-gradient(circle,rgba(124,58,237,0.1),transparent 70%);top:-100px;right:-100px;"></div>
-
-  <div class="section-eyebrow" style="margin-bottom:80px;">Our belief</div>
+  <div class="eyebrow" style="margin-bottom:80px;opacity:0;" id="th-eyebrow">Our belief</div>
 
   <div id="highlight-paragraph">
-    <!-- Words will be injected by JS -->
+    <!-- words injected by JS -->
   </div>
 </section>
 
 
 <!-- ════════════════════════════════════════════════════════════════
-     SECTION 6 — GRADIENT BACKGROUND TRANSITION
+     SECTION 7 — GRADIENT BACKGROUND TRANSITION
 ════════════════════════════════════════════════════════════════ -->
-<section id="gradient-transition" style="background:#0a0a0f;">
+<section id="gradient-transition" style="background:#0D0D12;">
 
-  <div style="max-width:900px;margin:0 auto;text-align:center;padding:0 24px;position:relative;z-index:1;">
-    <div class="section-eyebrow" id="gradient-eyebrow" style="opacity:0;">The platform</div>
-    <h2 class="section-headline" id="gradient-headline" style="opacity:0;">Built for the modern<br>financial life.</h2>
-    <p style="margin-top:20px;font-size:18px;color:rgba(255,255,255,0.4);line-height:1.7;max-width:600px;margin-left:auto;margin-right:auto;" id="gradient-sub" style="opacity:0;">From your phone bill to your bank account, Yara adapts to where you are — and advocates for where you want to be.</p>
+  <div style="max-width:900px;margin:0 auto;text-align:center;position:relative;z-index:1;padding:0 24px;">
+    <div class="eyebrow" id="gt-eyebrow" style="opacity:0;">Security First</div>
+    <h2 id="gt-headline" style="font-size:clamp(36px,5vw,60px);font-weight:900;letter-spacing:-0.04em;opacity:0;">
+      Privacy isn't a feature.<br>
+      <span class="grad-text">It's the foundation.</span>
+    </h2>
+    <p id="gt-sub" style="margin-top:20px;font-size:18px;color:rgba(255,255,255,0.4);line-height:1.7;max-width:600px;margin-left:auto;margin-right:auto;opacity:0;">
+      We designed Yara so that even we can't see your data. Zero trust architecture means your financial life stays yours.
+    </p>
 
-    <div class="gradient-cards">
+    <div class="security-cards">
 
-      <div class="glass gradient-card" id="gc-0">
-        <div style="font-size:32px;margin-bottom:12px;">
-          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="url(#g1)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <defs><linearGradient id="g1" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#7c3aed"/><stop offset="100%" stop-color="#06b6d4"/></linearGradient></defs>
-            <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/>
-          </svg>
-        </div>
-        <div style="font-size:16px;font-weight:700;margin-bottom:8px;">Spending Intelligence</div>
-        <div style="font-size:14px;color:rgba(255,255,255,0.4);line-height:1.6;">Connect your accounts via Plaid and ask anything about your transactions in natural language.</div>
+      <div class="glass sec-card" id="sc0">
+        <div class="sec-badge grad-text">E2EE</div>
+        <div class="sec-title">End-to-End Encrypted</div>
+        <div class="sec-body">Every connection, every message, every piece of data — encrypted end-to-end so only you can read it.</div>
       </div>
 
-      <div class="glass gradient-card" id="gc-1">
-        <div style="font-size:32px;margin-bottom:12px;">
-          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="url(#g2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <defs><linearGradient id="g2" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#ec4899"/><stop offset="100%" stop-color="#7c3aed"/></linearGradient></defs>
-            <circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/>
-          </svg>
-        </div>
-        <div style="font-size:16px;font-weight:700;margin-bottom:8px;">Real-time Advocacy</div>
-        <div style="font-size:14px;color:rgba(255,255,255,0.4);line-height:1.6;">Yara surfaces the data you need during calls, so you can negotiate from a position of strength.</div>
+      <div class="glass sec-card" id="sc1">
+        <div class="sec-badge" style="background:linear-gradient(135deg,#22C55E,#06B6D4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">3FA</div>
+        <div class="sec-title">Three-Factor Auth</div>
+        <div class="sec-body">Face ID, device passcode, and biometric confirmation ensure only you can access your Yara session.</div>
       </div>
 
-      <div class="glass gradient-card" id="gc-2">
-        <div style="font-size:32px;margin-bottom:12px;">
-          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="url(#g3)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <defs><linearGradient id="g3" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#10b981"/><stop offset="100%" stop-color="#06b6d4"/></linearGradient></defs>
-            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-          </svg>
-        </div>
-        <div style="font-size:16px;font-weight:700;margin-bottom:8px;">Total Privacy</div>
-        <div style="font-size:14px;color:rgba(255,255,255,0.4);line-height:1.6;">Zero data persistence. Everything stays on your device. We never store, sell, or track your information.</div>
+      <div class="glass sec-card" id="sc2">
+        <div class="sec-badge" style="background:linear-gradient(135deg,#F59E0B,#EF4444);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">ZDR</div>
+        <div class="sec-title">Zero Data Retention</div>
+        <div class="sec-body">When your session ends, everything ends with it. No logs. No backups. No data that can be breached.</div>
       </div>
 
     </div>
@@ -1230,74 +1580,78 @@
 
 
 <!-- ════════════════════════════════════════════════════════════════
-     SECTION 7 — FINAL CTA
+     SECTION 8 — FINAL CTA WITH SCALE-IN
 ════════════════════════════════════════════════════════════════ -->
-<section id="cta">
+<section id="final-cta">
 
-  <!-- Background orbs for CTA -->
-  <div class="orb" style="width:700px;height:700px;background:radial-gradient(circle,rgba(124,58,237,0.12),transparent 70%);top:-200px;left:-200px;"></div>
-  <div class="orb" style="width:600px;height:600px;background:radial-gradient(circle,rgba(6,182,212,0.1),transparent 70%);bottom:-100px;right:-100px;"></div>
+  <div class="orb" style="width:700px;height:700px;background:radial-gradient(circle,rgba(139,92,246,0.12),transparent 70%);top:-200px;left:-200px;"></div>
+  <div class="orb" style="width:600px;height:600px;background:radial-gradient(circle,rgba(6,182,212,0.1),transparent 70%);bottom:-100px;right:-150px;"></div>
 
   <div id="cta-inner">
+    <div style="position:absolute;top:-80px;right:-80px;width:240px;height:240px;border-radius:50%;background:radial-gradient(circle,rgba(139,92,246,0.2),transparent 70%);filter:blur(30px);pointer-events:none;"></div>
+    <div style="position:absolute;bottom:-60px;left:-60px;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(6,182,212,0.15),transparent 70%);filter:blur(24px);pointer-events:none;"></div>
 
-    <!-- Decorative circles -->
-    <div style="position:absolute;top:-60px;right:-60px;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(124,58,237,0.25),transparent 70%);filter:blur(20px);"></div>
-    <div style="position:absolute;bottom:-40px;left:-40px;width:160px;height:160px;border-radius:50%;background:radial-gradient(circle,rgba(6,182,212,0.2),transparent 70%);filter:blur(15px);"></div>
+    <h2 class="cta-headline">
+      Take Back Control.
+    </h2>
 
-    <div class="section-tag" style="margin-bottom:32px;display:inline-flex;">Ready when you are</div>
+    <p class="cta-sub">
+      Be among the first to have AI that works for you, not against you.
+    </p>
 
-    <h2 class="cta-headline">Level the<br>playing field.</h2>
-
-    <p class="cta-subheadline">Enterprises have AI. Now you do too.</p>
-
-    <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;">
-      <a href="#" class="btn-primary btn-pulse" style="font-size:17px;padding:18px 44px;">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+    <div class="email-row">
+      <input type="email" class="email-input" placeholder="Your email address" />
+      <a href="#" class="btn-primary btn-pulse" style="font-size:15px;padding:15px 28px;white-space:nowrap;">
         Join the Waitlist
       </a>
     </div>
 
-    <!-- Trust strip -->
-    <div style="margin-top:60px;padding-top:40px;border-top:1px solid rgba(255,255,255,0.06);display:flex;justify-content:center;gap:48px;flex-wrap:wrap;">
+    <p style="margin-top:24px;font-size:12px;color:rgba(255,255,255,0.2);letter-spacing:0.04em;">No spam. No noise. Just early access when we launch.</p>
+
+    <!-- Trust badges -->
+    <div style="margin-top:64px;padding-top:40px;border-top:1px solid rgba(255,255,255,0.06);display:flex;justify-content:center;gap:56px;flex-wrap:wrap;">
       <div style="text-align:center;">
-        <div style="font-size:22px;font-weight:800;letter-spacing:-0.03em;" class="aurora-text">On-Device</div>
-        <div style="font-size:12px;color:rgba(255,255,255,0.35);margin-top:4px;">Processing</div>
+        <div style="font-size:19px;font-weight:900;letter-spacing:-0.03em;" class="grad-text">On-Device</div>
+        <div style="font-size:11px;color:rgba(255,255,255,0.3);margin-top:5px;text-transform:uppercase;letter-spacing:0.06em;">Processing</div>
       </div>
       <div style="text-align:center;">
-        <div style="font-size:22px;font-weight:800;letter-spacing:-0.03em;" class="aurora-text">Plaid</div>
-        <div style="font-size:12px;color:rgba(255,255,255,0.35);margin-top:4px;">Secure Connection</div>
+        <div style="font-size:19px;font-weight:900;letter-spacing:-0.03em;" class="grad-text">Plaid</div>
+        <div style="font-size:11px;color:rgba(255,255,255,0.3);margin-top:5px;text-transform:uppercase;letter-spacing:0.06em;">Secure Connect</div>
       </div>
       <div style="text-align:center;">
-        <div style="font-size:22px;font-weight:800;letter-spacing:-0.03em;" class="aurora-text">12,000+</div>
-        <div style="font-size:12px;color:rgba(255,255,255,0.35);margin-top:4px;">Banks Supported</div>
+        <div style="font-size:19px;font-weight:900;letter-spacing:-0.03em;" class="grad-text">12,000+</div>
+        <div style="font-size:11px;color:rgba(255,255,255,0.3);margin-top:5px;text-transform:uppercase;letter-spacing:0.06em;">Banks Supported</div>
       </div>
       <div style="text-align:center;">
-        <div style="font-size:22px;font-weight:800;letter-spacing:-0.03em;" class="aurora-text">Zero</div>
-        <div style="font-size:12px;color:rgba(255,255,255,0.35);margin-top:4px;">Data Persistence</div>
+        <div style="font-size:19px;font-weight:900;letter-spacing:-0.03em;" class="grad-text">Zero</div>
+        <div style="font-size:11px;color:rgba(255,255,255,0.3);margin-top:5px;text-transform:uppercase;letter-spacing:0.06em;">Data Retention</div>
       </div>
     </div>
-
   </div>
 </section>
 
 
-<!-- Footer -->
-<footer style="padding:48px 48px;border-top:1px solid rgba(255,255,255,0.05);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:20px;">
-  <div class="nav-logo" style="font-size:18px;display:flex;align-items:center;gap:8px;"><img src="yara_butterfly.png" alt="Yara" style="width:24px;height:24px;mix-blend-mode:screen;">yara</div>
-  <div style="font-size:13px;color:rgba(255,255,255,0.25);">© 2025 Yara. All rights reserved.</div>
-  <div style="display:flex;gap:24px;">
-    <a href="#" style="font-size:13px;color:rgba(255,255,255,0.3);text-decoration:none;">Privacy</a>
-    <a href="#" style="font-size:13px;color:rgba(255,255,255,0.3);text-decoration:none;">Terms</a>
-    <a href="#" style="font-size:13px;color:rgba(255,255,255,0.3);text-decoration:none;">Security</a>
+<!-- ════════════════════════════════════════════════════════════════
+     FOOTER
+════════════════════════════════════════════════════════════════ -->
+<footer>
+  <div class="footer-brand">
+    <img src="yara_butterfly.png" alt="Yara" style="width:24px;height:24px;mix-blend-mode:screen;">
+    yara
+  </div>
+  <div style="font-size:13px;color:rgba(255,255,255,0.2);">© 2026 Yara.</div>
+  <div style="display:flex;gap:28px;">
+    <a href="#" style="font-size:13px;color:rgba(255,255,255,0.3);text-decoration:none;transition:color 0.2s;" onmouseover="this.style.color='rgba(255,255,255,0.7)'" onmouseout="this.style.color='rgba(255,255,255,0.3)'">Privacy</a>
+    <a href="#" style="font-size:13px;color:rgba(255,255,255,0.3);text-decoration:none;transition:color 0.2s;" onmouseover="this.style.color='rgba(255,255,255,0.7)'" onmouseout="this.style.color='rgba(255,255,255,0.3)'">Terms</a>
+    <a href="#" style="font-size:13px;color:rgba(255,255,255,0.3);text-decoration:none;transition:color 0.2s;" onmouseover="this.style.color='rgba(255,255,255,0.7)'" onmouseout="this.style.color='rgba(255,255,255,0.3)'">Security</a>
   </div>
 </footer>
 
 
 <!-- ════════════════════════════════════════════════════════════════
-     JAVASCRIPT — GSAP + ScrollTrigger Animations
+     JAVASCRIPT — GSAP + ScrollTrigger
 ════════════════════════════════════════════════════════════════ -->
 <script>
-  // ─── Register ScrollTrigger ───────────────────────────────────────
   gsap.registerPlugin(ScrollTrigger);
 
   // ─── Nav scroll effect ────────────────────────────────────────────
@@ -1305,67 +1659,100 @@
   ScrollTrigger.create({
     trigger: document.body,
     start: '80px top',
-    onEnter: () => nav.classList.add('scrolled'),
+    onEnter:     () => nav.classList.add('scrolled'),
     onLeaveBack: () => nav.classList.remove('scrolled'),
   });
 
 
   // ════════════════════════════════════════════════════════════════
-  // SECTION 1 — HERO ANIMATIONS
+  // SECTION 1 — HERO
   // ════════════════════════════════════════════════════════════════
 
-  // Wordmark scale on scroll
-  gsap.to('#hero-wordmark', {
-    scale: 0.9,
-    opacity: 0.6,
-    ease: 'none',
-    scrollTrigger: {
-      trigger: '#hero',
-      start: 'top top',
-      end: 'bottom top',
-      scrub: true,
-    }
-  });
+  // Headline load animation
+  gsap.fromTo('#hero-headline',
+    { opacity: 0, y: 40 },
+    { opacity: 1, y: 0, duration: 1.2, delay: 0.1, ease: 'power3.out' }
+  );
 
-  // Subtitle fade-in on load
+  // Subtitle load
   gsap.to('#hero-subtitle', {
     opacity: 1,
     y: 0,
-    duration: 1.2,
-    delay: 0.4,
+    duration: 1.1,
+    delay: 0.5,
     ease: 'power3.out',
   });
 
-  // CTA fade-in
+  // CTAs load
   gsap.to('#hero-cta', {
     opacity: 1,
     y: 0,
-    duration: 1,
-    delay: 0.8,
+    duration: 1.0,
+    delay: 0.75,
     ease: 'power3.out',
   });
 
-  // Phone slide up
-  gsap.to('#hero-phone', {
-    opacity: 1,
-    y: 0,
-    scale: 1,
-    duration: 1.4,
-    delay: 0.6,
-    ease: 'power4.out',
-  });
+  // Headline scale/fade on scroll out (scrub — fully reverses on scroll up)
+  gsap.fromTo('#hero-headline',
+    { scale: 1 },
+    {
+      scale: 0.9,
+      opacity: 0,
+      ease: 'none',
+      immediateRender: false,
+      scrollTrigger: {
+        trigger: '#hero',
+        start: 'top top',
+        end: 'bottom top',
+        scrub: 1.5,
+      }
+    }
+  );
 
-  // Parallax orbs
-  const orbSpeeds = [
-    { id: '#orb1', speed: 0.25 },
-    { id: '#orb2', speed: -0.18 },
-    { id: '#orb3', speed: 0.12 },
-    { id: '#orb4', speed: -0.22 },
+  // Subtitle fade on scroll out
+  gsap.fromTo('#hero-subtitle',
+    {},
+    {
+      opacity: 0,
+      y: -30,
+      ease: 'none',
+      immediateRender: false,
+      scrollTrigger: {
+        trigger: '#hero',
+        start: '30% top',
+        end: 'bottom top',
+        scrub: 1,
+      }
+    }
+  );
+
+  // CTAs fade on scroll out
+  gsap.fromTo('#hero-cta',
+    {},
+    {
+      opacity: 0,
+      y: -20,
+      ease: 'none',
+      immediateRender: false,
+      scrollTrigger: {
+        trigger: '#hero',
+        start: '30% top',
+        end: '80% top',
+        scrub: 1,
+      }
+    }
+  );
+
+  // Orb parallax
+  const orbConfigs = [
+    { id: '#orb1', speed:  0.3 },
+    { id: '#orb2', speed: -0.2 },
+    { id: '#orb3', speed:  0.15 },
   ];
 
-  orbSpeeds.forEach(({ id, speed }) => {
+  orbConfigs.forEach(({ id, speed }) => {
     gsap.to(id, {
-      y: () => window.innerHeight * speed,
+      y: () => window.innerHeight * speed * 1.5,
       ease: 'none',
       scrollTrigger: {
         trigger: '#hero',
@@ -1376,215 +1763,49 @@
     });
   });
 
+  // Continuous orb drift
+  gsap.to('#orb1', { x: 35, y: 22, duration: 9, repeat: -1, yoyo: true, ease: 'sine.inOut' });
+  gsap.to('#orb2', { x: -28, y: 18, duration: 7.5, repeat: -1, yoyo: true, ease: 'sine.inOut', delay: 1.2 });
+  gsap.to('#orb3', { x: 22, y: -24, duration: 11, repeat: -1, yoyo: true, ease: 'sine.inOut', delay: 2.5 });
 
-  // ════════════════════════════════════════════════════════════════
-  // SECTION 2 — PINNED FEATURE SHOWCASE
-  // ════════════════════════════════════════════════════════════════
-
-  const panels = ['panel-1','panel-2','panel-3','panel-4'];
-  const screens = ['screen-1','screen-2','screen-3','screen-4'];
-  const dots = document.querySelectorAll('.progress-dot');
-  let currentIndex = 0;
-
-  function activateStep(index) {
-    if (index === currentIndex && index !== 0) return;
-
-    // Text panels
-    panels.forEach((id, i) => {
-      const el = document.getElementById(id);
-      if (i === index) {
-        el.classList.add('active');
-      } else {
-        el.classList.remove('active');
-      }
-    });
-
-    // Phone screens
-    screens.forEach((id, i) => {
-      const el = document.getElementById(id);
-      if (i === index) {
-        el.classList.add('active');
-      } else {
-        el.classList.remove('active');
-      }
-    });
-
-    // Progress dots
-    dots.forEach((dot, i) => {
-      if (i === index) {
-        dot.classList.add('active');
-      } else {
-        dot.classList.remove('active');
-      }
-    });
-
-    currentIndex = index;
-  }
-
-  // Build a ScrollTrigger that drives the 4 steps across the 400vh scroll
-  // Each step occupies 25% of the scroll distance (100vh each)
-  ScrollTrigger.create({
-    trigger: '#feature-showcase',
-    start: 'top top',
-    end: 'bottom bottom',
-    scrub: false,
-    pin: false,
-    onUpdate: (self) => {
-      const progress = self.progress;
-      // 4 steps across 0-1 progress
-      // Step boundaries: 0-0.25, 0.25-0.5, 0.5-0.75, 0.75-1.0
-      let step;
-      if (progress < 0.25) step = 0;
-      else if (progress < 0.5) step = 1;
-      else if (progress < 0.75) step = 2;
-      else step = 3;
-      activateStep(step);
-    }
-  });
-
-  // Pin the sticky frame (ScrollTrigger handles the sticky via CSS sticky + scroll)
-  // GSAP pin the inner sticky element for extra control
-  ScrollTrigger.create({
-    trigger: '#feature-showcase',
-    start: 'top top',
-    end: 'bottom bottom',
-    pin: '#feature-sticky',
-    pinSpacing: false,
-  });
-
-  // Dot click handlers
-  dots.forEach((dot, i) => {
-    dot.addEventListener('click', () => {
-      const showcaseEl = document.getElementById('feature-showcase');
-      const rect = showcaseEl.getBoundingClientRect();
-      const sectionHeight = showcaseEl.offsetHeight;
-      const targetScroll = window.scrollY + rect.top + (sectionHeight * (i / 4));
-      window.scrollTo({ top: targetScroll, behavior: 'smooth' });
-    });
-  });
-
-
-  // ════════════════════════════════════════════════════════════════
-  // SECTION 3 — COUNTING STATS
-  // ════════════════════════════════════════════════════════════════
-
-  // Eyebrow + headline
-  gsap.to('#stats-eyebrow', {
-    opacity: 1,
-    y: 0,
-    duration: 0.8,
-    scrollTrigger: { trigger: '#stats', start: 'top 75%', toggleActions: 'play none none none' }
-  });
-
-  gsap.to('#stats-headline', {
-    opacity: 1,
-    y: 0,
-    duration: 1,
-    delay: 0.15,
-    scrollTrigger: { trigger: '#stats', start: 'top 75%', toggleActions: 'play none none none' }
-  });
-
-  // Stat items stagger reveal
-  const statItems = document.querySelectorAll('.stat-item');
-  gsap.to(statItems, {
-    opacity: 1,
-    y: 0,
-    duration: 0.8,
-    stagger: 0.15,
-    ease: 'power3.out',
+  // Scroll indicator fade out
+  gsap.to('#scroll-indicator', {
+    opacity: 0,
+    ease: 'none',
     scrollTrigger: {
-      trigger: '#stats',
-      start: 'top 65%',
-      toggleActions: 'play none none none',
-    }
-  });
-
-  // Number counting animation
-  function animateCount(el) {
-    const target = parseFloat(el.dataset.target);
-    const suffix = el.dataset.suffix || '';
-    const isFloat = el.dataset.isFloat === 'true';
-    const decimals = parseInt(el.dataset.decimals || '0');
-    const displayFormat = el.dataset.displayFormat;
-
-    const obj = { val: 0 };
-    gsap.to(obj, {
-      val: target,
-      duration: 2.2,
-      ease: 'power2.out',
-      onUpdate: () => {
-        let display;
-        if (isFloat) {
-          display = obj.val.toFixed(decimals);
-        } else if (displayFormat === 'compact') {
-          if (obj.val >= 1000) {
-            display = Math.floor(obj.val / 1000) + 'k';
-          } else {
-            display = Math.floor(obj.val).toLocaleString();
-          }
-        } else {
-          display = Math.floor(obj.val).toLocaleString();
-        }
-        el.textContent = display;
-        // Re-add suffix tracking (suffix lives outside span for some items)
-      },
-      onComplete: () => {
-        if (isFloat) {
-          el.textContent = target.toFixed(decimals);
-        } else if (displayFormat === 'compact') {
-          if (target >= 1000) {
-            el.textContent = Math.floor(target / 1000) + 'k';
-          } else {
-            el.textContent = Math.floor(target);
-          }
-        } else {
-          el.textContent = target.toLocaleString();
-        }
-      }
-    });
-  }
-
-  let countersAnimated = false;
-  ScrollTrigger.create({
-    trigger: '#stats',
-    start: 'top 60%',
-    onEnter: () => {
-      if (countersAnimated) return;
-      countersAnimated = true;
-      const countEls = document.querySelectorAll('.count-val');
-      countEls.forEach((el, i) => {
-        gsap.delayedCall(i * 0.2, () => animateCount(el));
-      });
+      trigger: '#hero',
+      start: '15% top',
+      end: '30% top',
+      scrub: true,
     }
   });
 
 
   // ════════════════════════════════════════════════════════════════
-  // SECTION 4 — STAGGERED CARD REVEAL
+  // SECTION 2 — FEATURE CARDS
   // ════════════════════════════════════════════════════════════════
 
-  gsap.to('#cards-eyebrow', {
+  gsap.to('#fc-eyebrow', {
     opacity: 1,
     y: 0,
     duration: 0.8,
-    scrollTrigger: { trigger: '#feature-cards', start: 'top 75%', toggleActions: 'play none none none' }
+    scrollTrigger: { trigger: '#feature-cards', start: 'top 80%', toggleActions: 'play none none none' }
   });
 
-  gsap.to('#cards-headline', {
+  gsap.to('#fc-headline', {
     opacity: 1,
     y: 0,
-    duration: 1,
-    delay: 0.1,
-    scrollTrigger: { trigger: '#feature-cards', start: 'top 75%', toggleActions: 'play none none none' }
+    duration: 1.0,
+    delay: 0.12,
+    scrollTrigger: { trigger: '#feature-cards', start: 'top 80%', toggleActions: 'play none none none' }
   });
 
-  // Cards staggered
-  const featureCards = document.querySelectorAll('.feature-card');
-  gsap.to(featureCards, {
+  // Staggered card reveal — 100ms between each
+  const featCards = document.querySelectorAll('.feat-card');
+  gsap.to(featCards, {
     opacity: 1,
     y: 0,
-    scale: 1,
-    duration: 0.9,
+    duration: 0.85,
     stagger: 0.1,
     ease: 'power3.out',
     scrollTrigger: {
@@ -1594,66 +1815,211 @@
     }
   });
 
-  // Subtle hover tilt on cards
-  featureCards.forEach(card => {
+  // 3D tilt on hover
+  featCards.forEach(card => {
+    card.style.transformStyle = 'preserve-3d';
+    card.style.willChange = 'transform';
+
     card.addEventListener('mousemove', (e) => {
       const rect = card.getBoundingClientRect();
-      const x = (e.clientX - rect.left) / rect.width - 0.5;
-      const y = (e.clientY - rect.top) / rect.height - 0.5;
+      const nx = (e.clientX - rect.left) / rect.width - 0.5;
+      const ny = (e.clientY - rect.top) / rect.height - 0.5;
       gsap.to(card, {
-        rotateY: x * 8,
-        rotateX: -y * 8,
-        transformPerspective: 800,
+        rotateY: nx * 10,
+        rotateX: -ny * 10,
+        transformPerspective: 900,
+        duration: 0.35,
         ease: 'power1.out',
-        duration: 0.4,
       });
     });
+
     card.addEventListener('mouseleave', () => {
-      gsap.to(card, { rotateY: 0, rotateX: 0, duration: 0.5, ease: 'power2.out' });
+      gsap.to(card, { rotateY: 0, rotateX: 0, duration: 0.55, ease: 'power2.out' });
     });
   });
 
 
   // ════════════════════════════════════════════════════════════════
-  // SECTION 5 — WORD-BY-WORD TEXT HIGHLIGHT
+  // SCROLLYTELLING UTILITY
+  // Used for both Section 3 (fin) and Section 4 (call)
+  // ════════════════════════════════════════════════════════════════
+
+  function buildScrollytelling({ containerId, stickyId, panelPrefix, screenPrefix, dotsId, numSteps }) {
+    const panels  = Array.from({ length: numSteps }, (_, i) => document.getElementById(`${panelPrefix}-${i}`));
+    const screens = Array.from({ length: numSteps }, (_, i) => document.getElementById(`${screenPrefix}-${i}`));
+    const dots    = dotsId ? document.getElementById(dotsId).querySelectorAll('.sdot') : [];
+
+    let current = -1;
+
+    function activate(idx) {
+      if (idx === current) return;
+      current = idx;
+
+      panels.forEach((el, i) => {
+        if (!el) return;
+        el.classList.toggle('active', i === idx);
+      });
+      screens.forEach((el, i) => {
+        if (!el) return;
+        el.classList.toggle('active', i === idx);
+      });
+      dots.forEach((dot, i) => {
+        dot.classList.toggle('active', i === idx);
+      });
+    }
+
+    // Pin the sticky frame for the full scroll height
+    ScrollTrigger.create({
+      trigger: `#${containerId}`,
+      start: 'top top',
+      end: 'bottom bottom',
+      pin: `#${stickyId}`,
+      pinSpacing: false,
+    });
+
+    // Drive steps via progress
+    ScrollTrigger.create({
+      trigger: `#${containerId}`,
+      start: 'top top',
+      end: 'bottom bottom',
+      onUpdate: (self) => {
+        const p = self.progress;
+        // Each step spans 25% of scroll travel
+        // Give a small buffer at the end so step 3 activates cleanly
+        let step = Math.min(numSteps - 1, Math.floor(p * numSteps));
+        activate(step);
+      }
+    });
+
+    // Initial state
+    activate(0);
+  }
+
+  // Financial Intelligence scrollytelling
+  buildScrollytelling({
+    containerId: 'fin-scrolly',
+    stickyId: 'fin-sticky',
+    panelPrefix: 'fin-panel',
+    screenPrefix: 'fin-screen',
+    dotsId: 'fin-dots',
+    numSteps: 4,
+  });
+
+  // Call Advocacy scrollytelling
+  buildScrollytelling({
+    containerId: 'call-scrolly',
+    stickyId: 'call-sticky',
+    panelPrefix: 'call-panel',
+    screenPrefix: 'call-screen',
+    dotsId: 'call-dots',
+    numSteps: 4,
+  });
+
+
+  // ════════════════════════════════════════════════════════════════
+  // SECTION 5 — COUNTING STATS
+  // ════════════════════════════════════════════════════════════════
+
+  gsap.to('#stats-eyebrow', {
+    opacity: 1,
+    y: 0,
+    duration: 0.8,
+    scrollTrigger: { trigger: '#stats', start: 'top 80%', toggleActions: 'play none none none' }
+  });
+
+  gsap.to('#stats-headline', {
+    opacity: 1,
+    y: 0,
+    duration: 1.0,
+    delay: 0.12,
+    scrollTrigger: { trigger: '#stats', start: 'top 80%', toggleActions: 'play none none none' }
+  });
+
+  const statItems = document.querySelectorAll('.stat-item');
+  gsap.to(statItems, {
+    opacity: 1,
+    y: 0,
+    duration: 0.85,
+    stagger: 0.15,
+    ease: 'power3.out',
+    scrollTrigger: { trigger: '#stats', start: 'top 65%', toggleActions: 'play none none none' }
+  });
+
+  // Number counter animation
+  function animateCounter(el) {
+    const target = parseInt(el.dataset.target, 10);
+    const suffix = el.dataset.suffix || '';
+    const obj = { v: 0 };
+    gsap.to(obj, {
+      v: target,
+      duration: 2.4,
+      ease: 'power2.out',
+      onUpdate() {
+        el.textContent = Math.floor(obj.v) + suffix;
+      },
+      onComplete() {
+        el.textContent = target + suffix;
+      }
+    });
+  }
+
+  let countersTriggered = false;
+  ScrollTrigger.create({
+    trigger: '#stats',
+    start: 'top 60%',
+    onEnter() {
+      if (countersTriggered) return;
+      countersTriggered = true;
+      document.querySelectorAll('.ctr').forEach((el, i) => {
+        gsap.delayedCall(i * 0.2, () => animateCounter(el));
+      });
+    }
+  });
+
+
+  // ════════════════════════════════════════════════════════════════
+  // SECTION 6 — TEXT HIGHLIGHT
   // ════════════════════════════════════════════════════════════════
 
   const highlightText = `We believe everyone deserves an AI advocate. Not one that works for corporations, but one that works for you. One that connects your accounts, reviews your bills, finds you savings, and fights for better deals. Enterprises have had AI on their side for years. Now you do too. That's Yara.`;
 
-  const words = highlightText.split(' ');
   const para = document.getElementById('highlight-paragraph');
-
-  // Build spans
-  para.innerHTML = words.map(w => `<span class="word">${w}</span>`).join(' ');
+  para.innerHTML = highlightText
+    .split(' ')
+    .map(w => `<span class="word">${w}</span>`)
+    .join(' ');
 
   const wordSpans = para.querySelectorAll('.word');
 
-  // Scrubbed highlight driven by scroll
+  gsap.to('#th-eyebrow', {
+    opacity: 1,
+    y: 0,
+    duration: 0.8,
+    scrollTrigger: { trigger: '#text-highlight', start: 'top 80%', toggleActions: 'play none none none' }
+  });
+
+  // Apple Vision Pro style word-by-word highlight driven by scroll scrub
   gsap.to(wordSpans, {
     color: '#ffffff',
-    stagger: {
-      each: 0.05,
-      from: 0,
-    },
+    stagger: { each: 0.04, from: 0 },
     ease: 'none',
     scrollTrigger: {
       trigger: '#text-highlight',
-      start: 'top 70%',
-      end: 'bottom 30%',
-      scrub: 0.5,
+      start: 'top 65%',
+      end: 'bottom 35%',
+      scrub: 0.8,
     }
   });
 
 
   // ════════════════════════════════════════════════════════════════
-  // SECTION 6 — GRADIENT BACKGROUND TRANSITION
+  // SECTION 7 — GRADIENT BACKGROUND TRANSITION
   // ════════════════════════════════════════════════════════════════
 
   const gradSection = document.getElementById('gradient-transition');
 
-  gsap.to(gradSection, {
-    backgroundColor: '#0a1a1f',
-    ease: 'none',
+  // Background color interpolation: base → purple → teal
+  const bgTl = gsap.timeline({
     scrollTrigger: {
       trigger: '#gradient-transition',
       start: 'top bottom',
@@ -1662,51 +2028,33 @@
     }
   });
 
-  // Mid-point purple peak
-  const gradTl = gsap.timeline({
-    scrollTrigger: {
-      trigger: '#gradient-transition',
-      start: 'top bottom',
-      end: 'bottom top',
-      scrub: true,
-    }
-  });
-
-  gradTl
+  bgTl
     .to(gradSection, { backgroundColor: '#1a0a2e', ease: 'none', duration: 0.5 })
     .to(gradSection, { backgroundColor: '#0a1a1f', ease: 'none', duration: 0.5 });
 
-  // Gradient section headings
-  gsap.to('#gradient-eyebrow', {
-    opacity: 1,
-    y: 0,
-    duration: 0.8,
-    scrollTrigger: { trigger: '#gradient-transition', start: 'top 75%', toggleActions: 'play none none none' }
+  // Eyebrow / headline / sub
+  gsap.to('#gt-eyebrow', {
+    opacity: 1, y: 0, duration: 0.8,
+    scrollTrigger: { trigger: '#gradient-transition', start: 'top 80%', toggleActions: 'play none none none' }
   });
 
-  gsap.to('#gradient-headline', {
-    opacity: 1,
-    y: 0,
-    duration: 1,
-    delay: 0.1,
-    scrollTrigger: { trigger: '#gradient-transition', start: 'top 75%', toggleActions: 'play none none none' }
+  gsap.to('#gt-headline', {
+    opacity: 1, y: 0, duration: 1.0, delay: 0.1,
+    scrollTrigger: { trigger: '#gradient-transition', start: 'top 80%', toggleActions: 'play none none none' }
   });
 
-  gsap.to('#gradient-sub', {
-    opacity: 1,
-    y: 0,
-    duration: 1,
-    delay: 0.2,
-    scrollTrigger: { trigger: '#gradient-transition', start: 'top 75%', toggleActions: 'play none none none' }
+  gsap.to('#gt-sub', {
+    opacity: 1, y: 0, duration: 1.0, delay: 0.2,
+    scrollTrigger: { trigger: '#gradient-transition', start: 'top 80%', toggleActions: 'play none none none' }
   });
 
-  // Gradient cards reveal
-  const gradCards = document.querySelectorAll('.gradient-card');
-  gsap.to(gradCards, {
+  // Security cards stagger
+  const secCards = document.querySelectorAll('.sec-card');
+  gsap.to(secCards, {
     opacity: 1,
     y: 0,
     duration: 0.9,
-    stagger: 0.15,
+    stagger: 0.16,
     ease: 'power3.out',
     scrollTrigger: {
       trigger: '#gradient-transition',
@@ -1717,93 +2065,50 @@
 
 
   // ════════════════════════════════════════════════════════════════
-  // SECTION 7 — CTA SCALE-IN
+  // SECTION 8 — FINAL CTA SCALE-IN + FLOAT
   // ════════════════════════════════════════════════════════════════
 
   gsap.to('#cta-inner', {
     scale: 1,
     opacity: 1,
-    duration: 1.2,
+    duration: 1.3,
     ease: 'power3.out',
     scrollTrigger: {
-      trigger: '#cta',
+      trigger: '#final-cta',
       start: 'top 80%',
       toggleActions: 'play none none none',
     }
   });
 
-  // Subtle floating animation on CTA once visible
+  // Subtle floating loop once revealed
   ScrollTrigger.create({
-    trigger: '#cta',
+    trigger: '#final-cta',
     start: 'top 80%',
-    onEnter: () => {
+    onEnter() {
       gsap.to('#cta-inner', {
-        y: -8,
-        duration: 3,
+        y: -10,
+        duration: 3.2,
         repeat: -1,
         yoyo: true,
         ease: 'sine.inOut',
-        delay: 1.2,
+        delay: 1.3,
       });
     }
   });
 
 
   // ════════════════════════════════════════════════════════════════
-  // MICRO-INTERACTIONS — Scroll-driven orb drift
+  // PERFORMANCE — Refresh after fonts, handle resize
   // ════════════════════════════════════════════════════════════════
 
-  // Continuous subtle orb animation on hero (not scroll based)
-  gsap.to('#orb1', {
-    x: 30,
-    y: 20,
-    duration: 8,
-    repeat: -1,
-    yoyo: true,
-    ease: 'sine.inOut',
-  });
-
-  gsap.to('#orb2', {
-    x: -25,
-    y: 15,
-    duration: 7,
-    repeat: -1,
-    yoyo: true,
-    ease: 'sine.inOut',
-    delay: 1,
-  });
-
-  gsap.to('#orb3', {
-    x: 20,
-    y: -20,
-    duration: 10,
-    repeat: -1,
-    yoyo: true,
-    ease: 'sine.inOut',
-    delay: 2,
-  });
-
-  gsap.to('#orb4', {
-    x: -15,
-    y: 25,
-    duration: 9,
-    repeat: -1,
-    yoyo: true,
-    ease: 'sine.inOut',
-    delay: 0.5,
-  });
-
-
-  // ════════════════════════════════════════════════════════════════
-  // PERFORMANCE — Refresh ScrollTrigger after fonts load
-  // ════════════════════════════════════════════════════════════════
   document.fonts.ready.then(() => {
     ScrollTrigger.refresh();
   });
 
-  // Handle resize
+  let resizeTimer;
   window.addEventListener('resize', () => {
-    ScrollTrigger.refresh();
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => ScrollTrigger.refresh(), 250);
   });
 </script>
 
