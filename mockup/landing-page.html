@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Yara - Your Personal AI Advocate</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            inter: ['Inter', 'system-ui', 'sans-serif'],
+          },
+          colors: {
+            base: '#0a0a0f',
+            elevated: '#0d1628',
+            surface: '#111827',
+            violet: '#7c3aed',
+            teal: '#06b6d4',
+          },
+        },
+      },
+    };
+  </script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html { font-family: 'Inter', system-ui, sans-serif; }
+    body {
+      background-color: #0a0a0f;
+      color: #e2e8f0;
+      overflow-x: hidden;
+    }
+
+    /* --- Aurora gradient text --- */
+    .aurora-text {
+      background: linear-gradient(135deg, #7c3aed 0%, #a78bfa 25%, #06b6d4 50%, #22d3ee 75%, #7c3aed 100%);
+      background-size: 200% 200%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: gradientShift 6s ease infinite;
+    }
+
+    /* --- Aurora gradient background for buttons --- */
+    .aurora-btn {
+      background: linear-gradient(135deg, #7c3aed, #6d28d9, #06b6d4);
+      background-size: 200% 200%;
+      animation: gradientShift 4s ease infinite;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .aurora-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 40px rgba(124, 58, 237, 0.4), 0 4px 20px rgba(6, 182, 212, 0.3);
+    }
+
+    /* --- Ghost button --- */
+    .ghost-btn {
+      border: 1px solid rgba(124, 58, 237, 0.5);
+      transition: all 0.3s ease;
+    }
+    .ghost-btn:hover {
+      border-color: rgba(124, 58, 237, 0.9);
+      background: rgba(124, 58, 237, 0.1);
+      box-shadow: 0 0 30px rgba(124, 58, 237, 0.15);
+    }
+
+    /* --- Glass card --- */
+    .glass-card {
+      background: rgba(13, 22, 40, 0.6);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
+    }
+    .glass-card:hover {
+      transform: translateY(-4px) scale(1.01);
+      box-shadow: 0 20px 60px rgba(124, 58, 237, 0.08), 0 8px 24px rgba(6, 182, 212, 0.06);
+      border-color: rgba(124, 58, 237, 0.15);
+    }
+
+    /* --- Glass nav --- */
+    .glass-nav {
+      background: rgba(10, 10, 15, 0.7);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    /* --- Auth button --- */
+    .auth-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.3s ease;
+    }
+    .auth-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    /* --- Coming Soon badge --- */
+    .coming-soon-badge {
+      background: linear-gradient(135deg, rgba(124, 58, 237, 0.2), rgba(6, 182, 212, 0.2));
+      border: 1px solid rgba(124, 58, 237, 0.3);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #a78bfa;
+      padding: 4px 10px;
+      border-radius: 9999px;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    /* --- Keyframe animations --- */
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-14px); }
+    }
+
+    @keyframes waveBar {
+      0%, 100% { height: 8px; }
+      50% { height: 28px; }
+    }
+
+    @keyframes pulseGlow {
+      0%, 100% { box-shadow: 0 0 40px rgba(124, 58, 237, 0.15), 0 0 80px rgba(6, 182, 212, 0.1); }
+      50% { box-shadow: 0 0 60px rgba(124, 58, 237, 0.25), 0 0 120px rgba(6, 182, 212, 0.15); }
+    }
+
+    .fade-in-up {
+      opacity: 0;
+      animation: fadeInUp 0.8s ease forwards;
+    }
+
+    .float-anim {
+      animation: float 5s ease-in-out infinite;
+    }
+
+    .stagger-1 { animation-delay: 0.1s; }
+    .stagger-2 { animation-delay: 0.2s; }
+    .stagger-3 { animation-delay: 0.3s; }
+    .stagger-4 { animation-delay: 0.4s; }
+    .stagger-5 { animation-delay: 0.5s; }
+    .stagger-6 { animation-delay: 0.6s; }
+
+    /* --- Audio waveform bars --- */
+    .wave-bar {
+      display: inline-block;
+      width: 3px;
+      background: linear-gradient(to top, #7c3aed, #06b6d4);
+      border-radius: 2px;
+      animation: waveBar 1.2s ease-in-out infinite;
+    }
+
+    /* --- Phone glow --- */
+    .phone-glow {
+      animation: pulseGlow 4s ease-in-out infinite;
+    }
+
+    /* --- CTA Section gradient container --- */
+    .aurora-container {
+      background: linear-gradient(135deg, rgba(124, 58, 237, 0.15) 0%, rgba(6, 182, 212, 0.12) 50%, rgba(124, 58, 237, 0.1) 100%);
+      border: 1px solid rgba(124, 58, 237, 0.2);
+    }
+
+    /* --- Steps connecting line --- */
+    .steps-line {
+      background: linear-gradient(90deg, #7c3aed, #06b6d4);
+      height: 2px;
+      position: absolute;
+      top: 40px;
+      left: 15%;
+      right: 15%;
+      z-index: 0;
+    }
+
+    /* --- Spending bar animation --- */
+    .spending-bar {
+      transition: width 1.5s cubic-bezier(0.22, 1, 0.36, 1);
+      width: 0;
+    }
+    .spending-bar.animated {
+      /* width set via inline style */
+    }
+
+    /* --- Scroll-triggered animation --- */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* --- Star color --- */
+    .star-gold { color: #facc15; }
+
+    /* --- Mobile hamburger --- */
+    .mobile-menu {
+      display: none;
+    }
+    .mobile-menu.open {
+      display: flex;
+    }
+
+    /* Smooth scrollbar */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #0a0a0f; }
+    ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #334155; }
+
+    /* Number badge */
+    .number-badge {
+      background: linear-gradient(135deg, #7c3aed, #06b6d4);
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 18px;
+      color: white;
+      position: relative;
+      z-index: 2;
+    }
+
+    /* Subtle background grid pattern */
+    .bg-grid {
+      background-image:
+        linear-gradient(rgba(124, 58, 237, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(124, 58, 237, 0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+
+    /* Aurora orb behind hero */
+    .aurora-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(120px);
+      opacity: 0.3;
+      pointer-events: none;
+    }
+
+    /* Plan card mini */
+    .plan-card-mini {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: border-color 0.3s ease;
+    }
+    .plan-card-mini:hover {
+      border-color: rgba(124, 58, 237, 0.3);
+    }
+    .plan-card-mini.recommended {
+      border-color: rgba(34, 197, 94, 0.4);
+      background: rgba(34, 197, 94, 0.05);
+    }
+  </style>
+</head>
+<body class="font-inter bg-grid antialiased">
+
+  <!-- ===== NAVIGATION ===== -->
+  <nav class="glass-nav fixed top-0 left-0 right-0 z-50">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16 md:h-20">
+        <!-- Logo -->
+        <a href="#" class="flex items-center gap-2 text-2xl font-extrabold tracking-tight text-white">
+          <img src="yara_butterfly.png" alt="Yara" class="w-8 h-8" style="mix-blend-mode:screen;">
+          yara<span class="aurora-text">.</span>
+        </a>
+
+        <!-- Desktop nav -->
+        <div class="hidden md:flex items-center gap-8">
+          <a href="#features" class="text-sm text-slate-400 hover:text-white transition-colors duration-200">Features</a>
+          <a href="#how-it-works" class="text-sm text-slate-400 hover:text-white transition-colors duration-200">How It Works</a>
+          <a href="#security" class="text-sm text-slate-400 hover:text-white transition-colors duration-200">Security</a>
+          <a href="#waitlist" class="text-sm text-slate-400 hover:text-white transition-colors duration-200">Join Waitlist</a>
+          <a href="#waitlist" class="aurora-btn text-sm font-semibold text-white px-5 py-2.5 rounded-full">
+            Join the Waitlist
+          </a>
+        </div>
+
+        <!-- Mobile hamburger -->
+        <button id="mobileToggle" class="md:hidden text-white p-2" aria-label="Toggle navigation menu">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile menu -->
+    <div id="mobileMenu" class="mobile-menu flex-col gap-4 px-6 pb-6 md:hidden">
+      <a href="#features" class="text-sm text-slate-400 hover:text-white transition-colors">Features</a>
+      <a href="#how-it-works" class="text-sm text-slate-400 hover:text-white transition-colors">How It Works</a>
+      <a href="#security" class="text-sm text-slate-400 hover:text-white transition-colors">Security</a>
+      <a href="#waitlist" class="text-sm text-slate-400 hover:text-white transition-colors">Join Waitlist</a>
+      <a href="#waitlist" class="aurora-btn text-sm font-semibold text-white px-5 py-2.5 rounded-full text-center mt-2">
+        Join the Waitlist
+      </a>
+    </div>
+  </nav>
+
+
+  <!-- ===== HERO SECTION ===== -->
+  <section class="relative min-h-screen flex items-center pt-20 overflow-hidden">
+    <!-- Aurora orbs -->
+    <div class="aurora-orb w-[500px] h-[500px] bg-violet-600 -top-40 -left-40" style="position:absolute;"></div>
+    <div class="aurora-orb w-[400px] h-[400px] bg-cyan-500 top-1/3 -right-32" style="position:absolute;"></div>
+    <div class="aurora-orb w-[300px] h-[300px] bg-violet-500 bottom-0 left-1/3" style="position:absolute;"></div>
+
+    <div class="max-w-7xl mx-auto px-6 lg:px-8 w-full py-16 lg:py-0">
+      <div class="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+        <!-- Left: Copy -->
+        <div class="text-center lg:text-left">
+          <h1 class="fade-in-up stagger-1 text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold leading-[1.08] tracking-tight text-white">
+            Your Personal <span class="aurora-text">AI Advocate</span>
+          </h1>
+          <p class="fade-in-up stagger-2 mt-6 md:mt-8 text-base md:text-lg lg:text-xl text-slate-400 max-w-xl mx-auto lg:mx-0 leading-relaxed">
+            Connecting accounts. Reviewing bills. Saving you money.
+          </p>
+          <p class="fade-in-up stagger-2 mt-3 text-sm md:text-base text-slate-500 max-w-xl mx-auto lg:mx-0">
+            Level the playing field. Enterprises have AI. Now you do too.
+          </p>
+
+          <!-- CTAs -->
+          <div class="fade-in-up stagger-3 mt-8 md:mt-10 flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+            <a href="#waitlist" class="aurora-btn text-white font-semibold px-8 py-4 rounded-full text-base inline-flex items-center justify-center gap-2">
+              Join the Waitlist
+            </a>
+            <a href="#how-it-works" class="ghost-btn text-white font-semibold px-8 py-4 rounded-full text-base inline-flex items-center justify-center gap-2">
+              See How It Works
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+            </a>
+          </div>
+
+          <!-- Auth options -->
+          <div class="fade-in-up stagger-4 mt-8 md:mt-10 flex flex-col sm:flex-row gap-3 justify-center lg:justify-start">
+            <a href="#" class="auth-btn text-white text-sm font-medium px-5 py-3 rounded-xl inline-flex items-center justify-center gap-2.5">
+              <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/></svg>
+              Continue with Apple
+            </a>
+            <a href="#" class="auth-btn text-white text-sm font-medium px-5 py-3 rounded-xl inline-flex items-center justify-center gap-2.5">
+              <svg class="w-5 h-5" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+              Continue with Google
+            </a>
+            <a href="#" class="auth-btn text-white text-sm font-medium px-5 py-3 rounded-xl inline-flex items-center justify-center gap-2.5">
+              <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M11.4 24H0V12.6h11.4V24zM24 24H12.6V12.6H24V24zM11.4 11.4H0V0h11.4v11.4zM24 11.4H12.6V0H24v11.4z"/></svg>
+              Continue with Microsoft
+            </a>
+          </div>
+        </div>
+
+        <!-- Right: Phone mockup -->
+        <div class="flex justify-center lg:justify-end">
+          <div class="float-anim phone-glow relative w-[280px] sm:w-[300px] md:w-[320px]">
+            <!-- Phone frame -->
+            <div class="bg-[#1a1a2e] rounded-[40px] p-3 shadow-2xl border border-white/5">
+              <!-- Notch -->
+              <div class="relative bg-[#0d1117] rounded-[32px] overflow-hidden" style="min-height: 560px;">
+                <!-- Status bar -->
+                <div class="flex items-center justify-between px-6 pt-3 pb-1 text-[10px] text-slate-500 font-medium">
+                  <span>9:41</span>
+                  <div class="w-28 h-6 bg-black rounded-full mx-auto"></div>
+                  <div class="flex items-center gap-1">
+                    <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/></svg>
+                    <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24"><path d="M15.67 4H14V2h-4v2H8.33C7.6 4 7 4.6 7 5.33v15.33C7 21.4 7.6 22 8.33 22h7.33c.74 0 1.34-.6 1.34-1.33V5.33C17 4.6 16.4 4 15.67 4z"/></svg>
+                  </div>
+                </div>
+
+                <!-- App header -->
+                <div class="px-5 pt-2 pb-3 border-b border-white/5">
+                  <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-full bg-gradient-to-br from-violet-500 to-cyan-400 flex items-center justify-center text-xs font-bold text-white">Y</div>
+                    <div>
+                      <div class="text-sm font-semibold text-white">Yara</div>
+                      <div class="text-[10px] text-green-400">Online</div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Chat messages -->
+                <div class="px-4 py-4 flex flex-col gap-3">
+                  <!-- User message -->
+                  <div class="flex justify-end">
+                    <div class="bg-gradient-to-br from-violet-600 to-violet-700 text-white text-xs px-4 py-2.5 rounded-2xl rounded-br-md max-w-[200px] leading-relaxed">
+                      Show me my Uber transactions
+                    </div>
+                  </div>
+
+                  <!-- AI response -->
+                  <div class="flex justify-start">
+                    <div class="bg-[#161b2e] text-slate-200 text-xs px-4 py-3 rounded-2xl rounded-bl-md max-w-[230px] leading-relaxed border border-white/5">
+                      <p class="mb-2">I found <span class="text-white font-semibold">2 Uber transactions</span>:</p>
+
+                      <!-- Transaction 1 -->
+                      <div class="flex items-start gap-2 mb-2 p-2 rounded-lg bg-white/[0.03] border border-white/5">
+                        <div class="w-5 h-5 rounded-md bg-green-500/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                          <svg class="w-3 h-3 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z"/></svg>
+                        </div>
+                        <div>
+                          <div class="text-white font-semibold text-[11px]">UberEats</div>
+                          <div class="text-slate-400 text-[10px]">Food & Dining &middot; Nov 15</div>
+                          <div class="text-cyan-400 font-semibold text-[11px] mt-0.5">$42.50</div>
+                        </div>
+                      </div>
+
+                      <!-- Transaction 2 -->
+                      <div class="flex items-start gap-2 p-2 rounded-lg bg-white/[0.03] border border-white/5">
+                        <div class="w-5 h-5 rounded-md bg-violet-500/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                          <svg class="w-3 h-3 text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
+                        </div>
+                        <div>
+                          <div class="text-white font-semibold text-[11px]">Uber ride</div>
+                          <div class="text-slate-400 text-[10px]">Transportation &middot; Nov 12</div>
+                          <div class="text-cyan-400 font-semibold text-[11px] mt-0.5">$72.00</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Typing indicator -->
+                  <div class="flex justify-start">
+                    <div class="bg-[#161b2e] px-4 py-3 rounded-2xl rounded-bl-md border border-white/5 flex items-center gap-1">
+                      <div class="w-1.5 h-1.5 bg-slate-500 rounded-full animate-pulse"></div>
+                      <div class="w-1.5 h-1.5 bg-slate-500 rounded-full animate-pulse" style="animation-delay:0.2s"></div>
+                      <div class="w-1.5 h-1.5 bg-slate-500 rounded-full animate-pulse" style="animation-delay:0.4s"></div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Input bar -->
+                <div class="absolute bottom-0 left-0 right-0 px-4 pb-6 pt-3 bg-gradient-to-t from-[#0d1117] to-transparent">
+                  <div class="flex items-center gap-2 bg-[#161b2e] rounded-full px-4 py-2.5 border border-white/5">
+                    <svg class="w-4 h-4 text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"/></svg>
+                    <span class="text-xs text-slate-600 flex-1">Ask about your finances...</span>
+                    <svg class="w-4 h-4 text-cyan-400" fill="currentColor" viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Bottom bar / home indicator -->
+            <div class="absolute bottom-2 left-1/2 -translate-x-1/2 w-24 h-1 bg-white/20 rounded-full"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ===== FEATURES BENTO GRID ===== -->
+  <section id="features" class="py-24 md:py-32 lg:py-40 relative">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
+      <!-- Section header -->
+      <div class="text-center mb-16 md:mb-20 reveal">
+        <p class="text-sm font-semibold tracking-[0.2em] uppercase text-violet-400 mb-4">Features</p>
+        <h2 class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white tracking-tight">
+          Everything you need. <span class="aurora-text">Nothing you don't.</span>
+        </h2>
+      </div>
+
+      <!-- Bento grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5">
+
+        <!-- Large: Financial Intelligence (spans 2 cols) -->
+        <div class="glass-card rounded-3xl p-8 md:col-span-2 reveal">
+          <div class="flex items-start justify-between mb-6">
+            <div>
+              <div class="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-violet-500/10 border border-violet-500/20 mb-4">
+                <svg class="w-6 h-6 text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+              </div>
+              <h3 class="text-xl font-bold text-white mb-2">Financial Intelligence</h3>
+              <p class="text-slate-400 text-sm leading-relaxed max-w-md">Connect securely via Plaid. Ask anything about your spending. Get instant, accurate answers.</p>
+            </div>
+          </div>
+          <!-- Animated waveform -->
+          <div class="flex items-center gap-1 h-10 mt-4">
+            <div class="wave-bar" style="animation-delay: 0.0s; height: 12px;"></div>
+            <div class="wave-bar" style="animation-delay: 0.1s; height: 20px;"></div>
+            <div class="wave-bar" style="animation-delay: 0.2s; height: 8px;"></div>
+            <div class="wave-bar" style="animation-delay: 0.3s; height: 28px;"></div>
+            <div class="wave-bar" style="animation-delay: 0.4s; height: 16px;"></div>
+            <div class="wave-bar" style="animation-delay: 0.15s; height: 24px;"></div>
+            <div class="wave-bar" style="animation-delay: 0.25s; height: 10px;"></div>
+            <div class="wave-bar" style="animation-delay: 0.35s; height: 20px;"></div>
+            <div class="wave-bar" style="animation-delay: 0.45s; height: 14px;"></div>
+            <div class="wave-bar" style="animation-delay: 0.05s; height: 26px;"></div>
+            <div class="wave-bar" style="animation-delay: 0.22s; height: 18px;"></div>
+            <div class="wave-bar" style="animation-delay: 0.32s; height: 8px;"></div>
+            <div class="wave-bar" style="animation-delay: 0.42s; height: 22px;"></div>
+            <div class="wave-bar" style="animation-delay: 0.12s; height: 12px;"></div>
+            <div class="wave-bar" style="animation-delay: 0.28s; height: 28px;"></div>
+            <div class="wave-bar" style="animation-delay: 0.08s; height: 16px;"></div>
+            <div class="wave-bar" style="animation-delay: 0.38s; height: 10px;"></div>
+            <div class="wave-bar" style="animation-delay: 0.18s; height: 24px;"></div>
+            <div class="wave-bar" style="animation-delay: 0.48s; height: 14px;"></div>
+            <div class="wave-bar" style="animation-delay: 0.02s; height: 20px;"></div>
+          </div>
+        </div>
+
+        <!-- Medium: Verified Savings -->
+        <div class="glass-card rounded-3xl p-8 reveal">
+          <div class="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-green-500/10 border border-green-500/20 mb-4">
+            <svg class="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+          </div>
+          <h3 class="text-lg font-bold text-white mb-2">Verified Savings</h3>
+          <p class="text-slate-400 text-sm leading-relaxed mb-5">Our models verify every recommendation for mathematical accuracy. No hallucinations. Just savings.</p>
+          <!-- Mini plan cards -->
+          <div class="space-y-2">
+            <div class="plan-card-mini recommended">
+              <div>
+                <div class="text-white text-[11px] font-semibold">T-Mobile</div>
+                <div class="text-[9px] text-green-400 font-medium">Best Value</div>
+              </div>
+              <div class="text-green-400 text-xs font-bold">$61/mo</div>
+            </div>
+            <div class="plan-card-mini">
+              <div>
+                <div class="text-white text-[11px] font-semibold">AT&T</div>
+                <div class="text-[9px] text-slate-500">Standard</div>
+              </div>
+              <div class="text-slate-300 text-xs font-bold">$65/mo</div>
+            </div>
+            <div class="plan-card-mini">
+              <div>
+                <div class="text-white text-[11px] font-semibold">AT&T Premium</div>
+                <div class="text-[9px] text-slate-500">Premium</div>
+              </div>
+              <div class="text-slate-300 text-xs font-bold">$70/mo</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Medium: Silent Assistant -->
+        <div class="glass-card rounded-3xl p-8 reveal">
+          <div class="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-cyan-500/10 border border-cyan-500/20 mb-4">
+            <svg class="w-6 h-6 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+          </div>
+          <h3 class="text-lg font-bold text-white mb-2">Silent Assistant</h3>
+          <p class="text-slate-400 text-sm leading-relaxed">On calls, Yara provides the data you need from your records. Real-time advocacy when it matters most.</p>
+          <!-- Visual indicator -->
+          <div class="mt-5 flex items-center gap-3">
+            <div class="w-8 h-8 rounded-full bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center">
+              <svg class="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"/></svg>
+            </div>
+            <div class="flex-1">
+              <div class="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
+                <div class="h-full w-3/4 bg-gradient-to-r from-cyan-500 to-violet-500 rounded-full" style="animation: gradientShift 3s ease infinite;"></div>
+              </div>
+              <div class="text-[10px] text-slate-600 mt-1">Listening & providing data...</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Large: Security on Device (spans 2 cols) -->
+        <div class="glass-card rounded-3xl p-8 md:col-span-2 reveal" style="border-color: rgba(34, 197, 94, 0.12);">
+          <div class="flex items-start gap-6">
+            <div class="flex-1">
+              <div class="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-green-500/10 border border-green-500/20 mb-4">
+                <svg class="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+              </div>
+              <h3 class="text-xl font-bold text-white mb-2">Security on Device</h3>
+              <p class="text-slate-400 text-sm leading-relaxed max-w-md">Zero data persistence. Your data never leaves your device. Zero persistence. Zero tracking.</p>
+            </div>
+            <!-- Shield visualization -->
+            <div class="hidden sm:flex flex-col items-center justify-center gap-2 opacity-60">
+              <svg class="w-20 h-20 text-green-400/30" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+            </div>
+          </div>
+          <!-- Security indicators -->
+          <div class="grid grid-cols-3 gap-3 mt-6">
+            <div class="text-center p-3 rounded-xl bg-white/[0.02] border border-white/5">
+              <div class="text-green-400 text-lg font-bold">0</div>
+              <div class="text-slate-500 text-[10px] mt-1">Data Stored</div>
+            </div>
+            <div class="text-center p-3 rounded-xl bg-white/[0.02] border border-white/5">
+              <div class="text-green-400 text-lg font-bold">0</div>
+              <div class="text-slate-500 text-[10px] mt-1">Trackers</div>
+            </div>
+            <div class="text-center p-3 rounded-xl bg-white/[0.02] border border-white/5">
+              <div class="text-green-400 text-lg font-bold">0</div>
+              <div class="text-slate-500 text-[10px] mt-1">Third Parties</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Small: Web Navigation (Coming Soon) -->
+        <div class="glass-card rounded-3xl p-8 reveal relative overflow-hidden">
+          <div class="flex items-center justify-between mb-4">
+            <div class="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/20">
+              <svg class="w-6 h-6 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"/></svg>
+            </div>
+            <span class="coming-soon-badge">Coming Soon</span>
+          </div>
+          <h3 class="text-lg font-bold text-white mb-2">Web Navigation</h3>
+          <p class="text-slate-400 text-sm leading-relaxed">Yara will browse websites, fill forms, and take action for you&mdash;switching plans, claiming refunds, canceling subscriptions.</p>
+        </div>
+
+        <!-- Small: Voice Advocacy (Coming Soon) -->
+        <div class="glass-card rounded-3xl p-8 reveal relative overflow-hidden">
+          <div class="flex items-center justify-between mb-4">
+            <div class="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-violet-500/10 border border-violet-500/20">
+              <svg class="w-6 h-6 text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"/></svg>
+            </div>
+            <span class="coming-soon-badge">Coming Soon</span>
+          </div>
+          <h3 class="text-lg font-bold text-white mb-2">Voice Advocacy</h3>
+          <p class="text-slate-400 text-sm leading-relaxed">Yara will handle customer service calls end-to-end. No more hold music. No more repeating yourself.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ===== HOW IT WORKS ===== -->
+  <section id="how-it-works" class="py-24 md:py-32 lg:py-40 relative">
+    <div class="max-w-5xl mx-auto px-6 lg:px-8">
+      <!-- Section header -->
+      <div class="text-center mb-16 md:mb-24 reveal">
+        <p class="text-sm font-semibold tracking-[0.2em] uppercase text-cyan-400 mb-4">How It Works</p>
+        <h2 class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white tracking-tight">
+          Three steps to <span class="aurora-text">saving money</span>
+        </h2>
+      </div>
+
+      <!-- Steps -->
+      <div class="relative">
+        <!-- Connecting line (desktop) -->
+        <div class="hidden md:block steps-line"></div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-8 relative z-10">
+          <!-- Step 1 -->
+          <div class="text-center reveal">
+            <div class="flex justify-center mb-6">
+              <div class="number-badge">1</div>
+            </div>
+            <div class="glass-card rounded-3xl p-8 text-center">
+              <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-violet-500/10 border border-violet-500/20 mb-5 mx-auto">
+                <svg class="w-8 h-8 text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg>
+              </div>
+              <h3 class="text-xl font-bold text-white mb-3">Connect</h3>
+              <p class="text-slate-400 text-sm leading-relaxed">Link your accounts securely via Plaid.</p>
+            </div>
+          </div>
+
+          <!-- Step 2 -->
+          <div class="text-center reveal" style="transition-delay: 0.15s;">
+            <div class="flex justify-center mb-6">
+              <div class="number-badge">2</div>
+            </div>
+            <div class="glass-card rounded-3xl p-8 text-center">
+              <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-cyan-500/10 border border-cyan-500/20 mb-5 mx-auto">
+                <svg class="w-8 h-8 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+              </div>
+              <h3 class="text-xl font-bold text-white mb-3">Ask</h3>
+              <p class="text-slate-400 text-sm leading-relaxed">Ask anything about your spending, bills, or finances.</p>
+            </div>
+          </div>
+
+          <!-- Step 3 -->
+          <div class="text-center reveal" style="transition-delay: 0.3s;">
+            <div class="flex justify-center mb-6">
+              <div class="number-badge">3</div>
+            </div>
+            <div class="glass-card rounded-3xl p-8 text-center">
+              <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-green-500/10 border border-green-500/20 mb-5 mx-auto">
+                <svg class="w-8 h-8 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              </div>
+              <h3 class="text-xl font-bold text-white mb-3">Save</h3>
+              <p class="text-slate-400 text-sm leading-relaxed">Get verified recommendations that save you real money.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ===== WHAT'S NEXT / ROADMAP ===== -->
+  <section class="py-24 md:py-32 lg:py-40 relative">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
+      <!-- Section header -->
+      <div class="text-center mb-16 md:mb-20 reveal">
+        <p class="text-sm font-semibold tracking-[0.2em] uppercase text-violet-400 mb-4">Roadmap</p>
+        <h2 class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white tracking-tight">
+          What's <span class="aurora-text">next</span>
+        </h2>
+      </div>
+
+      <!-- Roadmap cards -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+        <!-- Web Navigation -->
+        <div class="glass-card rounded-3xl p-8 reveal">
+          <div class="flex items-center justify-between mb-5">
+            <div class="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-amber-500/10 border border-amber-500/20">
+              <svg class="w-7 h-7 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"/></svg>
+            </div>
+            <span class="coming-soon-badge">Coming Soon</span>
+          </div>
+          <h3 class="text-xl font-bold text-white mb-3">Web Navigation</h3>
+          <p class="text-slate-400 text-sm leading-relaxed">Yara will browse websites, fill forms, and take action for you&mdash;switching plans, claiming refunds, canceling subscriptions. All on your behalf.</p>
+        </div>
+
+        <!-- Voice Advocacy -->
+        <div class="glass-card rounded-3xl p-8 reveal" style="transition-delay: 0.1s;">
+          <div class="flex items-center justify-between mb-5">
+            <div class="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-violet-500/10 border border-violet-500/20">
+              <svg class="w-7 h-7 text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+            </div>
+            <span class="coming-soon-badge">Coming Soon</span>
+          </div>
+          <h3 class="text-xl font-bold text-white mb-3">Voice Advocacy</h3>
+          <p class="text-slate-400 text-sm leading-relaxed">Yara will handle customer service calls end-to-end. No more hold music. No more repeating yourself. Just results.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ===== SECURITY SECTION ===== -->
+  <section id="security" class="py-24 md:py-32 lg:py-40 relative">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
+      <!-- Section header -->
+      <div class="text-center mb-16 md:mb-20 reveal">
+        <p class="text-sm font-semibold tracking-[0.2em] uppercase text-green-400 mb-4">Security</p>
+        <h2 class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white tracking-tight">
+          Your financial privacy is <span class="aurora-text">sacred</span>
+        </h2>
+      </div>
+
+      <!-- Security grid -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        <!-- Zero Data Persistence -->
+        <div class="glass-card rounded-3xl p-7 text-center reveal">
+          <div class="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-green-500/10 border border-green-500/20 mb-5 mx-auto">
+            <svg class="w-7 h-7 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+          </div>
+          <h3 class="text-base font-bold text-white mb-2">Zero Data Persistence</h3>
+          <p class="text-slate-500 text-sm leading-relaxed">Your data never leaves your device.</p>
+        </div>
+
+        <!-- No Tracking -->
+        <div class="glass-card rounded-3xl p-7 text-center reveal" style="transition-delay: 0.1s;">
+          <div class="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-violet-500/10 border border-violet-500/20 mb-5 mx-auto">
+            <svg class="w-7 h-7 text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/></svg>
+          </div>
+          <h3 class="text-base font-bold text-white mb-2">No Tracking</h3>
+          <p class="text-slate-500 text-sm leading-relaxed">Zero tracking. Zero analytics on your financial data.</p>
+        </div>
+
+        <!-- Plaid Secured -->
+        <div class="glass-card rounded-3xl p-7 text-center reveal" style="transition-delay: 0.2s;">
+          <div class="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-cyan-500/10 border border-cyan-500/20 mb-5 mx-auto">
+            <svg class="w-7 h-7 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/></svg>
+          </div>
+          <h3 class="text-base font-bold text-white mb-2">Plaid Secured</h3>
+          <p class="text-slate-500 text-sm leading-relaxed">Bank-grade security via Plaid integration.</p>
+        </div>
+
+        <!-- Total Privacy -->
+        <div class="glass-card rounded-3xl p-7 text-center reveal" style="transition-delay: 0.3s;">
+          <div class="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-amber-500/10 border border-amber-500/20 mb-5 mx-auto">
+            <svg class="w-7 h-7 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+          </div>
+          <h3 class="text-base font-bold text-white mb-2">Total Privacy</h3>
+          <p class="text-slate-500 text-sm leading-relaxed">Your financial life is nobody else's business.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ===== FINAL CTA ===== -->
+  <section id="waitlist" class="py-24 md:py-32 lg:py-40 relative">
+    <div class="max-w-4xl mx-auto px-6 lg:px-8">
+      <div class="aurora-container rounded-[48px] px-8 py-16 md:px-16 md:py-24 text-center relative overflow-hidden reveal">
+        <!-- Decorative orbs -->
+        <div class="aurora-orb w-[300px] h-[300px] bg-violet-600 -top-20 -right-20" style="position:absolute; opacity:0.15;"></div>
+        <div class="aurora-orb w-[250px] h-[250px] bg-cyan-500 -bottom-16 -left-16" style="position:absolute; opacity:0.12;"></div>
+
+        <h2 class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white tracking-tight mb-5 relative z-10">
+          Level the <span class="aurora-text">playing field.</span>
+        </h2>
+        <p class="text-slate-400 text-base md:text-lg mb-10 relative z-10">
+          Enterprises have AI. Now you do too.
+        </p>
+
+        <div class="flex flex-col items-center gap-6 relative z-10">
+          <!-- Primary CTA -->
+          <a href="#" class="aurora-btn text-white font-semibold px-10 py-4 rounded-full text-base inline-flex items-center gap-3">
+            Join the Waitlist
+          </a>
+
+          <!-- Auth buttons -->
+          <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
+            <a href="#" class="auth-btn text-white text-sm font-medium px-5 py-3 rounded-xl inline-flex items-center justify-center gap-2.5">
+              <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/></svg>
+              Continue with Apple
+            </a>
+            <a href="#" class="auth-btn text-white text-sm font-medium px-5 py-3 rounded-xl inline-flex items-center justify-center gap-2.5">
+              <svg class="w-5 h-5" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+              Continue with Google
+            </a>
+            <a href="#" class="auth-btn text-white text-sm font-medium px-5 py-3 rounded-xl inline-flex items-center justify-center gap-2.5">
+              <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M11.4 24H0V12.6h11.4V24zM24 24H12.6V12.6H24V24zM11.4 11.4H0V0h11.4v11.4zM24 11.4H12.6V0H24v11.4z"/></svg>
+              Continue with Microsoft
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="border-t border-white/5 py-16 md:py-20">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
+      <div class="flex flex-col items-center text-center gap-8">
+        <!-- Brand -->
+        <a href="#" class="flex items-center gap-2 text-2xl font-extrabold tracking-tight text-white">
+          <img src="yara_butterfly.png" alt="Yara" class="w-8 h-8" style="mix-blend-mode:screen;">
+          yara<span class="aurora-text">.</span>
+        </a>
+        <p class="text-slate-500 text-sm leading-relaxed max-w-md">Your Personal AI Advocate.</p>
+
+        <!-- Links -->
+        <div class="flex items-center gap-6">
+          <a href="#" class="text-sm text-slate-500 hover:text-white transition-colors">Terms of Service</a>
+          <span class="text-slate-700">|</span>
+          <a href="#" class="text-sm text-slate-500 hover:text-white transition-colors">Privacy Policy</a>
+        </div>
+
+        <p class="text-slate-600 text-xs">By signing up, you agree to our Terms and Privacy Policy.</p>
+
+        <!-- Bottom -->
+        <div class="border-t border-white/5 pt-8 w-full">
+          <p class="text-slate-600 text-sm">&copy; 2026 Yara. All rights reserved.</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+
+  <!-- ===== JAVASCRIPT ===== -->
+  <script>
+    // --- Mobile menu toggle ---
+    const mobileToggle = document.getElementById('mobileToggle');
+    const mobileMenu = document.getElementById('mobileMenu');
+    mobileToggle.addEventListener('click', () => {
+      mobileMenu.classList.toggle('open');
+    });
+    // Close mobile menu on link click
+    mobileMenu.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        mobileMenu.classList.remove('open');
+      });
+    });
+
+    // --- Scroll-reveal animation ---
+    const revealElements = document.querySelectorAll('.reveal');
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    });
+    revealElements.forEach(el => revealObserver.observe(el));
+
+    // --- Smooth scroll for anchor links ---
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        const href = this.getAttribute('href');
+        if (href === '#') return;
+        e.preventDefault();
+        const target = document.querySelector(href);
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+
+    // --- Nav background opacity on scroll ---
+    const nav = document.querySelector('nav');
+    let lastScrollY = 0;
+    window.addEventListener('scroll', () => {
+      const scrollY = window.scrollY;
+      if (scrollY > 50) {
+        nav.style.background = 'rgba(10, 10, 15, 0.85)';
+        nav.style.borderBottomColor = 'rgba(255, 255, 255, 0.06)';
+      } else {
+        nav.style.background = 'rgba(10, 10, 15, 0.7)';
+        nav.style.borderBottomColor = 'rgba(255, 255, 255, 0.04)';
+      }
+      lastScrollY = scrollY;
+    }, { passive: true });
+  </script>
+
+</body>
+</html>

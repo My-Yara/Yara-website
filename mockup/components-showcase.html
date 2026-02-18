@@ -1,0 +1,1056 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yara - UI Components Showcase</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0a0a0f 0%, #0d1628 50%, #0a0a0f 100%);
+            background-attachment: fixed;
+            color: #fff;
+        }
+
+        /* Aurora Gradient */
+        .aurora-gradient {
+            background: linear-gradient(90deg, #7c3aed 0%, #6366f1 50%, #06b6d4 100%);
+        }
+
+        .aurora-gradient-text {
+            background: linear-gradient(90deg, #7c3aed 0%, #6366f1 50%, #06b6d4 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Glass Effect */
+        .glass {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .glass-hover {
+            transition: all 0.3s ease;
+        }
+
+        .glass-hover:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 8px 32px rgba(124, 58, 237, 0.1);
+        }
+
+        /* Glow Effects */
+        .glow-aurora {
+            box-shadow: 0 0 20px rgba(124, 58, 237, 0.3);
+        }
+
+        .glow-aurora-intense {
+            box-shadow: 0 0 40px rgba(124, 58, 237, 0.5), 0 0 60px rgba(99, 102, 241, 0.3);
+        }
+
+        /* Button Styles */
+        .btn-primary {
+            background: linear-gradient(90deg, #7c3aed 0%, #6366f1 100%);
+            color: white;
+            padding: 12px 28px;
+            border-radius: 16px;
+            border: none;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(124, 58, 237, 0.4);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            padding: 12px 28px;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-ghost {
+            background: transparent;
+            color: white;
+            padding: 12px 28px;
+            border-radius: 16px;
+            border: none;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-ghost:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .btn-danger {
+            background: linear-gradient(90deg, #ef4444 0%, #dc2626 100%);
+            color: white;
+            padding: 12px 28px;
+            border-radius: 16px;
+            border: none;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(239, 68, 68, 0.4);
+        }
+
+        .btn-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .btn-icon:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: scale(1.05);
+        }
+
+        .btn-waitlist {
+            background: linear-gradient(90deg, #7c3aed 0%, #6366f1 50%, #06b6d4 100%);
+            border: none;
+            color: white;
+            padding: 14px 24px;
+            border-radius: 16px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-waitlist:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(124, 58, 237, 0.4), 0 0 60px rgba(99, 102, 241, 0.2);
+        }
+
+        /* Mesh Gradient */
+        .mesh-gradient {
+            background: radial-gradient(circle at 20% 50%, rgba(124, 58, 237, 0.3) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(6, 182, 212, 0.2) 0%, transparent 50%),
+                        radial-gradient(circle at 40% 80%, rgba(99, 102, 241, 0.2) 0%, transparent 50%);
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .animate-fade-in {
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+
+        .animate-float {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .stagger-1 { animation-delay: 0.1s; }
+        .stagger-2 { animation-delay: 0.2s; }
+        .stagger-3 { animation-delay: 0.3s; }
+        .stagger-4 { animation-delay: 0.4s; }
+        .stagger-5 { animation-delay: 0.5s; }
+
+        /* Section Headers */
+        .section-label {
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            background: linear-gradient(90deg, #7c3aed 0%, #6366f1 50%, #06b6d4 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 16px;
+        }
+
+        /* Card Hover */
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+
+        .card-hover:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 60px rgba(124, 58, 237, 0.2);
+        }
+
+        /* Status Pulse */
+        .pulse-dot {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+
+        /* Phone Mockup */
+        .phone-frame {
+            width: 375px;
+            height: 812px;
+            background: #000;
+            border-radius: 60px;
+            border: 12px solid #1a1a1a;
+            box-shadow: 0 20px 60px rgba(124, 58, 237, 0.3);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .phone-notch {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 28px;
+            background: #000;
+            border-radius: 0 0 40px 40px;
+            z-index: 10;
+        }
+
+        .phone-screen {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #0a0a0f 0%, #0d1628 100%);
+            display: flex;
+            flex-direction: column;
+            padding-top: 12px;
+        }
+
+        /* Bento Grid */
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            max-width: 1200px;
+        }
+
+        .bento-item-1x1 {
+            grid-column: span 1;
+            grid-row: span 1;
+        }
+
+        .bento-item-2x1 {
+            grid-column: span 2;
+            grid-row: span 1;
+        }
+
+        .bento-item-2x2 {
+            grid-column: span 2;
+            grid-row: span 2;
+        }
+
+        @media (max-width: 1024px) {
+            .bento-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .bento-item-2x2 {
+                grid-column: span 2;
+                grid-row: span 2;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .bento-grid {
+                grid-template-columns: 1fr;
+            }
+            .bento-item-2x1,
+            .bento-item-2x2 {
+                grid-column: span 1;
+                grid-row: span 1;
+            }
+        }
+
+        /* Border Gradient */
+        .border-gradient {
+            position: relative;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(16px);
+            border-radius: 20px;
+            padding: 2px;
+            overflow: hidden;
+        }
+
+        .border-gradient::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 20px;
+            background: linear-gradient(90deg, #7c3aed 0%, #6366f1 50%, #06b6d4 100%);
+            z-index: -1;
+            opacity: 0.5;
+        }
+
+        .border-gradient > * {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(16px);
+            border-radius: 18px;
+        }
+
+        /* Category Icons */
+        .category-badge {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .category-badge.food { background: rgba(249, 115, 22, 0.2); border: 1px solid rgba(249, 115, 22, 0.3); }
+        .category-badge.housing { background: rgba(59, 130, 246, 0.2); border: 1px solid rgba(59, 130, 246, 0.3); }
+        .category-badge.transport { background: rgba(168, 85, 247, 0.2); border: 1px solid rgba(168, 85, 247, 0.3); }
+        .category-badge.entertainment { background: rgba(236, 72, 153, 0.2); border: 1px solid rgba(236, 72, 153, 0.3); }
+        .category-badge.health { background: rgba(16, 185, 129, 0.2); border: 1px solid rgba(16, 185, 129, 0.3); }
+        .category-badge.shopping { background: rgba(6, 182, 212, 0.2); border: 1px solid rgba(6, 182, 212, 0.3); }
+
+        /* Badge Styles */
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .badge-new { background: rgba(124, 58, 237, 0.2); color: #a78bfa; }
+        .badge-beta { background: rgba(99, 102, 241, 0.2); color: #93c5fd; }
+        .badge-ai { background: rgba(6, 182, 212, 0.2); color: #67e8f9; }
+        .badge-connected { background: rgba(16, 185, 129, 0.2); color: #6ee7b7; }
+        .badge-syncing { background: rgba(250, 204, 21, 0.2); color: #fde047; animation: pulse 2s infinite; }
+        .badge-error { background: rgba(239, 68, 68, 0.2); color: #fca5a5; }
+        .badge-verified { background: rgba(16, 185, 129, 0.2); color: #6ee7b7; }
+        .badge-private { background: rgba(168, 85, 247, 0.2); color: #c4b5fd; }
+        .badge-coming-soon { background: rgba(250, 204, 21, 0.2); color: #fde047; }
+        .badge-on-device { background: rgba(99, 102, 241, 0.2); color: #93c5fd; }
+
+        /* Status Indicator */
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .status-dot.connected { background: #10b981; }
+        .status-dot.syncing { background: #fbbf24; }
+        .status-dot.error { background: #ef4444; }
+
+        /* Conversation Bubbles */
+        .bubble-user {
+            background: rgba(124, 58, 237, 0.2);
+            border: 1px solid rgba(124, 58, 237, 0.3);
+            color: #fff;
+            padding: 12px 16px;
+            border-radius: 16px;
+            border-bottom-right-radius: 4px;
+            margin-left: auto;
+            max-width: 85%;
+            text-align: right;
+        }
+
+        .bubble-ai {
+            background: rgba(99, 102, 241, 0.15);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            color: #fff;
+            padding: 12px 16px;
+            border-radius: 16px;
+            border-bottom-left-radius: 4px;
+            max-width: 85%;
+        }
+
+        /* Text Utilities */
+        .text-white-90 { color: rgba(255, 255, 255, 0.9); }
+        .text-white-80 { color: rgba(255, 255, 255, 0.8); }
+        .text-white-70 { color: rgba(255, 255, 255, 0.7); }
+        .text-white-60 { color: rgba(255, 255, 255, 0.6); }
+        .text-white-40 { color: rgba(255, 255, 255, 0.4); }
+
+        /* Smoothing */
+        * {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+    </style>
+</head>
+<body class="overflow-x-hidden">
+    <div class="min-h-screen pt-20 pb-40">
+        <!-- Hero Section -->
+        <div class="max-w-5xl mx-auto px-8 mb-40">
+            <h1 class="text-9xl font-black mb-4 aurora-gradient-text">Yara</h1>
+            <p class="text-2xl text-white-70 mb-8">UI Components & Design System Showcase</p>
+            <p class="text-lg text-white-60">Glass-morphism design tokens, component patterns, and visual effects</p>
+        </div>
+
+        <!-- SECTION 1: TYPOGRAPHY -->
+        <div class="max-w-5xl mx-auto px-8 mb-40">
+            <div class="section-label">Typography Scale</div>
+            <div class="space-y-12">
+                <div>
+                    <div class="text-8xl font-black mb-2 aurora-gradient-text" style="line-height: 1.1;">Your Personal AI Advocate</div>
+                    <div class="text-white-60 text-sm">Display XL — 80px, font-weight 800</div>
+                </div>
+                <div>
+                    <div class="text-6xl font-bold mb-2 text-white" style="line-height: 1.2;">Level the Playing Field</div>
+                    <div class="text-white-60 text-sm">Display — 64px, font-weight 700</div>
+                </div>
+                <div>
+                    <div class="text-5xl font-semibold mb-2 text-white" style="line-height: 1.2;">Verified savings recommendations</div>
+                    <div class="text-white-60 text-sm">Heading 1 — 48px, font-weight 600</div>
+                </div>
+                <div>
+                    <div class="text-4xl font-semibold mb-2 text-white-90" style="line-height: 1.3;">Zero data persistence</div>
+                    <div class="text-white-60 text-sm">Heading 2 — 36px, font-weight 600</div>
+                </div>
+                <div>
+                    <div class="text-3xl font-medium mb-2 text-white-80" style="line-height: 1.3;">Real-time advocacy</div>
+                    <div class="text-white-60 text-sm">Heading 3 — 24px, font-weight 500</div>
+                </div>
+                <div>
+                    <div class="text-xl font-normal mb-2 text-white-70" style="line-height: 1.4;">Yara connects your accounts, reviews your bills, and saves you money. No data stored. No tracking. Just results.</div>
+                    <div class="text-white-60 text-sm">Body Large — 20px, font-weight 400</div>
+                </div>
+                <div>
+                    <div class="text-base font-normal mb-2 text-white-60" style="line-height: 1.5;">Connect securely via Plaid to 12,000+ banks</div>
+                    <div class="text-white-60 text-sm">Body — 16px, font-weight 400</div>
+                </div>
+                <div>
+                    <div class="text-sm font-normal mb-2 text-white-40" style="line-height: 1.5;">Zero persistence. Zero tracking.</div>
+                    <div class="text-white-60 text-sm">Caption — 14px, font-weight 400</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION 2: BUTTONS -->
+        <div class="max-w-5xl mx-auto px-8 mb-40">
+            <div class="section-label">Button Styles</div>
+
+            <div class="space-y-8">
+                <!-- Primary Buttons -->
+                <div>
+                    <div class="text-sm font-semibold text-white-60 mb-4">Primary Button</div>
+                    <div class="flex gap-4 flex-wrap items-center">
+                        <button class="btn-primary">Join the Waitlist</button>
+                        <button class="btn-primary" style="opacity: 0.5; cursor: not-allowed;">Disabled</button>
+                    </div>
+                </div>
+
+                <!-- Secondary Buttons -->
+                <div>
+                    <div class="text-sm font-semibold text-white-60 mb-4">Secondary Button</div>
+                    <div class="flex gap-4 flex-wrap items-center">
+                        <button class="btn-secondary">Learn More</button>
+                        <button class="btn-secondary" style="opacity: 0.5; cursor: not-allowed;">Disabled</button>
+                    </div>
+                </div>
+
+                <!-- Ghost Buttons -->
+                <div>
+                    <div class="text-sm font-semibold text-white-60 mb-4">Ghost Button</div>
+                    <div class="flex gap-4 flex-wrap items-center">
+                        <button class="btn-ghost">Cancel</button>
+                        <button class="btn-ghost" style="opacity: 0.5; cursor: not-allowed;">Disabled</button>
+                    </div>
+                </div>
+
+                <!-- Danger Buttons -->
+                <div>
+                    <div class="text-sm font-semibold text-white-60 mb-4">Danger Button</div>
+                    <div class="flex gap-4 flex-wrap items-center">
+                        <button class="btn-danger">Disconnect Account</button>
+                    </div>
+                </div>
+
+                <!-- Icon Buttons -->
+                <div>
+                    <div class="text-sm font-semibold text-white-60 mb-4">Icon Buttons</div>
+                    <div class="flex gap-4 flex-wrap items-center">
+                        <button class="btn-icon">➕</button>
+                        <button class="btn-icon">🔍</button>
+                        <button class="btn-icon">⚙️</button>
+                        <button class="btn-icon">🔔</button>
+                    </div>
+                </div>
+
+                <!-- Waitlist Button -->
+                <div>
+                    <div class="text-sm font-semibold text-white-60 mb-4">Waitlist Button</div>
+                    <div class="flex gap-4 flex-wrap items-center">
+                        <button class="btn-waitlist">
+                            <span>✉️</span>
+                            Join the Waitlist
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Button Group -->
+                <div>
+                    <div class="text-sm font-semibold text-white-60 mb-4">Button Group</div>
+                    <div class="flex gap-3">
+                        <button class="btn-primary">Confirm</button>
+                        <button class="btn-ghost">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION 3: GLASS CARDS -->
+        <div class="max-w-5xl mx-auto px-8 mb-40">
+            <div class="section-label">Glass Cards</div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Card 1: Feature Card -->
+                <div class="glass card-hover p-6 rounded-2xl animate-fade-in stagger-1">
+                    <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-violet-500 to-indigo-500 flex items-center justify-center mb-4 text-lg">🧠</div>
+                    <h3 class="text-lg font-semibold text-white mb-2">Financial Intelligence</h3>
+                    <p class="text-sm text-white-60">Connect securely via Plaid. Ask anything about your spending. Get instant, accurate answers.</p>
+                </div>
+
+                <!-- Card 2: Stat Card -->
+                <div class="glass card-hover p-6 rounded-2xl animate-fade-in stagger-2">
+                    <div class="text-white-60 text-sm mb-2">UberEats Transaction</div>
+                    <div class="text-4xl font-bold text-white mb-2">$42.50</div>
+                    <div class="flex items-center gap-2">
+                        <span class="text-white-60 text-sm">Food & Dining</span>
+                        <span class="text-white-40 text-sm">• Nov 15</span>
+                    </div>
+                </div>
+
+                <!-- Card 3: Transaction Card -->
+                <div class="glass card-hover p-6 rounded-2xl animate-fade-in stagger-3 flex items-center gap-4">
+                    <div class="category-badge transport">🚗</div>
+                    <div class="flex-1">
+                        <div class="text-white font-medium">Uber ride</div>
+                        <div class="text-white-60 text-sm">Transportation</div>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-white font-semibold">-$72.00</div>
+                        <div class="text-white-40 text-sm">Nov 12</div>
+                    </div>
+                </div>
+
+                <!-- Card 4: Account Card -->
+                <div class="glass card-hover p-6 rounded-2xl animate-fade-in stagger-4">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="text-2xl">🏦</div>
+                        <div class="flex items-center gap-2">
+                            <span class="status-dot connected"></span>
+                            <span class="text-white-60 text-xs">Connected via Plaid</span>
+                        </div>
+                    </div>
+                    <div class="text-white-80 text-sm mb-2">Chase Checking</div>
+                    <div class="text-2xl font-bold text-white">$5,230.18</div>
+                    <div class="text-white-60 text-xs mt-4">••4521</div>
+                </div>
+
+                <!-- Card 5: Insight Card -->
+                <div class="border-gradient animate-fade-in stagger-5 lg:col-span-2">
+                    <div class="p-6">
+                        <div class="flex items-start gap-4">
+                            <div class="text-2xl mt-1">💡</div>
+                            <div class="flex-1">
+                                <div class="text-white mb-4">Your T-Mobile Essentials plan at <span class="font-semibold text-green-400">$61/mo</span> is the best match for your usage. You could save <span class="font-semibold text-green-400">$9/mo</span> compared to your current AT&T Premium plan at $70/mo.</div>
+                                <button class="btn-secondary text-sm py-2 px-4">View Plan</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 6: Conversation Card -->
+                <div class="glass card-hover p-6 rounded-2xl animate-fade-in lg:col-span-3">
+                    <div class="text-white-60 text-xs font-semibold mb-4 uppercase tracking-wide">Sample Conversation</div>
+                    <div class="space-y-3">
+                        <div class="bubble-user text-sm">Show me my Uber transactions</div>
+                        <div class="bubble-ai text-sm">I found 2 Uber transactions: UberEats - $42.50 (Food & Dining, Nov 15) and Uber ride - $72.00 (Transportation, Nov 12)</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION 4: BENTO GRID -->
+        <div class="max-w-6xl mx-auto px-8 mb-40">
+            <div class="section-label">Bento Grid Layout</div>
+            <div class="bento-grid">
+                <div class="bento-item-2x1 glass card-hover p-8 rounded-2xl animate-fade-in stagger-1">
+                    <div class="flex items-center gap-4">
+                        <div class="text-4xl">🧠</div>
+                        <div>
+                            <h4 class="text-xl font-bold text-white">Financial Intelligence</h4>
+                            <p class="text-white-60 text-sm">Ask anything about your money. Get instant, verified answers powered by AI.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bento-item-1x1 glass card-hover p-6 rounded-2xl animate-fade-in stagger-2">
+                    <div class="text-2xl mb-2">✅</div>
+                    <h4 class="text-white font-semibold mb-2">Verified Savings</h4>
+                    <p class="text-white-60 text-sm">Real recommendations backed by real data</p>
+                </div>
+
+                <div class="bento-item-1x1 glass card-hover p-6 rounded-2xl animate-fade-in stagger-3">
+                    <div class="text-2xl mb-2">🤫</div>
+                    <h4 class="text-white font-semibold mb-2">Silent Assistant</h4>
+                    <p class="text-white-60 text-sm">Works in the background, speaks up when it matters</p>
+                </div>
+
+                <div class="bento-item-2x2 glass card-hover p-8 rounded-2xl animate-fade-in stagger-4 flex flex-col justify-between">
+                    <div>
+                        <div class="text-3xl mb-3">🔒</div>
+                        <h4 class="text-2xl font-bold text-white mb-2">Security on Device</h4>
+                        <p class="text-white-70 mb-6">Zero data persistence. Zero tracking. Your financial data never leaves your device and is never stored on our servers.</p>
+                    </div>
+                    <button class="btn-primary w-full">Join the Waitlist</button>
+                </div>
+
+                <div class="bento-item-1x1 glass card-hover p-6 rounded-2xl animate-fade-in stagger-5" style="opacity: 0.7;">
+                    <div class="text-2xl mb-2">🌐</div>
+                    <h4 class="text-white font-semibold mb-2">Web Navigation</h4>
+                    <p class="text-white-60 text-sm">Browse and act on your behalf</p>
+                    <div class="badge badge-coming-soon mt-3">Coming Soon</div>
+                </div>
+
+                <div class="bento-item-1x1 glass card-hover p-6 rounded-2xl animate-fade-in stagger-5" style="opacity: 0.7;">
+                    <div class="text-2xl mb-2">🎤</div>
+                    <h4 class="text-white font-semibold mb-2">Voice Advocacy</h4>
+                    <p class="text-white-60 text-sm">Yara calls and negotiates for you</p>
+                    <div class="badge badge-coming-soon mt-3">Coming Soon</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION 5: NAVIGATION BAR -->
+        <div class="max-w-5xl mx-auto px-8 mb-40">
+            <div class="section-label">Navigation Bar</div>
+
+            <!-- Transparent State -->
+            <div class="mb-8">
+                <div class="text-white-60 text-sm mb-4">Transparent state</div>
+                <nav class="glass rounded-2xl px-8 py-4 flex items-center justify-between">
+                    <div class="text-2xl font-bold aurora-gradient-text flex items-center gap-2"><img src="yara_butterfly.png" alt="Yara" class="w-7 h-7" style="mix-blend-mode:screen;">yara</div>
+                    <div class="hidden md:flex gap-8 items-center">
+                        <a href="#" class="text-white-70 hover:text-white transition">Features</a>
+                        <a href="#" class="text-white-70 hover:text-white transition">How It Works</a>
+                        <a href="#" class="text-white-70 hover:text-white transition">Security</a>
+                        <a href="#" class="text-white-70 hover:text-white transition">Pricing</a>
+                    </div>
+                    <button class="btn-primary text-sm py-2 px-4">Join the Waitlist</button>
+                </nav>
+            </div>
+
+            <!-- Blurred State (scrolled) -->
+            <div>
+                <div class="text-white-60 text-sm mb-4">Scrolled state (enhanced blur)</div>
+                <nav class="glass rounded-2xl px-8 py-4 flex items-center justify-between" style="background: rgba(0, 0, 0, 0.3); backdrop-filter: blur(32px);">
+                    <div class="text-2xl font-bold aurora-gradient-text flex items-center gap-2"><img src="yara_butterfly.png" alt="Yara" class="w-7 h-7" style="mix-blend-mode:screen;">yara</div>
+                    <div class="hidden md:flex gap-8 items-center">
+                        <a href="#" class="text-white-70 hover:text-white transition">Features</a>
+                        <a href="#" class="text-white-70 hover:text-white transition">How It Works</a>
+                        <a href="#" class="text-white-70 hover:text-white transition">Security</a>
+                        <a href="#" class="text-white-70 hover:text-white transition">Pricing</a>
+                    </div>
+                    <button class="btn-primary text-sm py-2 px-4">Join the Waitlist</button>
+                </nav>
+            </div>
+        </div>
+
+        <!-- SECTION 6: PHONE MOCKUP -->
+        <div class="max-w-5xl mx-auto px-8 mb-40 flex justify-center">
+            <div class="section-label absolute -top-16 left-0 right-0 text-center">Phone Mockup</div>
+            <div class="phone-frame animate-float">
+                <div class="phone-notch"></div>
+                <div class="phone-screen">
+                    <!-- Status Bar -->
+                    <div class="px-6 pt-8 pb-4 flex justify-between items-center text-xs">
+                        <span>9:41</span>
+                        <div class="flex gap-1">
+                            <span>📶</span>
+                            <span>📡</span>
+                            <span>🔋</span>
+                        </div>
+                    </div>
+
+                    <!-- Nav Bar -->
+                    <div class="glass mx-3 mb-4 rounded-xl px-4 py-3 flex items-center gap-3">
+                        <span class="text-lg">←</span>
+                        <div class="w-8 h-8 rounded-full bg-gradient-to-br from-violet-500 to-indigo-500"></div>
+                        <span class="text-sm font-semibold">Yara</span>
+                    </div>
+
+                    <!-- Chat Area -->
+                    <div class="flex-1 px-4 py-4 space-y-4 overflow-y-auto">
+                        <!-- User Message -->
+                        <div class="flex justify-end">
+                            <div class="bubble-user text-xs">Show me my Uber transactions</div>
+                        </div>
+
+                        <!-- AI Message -->
+                        <div class="flex">
+                            <div class="bubble-ai text-xs">I found 2 Uber transactions:</div>
+                        </div>
+
+                        <!-- AI Message with List -->
+                        <div class="flex">
+                            <div class="bubble-ai text-xs space-y-1">
+                                <div class="text-xs space-y-2 mt-1">
+                                    <div class="flex justify-between items-center gap-3">
+                                        <span>UberEats</span>
+                                        <span class="text-white-60">$42.50</span>
+                                    </div>
+                                    <div class="text-white-40" style="font-size: 10px; margin-top: 2px;">Food & Dining • Nov 15</div>
+                                    <div style="border-top: 1px solid rgba(255,255,255,0.1); margin: 4px 0;"></div>
+                                    <div class="flex justify-between items-center gap-3">
+                                        <span>Uber ride</span>
+                                        <span class="text-white-60">$72.00</span>
+                                    </div>
+                                    <div class="text-white-40" style="font-size: 10px; margin-top: 2px;">Transportation • Nov 12</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- AI Message with CTA -->
+                        <div class="flex">
+                            <div class="bubble-ai text-xs">Would you like to see a spending breakdown by category?</div>
+                        </div>
+                    </div>
+
+                    <!-- Input Bar -->
+                    <div class="glass mx-3 mb-4 rounded-xl px-4 py-3 flex items-center gap-3">
+                        <span class="text-lg cursor-pointer">🎤</span>
+                        <input type="text" placeholder="Ask about your finances..." class="bg-transparent text-xs text-white-80 placeholder:text-white-40 outline-none flex-1" disabled>
+                        <span class="text-lg cursor-pointer">⏎</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION 7: COLOR PALETTE -->
+        <div class="max-w-5xl mx-auto px-8 mb-40">
+            <div class="section-label">Color Palette</div>
+
+            <div class="space-y-8">
+                <!-- Background Colors -->
+                <div>
+                    <div class="text-white-60 text-sm font-semibold mb-4">Background Colors</div>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <div class="space-y-2">
+                            <div class="h-20 rounded-xl border border-white-20" style="background: #0a0a0f;"></div>
+                            <div class="text-white-80 text-sm font-medium">#0a0a0f</div>
+                            <div class="text-white-60 text-xs">Primary BG</div>
+                        </div>
+                        <div class="space-y-2">
+                            <div class="h-20 rounded-xl border border-white-20" style="background: #0d1628;"></div>
+                            <div class="text-white-80 text-sm font-medium">#0d1628</div>
+                            <div class="text-white-60 text-xs">Elevated 1</div>
+                        </div>
+                        <div class="space-y-2">
+                            <div class="h-20 rounded-xl border border-white-20" style="background: #111827;"></div>
+                            <div class="text-white-80 text-sm font-medium">#111827</div>
+                            <div class="text-white-60 text-xs">Elevated 2</div>
+                        </div>
+                        <div class="space-y-2">
+                            <div class="h-20 rounded-xl border border-white-20" style="background: #1f2937;"></div>
+                            <div class="text-white-80 text-sm font-medium">#1f2937</div>
+                            <div class="text-white-60 text-xs">Elevated 3</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Aurora Gradient -->
+                <div>
+                    <div class="text-white-60 text-sm font-semibold mb-4">Aurora Gradient</div>
+                    <div class="h-24 rounded-xl aurora-gradient shadow-2xl" style="box-shadow: 0 0 40px rgba(124, 58, 237, 0.3);"></div>
+                    <div class="text-white-80 text-sm font-medium mt-3">#7c3aed → #6366f1 → #06b6d4</div>
+                </div>
+
+                <!-- Accent Colors -->
+                <div>
+                    <div class="text-white-60 text-sm font-semibold mb-4">Accent Colors</div>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <div class="space-y-2">
+                            <div class="h-20 rounded-xl" style="background: #7c3aed;"></div>
+                            <div class="text-white-80 text-sm font-medium">Violet</div>
+                            <div class="text-white-60 text-xs">#7c3aed</div>
+                        </div>
+                        <div class="space-y-2">
+                            <div class="h-20 rounded-xl" style="background: #6366f1;"></div>
+                            <div class="text-white-80 text-sm font-medium">Indigo</div>
+                            <div class="text-white-60 text-xs">#6366f1</div>
+                        </div>
+                        <div class="space-y-2">
+                            <div class="h-20 rounded-xl" style="background: #06b6d4;"></div>
+                            <div class="text-white-80 text-sm font-medium">Teal</div>
+                            <div class="text-white-60 text-xs">#06b6d4</div>
+                        </div>
+                        <div class="space-y-2">
+                            <div class="h-20 rounded-xl" style="background: #10b981;"></div>
+                            <div class="text-white-80 text-sm font-medium">Green</div>
+                            <div class="text-white-60 text-xs">#10b981</div>
+                        </div>
+                        <div class="space-y-2">
+                            <div class="h-20 rounded-xl" style="background: #ef4444;"></div>
+                            <div class="text-white-80 text-sm font-medium">Red</div>
+                            <div class="text-white-60 text-xs">#ef4444</div>
+                        </div>
+                        <div class="space-y-2">
+                            <div class="h-20 rounded-xl" style="background: #f97316;"></div>
+                            <div class="text-white-80 text-sm font-medium">Orange</div>
+                            <div class="text-white-60 text-xs">#f97316</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Text Colors -->
+                <div>
+                    <div class="text-white-60 text-sm font-semibold mb-4">Text Colors</div>
+                    <div class="space-y-3">
+                        <div class="glass p-4 rounded-xl">
+                            <div style="color: #fff;">White 100 — Primary text</div>
+                        </div>
+                        <div class="glass p-4 rounded-xl">
+                            <div style="color: rgba(255,255,255,0.8);">White 80 — Secondary text</div>
+                        </div>
+                        <div class="glass p-4 rounded-xl">
+                            <div style="color: rgba(255,255,255,0.6);">White 60 — Tertiary text</div>
+                        </div>
+                        <div class="glass p-4 rounded-xl">
+                            <div style="color: rgba(255,255,255,0.4);">White 40 — Metadata</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION 8: GRADIENTS & EFFECTS -->
+        <div class="max-w-5xl mx-auto px-8 mb-40">
+            <div class="section-label">Gradients & Effects</div>
+
+            <div class="space-y-8">
+                <!-- Aurora Gradient Bar -->
+                <div>
+                    <div class="text-white-60 text-sm font-semibold mb-4">Aurora Gradient Bar</div>
+                    <div class="h-16 rounded-xl aurora-gradient glow-aurora-intense"></div>
+                </div>
+
+                <!-- Mesh Gradient -->
+                <div>
+                    <div class="text-white-60 text-sm font-semibold mb-4">Mesh Gradient</div>
+                    <div class="h-40 rounded-xl mesh-gradient border border-white-10"></div>
+                </div>
+
+                <!-- Blur Levels -->
+                <div>
+                    <div class="text-white-60 text-sm font-semibold mb-4">Glass Blur Levels</div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div style="backdrop-filter: blur(4px); background: rgba(255,255,255,0.05);" class="p-6 rounded-xl border border-white-10">
+                            <div class="text-white font-semibold">blur-sm</div>
+                            <div class="text-white-60 text-sm">Light blur effect</div>
+                        </div>
+                        <div style="backdrop-filter: blur(12px); background: rgba(255,255,255,0.05);" class="p-6 rounded-xl border border-white-10">
+                            <div class="text-white font-semibold">blur-md</div>
+                            <div class="text-white-60 text-sm">Medium blur effect</div>
+                        </div>
+                        <div style="backdrop-filter: blur(24px); background: rgba(255,255,255,0.05);" class="p-6 rounded-xl border border-white-10">
+                            <div class="text-white font-semibold">blur-xl</div>
+                            <div class="text-white-60 text-sm">Extra large blur</div>
+                        </div>
+                        <div style="backdrop-filter: blur(64px); background: rgba(255,255,255,0.05);" class="p-6 rounded-xl border border-white-10">
+                            <div class="text-white font-semibold">blur-2xl</div>
+                            <div class="text-white-60 text-sm">Maximum blur effect</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Glow Effects -->
+                <div>
+                    <div class="text-white-60 text-sm font-semibold mb-4">Glow Effects</div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="glass p-8 rounded-xl text-center glow-aurora">
+                            <div class="text-white font-semibold">Soft Glow</div>
+                            <div class="text-white-60 text-sm mt-2">Subtle aurora</div>
+                        </div>
+                        <div class="glass p-8 rounded-xl text-center" style="box-shadow: 0 0 40px rgba(124, 58, 237, 0.5), 0 0 60px rgba(99, 102, 241, 0.3);">
+                            <div class="text-white font-semibold">Medium Glow</div>
+                            <div class="text-white-60 text-sm mt-2">Enhanced aurora</div>
+                        </div>
+                        <div class="glass p-8 rounded-xl text-center glow-aurora-intense">
+                            <div class="text-white font-semibold">Intense Glow</div>
+                            <div class="text-white-60 text-sm mt-2">Maximum aurora</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Text Gradient -->
+                <div>
+                    <div class="text-white-60 text-sm font-semibold mb-4">Text Gradient</div>
+                    <div class="text-6xl font-bold aurora-gradient-text" style="line-height: 1.2;">
+                        Gradient Text Effect
+                    </div>
+                </div>
+
+                <!-- Border Gradient -->
+                <div>
+                    <div class="text-white-60 text-sm font-semibold mb-4">Border Gradient</div>
+                    <div class="border-gradient p-6 rounded-2xl">
+                        <div class="text-white font-semibold mb-2">Gradient Border Card</div>
+                        <div class="text-white-60 text-sm">This card has an aurora gradient border with glass effect</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION 9: ICONS & BADGES -->
+        <div class="max-w-5xl mx-auto px-8 mb-40">
+            <div class="section-label">Icons & Badges</div>
+
+            <div class="space-y-8">
+                <!-- Category Icons -->
+                <div>
+                    <div class="text-white-60 text-sm font-semibold mb-4">Category Icons</div>
+                    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+                        <div class="text-center">
+                            <div class="category-badge food mx-auto mb-3">🍔</div>
+                            <div class="text-white-80 text-sm">Food & Dining</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="category-badge housing mx-auto mb-3">🏠</div>
+                            <div class="text-white-80 text-sm">Housing</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="category-badge transport mx-auto mb-3">🚗</div>
+                            <div class="text-white-80 text-sm">Transport</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="category-badge entertainment mx-auto mb-3">🎬</div>
+                            <div class="text-white-80 text-sm">Entertainment</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="category-badge health mx-auto mb-3">💊</div>
+                            <div class="text-white-80 text-sm">Health</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="category-badge shopping mx-auto mb-3">🛍️</div>
+                            <div class="text-white-80 text-sm">Shopping</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Status Badges -->
+                <div>
+                    <div class="text-white-60 text-sm font-semibold mb-4">Status Badges</div>
+                    <div class="flex flex-wrap gap-3">
+                        <div class="badge badge-connected">
+                            <span class="status-dot connected inline-block mr-2"></span>
+                            Connected
+                        </div>
+                        <div class="badge badge-syncing">
+                            <span class="inline-block mr-2">⟳</span>
+                            Syncing
+                        </div>
+                        <div class="badge badge-error">
+                            <span class="inline-block mr-2">⚠️</span>
+                            Error
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Feature Badges -->
+                <div>
+                    <div class="text-white-60 text-sm font-semibold mb-4">Feature Badges</div>
+                    <div class="flex flex-wrap gap-3">
+                        <div class="badge badge-coming-soon">⏳ Coming Soon</div>
+                        <div class="badge badge-ai">🤖 AI-Powered</div>
+                        <div class="badge badge-on-device">📱 On-Device</div>
+                        <div class="badge badge-verified">✅ Verified</div>
+                        <div class="badge badge-private">🔒 Private</div>
+                    </div>
+                </div>
+
+                <!-- Rating -->
+                <div>
+                    <div class="text-white-60 text-sm font-semibold mb-4">App Rating</div>
+                    <div class="glass p-6 rounded-xl inline-flex items-center gap-3">
+                        <div class="text-2xl">⭐⭐⭐⭐⭐</div>
+                        <div>
+                            <div class="text-white font-semibold">4.8</div>
+                            <div class="text-white-60 text-sm">2.4K Reviews</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="max-w-5xl mx-auto px-8 py-20 text-center">
+            <div class="text-white-40">
+                <p class="text-sm mb-2">Yara UI Components Showcase</p>
+                <p class="text-xs">Glass-morphism design system with Tailwind CSS</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,1811 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>yara — Your Personal AI Advocate</title>
+
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- GSAP + ScrollTrigger -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+  <style>
+    /* ─── Reset & Base ─────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html {
+      scroll-behavior: smooth;
+      overflow-x: hidden;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: #0a0a0f;
+      color: #ffffff;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* ─── Design Tokens ────────────────────────────────────────────── */
+    :root {
+      --bg-base:     #0a0a0f;
+      --bg-elevated: #0d1628;
+      --violet:      #7c3aed;
+      --teal:        #06b6d4;
+      --blue:        #3b82f6;
+      --pink:        #ec4899;
+      --text-dim:    #333344;
+      --text-mid:    #888899;
+      --text-bright: #ffffff;
+      --glass-bg:    rgba(255,255,255,0.05);
+      --glass-border:rgba(255,255,255,0.10);
+      --radius-card: 24px;
+    }
+
+    /* ─── Aurora Gradient Text ─────────────────────────────────────── */
+    .aurora-text {
+      background: linear-gradient(135deg, #7c3aed 0%, #3b82f6 40%, #06b6d4 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .aurora-text-warm {
+      background: linear-gradient(135deg, #ec4899 0%, #7c3aed 50%, #3b82f6 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* ─── Glass Card ───────────────────────────────────────────────── */
+    .glass {
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border-radius: var(--radius-card);
+    }
+
+    /* ─── Noise Overlay ────────────────────────────────────────────── */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.4;
+    }
+
+    /* ─── Section Spacing ──────────────────────────────────────────── */
+    section { position: relative; overflow: hidden; }
+
+    /* ─── Orb ──────────────────────────────────────────────────────── */
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      will-change: transform;
+      pointer-events: none;
+    }
+
+    /* ─── SECTION 1: Hero ──────────────────────────────────────────── */
+    #hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 120px 24px 80px;
+    }
+
+    #hero-wordmark {
+      font-size: clamp(120px, 22vw, 240px);
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      line-height: 0.85;
+      will-change: transform;
+      background: linear-gradient(135deg, #ffffff 0%, rgba(255,255,255,0.7) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    #hero-subtitle {
+      margin-top: 32px;
+      font-size: clamp(18px, 2.5vw, 24px);
+      font-weight: 400;
+      color: rgba(255,255,255,0.55);
+      letter-spacing: -0.01em;
+      max-width: 520px;
+      opacity: 0;
+    }
+
+    #hero-cta {
+      margin-top: 48px;
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 16px 36px;
+      background: linear-gradient(135deg, #7c3aed, #06b6d4);
+      border-radius: 100px;
+      font-size: 16px;
+      font-weight: 600;
+      color: #fff;
+      cursor: pointer;
+      border: none;
+      transition: opacity 0.2s, transform 0.2s;
+      text-decoration: none;
+      letter-spacing: -0.01em;
+    }
+    .btn-primary:hover { opacity: 0.85; transform: scale(1.03); }
+
+    #hero-phone {
+      margin-top: 64px;
+      opacity: 0;
+      transform: translateY(60px) scale(0.95);
+      will-change: transform, opacity;
+    }
+
+    /* ─── Phone Frame Shared ───────────────────────────────────────── */
+    .phone-frame {
+      width: 260px;
+      height: 520px;
+      background: #0d0d18;
+      border-radius: 40px;
+      border: 1.5px solid rgba(255,255,255,0.12);
+      position: relative;
+      overflow: hidden;
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,0.06),
+        0 40px 120px rgba(0,0,0,0.8),
+        inset 0 1px 0 rgba(255,255,255,0.08);
+    }
+
+    /* Notch */
+    .phone-frame::before {
+      content: '';
+      position: absolute;
+      top: 14px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 90px;
+      height: 26px;
+      background: #000;
+      border-radius: 20px;
+      z-index: 10;
+    }
+
+    /* Side button */
+    .phone-frame::after {
+      content: '';
+      position: absolute;
+      top: 100px;
+      right: -4px;
+      width: 4px;
+      height: 60px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 2px;
+    }
+
+    /* Phone screen areas */
+    .phone-screen {
+      position: absolute;
+      inset: 0;
+      padding: 60px 16px 24px;
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+
+    /* Status bar sim */
+    .phone-status {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 10px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.6);
+      margin-bottom: 16px;
+      padding: 0 4px;
+    }
+
+    /* ─── SECTION 2: Feature Showcase ─────────────────────────────── */
+    #feature-showcase {
+      height: 400vh;
+      position: relative;
+    }
+
+    #feature-sticky {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 48px;
+      gap: 80px;
+    }
+
+    /* Left phone side */
+    #showcase-phone-wrap {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .showcase-phone {
+      width: 280px;
+      height: 560px;
+    }
+
+    /* Screen layers - stack them */
+    .showcase-screen {
+      position: absolute;
+      inset: 0;
+      padding: 64px 16px 24px;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+    .showcase-screen.active { opacity: 1; }
+
+    /* Right text side */
+    #showcase-text-wrap {
+      position: relative;
+      height: 400px;
+    }
+
+    .feature-panel {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+    .feature-panel.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .feature-label {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-bottom: 16px;
+    }
+
+    .feature-title {
+      font-size: clamp(32px, 4vw, 48px);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      margin-bottom: 20px;
+    }
+
+    .feature-body {
+      font-size: 17px;
+      font-weight: 400;
+      color: rgba(255,255,255,0.5);
+      line-height: 1.65;
+      max-width: 420px;
+    }
+
+    /* Progress dots */
+    #showcase-progress {
+      position: absolute;
+      right: -48px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .progress-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.2);
+      transition: background 0.3s, transform 0.3s;
+      cursor: pointer;
+    }
+    .progress-dot.active {
+      background: #7c3aed;
+      transform: scale(1.5);
+    }
+
+    /* ─── SECTION 3: Stats ─────────────────────────────────────────── */
+    #stats {
+      padding: 160px 24px;
+      text-align: center;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 48px;
+      max-width: 1100px;
+      margin: 80px auto 0;
+    }
+
+    @media (max-width: 768px) {
+      .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 32px; }
+    }
+
+    .stat-number {
+      font-size: clamp(48px, 7vw, 80px);
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      line-height: 1;
+    }
+
+    .stat-label {
+      margin-top: 10px;
+      font-size: 14px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.4);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    /* ─── SECTION 4: Feature Cards ─────────────────────────────────── */
+    #feature-cards {
+      padding: 160px 24px;
+    }
+
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      max-width: 1100px;
+      margin: 80px auto 0;
+    }
+
+    @media (max-width: 900px) {
+      .cards-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 600px) {
+      .cards-grid { grid-template-columns: 1fr; }
+    }
+
+    .feature-card {
+      padding: 36px;
+      opacity: 0;
+      transform: translateY(40px) scale(0.95);
+      will-change: transform, opacity;
+    }
+
+    .card-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      margin-bottom: 24px;
+    }
+
+    .card-title {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 10px;
+    }
+
+    .card-body {
+      font-size: 15px;
+      color: rgba(255,255,255,0.45);
+      line-height: 1.6;
+    }
+
+    /* ─── SECTION 5: Text Highlight ────────────────────────────────── */
+    #text-highlight {
+      padding: 200px 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    #highlight-paragraph {
+      font-size: clamp(28px, 4.5vw, 54px);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1.2;
+      max-width: 900px;
+      text-align: center;
+    }
+
+    #highlight-paragraph .word {
+      display: inline-block;
+      color: var(--text-dim);
+      transition: color 0.1s;
+      margin-right: 0.25em;
+      will-change: color;
+    }
+
+    /* ─── SECTION 6: Gradient BG Transition ────────────────────────── */
+    #gradient-transition {
+      padding: 160px 24px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: background-color 0s; /* GSAP handles this */
+    }
+
+    .gradient-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      max-width: 1000px;
+      margin: 60px auto 0;
+    }
+
+    @media (max-width: 700px) {
+      .gradient-cards { grid-template-columns: 1fr; }
+      #feature-sticky { grid-template-columns: 1fr; padding: 0 24px; }
+      #showcase-phone-wrap { display: none; }
+      #showcase-progress { right: 0; top: auto; bottom: -40px; flex-direction: row; transform: none; left: 50%; transform: translateX(-50%); }
+    }
+
+    .gradient-card {
+      padding: 32px;
+      opacity: 0;
+      transform: translateY(30px);
+    }
+
+    /* ─── SECTION 7: CTA ───────────────────────────────────────────── */
+    #cta {
+      padding: 120px 24px 160px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 80vh;
+    }
+
+    #cta-inner {
+      border-radius: 40px;
+      padding: 100px 60px;
+      max-width: 900px;
+      width: 100%;
+      text-align: center;
+      background: linear-gradient(135deg, rgba(124,58,237,0.35) 0%, rgba(6,182,212,0.15) 100%);
+      border: 1px solid rgba(124,58,237,0.3);
+      backdrop-filter: blur(40px);
+      -webkit-backdrop-filter: blur(40px);
+      transform: scale(0.8);
+      opacity: 0;
+      will-change: transform, opacity;
+      position: relative;
+      overflow: hidden;
+    }
+
+    #cta-inner::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(ellipse at center, rgba(124,58,237,0.15) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .cta-headline {
+      font-size: clamp(36px, 6vw, 68px);
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      line-height: 1.05;
+      margin-bottom: 20px;
+    }
+
+    .cta-subheadline {
+      font-size: 18px;
+      color: rgba(255,255,255,0.5);
+      margin-bottom: 48px;
+      line-height: 1.6;
+    }
+
+    .btn-pulse {
+      animation: pulse-glow 2.5s ease-in-out infinite;
+    }
+
+    @keyframes pulse-glow {
+      0%, 100% { box-shadow: 0 0 30px rgba(124,58,237,0.4), 0 0 60px rgba(6,182,212,0.2); }
+      50%       { box-shadow: 0 0 50px rgba(124,58,237,0.7), 0 0 100px rgba(6,182,212,0.4); }
+    }
+
+    /* ─── Nav ──────────────────────────────────────────────────────── */
+    #nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      padding: 20px 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.3s, background 0.3s;
+    }
+
+    #nav.scrolled {
+      background: rgba(10,10,15,0.8);
+      border-color: rgba(255,255,255,0.06);
+    }
+
+    .nav-logo {
+      font-size: 22px;
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      background: linear-gradient(135deg, #fff, rgba(255,255,255,0.7));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 32px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 14px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.5);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: #fff; }
+
+    /* ─── Section Label ────────────────────────────────────────────── */
+    .section-eyebrow {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(124,58,237,0.8);
+      margin-bottom: 16px;
+    }
+
+    .section-headline {
+      font-size: clamp(36px, 5.5vw, 64px);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.05;
+    }
+
+    /* ─── Chat Bubbles (Screen 1) ──────────────────────────────────── */
+    .chat-bubble {
+      border-radius: 18px;
+      padding: 10px 14px;
+      font-size: 12px;
+      line-height: 1.45;
+      margin-bottom: 8px;
+      max-width: 80%;
+    }
+    .chat-user {
+      background: linear-gradient(135deg, #7c3aed, #3b82f6);
+      color: #fff;
+      margin-left: auto;
+      border-bottom-right-radius: 4px;
+    }
+    .chat-ai {
+      background: rgba(255,255,255,0.08);
+      color: rgba(255,255,255,0.85);
+      border-bottom-left-radius: 4px;
+    }
+
+    /* ─── Bar Chart (Screen 2) ─────────────────────────────────────── */
+    .spend-bar-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    .spend-label { font-size: 10px; color: rgba(255,255,255,0.5); width: 56px; text-align: right; flex-shrink: 0; }
+    .spend-bar-bg { flex: 1; height: 8px; background: rgba(255,255,255,0.06); border-radius: 4px; overflow: hidden; }
+    .spend-bar-fill { height: 100%; border-radius: 4px; }
+    .spend-value { font-size: 10px; color: rgba(255,255,255,0.4); width: 36px; }
+
+    /* ─── Transaction List (Screen 3) ─────────────────────────────── */
+    .tx-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .tx-icon {
+      width: 32px; height: 32px;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+    .tx-name { font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.85); }
+    .tx-date { font-size: 10px; color: rgba(255,255,255,0.35); }
+    .tx-amount { font-size: 12px; font-weight: 700; margin-left: auto; }
+
+    /* ─── Insights Cards (Screen 4) ────────────────────────────────── */
+    .insight-card {
+      padding: 14px;
+      border-radius: 14px;
+      margin-bottom: 10px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+    .insight-title { font-size: 11px; color: rgba(255,255,255,0.45); margin-bottom: 4px; }
+    .insight-value { font-size: 20px; font-weight: 800; letter-spacing: -0.03em; }
+    .insight-trend {
+      font-size: 10px; margin-top: 2px;
+      display: flex; align-items: center; gap: 3px;
+    }
+
+    /* ─── Divider ──────────────────────────────────────────────────── */
+    .divider {
+      width: 1px;
+      height: 80px;
+      background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.1), transparent);
+      margin: 0 auto;
+    }
+
+    /* ─── Scroll indicator ─────────────────────────────────────────── */
+    #scroll-indicator {
+      position: absolute;
+      bottom: 48px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      opacity: 0.5;
+    }
+    #scroll-indicator span {
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.5);
+    }
+    .scroll-arrow {
+      width: 20px;
+      height: 20px;
+      border-right: 1.5px solid rgba(255,255,255,0.4);
+      border-bottom: 1.5px solid rgba(255,255,255,0.4);
+      transform: rotate(45deg);
+      animation: bounce-arrow 1.5s ease-in-out infinite;
+    }
+    @keyframes bounce-arrow {
+      0%, 100% { transform: rotate(45deg) translateY(0); opacity: 0.5; }
+      50%       { transform: rotate(45deg) translateY(5px); opacity: 1; }
+    }
+
+    /* ─── Floating label ───────────────────────────────────────────── */
+    .section-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 16px;
+      border-radius: 100px;
+      background: rgba(124,58,237,0.12);
+      border: 1px solid rgba(124,58,237,0.25);
+      font-size: 12px;
+      font-weight: 600;
+      color: rgba(124,58,237,0.9);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+    }
+
+    /* ─── Plan comparison cards (Screen 2) ─────────────────────────── */
+    .plan-card {
+      padding: 10px 12px;
+      border-radius: 12px;
+      margin-bottom: 8px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+    .plan-card.recommended {
+      border-color: rgba(124,58,237,0.4);
+      background: rgba(124,58,237,0.08);
+    }
+    .plan-name { font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.9); }
+    .plan-price { font-size: 16px; font-weight: 800; letter-spacing: -0.03em; margin: 2px 0; }
+    .plan-stars { font-size: 10px; color: #f59e0b; }
+
+    /* ─── Call screen (Screen 3) ───────────────────────────────────── */
+    .call-avatar {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 10px;
+      font-size: 28px;
+    }
+    .data-overlay {
+      padding: 10px 12px;
+      border-radius: 12px;
+      background: rgba(124,58,237,0.12);
+      border: 1px solid rgba(124,58,237,0.25);
+      margin-top: 12px;
+    }
+
+    /* ─── Shield visual (Screen 4) ────────────────────────────────── */
+    .shield-icon {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 12px;
+      background: linear-gradient(135deg, rgba(16,185,129,0.2), rgba(6,182,212,0.15));
+      border: 1px solid rgba(16,185,129,0.3);
+    }
+    .privacy-bullet {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 0;
+      font-size: 11px;
+      color: rgba(255,255,255,0.7);
+    }
+    .privacy-bullet .check {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: rgba(16,185,129,0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    /* ─── Mobile nav hide ──────────────────────────────────────────── */
+    @media (max-width: 640px) {
+      .nav-links { display: none; }
+      #nav { padding: 20px 24px; }
+      #feature-sticky { padding: 0 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════════════════════════════
+     NAVIGATION
+════════════════════════════════════════════════════════════════ -->
+<nav id="nav">
+  <div class="nav-logo" style="display:flex;align-items:center;gap:8px;"><img src="yara_butterfly.png" alt="Yara" style="width:28px;height:28px;mix-blend-mode:screen;">yara</div>
+  <ul class="nav-links">
+    <li><a href="#feature-showcase">Features</a></li>
+    <li><a href="#stats">About</a></li>
+    <li><a href="#feature-cards">Platform</a></li>
+    <li><a href="#cta">Waitlist</a></li>
+  </ul>
+  <a href="#cta" class="btn-primary" style="padding: 10px 24px; font-size: 14px;">Join the Waitlist</a>
+</nav>
+
+
+<!-- ════════════════════════════════════════════════════════════════
+     SECTION 1 — HERO WITH PARALLAX
+════════════════════════════════════════════════════════════════ -->
+<section id="hero">
+
+  <!-- Background orbs -->
+  <div class="orb" id="orb1" style="width:600px;height:600px;background:radial-gradient(circle,rgba(124,58,237,0.35),transparent 70%);top:-100px;left:-200px;"></div>
+  <div class="orb" id="orb2" style="width:500px;height:500px;background:radial-gradient(circle,rgba(6,182,212,0.25),transparent 70%);top:200px;right:-150px;"></div>
+  <div class="orb" id="orb3" style="width:400px;height:400px;background:radial-gradient(circle,rgba(59,130,246,0.2),transparent 70%);bottom:0;left:30%;"></div>
+  <div class="orb" id="orb4" style="width:300px;height:300px;background:radial-gradient(circle,rgba(236,72,153,0.18),transparent 70%);top:30%;right:10%;"></div>
+
+  <!-- Wordmark -->
+  <div id="hero-wordmark">yara</div>
+
+  <!-- Subtitle -->
+  <p id="hero-subtitle">Your Personal AI Advocate</p>
+
+  <!-- CTA -->
+  <div id="hero-cta">
+    <a href="#cta" class="btn-primary btn-pulse">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+      Join the Waitlist
+    </a>
+  </div>
+
+  <!-- Hero phone -->
+  <div id="hero-phone">
+    <div class="phone-frame">
+      <!-- Ambient glow -->
+      <div style="position:absolute;inset:-1px;border-radius:40px;background:linear-gradient(135deg,rgba(124,58,237,0.3),rgba(6,182,212,0.15));filter:blur(20px);z-index:-1;"></div>
+
+      <!-- Screen content -->
+      <div style="padding:64px 16px 20px;height:100%;display:flex;flex-direction:column;gap:0;">
+        <div style="font-size:11px;font-weight:600;color:rgba(255,255,255,0.3);text-align:center;margin-bottom:12px;">yara</div>
+
+        <div class="chat-bubble chat-ai" style="max-width:90%;">
+          Hi there! I'm connected to your accounts. What would you like to know?
+        </div>
+        <div class="chat-bubble chat-user">Show me my Uber transactions</div>
+        <div class="chat-bubble chat-ai">I found 2 Uber transactions: <span style="color:#7c3aed;font-weight:700;">UberEats $42.50</span> (Food & Dining, Nov 15) and <span style="color:#06b6d4;font-weight:700;">Uber ride $72.00</span> (Transportation, Nov 12).</div>
+        <div class="chat-bubble chat-user">Can I save on my phone bill?</div>
+        <div class="chat-bubble chat-ai" style="max-width:90%;">Yes! I found a plan that could save you <span style="color:#10b981;font-weight:700;">$14/month</span>. Want me to show you the comparison?</div>
+
+        <!-- Input sim -->
+        <div style="margin-top:auto;background:rgba(255,255,255,0.06);border-radius:20px;padding:10px 14px;display:flex;align-items:center;gap:8px;border:1px solid rgba(255,255,255,0.08);">
+          <span style="font-size:11px;color:rgba(255,255,255,0.25);flex:1;">Ask yara anything...</span>
+          <div style="width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,#7c3aed,#06b6d4);display:flex;align-items:center;justify-content:center;">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="white"><path d="M12 2a3 3 0 0 1 3 3v7a3 3 0 0 1-6 0V5a3 3 0 0 1 3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="scroll-indicator">
+    <span>Scroll</span>
+    <div class="scroll-arrow"></div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════════════════════════════════
+     SECTION 2 — PINNED FEATURE SHOWCASE
+════════════════════════════════════════════════════════════════ -->
+<section id="feature-showcase">
+  <div id="feature-sticky">
+
+    <!-- LEFT: Phone -->
+    <div id="showcase-phone-wrap">
+      <div class="phone-frame showcase-phone" style="position:relative;">
+
+        <!-- Screen 1: Financial Intelligence — Conversation -->
+        <div class="showcase-screen active" id="screen-1">
+          <div class="phone-status">
+            <span>9:41</span>
+            <div style="display:flex;gap:5px;align-items:center;">
+              <svg width="12" height="9" viewBox="0 0 24 18" fill="rgba(255,255,255,0.6)"><rect x="0" y="6" width="4" height="12" rx="1"/><rect x="6" y="4" width="4" height="14" rx="1"/><rect x="12" y="1" width="4" height="17" rx="1"/><rect x="18" y="0" width="4" height="18" rx="1" opacity="0.3"/></svg>
+              <svg width="12" height="9" viewBox="0 0 24 16" fill="rgba(255,255,255,0.6)"><rect x="0" y="3" width="20" height="10" rx="3" stroke="rgba(255,255,255,0.6)" stroke-width="1.5" fill="none"/><rect x="20" y="6" width="3" height="4" rx="1" fill="rgba(255,255,255,0.4)"/><rect x="1.5" y="4.5" width="12" height="7" rx="1.5" fill="rgba(255,255,255,0.6)"/></svg>
+            </div>
+          </div>
+          <div style="font-size:14px;font-weight:700;text-align:center;margin-bottom:16px;color:rgba(255,255,255,0.9);">yara</div>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <div class="chat-bubble chat-ai">Hi! What would you like to know about your spending?</div>
+            <div class="chat-bubble chat-user">Show me my Uber transactions</div>
+            <div class="chat-bubble chat-ai" style="max-width:95%;">I found 2 Uber transactions:<br><br><span style="color:#7c3aed;font-weight:700;">UberEats</span> — $42.50<br><span style="font-size:10px;color:rgba(255,255,255,0.4);">Food & Dining, Nov 15</span><br><br><span style="color:#06b6d4;font-weight:700;">Uber ride</span> — $72.00<br><span style="font-size:10px;color:rgba(255,255,255,0.4);">Transportation, Nov 12</span></div>
+          </div>
+        </div>
+
+        <!-- Screen 2: Verified Savings — Plan Comparison -->
+        <div class="showcase-screen" id="screen-2">
+          <div class="phone-status"><span>9:41</span><span style="font-size:10px;color:rgba(255,255,255,0.4);">Savings</span></div>
+          <div style="font-size:14px;font-weight:700;margin-bottom:4px;">Plan Comparison</div>
+          <div style="font-size:11px;color:rgba(255,255,255,0.35);margin-bottom:16px;">Verified recommendations for your usage</div>
+
+          <div class="plan-card recommended">
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <div class="plan-name">T-Mobile Essentials</div>
+              <div style="font-size:9px;padding:2px 8px;border-radius:100px;background:rgba(124,58,237,0.2);color:#7c3aed;font-weight:600;">BEST MATCH</div>
+            </div>
+            <div class="plan-price aurora-text">$61<span style="font-size:11px;font-weight:400;">/mo</span></div>
+            <div class="plan-stars">&#9733;&#9733;&#9733;&#9733;&#9734;</div>
+          </div>
+
+          <div class="plan-card">
+            <div class="plan-name">AT&T Value Plus</div>
+            <div class="plan-price" style="color:rgba(255,255,255,0.8);">$65<span style="font-size:11px;font-weight:400;">/mo</span></div>
+            <div class="plan-stars">&#9733;&#9733;&#9733;&#9733;&#9734;</div>
+          </div>
+
+          <div class="plan-card">
+            <div class="plan-name">AT&T Premium</div>
+            <div class="plan-price" style="color:rgba(255,255,255,0.8);">$70<span style="font-size:11px;font-weight:400;">/mo</span></div>
+            <div class="plan-stars">&#9733;&#9733;&#9733;&#9734;&#9734;</div>
+          </div>
+
+          <div style="margin-top:12px;padding:10px;border-radius:10px;background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.15);">
+            <div style="font-size:10px;color:#10b981;font-weight:600;">MATHEMATICALLY VERIFIED</div>
+            <div style="font-size:10px;color:rgba(255,255,255,0.4);margin-top:2px;">All savings calculations independently verified</div>
+          </div>
+        </div>
+
+        <!-- Screen 3: Silent Assistant — Call Screen -->
+        <div class="showcase-screen" id="screen-3">
+          <div class="phone-status"><span>9:41</span><span style="font-size:10px;color:rgba(255,255,255,0.4);">On Call</span></div>
+
+          <div style="text-align:center;margin-top:16px;">
+            <div class="call-avatar" style="background:linear-gradient(135deg,rgba(59,130,246,0.3),rgba(6,182,212,0.2));border:1px solid rgba(59,130,246,0.3);">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.8)" stroke-width="1.5"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            </div>
+            <div style="font-size:16px;font-weight:700;color:rgba(255,255,255,0.9);">AT&T</div>
+            <div style="font-size:11px;color:rgba(255,255,255,0.35);margin-top:2px;">Customer Service</div>
+            <div style="font-size:12px;color:#10b981;margin-top:6px;font-weight:600;">12:34 connected</div>
+          </div>
+
+          <div class="data-overlay" style="margin-top:20px;">
+            <div style="font-size:9px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:rgba(124,58,237,0.8);margin-bottom:8px;">yara Live Data</div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.05);">
+              <span style="font-size:11px;color:rgba(255,255,255,0.5);">Promotional credit</span>
+              <span style="font-size:13px;font-weight:700;color:#10b981;">$2.78</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.05);">
+              <span style="font-size:11px;color:rgba(255,255,255,0.5);">Current plan</span>
+              <span style="font-size:11px;font-weight:600;color:rgba(255,255,255,0.8);">Unlimited Elite</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;">
+              <span style="font-size:11px;color:rgba(255,255,255,0.5);">Monthly charge</span>
+              <span style="font-size:11px;font-weight:600;color:rgba(255,255,255,0.8);">$85.00</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Screen 4: Security on Device — Shield Visual -->
+        <div class="showcase-screen" id="screen-4">
+          <div class="phone-status"><span>9:41</span><span style="font-size:10px;color:rgba(255,255,255,0.4);">Security</span></div>
+
+          <div style="text-align:center;margin-top:12px;">
+            <div class="shield-icon">
+              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4" stroke="#10b981" stroke-width="2"/></svg>
+            </div>
+            <div style="font-size:18px;font-weight:800;letter-spacing:-0.03em;background:linear-gradient(135deg,#10b981,#06b6d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Total Privacy</div>
+            <div style="font-size:10px;color:rgba(255,255,255,0.35);margin-top:4px;">Your data never leaves this device</div>
+          </div>
+
+          <div style="margin-top:20px;padding:0 4px;">
+            <div class="privacy-bullet">
+              <div class="check"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+              Zero data persistence on servers
+            </div>
+            <div class="privacy-bullet">
+              <div class="check"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+              All processing happens on-device
+            </div>
+            <div class="privacy-bullet">
+              <div class="check"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+              Zero tracking or analytics
+            </div>
+            <div class="privacy-bullet">
+              <div class="check"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+              End-to-end encrypted connections
+            </div>
+            <div class="privacy-bullet">
+              <div class="check"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+              Your data is never sold
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- RIGHT: Feature text panels + progress -->
+    <div style="position:relative;">
+      <div id="showcase-text-wrap">
+
+        <div class="feature-panel active" id="panel-1">
+          <div class="section-tag">01 — Financial Intelligence</div>
+          <h2 class="feature-title">Financial Intelligence</h2>
+          <p class="feature-body">Connect securely via Plaid. Ask anything about your spending. Get instant, accurate answers.</p>
+        </div>
+
+        <div class="feature-panel" id="panel-2">
+          <div class="section-tag" style="color:rgba(6,182,212,0.9);background:rgba(6,182,212,0.1);border-color:rgba(6,182,212,0.25);">02 — Verified Savings</div>
+          <h2 class="feature-title">Verified Savings</h2>
+          <p class="feature-body">Our models verify every recommendation for mathematical accuracy. No hallucinations. Just savings.</p>
+        </div>
+
+        <div class="feature-panel" id="panel-3">
+          <div class="section-tag" style="color:rgba(16,185,129,0.9);background:rgba(16,185,129,0.1);border-color:rgba(16,185,129,0.25);">03 — Silent Assistant</div>
+          <h2 class="feature-title">Silent Assistant</h2>
+          <p class="feature-body">On calls, Yara provides the data you need from your records. Real-time advocacy when it matters most.</p>
+        </div>
+
+        <div class="feature-panel" id="panel-4">
+          <div class="section-tag" style="color:rgba(236,72,153,0.9);background:rgba(236,72,153,0.1);border-color:rgba(236,72,153,0.25);">04 — Security on Device</div>
+          <h2 class="feature-title">Security on Device</h2>
+          <p class="feature-body">Zero data persistence. Your data never leaves your device. Zero persistence. Zero tracking.</p>
+        </div>
+
+      </div>
+
+      <!-- Progress dots -->
+      <div id="showcase-progress" style="position:absolute;right:-60px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:12px;">
+        <div class="progress-dot active" data-index="0"></div>
+        <div class="progress-dot" data-index="1"></div>
+        <div class="progress-dot" data-index="2"></div>
+        <div class="progress-dot" data-index="3"></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════════════════════════════════
+     SECTION 3 — COUNTING STATS
+════════════════════════════════════════════════════════════════ -->
+<section id="stats" style="background:linear-gradient(180deg,#0a0a0f 0%,#0d0d1a 100%);">
+  <div style="max-width:1100px;margin:0 auto;text-align:center;padding:0 24px;">
+
+    <!-- Orbs -->
+    <div class="orb" style="width:400px;height:400px;background:radial-gradient(circle,rgba(124,58,237,0.15),transparent 70%);top:0;left:-100px;"></div>
+    <div class="orb" style="width:300px;height:300px;background:radial-gradient(circle,rgba(6,182,212,0.12),transparent 70%);bottom:0;right:-50px;"></div>
+
+    <div class="section-eyebrow" id="stats-eyebrow" style="opacity:0;">By the numbers</div>
+    <h2 class="section-headline" id="stats-headline" style="opacity:0;">Built for privacy.<br>Powered by intelligence.</h2>
+
+    <div class="stats-grid">
+
+      <div class="stat-item" style="opacity:0;transform:translateY(40px);">
+        <div class="stat-number aurora-text">
+          <span class="count-val" data-target="4" data-suffix="" data-is-float="false" data-decimals="0">0</span>
+        </div>
+        <div class="stat-label">Core AI Features</div>
+      </div>
+
+      <div class="stat-item" style="opacity:0;transform:translateY(40px);">
+        <div class="stat-number aurora-text-warm">
+          <span class="count-val" data-target="0" data-suffix="" data-is-float="false" data-decimals="0">0</span>
+        </div>
+        <div class="stat-label">Data Stored on Servers</div>
+      </div>
+
+      <div class="stat-item" style="opacity:0;transform:translateY(40px);">
+        <div class="stat-number" style="background:linear-gradient(135deg,#f59e0b,#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">
+          <span class="count-val" data-target="100" data-suffix="%" data-is-float="false" data-decimals="0">0</span>
+        </div>
+        <div class="stat-label">On-Device Processing</div>
+      </div>
+
+      <div class="stat-item" style="opacity:0;transform:translateY(40px);">
+        <div class="stat-number" style="background:linear-gradient(135deg,#10b981,#06b6d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">
+          <span class="count-val" data-target="12000" data-suffix="+" data-display-format="compact">0</span>
+        </div>
+        <div class="stat-label">Supported Banks via Plaid</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════════════════════════════════
+     SECTION 4 — STAGGERED FEATURE CARDS
+════════════════════════════════════════════════════════════════ -->
+<section id="feature-cards" style="background:#0a0a0f;">
+  <div style="max-width:1100px;margin:0 auto;text-align:center;padding:0 24px;">
+
+    <!-- Orb -->
+    <div class="orb" style="width:600px;height:600px;background:radial-gradient(circle,rgba(59,130,246,0.1),transparent 70%);top:50%;left:50%;transform:translate(-50%,-50%);"></div>
+
+    <div class="section-eyebrow" id="cards-eyebrow" style="opacity:0;">Platform</div>
+    <h2 class="section-headline" id="cards-headline" style="opacity:0;">Everything you need.<br>Nothing you don't.</h2>
+
+    <div class="cards-grid">
+
+      <div class="glass feature-card" id="card-0">
+        <div class="card-icon" style="background:linear-gradient(135deg,rgba(124,58,237,0.25),rgba(59,130,246,0.15));border:1px solid rgba(124,58,237,0.2);">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        </div>
+        <div class="card-title">Financial Intelligence</div>
+        <div class="card-body">Ask anything about your spending</div>
+      </div>
+
+      <div class="glass feature-card" id="card-1">
+        <div class="card-icon" style="background:linear-gradient(135deg,rgba(6,182,212,0.2),rgba(59,130,246,0.15));border:1px solid rgba(6,182,212,0.2);">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#06b6d4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+        </div>
+        <div class="card-title">Verified Savings</div>
+        <div class="card-body">Mathematically verified recommendations</div>
+      </div>
+
+      <div class="glass feature-card" id="card-2">
+        <div class="card-icon" style="background:linear-gradient(135deg,rgba(16,185,129,0.2),rgba(6,182,212,0.15));border:1px solid rgba(16,185,129,0.2);">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        </div>
+        <div class="card-title">Silent Assistant</div>
+        <div class="card-body">Real-time data during calls</div>
+      </div>
+
+      <div class="glass feature-card" id="card-3">
+        <div class="card-icon" style="background:linear-gradient(135deg,rgba(245,158,11,0.2),rgba(236,72,153,0.1));border:1px solid rgba(245,158,11,0.2);">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        </div>
+        <div class="card-title">Security on Device</div>
+        <div class="card-body">Zero data persistence</div>
+      </div>
+
+      <div class="glass feature-card" id="card-4">
+        <div class="card-icon" style="background:linear-gradient(135deg,rgba(236,72,153,0.2),rgba(124,58,237,0.1));border:1px solid rgba(236,72,153,0.2);">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ec4899" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        </div>
+        <div class="card-title">Web Navigation</div>
+        <div class="card-body">Browse, fill forms, take action for you<br><span style="font-size:11px;color:rgba(124,58,237,0.7);font-weight:600;">Coming Soon</span></div>
+      </div>
+
+      <div class="glass feature-card" id="card-5">
+        <div class="card-icon" style="background:linear-gradient(135deg,rgba(59,130,246,0.2),rgba(124,58,237,0.1));border:1px solid rgba(59,130,246,0.2);">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 1 3 3v7a3 3 0 0 1-6 0V5a3 3 0 0 1 3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/></svg>
+        </div>
+        <div class="card-title">Voice Advocacy</div>
+        <div class="card-body">Handle customer service calls end-to-end<br><span style="font-size:11px;color:rgba(59,130,246,0.7);font-weight:600;">Coming Soon</span></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════════════════════════════════
+     SECTION 5 — TEXT HIGHLIGHT ON SCROLL
+════════════════════════════════════════════════════════════════ -->
+<section id="text-highlight" style="background:linear-gradient(180deg,#0a0a0f 0%,#080812 100%);">
+
+  <!-- Orbs -->
+  <div class="orb" style="width:500px;height:500px;background:radial-gradient(circle,rgba(124,58,237,0.1),transparent 70%);top:-100px;right:-100px;"></div>
+
+  <div class="section-eyebrow" style="margin-bottom:80px;">Our belief</div>
+
+  <div id="highlight-paragraph">
+    <!-- Words will be injected by JS -->
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════════════════════════════════
+     SECTION 6 — GRADIENT BACKGROUND TRANSITION
+════════════════════════════════════════════════════════════════ -->
+<section id="gradient-transition" style="background:#0a0a0f;">
+
+  <div style="max-width:900px;margin:0 auto;text-align:center;padding:0 24px;position:relative;z-index:1;">
+    <div class="section-eyebrow" id="gradient-eyebrow" style="opacity:0;">The platform</div>
+    <h2 class="section-headline" id="gradient-headline" style="opacity:0;">Built for the modern<br>financial life.</h2>
+    <p style="margin-top:20px;font-size:18px;color:rgba(255,255,255,0.4);line-height:1.7;max-width:600px;margin-left:auto;margin-right:auto;" id="gradient-sub" style="opacity:0;">From your phone bill to your bank account, Yara adapts to where you are — and advocates for where you want to be.</p>
+
+    <div class="gradient-cards">
+
+      <div class="glass gradient-card" id="gc-0">
+        <div style="font-size:32px;margin-bottom:12px;">
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="url(#g1)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <defs><linearGradient id="g1" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#7c3aed"/><stop offset="100%" stop-color="#06b6d4"/></linearGradient></defs>
+            <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/>
+          </svg>
+        </div>
+        <div style="font-size:16px;font-weight:700;margin-bottom:8px;">Spending Intelligence</div>
+        <div style="font-size:14px;color:rgba(255,255,255,0.4);line-height:1.6;">Connect your accounts via Plaid and ask anything about your transactions in natural language.</div>
+      </div>
+
+      <div class="glass gradient-card" id="gc-1">
+        <div style="font-size:32px;margin-bottom:12px;">
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="url(#g2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <defs><linearGradient id="g2" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#ec4899"/><stop offset="100%" stop-color="#7c3aed"/></linearGradient></defs>
+            <circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/>
+          </svg>
+        </div>
+        <div style="font-size:16px;font-weight:700;margin-bottom:8px;">Real-time Advocacy</div>
+        <div style="font-size:14px;color:rgba(255,255,255,0.4);line-height:1.6;">Yara surfaces the data you need during calls, so you can negotiate from a position of strength.</div>
+      </div>
+
+      <div class="glass gradient-card" id="gc-2">
+        <div style="font-size:32px;margin-bottom:12px;">
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="url(#g3)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <defs><linearGradient id="g3" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#10b981"/><stop offset="100%" stop-color="#06b6d4"/></linearGradient></defs>
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          </svg>
+        </div>
+        <div style="font-size:16px;font-weight:700;margin-bottom:8px;">Total Privacy</div>
+        <div style="font-size:14px;color:rgba(255,255,255,0.4);line-height:1.6;">Zero data persistence. Everything stays on your device. We never store, sell, or track your information.</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════════════════════════════════
+     SECTION 7 — FINAL CTA
+════════════════════════════════════════════════════════════════ -->
+<section id="cta">
+
+  <!-- Background orbs for CTA -->
+  <div class="orb" style="width:700px;height:700px;background:radial-gradient(circle,rgba(124,58,237,0.12),transparent 70%);top:-200px;left:-200px;"></div>
+  <div class="orb" style="width:600px;height:600px;background:radial-gradient(circle,rgba(6,182,212,0.1),transparent 70%);bottom:-100px;right:-100px;"></div>
+
+  <div id="cta-inner">
+
+    <!-- Decorative circles -->
+    <div style="position:absolute;top:-60px;right:-60px;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(124,58,237,0.25),transparent 70%);filter:blur(20px);"></div>
+    <div style="position:absolute;bottom:-40px;left:-40px;width:160px;height:160px;border-radius:50%;background:radial-gradient(circle,rgba(6,182,212,0.2),transparent 70%);filter:blur(15px);"></div>
+
+    <div class="section-tag" style="margin-bottom:32px;display:inline-flex;">Ready when you are</div>
+
+    <h2 class="cta-headline">Level the<br>playing field.</h2>
+
+    <p class="cta-subheadline">Enterprises have AI. Now you do too.</p>
+
+    <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;">
+      <a href="#" class="btn-primary btn-pulse" style="font-size:17px;padding:18px 44px;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+        Join the Waitlist
+      </a>
+    </div>
+
+    <!-- Trust strip -->
+    <div style="margin-top:60px;padding-top:40px;border-top:1px solid rgba(255,255,255,0.06);display:flex;justify-content:center;gap:48px;flex-wrap:wrap;">
+      <div style="text-align:center;">
+        <div style="font-size:22px;font-weight:800;letter-spacing:-0.03em;" class="aurora-text">On-Device</div>
+        <div style="font-size:12px;color:rgba(255,255,255,0.35);margin-top:4px;">Processing</div>
+      </div>
+      <div style="text-align:center;">
+        <div style="font-size:22px;font-weight:800;letter-spacing:-0.03em;" class="aurora-text">Plaid</div>
+        <div style="font-size:12px;color:rgba(255,255,255,0.35);margin-top:4px;">Secure Connection</div>
+      </div>
+      <div style="text-align:center;">
+        <div style="font-size:22px;font-weight:800;letter-spacing:-0.03em;" class="aurora-text">12,000+</div>
+        <div style="font-size:12px;color:rgba(255,255,255,0.35);margin-top:4px;">Banks Supported</div>
+      </div>
+      <div style="text-align:center;">
+        <div style="font-size:22px;font-weight:800;letter-spacing:-0.03em;" class="aurora-text">Zero</div>
+        <div style="font-size:12px;color:rgba(255,255,255,0.35);margin-top:4px;">Data Persistence</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- Footer -->
+<footer style="padding:48px 48px;border-top:1px solid rgba(255,255,255,0.05);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:20px;">
+  <div class="nav-logo" style="font-size:18px;display:flex;align-items:center;gap:8px;"><img src="yara_butterfly.png" alt="Yara" style="width:24px;height:24px;mix-blend-mode:screen;">yara</div>
+  <div style="font-size:13px;color:rgba(255,255,255,0.25);">© 2025 Yara. All rights reserved.</div>
+  <div style="display:flex;gap:24px;">
+    <a href="#" style="font-size:13px;color:rgba(255,255,255,0.3);text-decoration:none;">Privacy</a>
+    <a href="#" style="font-size:13px;color:rgba(255,255,255,0.3);text-decoration:none;">Terms</a>
+    <a href="#" style="font-size:13px;color:rgba(255,255,255,0.3);text-decoration:none;">Security</a>
+  </div>
+</footer>
+
+
+<!-- ════════════════════════════════════════════════════════════════
+     JAVASCRIPT — GSAP + ScrollTrigger Animations
+════════════════════════════════════════════════════════════════ -->
+<script>
+  // ─── Register ScrollTrigger ───────────────────────────────────────
+  gsap.registerPlugin(ScrollTrigger);
+
+  // ─── Nav scroll effect ────────────────────────────────────────────
+  const nav = document.getElementById('nav');
+  ScrollTrigger.create({
+    trigger: document.body,
+    start: '80px top',
+    onEnter: () => nav.classList.add('scrolled'),
+    onLeaveBack: () => nav.classList.remove('scrolled'),
+  });
+
+
+  // ════════════════════════════════════════════════════════════════
+  // SECTION 1 — HERO ANIMATIONS
+  // ════════════════════════════════════════════════════════════════
+
+  // Wordmark scale on scroll
+  gsap.to('#hero-wordmark', {
+    scale: 0.9,
+    opacity: 0.6,
+    ease: 'none',
+    scrollTrigger: {
+      trigger: '#hero',
+      start: 'top top',
+      end: 'bottom top',
+      scrub: true,
+    }
+  });
+
+  // Subtitle fade-in on load
+  gsap.to('#hero-subtitle', {
+    opacity: 1,
+    y: 0,
+    duration: 1.2,
+    delay: 0.4,
+    ease: 'power3.out',
+  });
+
+  // CTA fade-in
+  gsap.to('#hero-cta', {
+    opacity: 1,
+    y: 0,
+    duration: 1,
+    delay: 0.8,
+    ease: 'power3.out',
+  });
+
+  // Phone slide up
+  gsap.to('#hero-phone', {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    duration: 1.4,
+    delay: 0.6,
+    ease: 'power4.out',
+  });
+
+  // Parallax orbs
+  const orbSpeeds = [
+    { id: '#orb1', speed: 0.25 },
+    { id: '#orb2', speed: -0.18 },
+    { id: '#orb3', speed: 0.12 },
+    { id: '#orb4', speed: -0.22 },
+  ];
+
+  orbSpeeds.forEach(({ id, speed }) => {
+    gsap.to(id, {
+      y: () => window.innerHeight * speed,
+      ease: 'none',
+      scrollTrigger: {
+        trigger: '#hero',
+        start: 'top top',
+        end: 'bottom top',
+        scrub: true,
+      }
+    });
+  });
+
+
+  // ════════════════════════════════════════════════════════════════
+  // SECTION 2 — PINNED FEATURE SHOWCASE
+  // ════════════════════════════════════════════════════════════════
+
+  const panels = ['panel-1','panel-2','panel-3','panel-4'];
+  const screens = ['screen-1','screen-2','screen-3','screen-4'];
+  const dots = document.querySelectorAll('.progress-dot');
+  let currentIndex = 0;
+
+  function activateStep(index) {
+    if (index === currentIndex && index !== 0) return;
+
+    // Text panels
+    panels.forEach((id, i) => {
+      const el = document.getElementById(id);
+      if (i === index) {
+        el.classList.add('active');
+      } else {
+        el.classList.remove('active');
+      }
+    });
+
+    // Phone screens
+    screens.forEach((id, i) => {
+      const el = document.getElementById(id);
+      if (i === index) {
+        el.classList.add('active');
+      } else {
+        el.classList.remove('active');
+      }
+    });
+
+    // Progress dots
+    dots.forEach((dot, i) => {
+      if (i === index) {
+        dot.classList.add('active');
+      } else {
+        dot.classList.remove('active');
+      }
+    });
+
+    currentIndex = index;
+  }
+
+  // Build a ScrollTrigger that drives the 4 steps across the 400vh scroll
+  // Each step occupies 25% of the scroll distance (100vh each)
+  ScrollTrigger.create({
+    trigger: '#feature-showcase',
+    start: 'top top',
+    end: 'bottom bottom',
+    scrub: false,
+    pin: false,
+    onUpdate: (self) => {
+      const progress = self.progress;
+      // 4 steps across 0-1 progress
+      // Step boundaries: 0-0.25, 0.25-0.5, 0.5-0.75, 0.75-1.0
+      let step;
+      if (progress < 0.25) step = 0;
+      else if (progress < 0.5) step = 1;
+      else if (progress < 0.75) step = 2;
+      else step = 3;
+      activateStep(step);
+    }
+  });
+
+  // Pin the sticky frame (ScrollTrigger handles the sticky via CSS sticky + scroll)
+  // GSAP pin the inner sticky element for extra control
+  ScrollTrigger.create({
+    trigger: '#feature-showcase',
+    start: 'top top',
+    end: 'bottom bottom',
+    pin: '#feature-sticky',
+    pinSpacing: false,
+  });
+
+  // Dot click handlers
+  dots.forEach((dot, i) => {
+    dot.addEventListener('click', () => {
+      const showcaseEl = document.getElementById('feature-showcase');
+      const rect = showcaseEl.getBoundingClientRect();
+      const sectionHeight = showcaseEl.offsetHeight;
+      const targetScroll = window.scrollY + rect.top + (sectionHeight * (i / 4));
+      window.scrollTo({ top: targetScroll, behavior: 'smooth' });
+    });
+  });
+
+
+  // ════════════════════════════════════════════════════════════════
+  // SECTION 3 — COUNTING STATS
+  // ════════════════════════════════════════════════════════════════
+
+  // Eyebrow + headline
+  gsap.to('#stats-eyebrow', {
+    opacity: 1,
+    y: 0,
+    duration: 0.8,
+    scrollTrigger: { trigger: '#stats', start: 'top 75%', toggleActions: 'play none none none' }
+  });
+
+  gsap.to('#stats-headline', {
+    opacity: 1,
+    y: 0,
+    duration: 1,
+    delay: 0.15,
+    scrollTrigger: { trigger: '#stats', start: 'top 75%', toggleActions: 'play none none none' }
+  });
+
+  // Stat items stagger reveal
+  const statItems = document.querySelectorAll('.stat-item');
+  gsap.to(statItems, {
+    opacity: 1,
+    y: 0,
+    duration: 0.8,
+    stagger: 0.15,
+    ease: 'power3.out',
+    scrollTrigger: {
+      trigger: '#stats',
+      start: 'top 65%',
+      toggleActions: 'play none none none',
+    }
+  });
+
+  // Number counting animation
+  function animateCount(el) {
+    const target = parseFloat(el.dataset.target);
+    const suffix = el.dataset.suffix || '';
+    const isFloat = el.dataset.isFloat === 'true';
+    const decimals = parseInt(el.dataset.decimals || '0');
+    const displayFormat = el.dataset.displayFormat;
+
+    const obj = { val: 0 };
+    gsap.to(obj, {
+      val: target,
+      duration: 2.2,
+      ease: 'power2.out',
+      onUpdate: () => {
+        let display;
+        if (isFloat) {
+          display = obj.val.toFixed(decimals);
+        } else if (displayFormat === 'compact') {
+          if (obj.val >= 1000) {
+            display = Math.floor(obj.val / 1000) + 'k';
+          } else {
+            display = Math.floor(obj.val).toLocaleString();
+          }
+        } else {
+          display = Math.floor(obj.val).toLocaleString();
+        }
+        el.textContent = display;
+        // Re-add suffix tracking (suffix lives outside span for some items)
+      },
+      onComplete: () => {
+        if (isFloat) {
+          el.textContent = target.toFixed(decimals);
+        } else if (displayFormat === 'compact') {
+          if (target >= 1000) {
+            el.textContent = Math.floor(target / 1000) + 'k';
+          } else {
+            el.textContent = Math.floor(target);
+          }
+        } else {
+          el.textContent = target.toLocaleString();
+        }
+      }
+    });
+  }
+
+  let countersAnimated = false;
+  ScrollTrigger.create({
+    trigger: '#stats',
+    start: 'top 60%',
+    onEnter: () => {
+      if (countersAnimated) return;
+      countersAnimated = true;
+      const countEls = document.querySelectorAll('.count-val');
+      countEls.forEach((el, i) => {
+        gsap.delayedCall(i * 0.2, () => animateCount(el));
+      });
+    }
+  });
+
+
+  // ════════════════════════════════════════════════════════════════
+  // SECTION 4 — STAGGERED CARD REVEAL
+  // ════════════════════════════════════════════════════════════════
+
+  gsap.to('#cards-eyebrow', {
+    opacity: 1,
+    y: 0,
+    duration: 0.8,
+    scrollTrigger: { trigger: '#feature-cards', start: 'top 75%', toggleActions: 'play none none none' }
+  });
+
+  gsap.to('#cards-headline', {
+    opacity: 1,
+    y: 0,
+    duration: 1,
+    delay: 0.1,
+    scrollTrigger: { trigger: '#feature-cards', start: 'top 75%', toggleActions: 'play none none none' }
+  });
+
+  // Cards staggered
+  const featureCards = document.querySelectorAll('.feature-card');
+  gsap.to(featureCards, {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    duration: 0.9,
+    stagger: 0.1,
+    ease: 'power3.out',
+    scrollTrigger: {
+      trigger: '#feature-cards',
+      start: 'top 65%',
+      toggleActions: 'play none none none',
+    }
+  });
+
+  // Subtle hover tilt on cards
+  featureCards.forEach(card => {
+    card.addEventListener('mousemove', (e) => {
+      const rect = card.getBoundingClientRect();
+      const x = (e.clientX - rect.left) / rect.width - 0.5;
+      const y = (e.clientY - rect.top) / rect.height - 0.5;
+      gsap.to(card, {
+        rotateY: x * 8,
+        rotateX: -y * 8,
+        transformPerspective: 800,
+        ease: 'power1.out',
+        duration: 0.4,
+      });
+    });
+    card.addEventListener('mouseleave', () => {
+      gsap.to(card, { rotateY: 0, rotateX: 0, duration: 0.5, ease: 'power2.out' });
+    });
+  });
+
+
+  // ════════════════════════════════════════════════════════════════
+  // SECTION 5 — WORD-BY-WORD TEXT HIGHLIGHT
+  // ════════════════════════════════════════════════════════════════
+
+  const highlightText = `We believe everyone deserves an AI advocate. Not one that works for corporations, but one that works for you. One that connects your accounts, reviews your bills, finds you savings, and fights for better deals. Enterprises have had AI on their side for years. Now you do too. That's Yara.`;
+
+  const words = highlightText.split(' ');
+  const para = document.getElementById('highlight-paragraph');
+
+  // Build spans
+  para.innerHTML = words.map(w => `<span class="word">${w}</span>`).join(' ');
+
+  const wordSpans = para.querySelectorAll('.word');
+
+  // Scrubbed highlight driven by scroll
+  gsap.to(wordSpans, {
+    color: '#ffffff',
+    stagger: {
+      each: 0.05,
+      from: 0,
+    },
+    ease: 'none',
+    scrollTrigger: {
+      trigger: '#text-highlight',
+      start: 'top 70%',
+      end: 'bottom 30%',
+      scrub: 0.5,
+    }
+  });
+
+
+  // ════════════════════════════════════════════════════════════════
+  // SECTION 6 — GRADIENT BACKGROUND TRANSITION
+  // ════════════════════════════════════════════════════════════════
+
+  const gradSection = document.getElementById('gradient-transition');
+
+  gsap.to(gradSection, {
+    backgroundColor: '#0a1a1f',
+    ease: 'none',
+    scrollTrigger: {
+      trigger: '#gradient-transition',
+      start: 'top bottom',
+      end: 'bottom top',
+      scrub: true,
+    }
+  });
+
+  // Mid-point purple peak
+  const gradTl = gsap.timeline({
+    scrollTrigger: {
+      trigger: '#gradient-transition',
+      start: 'top bottom',
+      end: 'bottom top',
+      scrub: true,
+    }
+  });
+
+  gradTl
+    .to(gradSection, { backgroundColor: '#1a0a2e', ease: 'none', duration: 0.5 })
+    .to(gradSection, { backgroundColor: '#0a1a1f', ease: 'none', duration: 0.5 });
+
+  // Gradient section headings
+  gsap.to('#gradient-eyebrow', {
+    opacity: 1,
+    y: 0,
+    duration: 0.8,
+    scrollTrigger: { trigger: '#gradient-transition', start: 'top 75%', toggleActions: 'play none none none' }
+  });
+
+  gsap.to('#gradient-headline', {
+    opacity: 1,
+    y: 0,
+    duration: 1,
+    delay: 0.1,
+    scrollTrigger: { trigger: '#gradient-transition', start: 'top 75%', toggleActions: 'play none none none' }
+  });
+
+  gsap.to('#gradient-sub', {
+    opacity: 1,
+    y: 0,
+    duration: 1,
+    delay: 0.2,
+    scrollTrigger: { trigger: '#gradient-transition', start: 'top 75%', toggleActions: 'play none none none' }
+  });
+
+  // Gradient cards reveal
+  const gradCards = document.querySelectorAll('.gradient-card');
+  gsap.to(gradCards, {
+    opacity: 1,
+    y: 0,
+    duration: 0.9,
+    stagger: 0.15,
+    ease: 'power3.out',
+    scrollTrigger: {
+      trigger: '#gradient-transition',
+      start: 'top 60%',
+      toggleActions: 'play none none none',
+    }
+  });
+
+
+  // ════════════════════════════════════════════════════════════════
+  // SECTION 7 — CTA SCALE-IN
+  // ════════════════════════════════════════════════════════════════
+
+  gsap.to('#cta-inner', {
+    scale: 1,
+    opacity: 1,
+    duration: 1.2,
+    ease: 'power3.out',
+    scrollTrigger: {
+      trigger: '#cta',
+      start: 'top 80%',
+      toggleActions: 'play none none none',
+    }
+  });
+
+  // Subtle floating animation on CTA once visible
+  ScrollTrigger.create({
+    trigger: '#cta',
+    start: 'top 80%',
+    onEnter: () => {
+      gsap.to('#cta-inner', {
+        y: -8,
+        duration: 3,
+        repeat: -1,
+        yoyo: true,
+        ease: 'sine.inOut',
+        delay: 1.2,
+      });
+    }
+  });
+
+
+  // ════════════════════════════════════════════════════════════════
+  // MICRO-INTERACTIONS — Scroll-driven orb drift
+  // ════════════════════════════════════════════════════════════════
+
+  // Continuous subtle orb animation on hero (not scroll based)
+  gsap.to('#orb1', {
+    x: 30,
+    y: 20,
+    duration: 8,
+    repeat: -1,
+    yoyo: true,
+    ease: 'sine.inOut',
+  });
+
+  gsap.to('#orb2', {
+    x: -25,
+    y: 15,
+    duration: 7,
+    repeat: -1,
+    yoyo: true,
+    ease: 'sine.inOut',
+    delay: 1,
+  });
+
+  gsap.to('#orb3', {
+    x: 20,
+    y: -20,
+    duration: 10,
+    repeat: -1,
+    yoyo: true,
+    ease: 'sine.inOut',
+    delay: 2,
+  });
+
+  gsap.to('#orb4', {
+    x: -15,
+    y: 25,
+    duration: 9,
+    repeat: -1,
+    yoyo: true,
+    ease: 'sine.inOut',
+    delay: 0.5,
+  });
+
+
+  // ════════════════════════════════════════════════════════════════
+  // PERFORMANCE — Refresh ScrollTrigger after fonts load
+  // ════════════════════════════════════════════════════════════════
+  document.fonts.ready.then(() => {
+    ScrollTrigger.refresh();
+  });
+
+  // Handle resize
+  window.addEventListener('resize', () => {
+    ScrollTrigger.refresh();
+  });
+</script>
+
+</body>
+</html>
