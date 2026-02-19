@@ -1,0 +1,1611 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Yara - Your Personal AI Advocate</title>
+  <meta name="description" content="Every company you pay uses AI to optimize what they charge you. Yara is the AI that fights back across every bill, subscription, and policy you have." />
+
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- GSAP + ScrollTrigger -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            inter: ['Inter', 'system-ui', 'sans-serif'],
+          },
+          colors: {
+            base: '#0D0D12',
+            surface: '#1A1A24',
+            purple: '#8B5CF6',
+            teal: '#06B6D4',
+            green: '#22C55E',
+            orange: '#F59E0B',
+          },
+        },
+      },
+    };
+  </script>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html { font-family: 'Inter', system-ui, sans-serif; }
+    body {
+      background-color: #0D0D12;
+      color: #e2e8f0;
+      overflow-x: hidden;
+    }
+
+    /* --- Gradient text variants --- */
+    .gradient-text-purple-teal {
+      background: linear-gradient(135deg, #8B5CF6 0%, #06B6D4 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .gradient-text-teal-green {
+      background: linear-gradient(135deg, #06B6D4 0%, #22C55E 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .gradient-text-green {
+      background: linear-gradient(135deg, #22C55E 0%, #4ADE80 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* --- Buttons --- */
+    .btn-primary {
+      background: #8B5CF6;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(139, 92, 246, 0.4);
+    }
+    .btn-ghost {
+      border: 1px solid rgba(139, 92, 246, 0.5);
+      transition: all 0.3s ease;
+    }
+    .btn-ghost:hover {
+      border-color: rgba(139, 92, 246, 0.9);
+      background: rgba(139, 92, 246, 0.1);
+      box-shadow: 0 0 30px rgba(139, 92, 246, 0.15);
+    }
+
+    /* --- Glass card --- */
+    .glass-card {
+      background: #1A1A24;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
+    }
+    .glass-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 60px rgba(139, 92, 246, 0.08), 0 8px 24px rgba(6, 182, 212, 0.06);
+      border-color: rgba(139, 92, 246, 0.2);
+    }
+
+    /* --- Glass nav --- */
+    .glass-nav {
+      background: rgba(13, 13, 18, 0.7);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      transition: background 0.3s ease, border-color 0.3s ease;
+    }
+
+    /* --- Nav inner layout --- */
+    #navInner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 80px;
+      position: relative;
+    }
+
+    /* --- Nav links pill (centered on viewport, not grid column) --- */
+    #navPill {
+      position: absolute;
+      left: 50%;
+      top: 0;
+      bottom: 0;
+      margin: auto;
+      height: fit-content;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 9999px;
+      padding: 6px 8px;
+    }
+    #navPill a.nav-link {
+      font-size: 15px;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.7);
+      padding: 8px 18px;
+      border-radius: 9999px;
+      transition: color 0.2s ease, background 0.2s ease;
+      white-space: nowrap;
+    }
+    #navPill a.nav-link:hover {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    /* --- Auth button --- */
+    .auth-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.3s ease;
+    }
+    .auth-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    /* --- Coming Soon badge --- */
+    .coming-soon-badge {
+      border: 1px solid rgba(245, 158, 11, 0.4);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #F59E0B;
+      padding: 3px 10px;
+      border-radius: 9999px;
+      display: inline-flex;
+      align-items: center;
+      white-space: nowrap;
+    }
+
+    /* --- Steps line & number badge (How It Works) --- */
+    .steps-line {
+      background: linear-gradient(90deg, #3B82F6, #06B6D4, #22C55E);
+      height: 2px;
+      position: absolute;
+      top: 40px;
+      left: 15%;
+      right: 15%;
+      z-index: 0;
+    }
+    .number-badge {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 20px;
+      color: white;
+      position: relative;
+      z-index: 2;
+    }
+
+    /* --- Keyframe animations --- */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-20px); }
+    }
+    @keyframes floatAlt {
+      0%, 100% { transform: translateY(0px) translateX(0px); }
+      33% { transform: translateY(-15px) translateX(10px); }
+      66% { transform: translateY(5px) translateX(-5px); }
+    }
+    @keyframes waveBar {
+      0%, 100% { height: 6px; }
+      50% { height: var(--wave-max, 28px); }
+    }
+    @keyframes pulseGlow {
+      0%, 100% { box-shadow: 0 0 40px rgba(139, 92, 246, 0.15), 0 0 80px rgba(6, 182, 212, 0.1); }
+      50% { box-shadow: 0 0 60px rgba(139, 92, 246, 0.25), 0 0 120px rgba(6, 182, 212, 0.15); }
+    }
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(1.3); }
+    }
+
+    .fade-in-up {
+      opacity: 0;
+      animation: fadeInUp 0.8s ease forwards;
+    }
+    .stagger-1 { animation-delay: 0.1s; }
+    .stagger-2 { animation-delay: 0.2s; }
+    .stagger-3 { animation-delay: 0.3s; }
+
+    /* --- Audio waveform bars --- */
+    .wave-bar {
+      display: inline-block;
+      width: 3px;
+      background: linear-gradient(to top, #06B6D4, #3B82F6);
+      border-radius: 2px;
+      animation: waveBar 1.2s ease-in-out infinite;
+    }
+
+    /* --- Phone glow --- */
+    .phone-glow {
+      animation: pulseGlow 4s ease-in-out infinite;
+    }
+
+    /* --- Scroll-triggered animation --- */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* --- Mobile hamburger --- */
+    .mobile-menu { display: none; }
+    .mobile-menu.open { display: flex; }
+
+    /* Smooth scrollbar */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #0D0D12; }
+    ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #334155; }
+
+    /* Aurora orbs */
+    .aurora-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(120px);
+      pointer-events: none;
+    }
+
+    /* Notification card mini */
+    .notification-mini {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-size: 11px;
+      line-height: 1.5;
+      color: #94a3b8;
+    }
+
+    /* Plan card for savings */
+    .plan-card-mini {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 10px;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .plan-card-mini.recommended {
+      border-left: 3px solid #22C55E;
+      background: rgba(34, 197, 94, 0.05);
+    }
+    .plan-card-mini.dimmed { opacity: 0.5; }
+
+    /* Task completed items */
+    .task-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      color: #94a3b8;
+      padding: 6px 0;
+    }
+    .task-item .check {
+      color: #22C55E;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    /* Zero counter */
+    .zero-counter { text-align: center; padding: 12px 16px; }
+    .zero-counter .zero-num {
+      font-size: 36px;
+      font-weight: 900;
+      color: #22C55E;
+      line-height: 1;
+    }
+    .zero-counter .zero-label {
+      font-size: 11px;
+      color: #64748b;
+      margin-top: 4px;
+    }
+
+    /* Security badge card */
+    .security-badge {
+      background: #1A1A24;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      padding: 24px;
+      text-align: center;
+    }
+
+    /* Section tints */
+    .section-blue-tint {
+      background: radial-gradient(ellipse at 60% 50%, rgba(59, 130, 246, 0.06) 0%, transparent 70%);
+    }
+
+    /* CTA radial gradient */
+    .cta-radial {
+      background: radial-gradient(ellipse at 50% 50%, rgba(139, 92, 246, 0.15) 0%, rgba(139, 92, 246, 0.05) 40%, transparent 70%);
+    }
+
+    /* ============================== */
+    /* NAV RIGHT GROUP (waitlist btn) */
+    /* ============================== */
+    #navRight {
+      position: absolute;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      margin: auto;
+      height: fit-content;
+      display: flex;
+      align-items: center;
+      opacity: 0;
+      pointer-events: none;
+    }
+    #navRight .nav-email-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    #navRight .nav-email-input {
+      width: 0;
+      opacity: 0;
+      padding: 0;
+      border: none;
+      overflow: hidden;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    #navRight.email-open .nav-email-input {
+      width: 200px;
+      opacity: 1;
+      padding: 8px 16px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    /* ============================== */
+    /* SCROLLYTELLING STYLES          */
+    /* ============================== */
+    .scrolly-container { position: relative; }
+
+    .scrolly-sticky {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 60px;
+      gap: 80px;
+      overflow: hidden;
+    }
+
+    .scrolly-text-side {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      height: 100%;
+    }
+
+    .scrolly-header {
+      margin-bottom: 32px;
+      flex-shrink: 0;
+    }
+
+    .scrolly-panels-container {
+      position: relative;
+      min-height: 200px;
+      flex-shrink: 0;
+    }
+
+    .scrolly-text-panel {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+      pointer-events: none;
+    }
+    .scrolly-text-panel.active {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    .scrolly-panel-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #8B5CF6;
+      margin-bottom: 16px;
+    }
+    .scrolly-panel-title {
+      font-size: clamp(22px, 2.5vw, 32px);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+      margin-bottom: 14px;
+    }
+    .scrolly-panel-body {
+      font-size: 15px;
+      color: rgba(255,255,255,0.45);
+      line-height: 1.6;
+      max-width: 420px;
+    }
+
+    .scrolly-phone-side {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+    }
+    .scrolly-phone-screens { position: relative; }
+
+    .scrolly-screen {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+    .scrolly-screen.active { opacity: 1; }
+
+    /* Progress dots */
+    .scrolly-dots {
+      position: absolute;
+      right: -48px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .sdot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.2);
+      transition: background 0.3s, transform 0.3s;
+    }
+    .sdot.active {
+      background: #8B5CF6;
+      transform: scale(1.6);
+    }
+
+    /* Phone frame */
+    .phone-frame {
+      width: 270px;
+      height: 540px;
+      background: #0a0a12;
+      border-radius: 44px;
+      border: 1.5px solid rgba(255,255,255,0.1);
+      position: relative;
+      overflow: hidden;
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,0.04),
+        0 48px 100px rgba(0,0,0,0.9),
+        inset 0 1px 0 rgba(255,255,255,0.07);
+      flex-shrink: 0;
+    }
+    .phone-frame::before {
+      content: '';
+      position: absolute;
+      top: 14px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 96px;
+      height: 28px;
+      background: #000;
+      border-radius: 20px;
+      z-index: 20;
+    }
+    .phone-frame::after {
+      content: '';
+      position: absolute;
+      top: 108px;
+      right: -3px;
+      width: 3px;
+      height: 64px;
+      background: rgba(255,255,255,0.07);
+      border-radius: 2px;
+    }
+
+    .phone-screen {
+      position: absolute;
+      inset: 0;
+      padding: 60px 18px 22px;
+    }
+    .phone-status {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.55);
+      margin-bottom: 14px;
+      padding: 0 2px;
+    }
+
+    /* Chat bubbles */
+    .chat-user {
+      background: #8B5CF6;
+      color: #fff;
+      padding: 9px 13px;
+      border-radius: 16px 16px 4px 16px;
+      font-size: 12px;
+      line-height: 1.45;
+      margin-left: auto;
+      max-width: 82%;
+      display: table;
+      margin-bottom: 7px;
+    }
+    .chat-ai {
+      background: rgba(255,255,255,0.07);
+      color: rgba(255,255,255,0.9);
+      padding: 9px 13px;
+      border-radius: 16px 16px 16px 4px;
+      font-size: 12px;
+      line-height: 1.45;
+      max-width: 88%;
+      margin-bottom: 7px;
+    }
+
+    /* Opportunity card in phone */
+    .opp-card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 14px;
+      padding: 13px;
+      margin-bottom: 8px;
+    }
+    .opp-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 2px 8px;
+      border-radius: 100px;
+      margin-bottom: 7px;
+    }
+    .opp-name { font-size: 13px; font-weight: 700; color: rgba(255,255,255,0.9); margin-bottom: 4px; }
+    .opp-detail { font-size: 11px; color: rgba(255,255,255,0.4); line-height: 1.5; }
+    .opp-savings { font-size: 16px; font-weight: 900; letter-spacing: -0.02em; margin-top: 6px; }
+
+    /* Call advocacy phone styles */
+    .call-banner {
+      background: rgba(34,197,94,0.08);
+      border: 1px solid rgba(34,197,94,0.2);
+      border-radius: 12px;
+      padding: 8px 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    .call-yara-msg {
+      background: rgba(139,92,246,0.08);
+      border: 1px solid rgba(139,92,246,0.15);
+      border-radius: 14px;
+      padding: 12px;
+      margin-top: 10px;
+      font-size: 11px;
+      color: rgba(255,255,255,0.75);
+      line-height: 1.5;
+    }
+    .comp-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 7px 10px;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.04);
+      margin-bottom: 5px;
+      font-size: 11px;
+    }
+    .compare-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 4px 0;
+      font-size: 11px;
+    }
+    .result-banner {
+      background: rgba(34, 197, 94, 0.15);
+      border: 1px solid rgba(34, 197, 94, 0.3);
+      border-radius: 10px;
+      padding: 10px 14px;
+      text-align: center;
+      font-size: 13px;
+      font-weight: 700;
+      color: #22C55E;
+    }
+
+    /* Eyebrow */
+    .eyebrow {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: #8B5CF6;
+      margin-bottom: 20px;
+    }
+
+    /* Mobile responsive for scrollytelling */
+    @media (max-width: 768px) {
+      .scrolly-sticky {
+        grid-template-columns: 1fr;
+        padding: 0 24px;
+        gap: 40px;
+      }
+      .scrolly-phone-side { display: none; }
+      .scrolly-dots { display: none; }
+    }
+  </style>
+</head>
+<body class="font-inter antialiased">
+
+  <!-- ===== NAVIGATION ===== -->
+  <nav id="mainNav" class="glass-nav fixed top-0 left-0 right-0 z-40">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8 relative">
+      <div id="navInner">
+        <!-- Logo -->
+        <a href="#" class="flex items-center gap-2 text-2xl font-extrabold tracking-tight text-white relative z-10">
+          <img src="yara_butterfly.png" alt="Yara" class="w-8 h-8" style="mix-blend-mode:screen;">
+          yara
+        </a>
+
+        <!-- Centered nav pill (desktop) — moves right on scroll -->
+        <div id="navPill" class="hidden md:flex">
+          <a href="#features" class="nav-link">Features</a>
+          <a href="#how-it-works" class="nav-link">How It Works</a>
+          <a href="#security" class="nav-link">Security</a>
+        </div>
+
+        <!-- Right group: waitlist btn + expandable email (hidden initially, appears on scroll) -->
+        <div id="navRight" class="hidden md:flex">
+          <div class="nav-email-group">
+            <input type="email" placeholder="Enter your email"
+              class="nav-email-input bg-white/5 text-white placeholder-slate-500 rounded-full text-xs focus:outline-none focus:border-purple/50 focus:ring-1 focus:ring-purple/20" />
+            <button id="navJoinBtn" class="btn-primary text-white font-semibold px-5 py-2 rounded-full text-xs whitespace-nowrap">
+              Join the Waitlist
+            </button>
+          </div>
+        </div>
+
+        <!-- Mobile hamburger -->
+        <button id="mobileToggle" class="md:hidden text-white p-2 relative z-10" aria-label="Toggle navigation menu">
+          <svg id="hamburgerIcon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+          </svg>
+          <svg id="closeIcon" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+    <!-- Mobile menu -->
+    <div id="mobileMenu" class="mobile-menu flex-col gap-4 px-6 pb-6 md:hidden bg-[#0D0D12]/95 backdrop-blur-xl">
+      <a href="#features" class="text-sm text-slate-400 hover:text-white transition-colors">Features</a>
+      <a href="#how-it-works" class="text-sm text-slate-400 hover:text-white transition-colors">How It Works</a>
+      <a href="#security" class="text-sm text-slate-400 hover:text-white transition-colors">Security</a>
+      <div class="flex gap-2 mt-2">
+        <input type="email" placeholder="Enter your email"
+          class="flex-1 min-w-0 bg-white/5 border border-white/10 text-white placeholder-slate-500 px-4 py-2.5 rounded-full text-sm focus:outline-none focus:border-purple/50 focus:ring-1 focus:ring-purple/20 transition-all" />
+        <button class="btn-primary text-white font-semibold px-5 py-2.5 rounded-full text-sm whitespace-nowrap">
+          Join
+        </button>
+      </div>
+    </div>
+  </nav>
+
+
+
+
+  <!-- ===== SECTION 1: HERO ===== -->
+  <section id="hero" class="relative min-h-screen flex items-center pt-20 overflow-hidden">
+    <!-- Aurora orbs -->
+    <div class="aurora-orb w-[600px] h-[600px] bg-purple-600 -top-48 -left-48 opacity-20" style="animation: float 8s ease-in-out infinite;"></div>
+    <div class="aurora-orb w-[500px] h-[500px] bg-cyan-500 top-1/4 -right-40 opacity-15" style="animation: floatAlt 10s ease-in-out infinite;"></div>
+    <div class="aurora-orb w-[400px] h-[400px] bg-purple-500 bottom-0 left-1/4 opacity-10" style="animation: float 12s ease-in-out infinite; animation-delay: 2s;"></div>
+
+    <div class="max-w-4xl mx-auto px-6 lg:px-8 w-full py-16 lg:py-0 text-center relative z-10">
+      <h1 class="fade-in-up stagger-1 text-5xl sm:text-6xl md:text-7xl lg:text-[80px] font-black leading-[1.05] tracking-tight text-white">
+        Your Personal<br><span class="gradient-text-purple-teal">AI Advocate</span>
+      </h1>
+
+      <p class="fade-in-up stagger-2 mt-6 md:mt-8 text-base md:text-lg lg:text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed">
+        Every company you pay uses AI to optimize what they charge you. Yara is the AI that fights back across every bill, subscription, and policy you have.
+      </p>
+
+      <!-- Waitlist signup -->
+      <div id="hero-ctas" class="fade-in-up stagger-3 mt-10 flex flex-col gap-5 items-center">
+        <div id="hero-waitlist-btn" class="flex flex-col sm:flex-row gap-3 justify-center w-full max-w-lg">
+          <input type="email" placeholder="Enter your email"
+            class="flex-1 min-w-0 bg-white/5 border border-white/10 text-white placeholder-slate-500 px-6 py-4 rounded-full text-sm focus:outline-none focus:border-purple/50 focus:ring-2 focus:ring-purple/20 transition-all" />
+          <button class="btn-primary text-white font-semibold px-8 py-4 rounded-full text-base whitespace-nowrap">
+            Join the Waitlist
+          </button>
+        </div>
+        <a id="hero-scroll-hint" href="#features" class="group inline-flex flex-col items-center gap-2 mt-2 text-slate-500 hover:text-white transition-colors duration-300">
+          <span class="text-sm tracking-wide">See What Yara Does</span>
+          <svg class="w-5 h-5 animate-bounce" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 13.5L12 21m0 0l-7.5-7.5M12 21V3"/></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ===== SECTION 2: FEATURE CARDS (6 cards, all visible in one viewport) ===== -->
+  <section id="features" class="py-16 md:py-20 relative">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
+      <!-- Section header -->
+      <div class="text-center mb-10 md:mb-12 reveal">
+        <p class="text-sm font-semibold tracking-[0.2em] uppercase text-teal mb-3">FEATURES</p>
+        <h2 class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white tracking-tight">
+          Everything you need. <span class="gradient-text-teal-green">Nothing you don't.</span>
+        </h2>
+      </div>
+
+      <!-- Feature grid: 3x2 on desktop, all visible without scrolling -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+
+        <!-- Card 1: Financial Intelligence -->
+        <div class="glass-card rounded-2xl p-5 md:p-6 reveal">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-teal/10 border border-teal/20 flex-shrink-0">
+              <svg class="w-5 h-5 text-teal" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+            </div>
+            <h3 class="text-lg font-bold text-white">Financial Intelligence</h3>
+          </div>
+          <p class="text-slate-400 text-sm leading-relaxed mb-4">Connect securely via Plaid. Ask anything about your spending. Get instant, accurate answers.</p>
+          <div class="flex items-end gap-[3px] h-8">
+            <div class="wave-bar" style="--wave-max: 18px; animation-delay: 0.00s;"></div>
+            <div class="wave-bar" style="--wave-max: 28px; animation-delay: 0.08s;"></div>
+            <div class="wave-bar" style="--wave-max: 14px; animation-delay: 0.16s;"></div>
+            <div class="wave-bar" style="--wave-max: 32px; animation-delay: 0.24s;"></div>
+            <div class="wave-bar" style="--wave-max: 20px; animation-delay: 0.32s;"></div>
+            <div class="wave-bar" style="--wave-max: 26px; animation-delay: 0.10s;"></div>
+            <div class="wave-bar" style="--wave-max: 12px; animation-delay: 0.18s;"></div>
+            <div class="wave-bar" style="--wave-max: 24px; animation-delay: 0.26s;"></div>
+            <div class="wave-bar" style="--wave-max: 16px; animation-delay: 0.34s;"></div>
+            <div class="wave-bar" style="--wave-max: 30px; animation-delay: 0.05s;"></div>
+            <div class="wave-bar" style="--wave-max: 22px; animation-delay: 0.13s;"></div>
+            <div class="wave-bar" style="--wave-max: 10px; animation-delay: 0.21s;"></div>
+            <div class="wave-bar" style="--wave-max: 28px; animation-delay: 0.29s;"></div>
+            <div class="wave-bar" style="--wave-max: 14px; animation-delay: 0.37s;"></div>
+          </div>
+        </div>
+
+        <!-- Card 2: Always Watching -->
+        <div class="glass-card rounded-2xl p-5 md:p-6 reveal">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-teal/10 border border-teal/20 flex-shrink-0">
+              <svg class="w-5 h-5 text-teal" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+            </div>
+            <h3 class="text-lg font-bold text-white">Always Watching</h3>
+          </div>
+          <p class="text-slate-400 text-sm leading-relaxed mb-3">Monitors every bill, renewal, and rate change. Catches errors and surfaces better deals automatically.</p>
+          <div class="space-y-1.5">
+            <div class="notification-mini">
+              <span class="text-white/70">Insurance up 12%.</span> Found $1,420.
+            </div>
+            <div class="notification-mini">
+              <span class="text-white/70">APR increased to 24.9%.</span> 0% transfer available.
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 3: Verified Savings -->
+        <div class="glass-card rounded-2xl p-5 md:p-6 reveal">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-green/10 border border-green/20 flex-shrink-0">
+              <svg class="w-5 h-5 text-green" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+            </div>
+            <h3 class="text-lg font-bold text-white">Verified Savings</h3>
+          </div>
+          <p class="text-slate-400 text-sm leading-relaxed mb-3">Every recommendation verified for accuracy. No hallucinations. Real savings backed by real math.</p>
+          <div class="space-y-1.5">
+            <div class="plan-card-mini recommended">
+              <div>
+                <div class="text-white text-[11px] font-semibold">Progressive</div>
+                <div class="text-[10px] text-green font-medium">Best Value</div>
+              </div>
+              <div class="text-green text-xs font-bold">$129/mo</div>
+            </div>
+            <div class="plan-card-mini">
+              <div>
+                <div class="text-white text-[11px] font-semibold">Allstate</div>
+                <div class="text-[10px] text-slate-500">Standard</div>
+              </div>
+              <div class="text-slate-300 text-xs font-bold">$145/mo</div>
+            </div>
+            <div class="plan-card-mini dimmed">
+              <div>
+                <div class="text-white text-[11px] font-semibold line-through">Current (Geico)</div>
+                <div class="text-[10px] text-slate-600">&nbsp;</div>
+              </div>
+              <div class="text-slate-500 text-xs font-bold line-through">$168/mo</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 4: Real-Time Advocacy -->
+        <div class="glass-card rounded-2xl p-5 md:p-6 reveal">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-purple/10 border border-purple/20 flex-shrink-0">
+              <svg class="w-5 h-5 text-purple" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+            </div>
+            <h3 class="text-lg font-bold text-white">Real-Time Advocacy</h3>
+          </div>
+          <p class="text-slate-400 text-sm leading-relaxed mb-3">On calls, Yara provides data from your records and market comparisons. Real-time support when it matters.</p>
+          <div class="flex items-center gap-3">
+            <div class="flex items-end gap-[2px] h-5">
+              <div class="wave-bar" style="--wave-max: 12px; animation-delay: 0.0s; width: 2px;"></div>
+              <div class="wave-bar" style="--wave-max: 18px; animation-delay: 0.1s; width: 2px;"></div>
+              <div class="wave-bar" style="--wave-max: 8px; animation-delay: 0.2s; width: 2px;"></div>
+              <div class="wave-bar" style="--wave-max: 16px; animation-delay: 0.3s; width: 2px;"></div>
+              <div class="wave-bar" style="--wave-max: 10px; animation-delay: 0.15s; width: 2px;"></div>
+              <div class="wave-bar" style="--wave-max: 20px; animation-delay: 0.25s; width: 2px;"></div>
+              <div class="wave-bar" style="--wave-max: 14px; animation-delay: 0.35s; width: 2px;"></div>
+              <div class="wave-bar" style="--wave-max: 8px; animation-delay: 0.05s; width: 2px;"></div>
+            </div>
+            <span class="text-[11px] text-white/40">Listening &amp; providing data...</span>
+          </div>
+        </div>
+
+        <!-- Card 5: Takes Action -->
+        <div class="glass-card rounded-2xl p-5 md:p-6 reveal">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-orange/10 border border-orange/20 flex-shrink-0">
+              <svg class="w-5 h-5 text-orange" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+            </div>
+            <h3 class="text-lg font-bold text-white">Takes Action</h3>
+          </div>
+          <p class="text-slate-400 text-sm leading-relaxed mb-3">Switching insurance, canceling subscriptions, disputing fees. You approve, Yara executes.</p>
+          <div class="space-y-1">
+            <div class="task-item">
+              <span class="check">&#10003;</span>
+              <span>Switched auto insurance <span class="text-slate-600">&middot;</span> <span class="text-green text-[11px] font-medium">saved $39/mo</span></span>
+            </div>
+            <div class="task-item">
+              <span class="check">&#10003;</span>
+              <span>Disputed electric bill <span class="text-slate-600">&middot;</span> <span class="text-green text-[11px] font-medium">refunded $72</span></span>
+            </div>
+            <div class="task-item">
+              <span class="check">&#10003;</span>
+              <span>Switched phone plan <span class="text-slate-600">&middot;</span> <span class="text-green text-[11px] font-medium">saved $24/mo</span></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 6: Web Navigation -->
+        <div class="glass-card rounded-2xl p-5 md:p-6 reveal">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-orange/10 border border-orange/20 flex-shrink-0">
+              <svg class="w-5 h-5 text-orange" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"/></svg>
+            </div>
+            <h3 class="text-lg font-bold text-white">Web Navigation</h3>
+          </div>
+          <p class="text-slate-400 text-sm leading-relaxed">Yara browses websites, fills forms, and takes action for you. Switching plans, claiming refunds, canceling subscriptions.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ===== SECTION: HOW IT WORKS (3 steps) ===== -->
+  <section id="how-it-works" class="py-24 md:py-32 relative">
+    <div class="max-w-5xl mx-auto px-6 lg:px-8">
+      <!-- Section header -->
+      <div class="text-center mb-16 md:mb-24 reveal">
+        <p class="text-sm font-semibold tracking-[0.2em] uppercase text-teal mb-4">HOW IT WORKS</p>
+        <h2 class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white tracking-tight">
+          Three steps to <span class="gradient-text-green">saving money</span>
+        </h2>
+      </div>
+
+      <!-- Steps -->
+      <div class="relative">
+        <!-- Connecting line (desktop) -->
+        <div class="hidden md:block steps-line"></div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-8 relative z-10">
+          <!-- Step 1: Connect -->
+          <div class="text-center reveal">
+            <div class="flex justify-center mb-6">
+              <div class="number-badge bg-blue-500">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg>
+              </div>
+            </div>
+            <div class="glass-card rounded-2xl p-7 text-center">
+              <h3 class="text-xl font-bold text-white mb-3">Connect</h3>
+              <p class="text-slate-400 text-sm leading-relaxed">Link your accounts securely via Plaid. Bank accounts, credit cards, insurance, subscriptions.</p>
+            </div>
+          </div>
+
+          <!-- Step 2: Ask -->
+          <div class="text-center reveal" style="transition-delay: 0.15s;">
+            <div class="flex justify-center mb-6">
+              <div class="number-badge bg-teal">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+              </div>
+            </div>
+            <div class="glass-card rounded-2xl p-7 text-center">
+              <h3 class="text-xl font-bold text-white mb-3">Ask</h3>
+              <p class="text-slate-400 text-sm leading-relaxed">Ask anything about your spending, bills, or finances. Yara analyzes and finds opportunities.</p>
+            </div>
+          </div>
+
+          <!-- Step 3: Save -->
+          <div class="text-center reveal" style="transition-delay: 0.3s;">
+            <div class="flex justify-center mb-6">
+              <div class="number-badge bg-green">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              </div>
+            </div>
+            <div class="glass-card rounded-2xl p-7 text-center">
+              <h3 class="text-xl font-bold text-white mb-3">Save</h3>
+              <p class="text-slate-400 text-sm leading-relaxed">Get verified recommendations that save you real money. Approve and Yara takes action.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ===== SECTION: SCROLLYTELLING (Pinned, 4 steps) ===== -->
+  <div id="scrolly-section" style="height:400vh;position:relative;background:#0D0D12;">
+
+    <div id="scrolly-sticky" class="scrolly-sticky">
+
+      <!-- LEFT: text panels -->
+      <div class="scrolly-text-side">
+
+        <!-- Section header -->
+        <div class="scrolly-header">
+          <div class="eyebrow">How It Works</div>
+          <h2 style="font-size:clamp(26px,3vw,38px);font-weight:900;letter-spacing:-0.04em;line-height:1.1;max-width:440px;">
+            See Yara In Action.
+          </h2>
+          <p style="margin-top:12px;font-size:15px;color:rgba(255,255,255,0.4);line-height:1.6;max-width:380px;">
+            From finding savings to negotiating on your behalf -- watch how Yara works across your financial life.
+          </p>
+        </div>
+
+        <!-- Step panels (swap in/out) -->
+        <div class="scrolly-panels-container">
+          <!-- Step 1: Financial Intelligence - Ask question, get audit -->
+          <div class="scrolly-text-panel active" id="scrolly-panel-0">
+            <div class="scrolly-panel-label">Step 1 of 4</div>
+            <div class="scrolly-panel-title">Ask one question.<br>Get a full audit.</div>
+            <div class="scrolly-panel-body">One message surfaces every overpayment across every account -- auto, subscriptions, phone, utilities -- in seconds.</div>
+          </div>
+
+          <!-- Step 2: Financial Intelligence - Auto insurance -->
+          <div class="scrolly-text-panel" id="scrolly-panel-1">
+            <div class="scrolly-panel-label">Step 2 of 4</div>
+            <div class="scrolly-panel-title">Auto insurance is the #1 overpayment.</div>
+            <div class="scrolly-panel-body">Yara compares your coverage to 40+ carriers instantly. Average driver overpays by $468/year without knowing it.</div>
+          </div>
+
+          <!-- Step 3: Call Advocacy - Competitor quotes -->
+          <div class="scrolly-text-panel" id="scrolly-panel-2">
+            <div class="scrolly-panel-label">Step 3 of 4</div>
+            <div class="scrolly-panel-title">Instant market comparison while you're on the phone.</div>
+            <div class="scrolly-panel-body">Know exactly what competitors charge before you say a word. Walk into every negotiation with the data companies don't want you to have.</div>
+          </div>
+
+          <!-- Step 4: Call Advocacy - Result -->
+          <div class="scrolly-text-panel" id="scrolly-panel-3">
+            <div class="scrolly-panel-label">Step 4 of 4</div>
+            <div class="scrolly-panel-title">Average user saves $320 per call.</div>
+            <div class="scrolly-panel-body">Yara turns every customer service call into a negotiation you win. The company has AI. Now so do you.</div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- RIGHT: phone -->
+      <div class="scrolly-phone-side">
+        <div style="position:relative;">
+          <div class="phone-frame" style="position:relative;">
+            <!-- Phone glow -->
+            <div style="position:absolute;inset:-2px;border-radius:46px;background:linear-gradient(135deg,rgba(139,92,246,0.25),rgba(6,182,212,0.1));filter:blur(24px);z-index:-1;pointer-events:none;"></div>
+
+            <!-- Screen 0: "Where am I overpaying?" with $85/month savings (fin-screen-0) -->
+            <div class="scrolly-screen phone-screen active" id="scrolly-screen-0">
+              <div class="phone-status">
+                <span>9:41</span>
+                <span style="font-size:10px;color:rgba(255,255,255,0.35);">yara</span>
+              </div>
+              <div style="font-size:13px;font-weight:700;text-align:center;margin-bottom:16px;color:rgba(255,255,255,0.9);">Financial Review</div>
+              <div class="chat-user">Where am I overpaying?</div>
+              <div class="chat-ai" style="margin-top:4px;">
+                I analyzed your last 90 days across all accounts. Found <strong style="color:#22C55E;">4 opportunities</strong> to save.
+                <div style="margin-top:10px;padding:10px;border-radius:12px;background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.15);">
+                  <div style="font-size:11px;color:#22C55E;font-weight:700;">Total potential savings</div>
+                  <div style="font-size:22px;font-weight:900;letter-spacing:-0.03em;color:#22C55E;">$85/month</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Screen 1: Auto insurance opportunity card (fin-screen-1) -->
+            <div class="scrolly-screen phone-screen" id="scrolly-screen-1">
+              <div class="phone-status"><span>9:41</span><span style="font-size:10px;color:rgba(255,255,255,0.35);">Opportunity 1/4</span></div>
+              <div class="opp-card">
+                <div class="opp-tag" style="background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.2);color:#F59E0B;">
+                  <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                  Overpaying
+                </div>
+                <div class="opp-name">Auto Insurance -- Geico</div>
+                <div class="opp-detail">You're paying $168/mo for comparable coverage available from $129/mo with Progressive.</div>
+                <div class="opp-savings" style="color:#22C55E;">Save $468/year</div>
+              </div>
+              <div class="chat-ai">
+                I found 3 carriers that match your coverage level at a lower price. Want me to start the switch?
+              </div>
+            </div>
+
+            <!-- Screen 2: State Farm call with competitor quotes (call-screen-1) -->
+            <div class="scrolly-screen phone-screen" id="scrolly-screen-2">
+              <div class="phone-status"><span>9:41</span><span style="font-size:10px;color:#22C55E;">12:07</span></div>
+              <div class="call-banner">
+                <div style="width:8px;height:8px;border-radius:50%;background:#22C55E;animation:pulse-dot 1.5s ease-in-out infinite;"></div>
+                <span style="font-size:12px;font-weight:700;color:rgba(255,255,255,0.9);">State Farm</span>
+              </div>
+              <div class="call-yara-msg" style="margin-bottom:10px;">
+                <div style="font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#8B5CF6;margin-bottom:7px;">Competitor Quotes</div>
+                <div class="comp-row">
+                  <span style="color:rgba(255,255,255,0.8);">USAA</span>
+                  <span style="color:#22C55E;font-weight:700;">$1,420</span>
+                </div>
+                <div class="comp-row">
+                  <span style="color:rgba(255,255,255,0.8);">Lemonade</span>
+                  <span style="color:#22C55E;font-weight:700;">$1,380</span>
+                </div>
+                <div class="comp-row">
+                  <span style="color:rgba(255,255,255,0.8);">Allstate</span>
+                  <span style="color:rgba(255,255,255,0.5);">$1,510</span>
+                </div>
+              </div>
+              <div class="call-yara-msg">
+                Mention the USAA quote. State Farm has a "price match consideration" policy for clean-record customers.
+              </div>
+            </div>
+
+            <!-- Screen 3: Result - $1,520/year saved $320 (call-screen-3) -->
+            <div class="scrolly-screen phone-screen" id="scrolly-screen-3">
+              <div class="phone-status"><span>9:41</span><span style="font-size:10px;color:rgba(255,255,255,0.35);">Call ended</span></div>
+              <div style="text-align:center;padding-top:20px;">
+                <div style="width:64px;height:64px;border-radius:50%;background:rgba(34,197,94,0.12);border:1px solid rgba(34,197,94,0.3);display:flex;align-items:center;justify-content:center;margin:0 auto 14px;">
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#22C55E" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                </div>
+                <div style="font-size:13px;font-weight:700;color:rgba(255,255,255,0.9);margin-bottom:4px;">Negotiation Complete</div>
+                <div style="font-size:11px;color:rgba(255,255,255,0.4);">State Farm Auto Insurance</div>
+              </div>
+              <div style="margin-top:20px;padding:16px;border-radius:14px;background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.2);text-align:center;">
+                <div style="font-size:10px;color:#22C55E;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:6px;">Final result</div>
+                <div style="font-size:28px;font-weight:900;letter-spacing:-0.04em;color:#22C55E;">$1,520/year</div>
+                <div style="font-size:12px;color:rgba(255,255,255,0.5);margin-top:4px;">You saved <strong style="color:#22C55E;">$320</strong> from their opening offer</div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Progress dots -->
+          <div class="scrolly-dots" id="scrolly-dots">
+            <div class="sdot active" data-scrolly="scrolly" data-i="0"></div>
+            <div class="sdot" data-scrolly="scrolly" data-i="1"></div>
+            <div class="sdot" data-scrolly="scrolly" data-i="2"></div>
+            <div class="sdot" data-scrolly="scrolly" data-i="3"></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ===== SECTION 4: PRIVACY & SECURITY (consolidated) ===== -->
+  <section id="security" class="py-24 md:py-32 relative">
+    <div class="max-w-5xl mx-auto px-6 lg:px-8">
+      <!-- Section header -->
+      <div class="text-center mb-16 md:mb-20 reveal">
+        <p class="text-sm font-semibold tracking-[0.2em] uppercase text-teal mb-4">SECURITY</p>
+        <h2 class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white tracking-tight mb-6">
+          Your Data. Your Device. Period.
+        </h2>
+        <p class="text-slate-400 text-base md:text-lg leading-relaxed max-w-2xl mx-auto">
+          Bank accounts, insurance policies, credit cards, medical bills. Yara sees it all and stores it on your device or fully encrypted on the cloud. End-to-end encryption. Three-factor authentication. Zero data retention.
+        </p>
+      </div>
+
+      <!-- Security badges: 2x2 grid -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-12 reveal">
+        <!-- E2EE -->
+        <div class="security-badge flex items-center gap-5">
+          <div class="flex-shrink-0 w-14 h-14 rounded-2xl bg-teal/10 border border-teal/20 flex items-center justify-center">
+            <svg class="w-7 h-7 text-teal" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+          </div>
+          <div class="text-left">
+            <div class="text-white font-extrabold text-lg">E2EE</div>
+            <div class="text-slate-400 text-sm">Every message encrypted end-to-end</div>
+          </div>
+        </div>
+        <!-- 3FA -->
+        <div class="security-badge flex items-center gap-5">
+          <div class="flex-shrink-0 w-14 h-14 rounded-2xl bg-purple/10 border border-purple/20 flex items-center justify-center">
+            <svg class="w-7 h-7 text-purple" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 11c0 1.104-.896 2-2 2s-2-.896-2-2 .896-2 2-2 2 .896 2 2zm0 0c0 1.104.896 2 2 2s2-.896 2-2-.896-2-2-2-2 .896-2 2zm-2 2v4m4-4v4"/></svg>
+          </div>
+          <div class="text-left">
+            <div class="text-white font-extrabold text-lg">3FA</div>
+            <div class="text-slate-400 text-sm">Password + device + biometrics</div>
+          </div>
+        </div>
+        <!-- ZDR -->
+        <div class="security-badge flex items-center gap-5">
+          <div class="flex-shrink-0 w-14 h-14 rounded-2xl bg-green/10 border border-green/20 flex items-center justify-center">
+            <svg class="w-7 h-7 text-green" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01"/></svg>
+          </div>
+          <div class="text-left">
+            <div class="text-white font-extrabold text-lg">ZDR</div>
+            <div class="text-slate-400 text-sm">Zero data retention on servers</div>
+          </div>
+        </div>
+        <!-- Secure Tunnels -->
+        <div class="security-badge flex items-center gap-5">
+          <div class="flex-shrink-0 w-14 h-14 rounded-2xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center">
+            <svg class="w-7 h-7 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+          </div>
+          <div class="text-left">
+            <div class="text-white font-extrabold text-lg">Secure Tunnels</div>
+            <div class="text-slate-400 text-sm">Encrypted communication channels</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Zero counters row -->
+      <div class="reveal flex items-center justify-center gap-4 sm:gap-8 mb-8">
+        <div class="zero-counter">
+          <div class="zero-num text-4xl">0</div>
+          <div class="zero-label">Data Stored</div>
+        </div>
+        <div class="w-px h-12 bg-white/10"></div>
+        <div class="zero-counter">
+          <div class="zero-num text-4xl">0</div>
+          <div class="zero-label">Trackers</div>
+        </div>
+        <div class="w-px h-12 bg-white/10"></div>
+        <div class="zero-counter">
+          <div class="zero-num text-4xl">0</div>
+          <div class="zero-label">Third Parties</div>
+        </div>
+      </div>
+
+      <!-- Trust line -->
+      <div class="reveal text-center">
+        <p class="text-slate-500 text-sm">Connected to <span class="text-white font-medium">12,000+</span> financial institutions via Plaid's bank-grade security</p>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ===== SECTION 5: FINAL CTA ===== -->
+  <section id="waitlist" class="py-24 md:py-32 relative cta-radial">
+    <div class="max-w-3xl mx-auto px-6 lg:px-8 text-center">
+      <div class="reveal">
+        <h2 class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white tracking-tight mb-5">
+          Take Back Control.
+        </h2>
+        <p class="text-slate-400 text-base md:text-lg mb-10">
+          Be among the first to have AI that works for you, not against you.
+        </p>
+
+        <!-- Email input + button -->
+        <div class="flex flex-col sm:flex-row gap-3 justify-center max-w-lg mx-auto mb-8">
+          <input
+            type="email"
+            placeholder="Enter your email"
+            class="flex-1 bg-white/5 border border-white/10 text-white placeholder-slate-500 px-5 py-4 rounded-full text-sm focus:outline-none focus:border-purple/50 focus:ring-2 focus:ring-purple/20 transition-all"
+          />
+          <button class="btn-primary text-white font-semibold px-8 py-4 rounded-full text-sm whitespace-nowrap">
+            Join the Waitlist
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="border-t border-white/5 py-16 md:py-20">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
+      <div class="flex flex-col items-center text-center gap-6">
+        <!-- Brand -->
+        <a href="#" class="flex items-center gap-2 text-2xl font-extrabold tracking-tight text-white">
+          <img src="yara_butterfly.png" alt="Yara" class="w-8 h-8" style="mix-blend-mode:screen;">
+          yara
+        </a>
+        <!-- Links -->
+        <div class="flex items-center gap-6">
+          <a href="#" class="text-sm text-slate-500 hover:text-white transition-colors">Terms of Service</a>
+          <span class="text-slate-700">|</span>
+          <a href="#" class="text-sm text-slate-500 hover:text-white transition-colors">Privacy Policy</a>
+        </div>
+        <p class="text-slate-600 text-xs">By signing up, you agree to our Terms and Privacy Policy.</p>
+        <!-- Bottom -->
+        <div class="border-t border-white/5 pt-6 w-full">
+          <p class="text-slate-600 text-sm">&copy; 2026 Yara. All rights reserved.</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+
+  <!-- ===== JAVASCRIPT ===== -->
+  <script>
+    gsap.registerPlugin(ScrollTrigger);
+
+    // =====================================================
+    // MOBILE MENU TOGGLE
+    // =====================================================
+    const mobileToggle = document.getElementById('mobileToggle');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const hamburgerIcon = document.getElementById('hamburgerIcon');
+    const closeIcon = document.getElementById('closeIcon');
+
+    mobileToggle.addEventListener('click', () => {
+      const isOpen = mobileMenu.classList.toggle('open');
+      hamburgerIcon.classList.toggle('hidden', isOpen);
+      closeIcon.classList.toggle('hidden', !isOpen);
+    });
+
+    mobileMenu.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        mobileMenu.classList.remove('open');
+        hamburgerIcon.classList.remove('hidden');
+        closeIcon.classList.add('hidden');
+      });
+    });
+
+
+    // =====================================================
+    // NAV PILL TRANSITION — centered → right on scroll
+    // Uses GSAP for smooth position animation (no CSS position swaps)
+    // =====================================================
+    const mainNav = document.getElementById('mainNav');
+    const navInner = document.getElementById('navInner');
+    const navPill = document.getElementById('navPill');
+    const navRight = document.getElementById('navRight');
+    const heroBtn = document.getElementById('hero-waitlist-btn');
+    let navCompact = false;
+
+    // Tell GSAP about the initial translateX(-50%) so it manages it properly
+    gsap.set(navPill, { xPercent: -50, x: 0 });
+
+    // Calculate how far right the pill needs to slide
+    function getPillSlideX() {
+      const pillRect = navPill.getBoundingClientRect();
+      const innerRect = navInner.getBoundingClientRect();
+      const btn = navRight.querySelector('#navJoinBtn');
+      const btnWidth = btn ? btn.offsetWidth : 140;
+      // Current center of pill (at viewport center)
+      const pillCenter = pillRect.left + pillRect.width / 2;
+      // Target: right-align pill just left of the waitlist button
+      const targetRightEdge = innerRect.right - btnWidth - 20;
+      const targetCenter = targetRightEdge - pillRect.width / 2;
+      return targetCenter - pillCenter;
+    }
+
+    ScrollTrigger.create({
+      trigger: heroBtn,
+      start: 'bottom top+=80',
+      onEnter: () => {
+        if (navCompact) return;
+        navCompact = true;
+        const slideX = getPillSlideX();
+
+        // Slide pill right + shrink styling
+        gsap.to(navPill, {
+          x: slideX,
+          background: 'rgba(255,255,255,0)',
+          borderColor: 'rgba(255,255,255,0)',
+          padding: '0px',
+          gap: '4px',
+          duration: 0.55,
+          ease: 'power3.inOut',
+        });
+        // Shrink the link text
+        gsap.to('#navPill .nav-link', {
+          fontSize: '13px',
+          padding: '6px 12px',
+          color: 'rgba(255,255,255,0.5)',
+          duration: 0.55,
+          ease: 'power3.inOut',
+        });
+        // Shrink nav height
+        gsap.to(navInner, {
+          height: 64,
+          duration: 0.55,
+          ease: 'power3.inOut',
+        });
+        // Fade in waitlist button
+        gsap.to(navRight, {
+          opacity: 1,
+          pointerEvents: 'auto',
+          duration: 0.4,
+          delay: 0.2,
+          ease: 'power2.out',
+        });
+        // Darken nav background
+        mainNav.style.background = 'rgba(13, 13, 18, 0.92)';
+        mainNav.style.borderBottomColor = 'rgba(255, 255, 255, 0.08)';
+      },
+      onLeaveBack: () => {
+        if (!navCompact) return;
+        navCompact = false;
+
+        // Slide pill back to center
+        gsap.to(navPill, {
+          x: 0,
+          background: 'rgba(255,255,255,0.06)',
+          borderColor: 'rgba(255,255,255,0.08)',
+          padding: '6px 8px',
+          gap: '8px',
+          duration: 0.55,
+          ease: 'power3.inOut',
+        });
+        // Grow the link text back
+        gsap.to('#navPill .nav-link', {
+          fontSize: '15px',
+          padding: '8px 18px',
+          color: 'rgba(255,255,255,0.7)',
+          duration: 0.55,
+          ease: 'power3.inOut',
+        });
+        // Grow nav height
+        gsap.to(navInner, {
+          height: 80,
+          duration: 0.55,
+          ease: 'power3.inOut',
+        });
+        // Fade out waitlist button + close email
+        navRight.classList.remove('email-open');
+        gsap.to(navPill, { opacity: 1, pointerEvents: 'auto', duration: 0.2 });
+        gsap.to(navRight, {
+          opacity: 0,
+          pointerEvents: 'none',
+          duration: 0.25,
+          ease: 'power2.in',
+        });
+        // Lighten nav background
+        mainNav.style.background = 'rgba(13, 13, 18, 0.7)';
+        mainNav.style.borderBottomColor = 'rgba(255, 255, 255, 0.04)';
+      },
+    });
+
+    // Recalculate slide position on resize
+    window.addEventListener('resize', () => {
+      if (navCompact) {
+        gsap.set(navPill, { x: getPillSlideX() });
+      }
+    });
+
+
+    // =====================================================
+    // NAV JOIN BUTTON — click to expand email input
+    // =====================================================
+    const navJoinBtn = document.getElementById('navJoinBtn');
+    const navEmailInput = navRight.querySelector('.nav-email-input');
+
+    function openNavEmail() {
+      navRight.classList.add('email-open');
+      // Fade out pill links to avoid overlap
+      gsap.to(navPill, { opacity: 0, pointerEvents: 'none', duration: 0.3, ease: 'power2.out' });
+      setTimeout(() => navEmailInput.focus(), 350);
+    }
+
+    function closeNavEmail() {
+      navRight.classList.remove('email-open');
+      // Bring pill links back
+      gsap.to(navPill, { opacity: 1, pointerEvents: 'auto', duration: 0.3, delay: 0.1, ease: 'power2.out' });
+    }
+
+    navJoinBtn.addEventListener('click', (e) => {
+      if (!navRight.classList.contains('email-open')) {
+        // First click: expand email input
+        e.preventDefault();
+        openNavEmail();
+      } else {
+        // Second click: submit (placeholder — would send email)
+        const email = navEmailInput.value.trim();
+        if (email) {
+          navJoinBtn.textContent = 'Joined!';
+          navJoinBtn.style.background = '#22C55E';
+          setTimeout(() => {
+            navJoinBtn.textContent = 'Join the Waitlist';
+            navJoinBtn.style.background = '';
+            closeNavEmail();
+            navEmailInput.value = '';
+          }, 2000);
+        }
+      }
+    });
+
+    // Close email expansion when clicking outside
+    document.addEventListener('click', (e) => {
+      if (navRight.classList.contains('email-open') && !navRight.contains(e.target)) {
+        closeNavEmail();
+      }
+    });
+
+
+    // =====================================================
+    // HERO SCROLL HINT — fade out on first scroll
+    // =====================================================
+    gsap.to('#hero-scroll-hint', {
+      opacity: 0,
+      y: -10,
+      ease: 'none',
+      scrollTrigger: {
+        trigger: '#hero',
+        start: 'top top',
+        end: '15% top',
+        scrub: true,
+      },
+    });
+
+
+    // =====================================================
+    // SCROLL-REVEAL (IntersectionObserver)
+    // =====================================================
+    const revealElements = document.querySelectorAll('.reveal');
+
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const delay = parseFloat(entry.target.style.transitionDelay) || 0;
+          entry.target.style.transitionDelay = delay + 's';
+          entry.target.classList.add('visible');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, {
+      threshold: 0.08,
+      rootMargin: '0px 0px -40px 0px'
+    });
+
+    revealElements.forEach(el => revealObserver.observe(el));
+
+
+    // =====================================================
+    // SMOOTH SCROLL FOR ANCHOR LINKS
+    // =====================================================
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        const href = this.getAttribute('href');
+        if (href === '#') return;
+        e.preventDefault();
+        const target = document.querySelector(href);
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+
+
+    // =====================================================
+    // SCROLLYTELLING UTILITY (from scroll-animations.html)
+    // =====================================================
+    function buildScrollytelling({ containerId, stickyId, panelPrefix, screenPrefix, dotsId, numSteps }) {
+      const panels  = Array.from({ length: numSteps }, (_, i) => document.getElementById(`${panelPrefix}-${i}`));
+      const screens = Array.from({ length: numSteps }, (_, i) => document.getElementById(`${screenPrefix}-${i}`));
+      const dots    = dotsId ? document.getElementById(dotsId).querySelectorAll('.sdot') : [];
+
+      let current = -1;
+
+      function activate(idx) {
+        if (idx === current) return;
+        current = idx;
+
+        panels.forEach((el, i) => {
+          if (!el) return;
+          el.classList.toggle('active', i === idx);
+        });
+        screens.forEach((el, i) => {
+          if (!el) return;
+          el.classList.toggle('active', i === idx);
+        });
+        dots.forEach((dot, i) => {
+          dot.classList.toggle('active', i === idx);
+        });
+      }
+
+      // Pin the sticky frame for the full scroll height
+      ScrollTrigger.create({
+        trigger: `#${containerId}`,
+        start: 'top top',
+        end: 'bottom bottom',
+        pin: `#${stickyId}`,
+        pinSpacing: false,
+      });
+
+      // Drive steps via progress
+      ScrollTrigger.create({
+        trigger: `#${containerId}`,
+        start: 'top top',
+        end: 'bottom bottom',
+        onUpdate: (self) => {
+          const p = self.progress;
+          let step = Math.min(numSteps - 1, Math.floor(p * numSteps));
+          activate(step);
+        }
+      });
+
+      // Initial state
+      activate(0);
+    }
+
+    // Build the unified scrollytelling section
+    buildScrollytelling({
+      containerId: 'scrolly-section',
+      stickyId: 'scrolly-sticky',
+      panelPrefix: 'scrolly-panel',
+      screenPrefix: 'scrolly-screen',
+      dotsId: 'scrolly-dots',
+      numSteps: 4,
+    });
+
+
+    // =====================================================
+    // PERFORMANCE - Refresh after fonts, handle resize
+    // =====================================================
+    document.fonts.ready.then(() => {
+      ScrollTrigger.refresh();
+    });
+
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => ScrollTrigger.refresh(), 250);
+    });
+  </script>
+
+</body>
+</html>
