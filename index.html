@@ -1,1732 +1,2224 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yara - Your Personal AI Advocate</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --font-display: 'Plus Jakarta Sans', -apple-system, sans-serif;
-            --font-body: 'Inter', -apple-system, sans-serif;
-            --bg-color: #FFFFFF;
-            --text-primary: #1D1D1F;
-            --text-secondary: #6E6E73;
-            --cta-blue: #007AFF;
-            --cta-blue-hover: #0062CC;
-            --yara-purple: #6A0DAD;
-            --success-green: #34C759;
-            --user-bubble-start: #0085FF;
-            --user-bubble-end: #0061E6;
-            --yara-bubble: #F0F0F5;
-        }
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        html { scroll-behavior: smooth; }
-        body {
-            font-family: var(--font-body);
-            background: var(--bg-color);
-            color: var(--text-primary);
-            overflow-x: hidden;
-            -webkit-font-smoothing: antialiased;
-        }
-        h1, h2 { font-family: var(--font-display); letter-spacing: -0.02em; line-height: 1.1; }
-        h1 { font-size: clamp(40px, 6vw, 72px); font-weight: 800; }
-        h2 { font-size: clamp(32px, 5vw, 56px); font-weight: 700; }
-        p { font-size: clamp(16px, 2vw, 20px); line-height: 1.6; color: var(--text-secondary); }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Yara - Your Personal AI Advocate</title>
+  <meta name="description" content="Every company you pay uses AI to optimize what they charge you. Yara is the AI that fights back across every bill, subscription, and policy you have." />
 
-        /* Navigation */
-        .nav {
-            position: fixed; top: 0; left: 0; right: 0; height: 64px;
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 0 40px; background: rgba(255,255,255,0.85);
-            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(0,0,0,0.05); z-index: 1000;
-        }
-        .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
-        .nav-logo img { height: 32px; }
-        .nav-logo span { font-family: var(--font-display); font-size: 20px; font-weight: 700; color: var(--text-primary); }
-        .nav-btn {
-            padding: 8px 20px; border-radius: 20px; border: 1.5px solid var(--yara-purple);
-            color: var(--yara-purple); background: transparent; font-size: 15px; font-weight: 600;
-            cursor: pointer; transition: all 0.3s;
-        }
-        .nav-btn:hover { background: var(--yara-purple); color: white; }
+  <!-- Google Fonts: Inter + Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet" />
 
-        /* Fixed Bottom CTA - Apple-style floating pill */
-        .fixed-cta {
-            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
-            z-index: 2000; padding: 0;
-        }
-        .cta-container {
-            max-width: 440px; margin: 0 auto;
-            display: flex; gap: 8px; align-items: center;
-            background: rgba(255,255,255,0.95); backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-radius: 30px; padding: 6px 6px 6px 20px;
-            box-shadow: 0 4px 24px rgba(0,0,0,0.12), 0 0 0 1px rgba(0,0,0,0.06);
-        }
-        .cta-container input {
-            flex: 1; border: none; background: transparent; font-size: 16px;
-            font-family: var(--font-body); outline: none; min-width: 0;
-        }
-        .cta-container button {
-            padding: 14px 28px; background: var(--cta-blue); color: white;
-            border: none; border-radius: 25px; font-size: 16px; font-weight: 600;
-            cursor: pointer; white-space: nowrap; transition: background 0.3s;
-        }
-        .cta-container button:hover { background: var(--cta-blue-hover); }
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
 
-        /* Split Layout */
-        .page-wrapper {
-            display: flex;
-            min-height: 100vh;
-            padding-top: 64px;
-            padding-bottom: 80px;
-        }
+  <!-- GSAP + ScrollTrigger -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 
-        /* Left Column - Scrolling Content */
-        .content-column {
-            flex: 1;
-            padding: 0 5%;
-        }
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            inter: ['Inter', '-apple-system', 'sans-serif'],
+            display: ['Plus Jakarta Sans', '-apple-system', 'sans-serif'],
+          },
+          colors: {
+            base: '#FAFAFA',
+            surface: '#FFFFFF',
+            purple: '#8B5CF6',
+            teal: '#06B6D4',
+            green: '#22C55E',
+            orange: '#F59E0B',
+          },
+        },
+      },
+    };
+  </script>
 
-        /* Right Column - Sticky Phone */
-        .phone-column {
-            width: 45%;
-            position: sticky;
-            top: 64px;
-            height: calc(100vh - 64px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            perspective: 1500px;
-            padding: 20px;
-            overflow: visible;
-        }
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html { font-family: 'Inter', -apple-system, sans-serif; -webkit-font-smoothing: antialiased; }
+    body {
+      background-color: #FAFAFA;
+      color: #334155;
+      overflow-x: hidden;
+    }
 
-        /* Content Sections */
-        .content-section {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            padding: 80px 0;
-            max-width: 560px;
-        }
-        .content-section h1, .content-section h2 { margin-bottom: 20px; }
-        .content-section p { margin-bottom: 24px; }
+    /* --- Gradient text variants --- */
+    .gradient-text-purple-teal {
+      background: linear-gradient(135deg, #8B5CF6 0%, #06B6D4 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .gradient-text-teal-green {
+      background: linear-gradient(135deg, #06B6D4 0%, #22C55E 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .gradient-text-green {
+      background: linear-gradient(135deg, #22C55E 0%, #4ADE80 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
 
-        /* iPhone Frame - Realistic iPhone 15 Pro */
-        .iphone-wrapper {
-            width: 340px;
-            height: 738px;
-            position: relative;
-            transform-style: preserve-3d;
-            flex-shrink: 0;
-        }
-        .iphone-frame {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(145deg, #3A3A3C, #1D1D1F, #2C2C2E);
-            border-radius: 50px;
-            padding: 4px;
-            box-shadow:
-                inset 0 0 0 1px rgba(255,255,255,0.15),
-                0 25px 50px -12px rgba(0,0,0,0.35);
-            backface-visibility: hidden;
-        }
-        .iphone-screen {
-            width: 100%;
-            height: 100%;
-            background: #fff;
-            border-radius: 46px;
-            overflow: hidden;
-            position: relative;
-            backface-visibility: hidden;
-        }
-        /* Physical Side Buttons */
-        .iphone-btn-vol-up, .iphone-btn-vol-down, .iphone-btn-power {
-            position: absolute;
-            background: linear-gradient(145deg, #3A3A3C, #2C2C2E);
-            z-index: 5;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.3);
-        }
-        .iphone-btn-vol-up {
-            width: 4px; height: 32px;
-            left: -3px; top: 120px;
-            border-radius: 2px 0 0 2px;
-        }
-        .iphone-btn-vol-down {
-            width: 4px; height: 32px;
-            left: -3px; top: 162px;
-            border-radius: 2px 0 0 2px;
-        }
-        .iphone-btn-power {
-            width: 4px; height: 50px;
-            right: -3px; top: 140px;
-            border-radius: 0 2px 2px 0;
-        }
-        /* Dynamic Island - Pill shape at top */
-        .dynamic-island {
-            position: absolute;
-            top: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100px;
-            height: 28px;
-            background: #000;
-            border-radius: 16px;
-            z-index: 100;
-        }
-        /* iOS Status Bar */
-        .status-bar {
-            position: absolute;
-            top: 16px;
-            left: 0;
-            right: 0;
-            height: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 28px;
-            font-size: 13px;
-            font-weight: 600;
-            z-index: 50;
-        }
-        .status-bar .time { color: #000; font-weight: 600; }
-        .iphone-back {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(145deg, #2C2C2E, #1D1D1F);
-            border-radius: 50px;
-            transform: rotateY(180deg);
-            backface-visibility: hidden;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            box-shadow: inset 0 0 60px rgba(255,255,255,0.05);
-            padding: 30px;
-        }
-        .iphone-back .shield-icon {
-            width: 70px;
-            height: 70px;
-            margin-bottom: 20px;
-            background: linear-gradient(135deg, #007AFF, #5856D6);
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .iphone-back .shield-icon svg { width: 40px; height: 40px; fill: white; }
-        .iphone-back h3 { color: white; font-size: 24px; font-weight: 700; margin-bottom: 12px; font-family: var(--font-display); }
-        .iphone-back p { color: rgba(255,255,255,0.6); font-size: 14px; line-height: 1.5; }
+    /* --- Buttons --- */
+    .btn-primary {
+      background: #8B5CF6;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(139, 92, 246, 0.4);
+    }
+    .btn-ghost {
+      border: 1px solid rgba(139, 92, 246, 0.5);
+      transition: all 0.3s ease;
+    }
+    .btn-ghost:hover {
+      border-color: rgba(139, 92, 246, 0.9);
+      background: rgba(139, 92, 246, 0.1);
+      box-shadow: 0 0 30px rgba(139, 92, 246, 0.15);
+    }
 
-        /* Screen Content */
-        .screen-content {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            opacity: 0;
-            transition: opacity 0.5s ease;
-            display: flex;
-            flex-direction: column;
-        }
-        .screen-content.active { opacity: 1; }
+    /* --- Glass card --- */
+    .glass-card {
+      background: #FFFFFF;
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+      transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
+    }
+    .glass-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 60px rgba(139, 92, 246, 0.1), 0 8px 24px rgba(6, 182, 212, 0.08);
+      border-color: rgba(139, 92, 246, 0.3);
+    }
 
-        /* Welcome Screen - Spacious like iOS */
-        .welcome-screen {
-            padding: 58px 24px 24px;
-            background: #fff;
-        }
-        .welcome-progress {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 20px;
-        }
-        .welcome-progress span {
-            flex: 1;
-            height: 3px;
-            background: #E5E5E5;
-            border-radius: 2px;
-        }
-        .welcome-progress span.active { background: #1D1D1F; }
-        .welcome-content {
-            text-align: center;
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 30px 0;
-        }
-        .welcome-content img {
-            width: 60px;
-            height: 60px;
-            margin-bottom: 24px;
-        }
-        .welcome-content h2 {
-            font-size: 26px;
-            font-weight: 700;
-            margin-bottom: 12px;
-            color: var(--text-primary);
-        }
-        .welcome-content .tagline {
-            font-size: 16px;
-            font-weight: 500;
-            color: var(--text-primary);
-            margin-bottom: 6px;
-        }
-        .welcome-content .sub {
-            font-size: 14px;
-            color: var(--text-secondary);
-        }
-        .sso-section {
-            margin-top: auto;
-            width: 100%;
-            background: #F5F5F7;
-            border-radius: 16px;
-            padding: 6px;
-        }
-        .sso-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            padding: 14px 18px;
-            background: #fff;
-            border-radius: 12px;
-            font-size: 15px;
-            font-weight: 500;
-            color: var(--text-primary);
-            margin-bottom: 8px;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-        .sso-btn:last-child { margin-bottom: 0; }
-        .sso-btn:hover { background: #FAFAFA; }
-        .sso-btn svg { width: 22px; height: 22px; }
-        .sso-footer {
-            margin-top: 20px;
-            text-align: center;
-            font-size: 11px;
-            color: var(--text-secondary);
-            line-height: 1.6;
-        }
-        .sso-footer a { color: var(--text-secondary); text-decoration: underline; }
+    /* --- Bento grid --- */
+    .bento-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+    .bento-grid > .glass-card {
+      padding: 18px 20px;
+    }
+    .bento-hero-left {
+      grid-column: span 2;
+      padding: 22px 24px !important;
+    }
+    .bento-wide {
+      grid-column: span 2;
+    }
+    .bento-hero-left .bento-hero-title {
+      font-size: 22px;
+    }
+    .bento-hero-left .bento-hero-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+    }
+    .bento-hero-left .bento-hero-icon svg {
+      width: 22px;
+      height: 22px;
+    }
+    @media (max-width: 768px) {
+      .bento-grid { grid-template-columns: 1fr; }
+      .bento-hero-left, .bento-wide { grid-column: span 1; }
+    }
+    @media (min-width: 769px) and (max-width: 1023px) {
+      .bento-grid { grid-template-columns: repeat(2, 1fr); }
+      .bento-hero-left { grid-column: span 2; }
+    }
 
-        /* Chat Screen - Spacious like iOS */
-        .chat-screen { background: #fff; }
-        .chat-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 55px 20px 16px;
-        }
-        .chat-header img { width: 30px; height: 30px; }
-        .chat-header-icon {
-            width: 28px;
-            height: 28px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #1D1D1F;
-        }
-        .chat-messages {
-            flex: 1;
-            padding: 16px 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-            overflow: hidden;
-        }
-        /* User bubble - light blue pill like iOS */
-        .chat-bubble {
-            max-width: 90%;
-            font-size: 14px;
-            line-height: 1.45;
-            opacity: 0;
-            transform: scale(0.9) translateY(10px);
-        }
-        .chat-bubble.visible {
-            opacity: 1;
-            transform: scale(1) translateY(0);
-            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-        .chat-bubble.user {
-            align-self: flex-end;
-            background: #E3F2FD;
-            color: var(--text-primary);
-            padding: 10px 16px;
-            border-radius: 18px;
-            border: 1px solid #BBDEFB;
-        }
-        /* Yara response - plain text like iOS, no bubble */
-        .chat-bubble.yara {
-            align-self: flex-start;
-            background: transparent;
-            color: var(--text-primary);
-            padding: 0;
-        }
-        .chat-actions {
-            display: flex;
-            gap: 12px;
-            margin-top: 8px;
-        }
-        .chat-actions span {
-            font-size: 14px;
-            color: #C7C7CC;
-            cursor: pointer;
-        }
-        .chat-suggestions {
-            display: flex;
-            gap: 10px;
-            padding: 12px 20px;
-            overflow-x: auto;
-        }
-        .chat-suggestion {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px 12px;
-            background: #fff;
-            border: 1px solid #E5E5EA;
-            border-radius: 20px;
-            font-size: 12px;
-            color: var(--cta-blue);
-            white-space: nowrap;
-            font-weight: 500;
-        }
-        .chat-input-bar {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 10px 14px 24px;
-            background: #fff;
-        }
-        .chat-input-bar .plus {
-            width: 32px;
-            height: 32px;
-            background: transparent;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            color: #8E8E93;
-            font-weight: 300;
-        }
-        .chat-input {
-            flex: 1;
-            padding: 10px 16px;
-            background: #F5F5F7;
-            border-radius: 24px;
-            font-size: 14px;
-            color: #8E8E93;
-        }
-        .mic-btn {
-            width: 38px;
-            height: 38px;
-            background: var(--cta-blue);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .mic-btn svg { width: 20px; height: 20px; fill: white; }
-        .waveform-btn {
-            width: 38px;
-            height: 38px;
-            background: #F5F5F7;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .waveform-btn svg { width: 22px; height: 22px; fill: var(--cta-blue); }
+    /* --- Glass nav --- */
+    .glass-nav {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+      transition: background 0.3s ease, border-color 0.3s ease;
+    }
 
-        /* Quick action button icons */
-        .chat-suggestion-icon {
-            width: 20px; height: 20px;
-            background: var(--cta-blue);
-            border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            flex-shrink: 0;
-        }
-        .chat-suggestion-icon svg { width: 11px; height: 11px; }
+    /* --- Nav inner layout --- */
+    #navInner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 80px;
+      position: relative;
+    }
 
-        /* Leveling Screen - "Hi, I'm Yara" intro */
-        .leveling-screen { background: #fff; }
-        .leveling-content {
-            flex: 1;
-            padding: 12px 20px;
-            display: flex;
-            flex-direction: column;
-        }
-        .leveling-greeting {
-            text-align: center;
-            margin-bottom: 12px;
-        }
-        .leveling-greeting h2 {
-            font-size: 20px; font-weight: 700;
-            margin-bottom: 4px;
-            color: var(--text-primary);
-        }
-        .leveling-greeting p {
-            font-size: 13px; color: var(--text-secondary);
-            line-height: 1.4;
-        }
-        .leveling-help-title {
-            font-size: 13px; font-weight: 600;
-            margin-bottom: 10px;
-            color: var(--text-primary);
-        }
-        .leveling-item {
-            display: flex;
-            align-items: flex-start;
-            gap: 10px;
-            margin-bottom: 10px;
-            font-size: 12px;
-            line-height: 1.4;
-            color: var(--text-secondary);
-        }
-        .leveling-check {
-            width: 18px; height: 18px;
-            background: var(--cta-blue);
-            border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            flex-shrink: 0;
-            margin-top: 1px;
-        }
-        .leveling-check svg { width: 10px; height: 10px; fill: white; }
-        .leveling-cta {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-top: 12px;
-            font-size: 12px;
-            color: var(--text-primary);
-            font-weight: 500;
-        }
-        .leveling-cta-icon {
-            color: var(--cta-blue);
-            font-size: 14px;
-        }
+    /* --- Nav links pill (centered on viewport, not grid column) --- */
+    #navPill {
+      position: absolute;
+      left: 50%;
+      top: 0;
+      bottom: 0;
+      margin: auto;
+      height: fit-content;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(0, 0, 0, 0.04);
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      border-radius: 9999px;
+      padding: 6px 8px;
+    }
+    #navPill a.nav-link {
+      font-size: 15px;
+      font-weight: 500;
+      color: rgba(0, 0, 0, 0.6);
+      padding: 8px 18px;
+      border-radius: 9999px;
+      transition: color 0.2s ease, background 0.2s ease;
+      white-space: nowrap;
+    }
+    #navPill a.nav-link:hover {
+      color: #0f172a;
+      background: rgba(0, 0, 0, 0.06);
+    }
 
-        /* Savings Screen - Spacious like iOS */
-        .savings-screen { background: #fff; }
-        .savings-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 55px 20px 16px;
-        }
-        .savings-header img { width: 30px; height: 30px; }
-        .savings-title {
-            padding: 12px 18px 4px;
-            font-size: 14px;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            color: var(--text-primary);
-        }
-        .savings-subtitle {
-            padding: 0 18px 10px;
-            font-size: 12px;
-            color: var(--text-secondary);
-        }
-        .savings-list {
-            padding: 0 14px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            flex: 1;
-            overflow: hidden;
-        }
-        .savings-card {
-            background: #fff;
-            border: 1px solid #E5E5EA;
-            border-radius: 14px;
-            padding: 14px;
-            opacity: 0;
-            transform: translateX(-20px);
-        }
-        .savings-card.visible {
-            opacity: 1;
-            transform: translateX(0);
-            transition: all 0.35s ease-out;
-        }
-        .savings-card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 4px;
-        }
-        .savings-card-provider {
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--text-primary);
-        }
-        .savings-card-plan {
-            font-size: 11px;
-            color: var(--text-secondary);
-            margin-top: 2px;
-        }
-        .savings-card-match {
-            font-size: 11px;
-            color: var(--cta-blue);
-            font-weight: 500;
-        }
-        .savings-card-price {
-            font-size: 24px;
-            font-weight: 700;
-            color: var(--text-primary);
-            margin: 6px 0 10px;
-        }
-        .savings-card-actions {
-            display: flex;
-            gap: 10px;
-        }
-        .savings-btn {
-            flex: 1;
-            padding: 10px;
-            border-radius: 10px;
-            font-size: 13px;
-            font-weight: 600;
-            text-align: center;
-            cursor: pointer;
-        }
-        .savings-btn.outline {
-            border: 1.5px solid var(--cta-blue);
-            color: var(--cta-blue);
-            background: transparent;
-        }
-        .savings-btn.filled {
-            background: var(--cta-blue);
-            color: white;
-            border: none;
-        }
+    /* --- Auth button --- */
+    .auth-btn {
+      background: rgba(0, 0, 0, 0.04);
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      transition: all 0.3s ease;
+    }
+    .auth-btn:hover {
+      background: rgba(0, 0, 0, 0.08);
+      border-color: rgba(0, 0, 0, 0.15);
+    }
 
-        /* Call Screen - Spacious like iOS */
-        .call-screen { background: #fff; }
-        .call-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 55px 20px 16px;
-        }
-        .call-status {
-            font-size: 14px;
-            font-weight: 500;
-            color: var(--text-primary);
-        }
-        .call-banner {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin: 0 14px 14px;
-            padding: 8px 12px;
-            background: #E8F5E9;
-            border-radius: 12px;
-            opacity: 0;
-            transform: translateY(-10px);
-        }
-        .call-banner.visible {
-            opacity: 1;
-            transform: translateY(0);
-            transition: all 0.4s ease;
-        }
-        .call-banner-phone {
-            width: 20px;
-            height: 20px;
-            background: var(--success-green);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .call-banner-phone svg { width: 11px; fill: white; }
-        .call-banner-num {
-            font-size: 12px;
-            font-weight: 500;
-            color: var(--success-green);
-        }
-        .call-banner-time {
-            font-size: 12px;
-            color: var(--success-green);
-            font-weight: 500;
-        }
-        .call-banner-badge {
-            font-size: 11px;
-            padding: 4px 10px;
-            background: #F5F5F7;
-            border-radius: 6px;
-            color: #8E8E93;
-            font-weight: 500;
-            margin-left: auto;
-        }
-        .call-messages {
-            flex: 1;
-            padding: 0 16px;
-            display: flex;
-            flex-direction: column;
-            gap: 14px;
-            overflow: hidden;
-        }
-        .call-input-bar {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 10px 14px 24px;
-        }
-        .call-input {
-            flex: 1;
-            padding: 10px 16px;
-            background: #F5F5F7;
-            border-radius: 24px;
-            font-size: 13px;
-            color: #8E8E93;
-        }
-        .call-btns {
-            display: flex;
-            gap: 10px;
-        }
-        .call-btn {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .call-btn svg { width: 16px; height: 16px; }
-        .call-btn.mic { background: #FF3B30; }
-        .call-btn.mic svg { fill: white; }
-        .call-btn.speaker { background: var(--success-green); }
-        .call-btn.speaker svg { fill: white; }
-        .call-btn.keypad { background: #F5F5F7; }
-        .call-btn.keypad svg { fill: #1D1D1F; }
-        .call-btn.end { background: #FF3B30; }
-        .call-btn.end svg { fill: white; }
+    /* --- Coming Soon badge --- */
+    .coming-soon-badge {
+      border: 1px solid rgba(245, 158, 11, 0.4);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #F59E0B;
+      padding: 3px 10px;
+      border-radius: 9999px;
+      display: inline-flex;
+      align-items: center;
+      white-space: nowrap;
+    }
 
-        /* Feature Cards */
-        .feature-card {
-            padding: 36px;
-            border-radius: 28px;
-            box-shadow: 0 4px 24px rgba(0,0,0,0.06);
-            margin-bottom: 20px;
-        }
-        .feature-card.blue { background: linear-gradient(135deg, #E8F4FD 0%, #D0EBFF 100%); }
-        .feature-card.green { background: linear-gradient(135deg, #E6F7EE 0%, #C6F0D4 100%); }
-        .feature-card.purple { background: linear-gradient(135deg, #F3E8FD 0%, #E4D1FC 100%); }
-        .feature-card.gray { background: linear-gradient(135deg, #F5F5F7 0%, #E8E8ED 100%); }
-        .feature-card.orange { background: linear-gradient(135deg, #FFF3E0 0%, #FFE0B2 100%); }
-        .feature-card.teal { background: linear-gradient(135deg, #E0F7FA 0%, #B2EBF2 100%); }
-        .feature-card h2 { font-size: clamp(28px, 4vw, 44px); margin-bottom: 16px; }
+    /* --- Steps line & number badge (How It Works) --- */
+    .steps-line {
+      background: linear-gradient(90deg, #3B82F6, #06B6D4, #22C55E);
+      height: 2px;
+      position: absolute;
+      top: 40px;
+      left: 15%;
+      right: 15%;
+      z-index: 0;
+    }
+    .number-badge {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 20px;
+      color: white;
+      position: relative;
+      z-index: 2;
+    }
 
-        /* Future section - side by side cards */
-        #sec-future { max-width: 100%; }
-        .future-cards {
-            display: flex;
-            gap: 20px;
-        }
-        .future-cards .feature-card {
-            flex: 1;
-            margin-bottom: 0;
-        }
-        .feature-card p { font-size: clamp(15px, 1.8vw, 18px); }
+    /* --- Keyframe animations --- */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-20px); }
+    }
+    @keyframes floatAlt {
+      0%, 100% { transform: translateY(0px) translateX(0px); }
+      33% { transform: translateY(-15px) translateX(10px); }
+      66% { transform: translateY(5px) translateX(-5px); }
+    }
+    @keyframes waveBar {
+      0%, 100% { height: 6px; }
+      50% { height: var(--wave-max, 28px); }
+    }
+    @keyframes pulseGlow {
+      0%, 100% { box-shadow: 0 0 40px rgba(139, 92, 246, 0.1), 0 0 80px rgba(6, 182, 212, 0.06); }
+      50% { box-shadow: 0 0 60px rgba(139, 92, 246, 0.18), 0 0 120px rgba(6, 182, 212, 0.1); }
+    }
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(1.3); }
+    }
+    .fade-in-up {
+      opacity: 0;
+      animation: fadeInUp 0.8s ease forwards;
+    }
+    .stagger-1 { animation-delay: 0.1s; }
+    .stagger-2 { animation-delay: 0.2s; }
+    .stagger-3 { animation-delay: 0.3s; }
 
-        /* Mobile phone - hidden on desktop, shown on mobile */
-        .mobile-phone {
-            display: none;
-        }
+    /* --- Audio waveform bars --- */
+    .wave-bar {
+      display: inline-block;
+      width: 3px;
+      background: linear-gradient(to top, #06B6D4, #3B82F6);
+      border-radius: 2px;
+      animation: waveBar 1.2s ease-in-out infinite;
+    }
 
-        /* Final Section */
-        .final-section {
-            min-height: 60vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            padding: 80px 0 150px;
-        }
-        .final-section h2 { margin-bottom: 16px; }
+    /* --- Phone glow --- */
+    .phone-glow {
+      animation: pulseGlow 4s ease-in-out infinite;
+    }
 
-        /* Modals */
-        .modal-overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(255,255,255,0.9);
-            backdrop-filter: blur(15px);
-            z-index: 3000;
-            display: none;
-            align-items: center;
-            justify-content: center;
-        }
-        .modal-overlay.active { display: flex; }
-        .glass-card {
-            background: #fff;
-            padding: 40px;
-            border-radius: 24px;
-            width: 90%;
-            max-width: 480px;
-            position: relative;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.12);
-        }
-        .close-btn {
-            position: absolute;
-            top: 16px; right: 16px;
-            font-size: 24px;
-            background: none;
-            border: none;
-            color: #999;
-            cursor: pointer;
-        }
-        .glass-input {
-            width: 100%;
-            padding: 14px 18px;
-            margin-bottom: 14px;
-            border: 1px solid #E5E5E5;
-            border-radius: 12px;
-            font-size: 16px;
-            font-family: var(--font-body);
-            outline: none;
-        }
-        .glass-input:focus { border-color: var(--cta-blue); }
+    /* --- Scroll-triggered animation --- */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
 
-        /* Responsive - Based on plan breakpoints */
+    /* --- Mobile hamburger --- */
+    .mobile-menu { display: none; }
+    .mobile-menu.open { display: flex; }
 
-        /* Desktop Large (≥1440px) - Full experience */
-        @media (min-width: 1440px) {
-            .iphone-wrapper {
-                width: 360px;
-                height: 780px;
-            }
-            .phone-column {
-                width: 45%;
-            }
-        }
+    /* Smooth scrollbar */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #FAFAFA; }
+    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
 
-        /* Desktop (1024px - 1439px) - Full experience */
-        @media (min-width: 1024px) and (max-width: 1439px) {
-            .iphone-wrapper {
-                width: 320px;
-                height: 694px;
-            }
-            .phone-column {
-                width: 45%;
-            }
-        }
+    /* Aurora orbs */
+    .aurora-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(120px);
+      pointer-events: none;
+    }
 
-        /* Tablet (768px - 1023px) - Phone above content */
-        @media (max-width: 1023px) {
-            .page-wrapper {
-                flex-direction: column;
-            }
-            .phone-column {
-                width: 100%;
-                position: relative;
-                top: 0;
-                height: auto;
-                min-height: 600px;
-                padding: 40px 20px;
-                order: -1;
-            }
-            .content-column {
-                padding: 0 20px;
-            }
-            .content-section {
-                min-height: auto;
-                padding: 60px 0;
-                max-width: 100%;
-                text-align: center;
-            }
-            .iphone-wrapper {
-                width: 280px;
-                height: 607px;
-            }
-            .nav { padding: 0 20px; }
-        }
+    /* ============================== */
+    /* CINEMATIC HERO STYLES          */
+    /* ============================== */
 
-        /* Mobile (<768px) - Full-bleed colored sections with inline screenshots */
-        @media (max-width: 767px) {
-            .phone-column {
-                display: none;
-            }
-            .nav {
-                height: 56px;
-            }
-            .page-wrapper {
-                padding-top: 56px;
-                padding-bottom: 60px;
-                flex-direction: column;
-            }
-            .content-column {
-                padding: 0;
-            }
+    /* Scroll runway -- extra height so frame 4 has room to hold */
+    #scroll-runway { position: relative; height: 600vh; width: 100% }
 
-            /* Each section becomes a full-bleed colored block */
-            .content-section {
-                min-height: auto;
-                padding: 60px 24px;
-                max-width: 100%;
-                text-align: center;
-            }
+    /* Pinned viewport */
+    #pinned { position: relative; width: 100%; height: 100vh; overflow: hidden }
 
-            /* Feature cards become transparent — section IS the card */
-            .content-section .feature-card {
-                background: transparent !important;
-                box-shadow: none;
-                border-radius: 0;
-                padding: 0;
-                margin-bottom: 0;
-            }
+    /* Hero background video */
+    #heroVideo {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      object-fit: cover; z-index: 0;
+    }
 
-            /* Full-bleed colored backgrounds per section */
-            #sec-hero {
-                padding: 80px 24px 60px;
-            }
-            #sec-problem {
-                background: linear-gradient(135deg, #F5F5F7 0%, #E8E8ED 100%);
-            }
-            #sec-f1 {
-                background: linear-gradient(135deg, #E8F4FD 0%, #D0EBFF 100%);
-            }
-            #sec-f2 {
-                background: linear-gradient(135deg, #E6F7EE 0%, #C6F0D4 100%);
-            }
-            #sec-f3 {
-                background: linear-gradient(135deg, #F3E8FD 0%, #E4D1FC 100%);
-            }
-            #sec-privacy {
-                background: linear-gradient(135deg, #1D1D1F 0%, #2C2C2E 100%);
-            }
-            #sec-privacy .feature-card h2,
-            #sec-privacy .feature-card p {
-                color: #FFFFFF;
-            }
-            #sec-privacy .feature-card p {
-                opacity: 0.8;
-            }
+    /* Canvases */
+    #bgCanvas, #particleCanvas, #grainCanvas { position: absolute; inset: 0; width: 100%; height: 100% }
+    #bgCanvas { z-index: 1; display: none }
+    #particleCanvas { z-index: 2 }
+    #grainCanvas { z-index: 3; opacity: 0.02; pointer-events: none; mix-blend-mode: overlay }
 
-            /* Mobile phone — exact desktop frame, scaled down via transform */
-            .mobile-phone {
-                display: block;
-                width: 190px;
-                height: 412px;
-                margin: 28px auto 0;
-            }
-            .mobile-phone .iphone-wrapper {
-                width: 340px !important;
-                height: 738px !important;
-                transform: scale(0.559);
-                transform-origin: top left;
-            }
-            /* Fix text-align inheritance from centered mobile sections */
-            .mobile-phone .iphone-screen {
-                text-align: left;
-            }
-            /* Remove visual line between suggestions and input bar */
-            .mobile-phone .chat-suggestions {
-                background: #fff;
-                overflow-x: hidden;
-            }
+    /* Vignette -- light mode: subtle white edge fade */
+    #vignette {
+      position: absolute; inset: 0; z-index: 4; pointer-events: none;
+      background: radial-gradient(ellipse at center, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.7) 100%);
+    }
 
-            /* What's Next section */
-            #sec-future {
-                padding: 60px 24px;
-                text-align: center;
-            }
-            #sec-future > h2,
-            #sec-future > p {
-                padding: 0;
-            }
-            .future-cards {
-                flex-direction: column;
-                gap: 16px;
-                margin-top: 24px;
-            }
-            .future-cards .feature-card {
-                background: linear-gradient(135deg, #FFF3E0 0%, #FFE0B2 100%) !important;
-                box-shadow: 0 4px 24px rgba(0,0,0,0.06) !important;
-                border-radius: 20px !important;
-                padding: 28px 24px !important;
-                margin-bottom: 0;
-                text-align: center;
-            }
-            .future-cards .feature-card.teal {
-                background: linear-gradient(135deg, #E0F7FA 0%, #B2EBF2 100%) !important;
-            }
+    /* Content layer */
+    #content { position: absolute; inset: 0; z-index: 10; display: flex; align-items: center; justify-content: center }
 
-            /* Final section */
-            .final-section {
-                min-height: auto;
-                padding: 60px 24px 120px;
-                text-align: center;
-            }
+    /* Frames */
+    .frame {
+      position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;
+      text-align: center; padding: 0 40px; opacity: 0; pointer-events: none; will-change: opacity, transform;
+    }
 
-            /* CTA pill — full width on mobile */
-            .fixed-cta {
-                left: 16px; right: 16px;
-                transform: none;
-                bottom: 12px;
-            }
-            .cta-container {
-                flex-direction: column;
-                padding: 12px;
-                border-radius: 20px;
-                width: 100%;
-            }
-            .cta-container input {
-                text-align: center;
-                padding: 10px;
-            }
-            .cta-container button { width: 100%; }
+    /* Typography -- dark text for light mode */
+    .frame h1 { font-family: 'Plus Jakarta Sans', -apple-system, sans-serif; font-size: clamp(40px,6vw,72px); font-weight: 800; letter-spacing: -0.02em; line-height: 1.1; color: #FFFFFF; margin-bottom: 20px }
+    .frame h1 .word { display: inline-block; opacity: 0; transform: translateY(40px); filter: blur(8px); will-change: opacity, transform, filter }
+    .frame .sub { font-size: clamp(16px,2vw,20px); font-weight: 400; color: rgba(255,255,255,0.7); max-width: 560px; line-height: 1.6; opacity: 0; transform: translateY(20px) }
 
-            /* Fade-in animation for mobile sections — applied via JS only */
-            .mobile-animate {
-                opacity: 0;
-                transform: translateY(30px);
-                transition: opacity 0.6s ease, transform 0.6s ease;
-            }
-            .mobile-animate.mobile-visible {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-    </style>
+    /* Gradient text (hero) */
+    .gpt { background: linear-gradient(135deg,#8B5CF6 0%,#06b6d4 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text }
+    .gg { background: linear-gradient(135deg,#22C55E 0%,#4ADE80 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text }
+
+    /* CTA (hero frame 3) */
+    .cta-wrap { display: flex; gap: 12px; margin-top: 36px; opacity: 0; transform: translateY(20px) }
+    .cta-wrap input {
+      width: 280px; background: #fff; border: 1px solid rgba(0,0,0,0.12);
+      color: #0f172a; padding: 16px 24px; border-radius: 999px; font-size: 15px; outline: none; font-family: inherit;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    }
+    .cta-wrap input::placeholder { color: rgba(0,0,0,0.35) }
+    .cta-wrap input:focus { border-color: rgba(139,92,246,0.5); box-shadow: 0 0 0 3px rgba(139,92,246,0.1); }
+    .cta-wrap button {
+      background: #8b5cf6; color: #fff; font-weight: 700; font-size: 15px; padding: 16px 32px;
+      border-radius: 999px; border: none; cursor: pointer; font-family: inherit; white-space: nowrap;
+      box-shadow: 0 4px 20px rgba(139,92,246,0.3);
+    }
+    .cta-wrap button:hover { box-shadow: 0 8px 32px rgba(139,92,246,0.4); transform: translateY(-1px); }
+
+    /* Progress dots (hero) */
+    #prog { position: absolute; bottom: 26px; left: 50%; transform: translateX(-50%); display: flex; gap: 8px; z-index: 30 }
+    .pd { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.25); transition: all 0.5s cubic-bezier(.4,0,.2,1) }
+    .pd.on { background: #8B5CF6; transform: scale(1.8); box-shadow: 0 0 12px rgba(139,92,246,0.4) }
+
+    /* Scroll hint (hero) */
+    #scroll-hint {
+      position: absolute; bottom: 80px; left: 50%; transform: translateX(-50%); z-index: 30;
+      display: flex; flex-direction: column; align-items: center; gap: 8px; color: rgba(255,255,255,0.4);
+      font-size: 12px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase;
+    }
+    #scroll-hint svg { animation: bobDown 1.5s ease-in-out infinite }
+    @keyframes bobDown { 0%,100% { transform: translateY(0) } 50% { transform: translateY(6px) } }
+
+    /* Charge you more -- amber text */
+    .amber-text { color: #FBBF24; -webkit-text-fill-color: #FBBF24; }
+
+    @media (max-width: 768px) {
+      .frame h1 { font-size: clamp(28px, 7vw, 44px); }
+      .cta-wrap { flex-direction: column; align-items: center; }
+      .cta-wrap input { width: 100%; max-width: 320px; }
+    }
+    @media (max-width: 480px) {
+      .frame h1 { font-size: 26px; }
+      .frame .sub { font-size: 15px; }
+    }
+
+    /* Notification card mini */
+    .notification-mini {
+      background: rgba(0, 0, 0, 0.03);
+      border: 1px solid rgba(0, 0, 0, 0.06);
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-size: 11px;
+      line-height: 1.5;
+      color: #64748b;
+    }
+
+    /* Plan card for savings */
+    .plan-card-mini {
+      background: rgba(0, 0, 0, 0.02);
+      border: 1px solid rgba(0, 0, 0, 0.06);
+      border-radius: 10px;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .plan-card-mini.recommended {
+      border-left: 3px solid #22C55E;
+      background: rgba(34, 197, 94, 0.05);
+    }
+    .plan-card-mini.dimmed { opacity: 0.5; }
+
+    /* Task completed items */
+    .task-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      color: #64748b;
+      padding: 6px 0;
+    }
+    .task-item .check {
+      color: #22C55E;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    /* Zero counter */
+    .zero-counter { text-align: center; padding: 12px 16px; }
+    .zero-counter .zero-num {
+      font-size: 36px;
+      font-weight: 900;
+      color: #22C55E;
+      line-height: 1;
+    }
+    .zero-counter .zero-label {
+      font-size: 11px;
+      color: #94a3b8;
+      margin-top: 4px;
+    }
+
+    /* Security badge card */
+    .security-badge {
+      background: #FFFFFF;
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      border-radius: 16px;
+      padding: 24px;
+      text-align: center;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    }
+
+    /* Section tints */
+    .section-blue-tint {
+      background: radial-gradient(ellipse at 60% 50%, rgba(59, 130, 246, 0.06) 0%, transparent 70%);
+    }
+
+    /* CTA radial gradient */
+    .cta-radial {
+      background: radial-gradient(ellipse at 50% 50%, rgba(139, 92, 246, 0.08) 0%, rgba(139, 92, 246, 0.03) 40%, transparent 70%);
+    }
+
+    /* Video divider band */
+    .video-divider {
+      position: relative;
+      height: 50vh;
+      min-height: 340px;
+      max-height: 500px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .video-divider video {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .video-divider .divider-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.45);
+      z-index: 1;
+    }
+    .video-divider .divider-content {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      padding: 0 24px;
+      max-width: 700px;
+    }
+    .video-divider .divider-content h2 {
+      font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+      font-size: clamp(28px, 4vw, 48px);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      color: #fff;
+      margin-bottom: 16px;
+    }
+    .video-divider .divider-content p {
+      font-size: clamp(15px, 1.8vw, 18px);
+      color: rgba(255, 255, 255, 0.7);
+      line-height: 1.6;
+    }
+
+    /* ============================== */
+    /* NAV RIGHT GROUP (waitlist btn) */
+    /* ============================== */
+    #navRight {
+      position: absolute;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      margin: auto;
+      height: fit-content;
+      display: flex;
+      align-items: center;
+      opacity: 1;
+      pointer-events: auto;
+    }
+    #navRight .nav-email-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    #navRight .nav-email-input {
+      width: 0;
+      opacity: 0;
+      padding: 0;
+      border: none;
+      overflow: hidden;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    #navRight.email-open .nav-email-input {
+      width: 200px;
+      opacity: 1;
+      padding: 8px 16px;
+      border: 1px solid rgba(0, 0, 0, 0.1);
+    }
+
+    /* ============================== */
+    /* SCROLLYTELLING STYLES          */
+    /* ============================== */
+    .scrolly-container { position: relative; }
+
+    .scrolly-sticky {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+      gap: 80px;
+      overflow: hidden;
+    }
+    @media (min-width: 769px) {
+      .scrolly-sticky { padding: 0 60px; }
+    }
+
+    .scrolly-text-side {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      height: 100%;
+    }
+
+    .scrolly-header {
+      margin-bottom: 32px;
+      flex-shrink: 0;
+    }
+
+    .scrolly-panels-container {
+      position: relative;
+      min-height: 200px;
+      flex-shrink: 0;
+    }
+
+    .scrolly-text-panel {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+      pointer-events: none;
+    }
+    .scrolly-text-panel.active {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    .scrolly-panel-label {
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #8B5CF6;
+      margin-bottom: 16px;
+    }
+    .scrolly-panel-title {
+      font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+      font-size: clamp(22px, 2.5vw, 32px);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+      margin-bottom: 14px;
+      color: #1D1D1F;
+    }
+    .scrolly-panel-body {
+      font-size: 14px;
+      color: #6E6E73;
+      line-height: 1.6;
+      max-width: 420px;
+    }
+
+    .scrolly-phone-side {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+    }
+    .scrolly-phone-screens { position: relative; }
+
+    .scrolly-screen {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+    .scrolly-screen.active { opacity: 1; }
+
+    /* Progress dots */
+    .scrolly-dots {
+      position: absolute;
+      right: -48px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .sdot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: rgba(0,0,0,0.15);
+      transition: background 0.3s, transform 0.3s;
+    }
+    .sdot.active {
+      background: #8B5CF6;
+      transform: scale(1.6);
+    }
+
+    /* Phone frame - kept dark themed */
+    .phone-frame {
+      width: 270px;
+      height: 540px;
+      background: #1a1a2e;
+      border-radius: 44px;
+      border: 1.5px solid rgba(0,0,0,0.15);
+      position: relative;
+      overflow: hidden;
+      box-shadow:
+        0 0 0 1px rgba(0,0,0,0.06),
+        0 48px 100px rgba(0,0,0,0.25),
+        inset 0 1px 0 rgba(255,255,255,0.07);
+      flex-shrink: 0;
+    }
+    .phone-frame::before {
+      content: '';
+      position: absolute;
+      top: 14px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 96px;
+      height: 28px;
+      background: #000;
+      border-radius: 20px;
+      z-index: 20;
+    }
+    .phone-frame::after {
+      content: '';
+      position: absolute;
+      top: 108px;
+      right: -3px;
+      width: 3px;
+      height: 64px;
+      background: rgba(255,255,255,0.07);
+      border-radius: 2px;
+    }
+
+    .phone-screen {
+      position: absolute;
+      inset: 0;
+      padding: 60px 18px 22px;
+    }
+    .phone-status {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.55);
+      margin-bottom: 14px;
+      padding: 0 2px;
+    }
+
+    /* Chat bubbles - kept dark themed (inside phone) */
+    .chat-user {
+      background: #8B5CF6;
+      color: #fff;
+      padding: 9px 13px;
+      border-radius: 16px 16px 4px 16px;
+      font-size: 12px;
+      line-height: 1.45;
+      margin-left: auto;
+      max-width: 82%;
+      display: table;
+      margin-bottom: 7px;
+    }
+    .chat-ai {
+      background: rgba(255,255,255,0.07);
+      color: rgba(255,255,255,0.9);
+      padding: 9px 13px;
+      border-radius: 16px 16px 16px 4px;
+      font-size: 12px;
+      line-height: 1.45;
+      max-width: 88%;
+      margin-bottom: 7px;
+    }
+
+    /* Opportunity card in phone - kept dark themed */
+    .opp-card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 14px;
+      padding: 13px;
+      margin-bottom: 8px;
+    }
+    .opp-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 2px 8px;
+      border-radius: 100px;
+      margin-bottom: 7px;
+    }
+    .opp-name { font-size: 13px; font-weight: 700; color: rgba(255,255,255,0.9); margin-bottom: 4px; }
+    .opp-detail { font-size: 11px; color: rgba(255,255,255,0.4); line-height: 1.5; }
+    .opp-savings { font-size: 16px; font-weight: 900; letter-spacing: -0.02em; margin-top: 6px; }
+
+    /* Call advocacy phone styles - kept dark themed */
+    .call-banner {
+      background: rgba(34,197,94,0.08);
+      border: 1px solid rgba(34,197,94,0.2);
+      border-radius: 12px;
+      padding: 8px 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    .call-yara-msg {
+      background: rgba(139,92,246,0.08);
+      border: 1px solid rgba(139,92,246,0.15);
+      border-radius: 14px;
+      padding: 12px;
+      margin-top: 10px;
+      font-size: 11px;
+      color: rgba(255,255,255,0.75);
+      line-height: 1.5;
+    }
+    .comp-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 7px 10px;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.04);
+      margin-bottom: 5px;
+      font-size: 11px;
+    }
+    .compare-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 4px 0;
+      font-size: 11px;
+    }
+    .result-banner {
+      background: rgba(34, 197, 94, 0.15);
+      border: 1px solid rgba(34, 197, 94, 0.3);
+      border-radius: 10px;
+      padding: 10px 14px;
+      text-align: center;
+      font-size: 13px;
+      font-weight: 700;
+      color: #22C55E;
+    }
+
+    /* Eyebrow */
+    .eyebrow {
+      display: inline-block;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #8B5CF6;
+      margin-bottom: 20px;
+    }
+
+    /* Mobile responsive for scrollytelling */
+    @media (max-width: 768px) {
+      .scrolly-sticky {
+        grid-template-columns: 1fr;
+        padding: 0 24px;
+        gap: 40px;
+      }
+      .scrolly-phone-side { display: none; }
+      .scrolly-dots { display: none; }
+      .number-badge { width: 48px; height: 48px; font-size: 18px; }
+      .steps-line { top: 36px; }
+    }
+    /* Small phone breakpoint */
+    @media (max-width: 480px) {
+      .scrolly-panel-title { font-size: clamp(18px, 5vw, 24px); }
+      .scrolly-panel-body { font-size: 13px; }
+      .security-badge { padding: 16px; }
+      .security-badge .text-lg { font-size: 16px; }
+    }
+
+    /* Production typography utilities */
+    .section-heading {
+      font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+      font-size: clamp(32px, 5vw, 56px);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      color: #1D1D1F;
+    }
+    .heading-display {
+      font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+    }
+  </style>
 </head>
-<body>
-    <nav class="nav">
-        <a href="#" class="nav-logo">
-            <img src="yara_butterfly.png" alt="Yara">
-            <span>Yara</span>
+<body class="font-inter antialiased">
+
+  <!-- ===== NAVIGATION ===== -->
+  <nav id="mainNav" class="glass-nav fixed top-0 left-0 right-0 z-40">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8 relative">
+      <div id="navInner">
+        <!-- Logo -->
+        <a href="#" class="flex items-center gap-2 relative z-10" style="font-family:'Plus Jakarta Sans',-apple-system,sans-serif;font-size:20px;font-weight:700;color:#1D1D1F;letter-spacing:-0.02em;">
+          <img src="yara_butterfly.png" alt="Yara" class="w-8 h-8" style="filter: drop-shadow(0 1px 2px rgba(0,0,0,0.1));">
+          Yara
         </a>
-        <button class="nav-btn" onclick="openModal('login-modal')">Login</button>
-    </nav>
 
-    <div class="page-wrapper">
-        <!-- Left: Scrolling Content -->
-        <div class="content-column">
-            <!-- Hero -->
-            <section class="content-section" id="sec-hero">
-                <h1>Your Personal<br>AI Advocate</h1>
-                <p>Connecting accounts. Reviewing bills. Saving you money.</p>
-            </section>
-
-            <!-- Level Playing Field -->
-            <section class="content-section" id="sec-problem">
-                <div class="feature-card gray">
-                    <h2>Level the playing field.</h2>
-                    <p>Enterprises have AI. Now you do too.</p>
-                    <div class="mobile-phone">
-                        <div class="iphone-wrapper">
-                            <div class="iphone-frame">
-                                <div class="iphone-screen">
-                                    <div class="status-bar"><span class="time">9:41</span></div>
-                                    <div class="dynamic-island"></div>
-                                    <div class="screen-content leveling-screen active">
-                                        <div class="chat-header">
-                                            <div class="chat-header-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="16" y2="12"/><line x1="4" y1="17" x2="12" y2="17"/></svg></div>
-                                            <img src="yara_butterfly.png" alt="Yara">
-                                            <div class="chat-header-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg></div>
-                                        </div>
-                                        <div class="leveling-content">
-                                            <div class="leveling-greeting"><h2>Hi, I'm Yara</h2><p>Your trusted AI Advocate</p></div>
-                                            <div class="leveling-help-title">I can help you:</div>
-                                            <div class="leveling-item"><div class="leveling-check"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div><span>Track your household spend and help you optimize your expenses</span></div>
-                                            <div class="leveling-item"><div class="leveling-check"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div><span>Manage service issues related to third parties you deal with</span></div>
-                                            <div class="leveling-item"><div class="leveling-check"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div><span>Assist you to negotiate with third parties</span></div>
-                                            <div class="leveling-item"><div class="leveling-check"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div><span>And lots of other tasks as well!</span></div>
-                                            <div class="leveling-cta"><span class="leveling-cta-icon">&#10022;</span><span>Try one of my suggestions below to get started</span></div>
-                                        </div>
-                                        <div class="chat-suggestions">
-                                            <div class="chat-suggestion"><span class="chat-suggestion-icon"><span style="color:white;font-weight:700;font-size:12px;">?</span></span> What do you do?</div>
-                                            <div class="chat-suggestion"><span class="chat-suggestion-icon"><svg viewBox="0 0 24 24" fill="white"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm-1 2l5 5h-5V4zm-3 12v-2h4v2h-4zm4-4H8v-2h6v2z"/></svg></span> Review My Bill</div>
-                                            <div class="chat-suggestion"><span class="chat-suggestion-icon"><svg viewBox="0 0 24 24" fill="white"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg></span> Optimize</div>
-                                        </div>
-                                        <div class="chat-input-bar"><div class="plus">+</div><div class="chat-input">Ask Yara...</div><div class="mic-btn"><svg viewBox="0 0 24 24" fill="white"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/><path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg></div><div class="waveform-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 6v12M8 8v8M4 10v4M16 8v8M20 10v4"/></svg></div></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="iphone-btn-vol-up"></div>
-                            <div class="iphone-btn-vol-down"></div>
-                            <div class="iphone-btn-power"></div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Financial Intelligence -->
-            <section class="content-section" id="sec-f1">
-                <div class="feature-card blue">
-                    <h2>Financial Intelligence.</h2>
-                    <p>Connect securely via Plaid. Ask anything about your spending. Get instant, accurate answers.</p>
-                    <div class="mobile-phone">
-                        <div class="iphone-wrapper">
-                            <div class="iphone-frame">
-                                <div class="iphone-screen">
-                                    <div class="status-bar"><span class="time">9:41</span></div>
-                                    <div class="dynamic-island"></div>
-                                    <div class="screen-content chat-screen active">
-                                        <div class="chat-header">
-                                            <div class="chat-header-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="16" y2="12"/><line x1="4" y1="17" x2="12" y2="17"/></svg></div>
-                                            <img src="yara_butterfly.png" alt="Yara">
-                                            <div class="chat-header-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg></div>
-                                        </div>
-                                        <div class="chat-messages">
-                                            <div class="chat-bubble user" style="opacity:1;transform:none;">Can you show me my uber transactions?</div>
-                                            <div class="chat-bubble yara" style="opacity:1;transform:none;">I found 2 Uber transactions:<br>- January 26, 2026: $42.50 at Uber (Travel)<br>- January 14, 2026: $72.00 at Uber Eats (Food and Drink)<div class="chat-actions"><span>👍</span><span>👎</span><span>📋</span></div></div>
-                                        </div>
-                                        <div class="chat-suggestions">
-                                            <div class="chat-suggestion"><span class="chat-suggestion-icon"><span style="color:white;font-weight:700;font-size:12px;">?</span></span> What do you do?</div>
-                                            <div class="chat-suggestion"><span class="chat-suggestion-icon"><svg viewBox="0 0 24 24" fill="white"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm-1 2l5 5h-5V4zm-3 12v-2h4v2h-4zm4-4H8v-2h6v2z"/></svg></span> Review My Bill</div>
-                                            <div class="chat-suggestion"><span class="chat-suggestion-icon"><svg viewBox="0 0 24 24" fill="white"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg></span> Optimize</div>
-                                        </div>
-                                        <div class="chat-input-bar"><div class="plus">+</div><div class="chat-input">Ask Yara...</div><div class="mic-btn"><svg viewBox="0 0 24 24" fill="white"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/><path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg></div><div class="waveform-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 6v12M8 8v8M4 10v4M16 8v8M20 10v4"/></svg></div></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="iphone-btn-vol-up"></div>
-                            <div class="iphone-btn-vol-down"></div>
-                            <div class="iphone-btn-power"></div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Verified Savings -->
-            <section class="content-section" id="sec-f2">
-                <div class="feature-card green">
-                    <h2>Verified Savings.</h2>
-                    <p>Our models verify every recommendation for mathematical accuracy. No hallucinations. Just savings.</p>
-                    <div class="mobile-phone">
-                        <div class="iphone-wrapper">
-                            <div class="iphone-frame">
-                                <div class="iphone-screen">
-                                    <div class="status-bar"><span class="time">9:41</span></div>
-                                    <div class="dynamic-island"></div>
-                                    <div class="screen-content savings-screen active">
-                                        <div class="savings-header">
-                                            <div class="chat-header-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="16" y2="12"/><line x1="4" y1="17" x2="12" y2="17"/></svg></div>
-                                            <img src="yara_butterfly.png" alt="Yara">
-                                            <div class="chat-header-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg></div>
-                                        </div>
-                                        <div class="savings-title">✨ Your Personalized Recommendations</div>
-                                        <div class="savings-subtitle">We found 3 plans that match your preferences</div>
-                                        <div class="savings-list">
-                                            <div class="savings-card" style="opacity:1;transform:none;"><div class="savings-card-header"><div><div class="savings-card-provider">T-Mobile USA</div><div class="savings-card-plan">Magenta MAX</div></div><div class="savings-card-match">⭐ 81%</div></div><div class="savings-card-price">$70/mo</div><div class="savings-card-actions"><div class="savings-btn outline">More Info</div><div class="savings-btn filled">View Plan</div></div></div>
-                                            <div class="savings-card" style="opacity:1;transform:none;"><div class="savings-card-header"><div><div class="savings-card-provider">AT&T Mobility</div><div class="savings-card-plan">Unlimited Starter</div></div><div class="savings-card-match">⭐ 44%</div></div><div class="savings-card-price">$61/mo</div><div class="savings-card-actions"><div class="savings-btn outline">More Info</div><div class="savings-btn filled">View Plan</div></div></div>
-                                            <div class="savings-card" style="opacity:1;transform:none;"><div class="savings-card-header"><div><div class="savings-card-provider">AT&T Mobility</div><div class="savings-card-plan">Unlimited Extra</div></div><div class="savings-card-match">⭐ 40%</div></div><div class="savings-card-price">$66/mo</div><div class="savings-card-actions"><div class="savings-btn outline">More Info</div><div class="savings-btn filled">View Plan</div></div></div>
-                                        </div>
-                                        <div class="chat-input-bar"><div class="plus">+</div><div class="chat-input">Ask Yara...</div><div class="mic-btn"><svg viewBox="0 0 24 24" fill="white"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/><path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg></div></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="iphone-btn-vol-up"></div>
-                            <div class="iphone-btn-vol-down"></div>
-                            <div class="iphone-btn-power"></div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Silent Assistant -->
-            <section class="content-section" id="sec-f3">
-                <div class="feature-card purple">
-                    <h2>Silent Assistant.</h2>
-                    <p>On calls, Yara provides the data you need from your records. Real-time advocacy when it matters most.</p>
-                    <div class="mobile-phone">
-                        <div class="iphone-wrapper">
-                            <div class="iphone-frame">
-                                <div class="iphone-screen">
-                                    <div class="status-bar"><span class="time">9:41</span></div>
-                                    <div class="dynamic-island"></div>
-                                    <div class="screen-content call-screen active">
-                                        <div class="call-header">
-                                            <div class="chat-header-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="16" y2="12"/><line x1="4" y1="17" x2="12" y2="17"/></svg></div>
-                                            <span class="call-status">Speaking...</span>
-                                            <div class="chat-header-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg></div>
-                                        </div>
-                                        <div class="call-banner" style="opacity:1;transform:none;">
-                                            <div class="call-banner-phone"><svg viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg></div>
-                                            <span class="call-banner-num">+18003310500</span>
-                                            <span class="call-banner-time">27:40</span>
-                                            <span class="call-banner-badge">Msgs private</span>
-                                        </div>
-                                        <div class="chat-messages call-messages">
-                                            <div class="chat-bubble user" style="opacity:1;transform:none;">Call ATT</div>
-                                            <div class="chat-bubble yara" style="opacity:1;transform:none;">I'm setting up the call with AT&T now.<div class="chat-actions"><span>👍</span><span>👎</span><span>📋</span></div></div>
-                                            <div class="chat-bubble user" style="opacity:1;transform:none;">What is the promotional credit I get for ATT</div>
-                                            <div class="chat-bubble yara" style="opacity:1;transform:none;">You receive a promotional credit of $2.78, which is applied to your Apple Watch equipment financing.<div class="chat-actions"><span>👍</span><span>👎</span><span>📋</span></div></div>
-                                        </div>
-                                        <div class="call-input-bar"><div class="plus">+</div><div class="call-input">Ask Yara pri...</div><div class="call-btns"><div class="call-btn mic"><svg viewBox="0 0 24 24" fill="white"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/><path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg></div><div class="call-btn speaker"><svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg></div><div class="call-btn keypad"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="4" height="4" rx="1"/><rect x="10" y="4" width="4" height="4" rx="1"/><rect x="16" y="4" width="4" height="4" rx="1"/><rect x="4" y="10" width="4" height="4" rx="1"/><rect x="10" y="10" width="4" height="4" rx="1"/><rect x="16" y="10" width="4" height="4" rx="1"/><rect x="4" y="16" width="4" height="4" rx="1"/><rect x="10" y="16" width="4" height="4" rx="1"/><rect x="16" y="16" width="4" height="4" rx="1"/></svg></div><div class="call-btn end"><svg viewBox="0 0 24 24"><path d="M12 9c-1.6 0-3.15.25-4.6.72v3.1c0 .39-.23.74-.56.9-.98.49-1.87 1.12-2.66 1.85-.18.18-.43.28-.7.28-.28 0-.53-.11-.71-.29L.29 13.08c-.18-.17-.29-.42-.29-.7 0-.28.11-.53.29-.71C3.34 8.78 7.46 7 12 7s8.66 1.78 11.71 4.67c.18.18.29.43.29.71 0 .28-.11.53-.29.71l-2.48 2.48c-.18.18-.43.29-.71.29-.27 0-.52-.11-.7-.28-.79-.74-1.68-1.36-2.66-1.85-.33-.16-.56-.5-.56-.9v-3.1C15.15 9.25 13.6 9 12 9z"/></svg></div></div></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="iphone-btn-vol-up"></div>
-                            <div class="iphone-btn-vol-down"></div>
-                            <div class="iphone-btn-power"></div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Privacy -->
-            <section class="content-section" id="sec-privacy">
-                <div class="feature-card gray">
-                    <h2>Security on Device.</h2>
-                    <p>Zero data persistence. Because your financial life is nobody else's business.</p>
-                </div>
-            </section>
-
-            <!-- What's Next -->
-            <section class="content-section" id="sec-future">
-                <h2>What's Next</h2>
-                <p>Yara is learning to act on your behalf.</p>
-                <div class="future-cards">
-                    <div class="feature-card orange">
-                        <h2>Web Navigation.</h2>
-                        <p>Yara will browse websites, fill forms, and take action for you — switching plans, claiming refunds, canceling subscriptions.</p>
-                    </div>
-                    <div class="feature-card teal">
-                        <h2>Voice Advocacy.</h2>
-                        <p>Yara will handle customer service calls end-to-end. No more hold music. No more repeating yourself.</p>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Final CTA -->
-            <section class="final-section" id="sec-final">
-                <h2>Ready to take control?</h2>
-                <p>Be among the first to experience AI that works for you.</p>
-            </section>
+        <!-- Centered nav pill (desktop) -- moves right on scroll -->
+        <div id="navPill" class="hidden md:flex">
+          <a href="#features" class="nav-link">Features</a>
+          <a href="#how-it-works" class="nav-link">How It Works</a>
+          <a href="#security" class="nav-link">Security</a>
         </div>
 
-        <!-- Right: Sticky Phone -->
-        <div class="phone-column">
-            <div class="iphone-wrapper" id="iphone">
-                <div class="iphone-frame" id="iphone-front">
-                    <div class="iphone-screen">
-                        <!-- iOS Status Bar -->
-                        <div class="status-bar">
-                            <span class="time">9:41</span>
-                        </div>
-                        <!-- Dynamic Island -->
-                        <div class="dynamic-island"></div>
+        <!-- Right group: waitlist btn + expandable email (hidden initially, appears on scroll) -->
+        <div id="navRight" class="hidden md:flex">
+          <div class="nav-email-group">
+            <input type="email" placeholder="Enter your email"
+              class="nav-email-input bg-black/5 text-slate-900 placeholder-slate-500 rounded-full text-xs focus:outline-none focus:border-purple/50 focus:ring-1 focus:ring-purple/20" />
+            <button id="navJoinBtn" class="btn-primary text-white font-semibold px-5 py-2 rounded-full text-xs whitespace-nowrap">
+              Join the Waitlist
+            </button>
+          </div>
+        </div>
 
-                        <!-- Welcome Screen -->
-                        <div class="screen-content welcome-screen active" id="screen-welcome">
-                            <div class="welcome-progress">
-                                <span class="active"></span><span></span><span></span>
-                            </div>
-                            <div class="welcome-content">
-                                <img src="yara_butterfly.png" alt="Yara">
-                                <h2>Welcome to Yara</h2>
-                                <p class="tagline">AI you can trust</p>
-                                <p class="sub">Reducing your cognitive load</p>
-                            </div>
-                            <div class="sso-section">
-                                <div class="sso-btn">
-                                    <svg viewBox="0 0 24 24"><path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/></svg>
-                                    Continue with Apple
-                                </div>
-                                <div class="sso-btn">
-                                    <svg viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
-                                    Continue with Google
-                                </div>
-                                <div class="sso-btn">
-                                    <svg viewBox="0 0 23 23"><path fill="#f25022" d="M0 0h11v11H0z"/><path fill="#00a4ef" d="M0 12h11v11H0z"/><path fill="#7fba00" d="M12 0h11v11H12z"/><path fill="#ffb900" d="M12 12h11v11H12z"/></svg>
-                                    Continue with Microsoft
-                                </div>
-                            </div>
-                            <div class="sso-footer">
-                                <a href="#">Terms of Service</a> · <a href="#">Privacy Policy</a><br>
-                                By signing up, you agree to our Terms and Privacy Policy
-                            </div>
-                        </div>
+        <!-- Mobile hamburger -->
+        <button id="mobileToggle" class="md:hidden text-slate-900 p-2 relative z-10" aria-label="Toggle navigation menu">
+          <svg id="hamburgerIcon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+          </svg>
+          <svg id="closeIcon" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+    <!-- Mobile menu -->
+    <div id="mobileMenu" class="mobile-menu flex-col gap-4 px-6 pb-6 md:hidden" style="background:rgba(255,255,255,0.97);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);">
+      <a href="#features" class="text-sm text-slate-600 hover:text-slate-900 transition-colors">Features</a>
+      <a href="#how-it-works" class="text-sm text-slate-600 hover:text-slate-900 transition-colors">How It Works</a>
+      <a href="#security" class="text-sm text-slate-600 hover:text-slate-900 transition-colors">Security</a>
+      <div class="flex gap-2 mt-2">
+        <input type="email" placeholder="Enter your email"
+          class="flex-1 min-w-0 bg-black/5 border border-black/10 text-slate-900 placeholder-slate-500 px-4 py-2.5 rounded-full text-sm focus:outline-none focus:border-purple/50 focus:ring-1 focus:ring-purple/20 transition-all" />
+        <button class="btn-primary text-white font-semibold px-5 py-2.5 rounded-full text-sm whitespace-nowrap">
+          Join
+        </button>
+      </div>
+    </div>
+  </nav>
 
-                        <!-- Leveling Screen - Hi, I'm Yara -->
-                        <div class="screen-content leveling-screen" id="screen-leveling">
-                            <div class="chat-header">
-                                <div class="chat-header-icon">
-                                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="16" y2="12"/><line x1="4" y1="17" x2="12" y2="17"/></svg>
-                                </div>
-                                <img src="yara_butterfly.png" alt="Yara">
-                                <div class="chat-header-icon">
-                                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
-                                </div>
-                            </div>
-                            <div class="leveling-content">
-                                <div class="leveling-greeting">
-                                    <h2>Hi, I'm Yara</h2>
-                                    <p>Your trusted AI Advocate</p>
-                                </div>
-                                <div class="leveling-help-title">I can help you:</div>
-                                <div class="leveling-item">
-                                    <div class="leveling-check"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>
-                                    <span>Track your household spend and help you optimize your expenses</span>
-                                </div>
-                                <div class="leveling-item">
-                                    <div class="leveling-check"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>
-                                    <span>Manage service issues related to third parties you deal with</span>
-                                </div>
-                                <div class="leveling-item">
-                                    <div class="leveling-check"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>
-                                    <span>Assist you to negotiate with third parties</span>
-                                </div>
-                                <div class="leveling-item">
-                                    <div class="leveling-check"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>
-                                    <span>And lots of other tasks as well!</span>
-                                </div>
-                                <div class="leveling-cta">
-                                    <span class="leveling-cta-icon">&#10022;</span>
-                                    <span>Try one of my suggestions below to get started</span>
-                                </div>
-                            </div>
-                            <div class="chat-suggestions">
-                                <div class="chat-suggestion"><span class="chat-suggestion-icon"><span style="color:white;font-weight:700;font-size:12px;">?</span></span> What do you do?</div>
-                                <div class="chat-suggestion"><span class="chat-suggestion-icon"><svg viewBox="0 0 24 24" fill="white"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm-1 2l5 5h-5V4zm-3 12v-2h4v2h-4zm4-4H8v-2h6v2z"/></svg></span> Review My Bill</div>
-                                <div class="chat-suggestion"><span class="chat-suggestion-icon"><svg viewBox="0 0 24 24" fill="white"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg></span> Optimize</div>
-                            </div>
-                            <div class="chat-input-bar">
-                                <div class="plus">+</div>
-                                <div class="chat-input">Ask Yara...</div>
-                                <div class="mic-btn">
-                                    <svg viewBox="0 0 24 24" fill="white"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/><path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg>
-                                </div>
-                                <div class="waveform-btn">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 6v12M8 8v8M4 10v4M16 8v8M20 10v4"/></svg>
-                                </div>
-                            </div>
-                        </div>
 
-                        <!-- Chat Screen -->
-                        <div class="screen-content chat-screen" id="screen-chat">
-                            <div class="chat-header">
-                                <div class="chat-header-icon">
-                                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="16" y2="12"/><line x1="4" y1="17" x2="12" y2="17"/></svg>
-                                </div>
-                                <img src="yara_butterfly.png" alt="Yara">
-                                <div class="chat-header-icon">
-                                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
-                                </div>
-                            </div>
-                            <div class="chat-messages">
-                                <div class="chat-bubble user" id="chat-user-1">Can you show me my uber transactions?</div>
-                                <div class="chat-bubble yara" id="chat-yara-1">
-                                    I found 2 Uber transactions:<br>
-                                    - January 26, 2026: $42.50 at Uber (Travel)<br>
-                                    - January 14, 2026: $72.00 at Uber Eats (Food and Drink)
-                                    <div class="chat-actions">
-                                        <span>👍</span><span>👎</span><span>📋</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="chat-suggestions">
-                                <div class="chat-suggestion"><span class="chat-suggestion-icon"><span style="color:white;font-weight:700;font-size:12px;">?</span></span> What do you do?</div>
-                                <div class="chat-suggestion"><span class="chat-suggestion-icon"><svg viewBox="0 0 24 24" fill="white"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm-1 2l5 5h-5V4zm-3 12v-2h4v2h-4zm4-4H8v-2h6v2z"/></svg></span> Review My Bill</div>
-                                <div class="chat-suggestion"><span class="chat-suggestion-icon"><svg viewBox="0 0 24 24" fill="white"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg></span> Optimize</div>
-                            </div>
-                            <div class="chat-input-bar">
-                                <div class="plus">+</div>
-                                <div class="chat-input">Ask Yara...</div>
-                                <div class="mic-btn">
-                                    <svg viewBox="0 0 24 24" fill="white"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/><path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg>
-                                </div>
-                                <div class="waveform-btn">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 6v12M8 8v8M4 10v4M16 8v8M20 10v4"/></svg>
-                                </div>
-                            </div>
-                        </div>
 
-                        <!-- Savings Screen -->
-                        <div class="screen-content savings-screen" id="screen-savings">
-                            <div class="savings-header">
-                                <div class="chat-header-icon">
-                                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="16" y2="12"/><line x1="4" y1="17" x2="12" y2="17"/></svg>
-                                </div>
-                                <img src="yara_butterfly.png" alt="Yara">
-                                <div class="chat-header-icon">
-                                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
-                                </div>
-                            </div>
-                            <div class="savings-title">✨ Your Personalized Recommendations</div>
-                            <div class="savings-subtitle">We found 3 plans that match your preferences</div>
-                            <div class="savings-list">
-                                <div class="savings-card" id="sav-1">
-                                    <div class="savings-card-header">
-                                        <div>
-                                            <div class="savings-card-provider">T-Mobile USA</div>
-                                            <div class="savings-card-plan">Magenta MAX</div>
-                                        </div>
-                                        <div class="savings-card-match">⭐ 81%</div>
-                                    </div>
-                                    <div class="savings-card-price">$70/mo</div>
-                                    <div class="savings-card-actions">
-                                        <div class="savings-btn outline">More Info</div>
-                                        <div class="savings-btn filled">View Plan</div>
-                                    </div>
-                                </div>
-                                <div class="savings-card" id="sav-2">
-                                    <div class="savings-card-header">
-                                        <div>
-                                            <div class="savings-card-provider">AT&T Mobility</div>
-                                            <div class="savings-card-plan">Unlimited Starter</div>
-                                        </div>
-                                        <div class="savings-card-match">⭐ 44%</div>
-                                    </div>
-                                    <div class="savings-card-price">$61/mo</div>
-                                    <div class="savings-card-actions">
-                                        <div class="savings-btn outline">More Info</div>
-                                        <div class="savings-btn filled">View Plan</div>
-                                    </div>
-                                </div>
-                                <div class="savings-card" id="sav-3">
-                                    <div class="savings-card-header">
-                                        <div>
-                                            <div class="savings-card-provider">AT&T Mobility</div>
-                                            <div class="savings-card-plan">Unlimited Extra</div>
-                                        </div>
-                                        <div class="savings-card-match">⭐ 40%</div>
-                                    </div>
-                                    <div class="savings-card-price">$66/mo</div>
-                                    <div class="savings-card-actions">
-                                        <div class="savings-btn outline">More Info</div>
-                                        <div class="savings-btn filled">View Plan</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="chat-input-bar">
-                                <div class="plus">+</div>
-                                <div class="chat-input">Ask Yara...</div>
-                                <div class="mic-btn">
-                                    <svg viewBox="0 0 24 24" fill="white"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/><path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg>
-                                </div>
-                            </div>
-                        </div>
+  <!-- ===== CINEMATIC HERO ===== -->
+  <div id="scroll-runway">
+    <div id="pinned">
 
-                        <!-- Call Screen -->
-                        <div class="screen-content call-screen" id="screen-call">
-                            <div class="call-header">
-                                <div class="chat-header-icon">
-                                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="16" y2="12"/><line x1="4" y1="17" x2="12" y2="17"/></svg>
-                                </div>
-                                <span class="call-status">Speaking...</span>
-                                <div class="chat-header-icon">
-                                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
-                                </div>
-                            </div>
-                            <div class="call-banner" id="call-banner">
-                                <div class="call-banner-phone">
-                                    <svg viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
-                                </div>
-                                <span class="call-banner-num">+18003310500</span>
-                                <span class="call-banner-time">27:40</span>
-                                <span class="call-banner-badge">Msgs private</span>
-                            </div>
-                            <div class="chat-messages call-messages">
-                                <div class="chat-bubble user" id="call-user-1">Call ATT</div>
-                                <div class="chat-bubble yara" style="opacity:1;transform:none;">I'm setting up the call with AT&T now.
-                                    <div class="chat-actions"><span>👍</span><span>👎</span><span>📋</span></div>
-                                </div>
-                                <div class="chat-bubble user" id="call-user-2">What is the promotional credit I get for ATT</div>
-                                <div class="chat-bubble yara" id="call-yara-1">You receive a promotional credit of $2.78, which is applied to your Apple Watch equipment financing.
-                                    <div class="chat-actions"><span>👍</span><span>👎</span><span>📋</span></div>
-                                </div>
-                            </div>
-                            <div class="call-input-bar">
-                                <div class="plus">+</div>
-                                <div class="call-input">Ask Yara pri...</div>
-                                <div class="call-btns">
-                                    <div class="call-btn mic">
-                                        <svg viewBox="0 0 24 24" fill="white"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/><path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg>
-                                    </div>
-                                    <div class="call-btn speaker">
-                                        <svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
-                                    </div>
-                                    <div class="call-btn keypad">
-                                        <svg viewBox="0 0 24 24"><rect x="4" y="4" width="4" height="4" rx="1"/><rect x="10" y="4" width="4" height="4" rx="1"/><rect x="16" y="4" width="4" height="4" rx="1"/><rect x="4" y="10" width="4" height="4" rx="1"/><rect x="10" y="10" width="4" height="4" rx="1"/><rect x="16" y="10" width="4" height="4" rx="1"/><rect x="4" y="16" width="4" height="4" rx="1"/><rect x="10" y="16" width="4" height="4" rx="1"/><rect x="16" y="16" width="4" height="4" rx="1"/></svg>
-                                    </div>
-                                    <div class="call-btn end">
-                                        <svg viewBox="0 0 24 24"><path d="M12 9c-1.6 0-3.15.25-4.6.72v3.1c0 .39-.23.74-.56.9-.98.49-1.87 1.12-2.66 1.85-.18.18-.43.28-.7.28-.28 0-.53-.11-.71-.29L.29 13.08c-.18-.17-.29-.42-.29-.7 0-.28.11-.53.29-.71C3.34 8.78 7.46 7 12 7s8.66 1.78 11.71 4.67c.18.18.29.43.29.71 0 .28-.11.53-.29.71l-2.48 2.48c-.18.18-.43.29-.71.29-.27 0-.52-.11-.7-.28-.79-.74-1.68-1.36-2.66-1.85-.33-.16-.56-.5-.56-.9v-3.1C15.15 9.25 13.6 9 12 9z"/></svg>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="iphone-back">
-                    <div class="shield-icon">
-                        <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/></svg>
-                    </div>
-                    <h3>Total Privacy</h3>
-                    <p>Your data never leaves your device. Zero persistence. Zero tracking.</p>
-                </div>
-                <!-- Physical Side Buttons -->
-                <div class="iphone-btn-vol-up"></div>
-                <div class="iphone-btn-vol-down"></div>
-                <div class="iphone-btn-power"></div>
+      <video id="heroVideo" autoplay muted loop playsinline>
+        <source src="chess-hero.mp4" type="video/mp4" />
+      </video>
+
+      <div id="vignette"></div>
+
+      <canvas id="bgCanvas"></canvas>
+      <canvas id="particleCanvas"></canvas>
+      <canvas id="grainCanvas"></canvas>
+
+      <div id="prog">
+        <div class="pd on" data-i="0"></div>
+        <div class="pd" data-i="1"></div>
+        <div class="pd" data-i="2"></div>
+        <div class="pd" data-i="3"></div>
+      </div>
+
+      <div id="scroll-hint">
+        <span>Scroll to explore</span>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3"/></svg>
+      </div>
+
+      <div id="content">
+        <!-- Frame 0 (visible on load) -->
+        <div class="frame" id="f0" style="opacity:1;">
+          <h1><span class="word" style="opacity:1;transform:none;filter:none;">Every</span> <span class="word" style="opacity:1;transform:none;filter:none;">company</span> <span class="word" style="opacity:1;transform:none;filter:none;">you</span> <span class="word" style="opacity:1;transform:none;filter:none;">pay</span><br><span class="word" style="opacity:1;transform:none;filter:none;">has</span> <span class="word gpt" style="opacity:1;transform:none;filter:none;">AI</span></h1>
+          <p class="sub" style="opacity:1;transform:none;">Banks, insurers, telecoms, utilities. They all use algorithms to optimize what they charge you.</p>
+        </div>
+        <!-- Frame 1 -->
+        <div class="frame" id="f1">
+          <h1><span class="word">They</span> <span class="word">use</span> <span class="word">it</span> <span class="word">to</span><br><span class="word amber-text">charge</span> <span class="word amber-text">you</span> <span class="word amber-text">more</span></h1>
+          <p class="sub">Dynamic pricing, hidden fees, automatic rate increases. Their AI works around the clock against your wallet.</p>
+        </div>
+        <!-- Frame 2 -->
+        <div class="frame" id="f2">
+          <h1><span class="word">It's</span> <span class="word">time</span> <span class="word">to</span><br><span class="word gg">fight</span> <span class="word gg">back</span></h1>
+          <p class="sub">What if you had AI that worked just as hard for you?</p>
+        </div>
+        <!-- Frame 3 -->
+        <div class="frame" id="f3">
+          <h1><span class="word">Meet</span> <span class="word gpt">Yara</span></h1>
+          <p class="sub">Your Personal AI Advocate. Fights every bill, subscription, and policy you have.</p>
+          <div class="cta-wrap" id="hero-waitlist-btn">
+            <input type="email" placeholder="Enter your email" />
+            <button>Join the Waitlist</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ===== SECTION 2: FEATURE CARDS (6 cards, all visible in one viewport) ===== -->
+  <section id="features" class="py-10 md:py-14 relative">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
+      <!-- Section header -->
+      <div class="text-center mb-8 md:mb-10 reveal">
+        <p class="text-[13px] font-semibold tracking-[0.2em] uppercase text-teal mb-3">FEATURES</p>
+        <h2 class="section-heading">
+          Everything you need. <span class="gradient-text-teal-green">Nothing you don't.</span>
+        </h2>
+      </div>
+
+      <!-- Feature grid: Bento layout — 7 cards, 3-col grid -->
+      <div class="bento-grid">
+
+        <!-- Card #6: Your AI Advocate (Hero — spans 2 cols + 2 rows) -->
+        <div class="bento-hero-left glass-card rounded-2xl reveal" style="border-image: linear-gradient(135deg, rgba(139,92,246,0.3), rgba(6,182,212,0.3)) 1; border-width: 1px; border-style: solid;">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="bento-hero-icon inline-flex items-center justify-center rounded-xl bg-purple/10 border border-purple/20 flex-shrink-0" style="width:44px;height:44px;">
+              <svg class="w-5.5 h-5.5 text-purple" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
             </div>
+            <h3 class="bento-hero-title text-2xl font-bold heading-display" style="color:#1D1D1F;">Your AI Advocate</h3>
+          </div>
+          <p class="text-slate-500 text-sm leading-relaxed mb-4">An always-on assistant that knows your financial life, protects your privacy, and fights for your best interest &mdash; 24/7.</p>
+          <div class="flex flex-wrap gap-2 mb-4">
+            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-purple/10 border border-purple/20 text-purple text-[11px] font-semibold">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+              Privacy-First
+            </span>
+            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-teal/10 border border-teal/20 text-teal text-[11px] font-semibold">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+              Always-On
+            </span>
+            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-green/10 border border-green/20 text-green text-[11px] font-semibold">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+              Your Advocate
+            </span>
+          </div>
+          <div class="space-y-1">
+            <div class="task-item">
+              <span class="check">&#10003;</span>
+              <span>Negotiated cable bill <span class="text-slate-400">&middot;</span> <span class="text-green text-[11px] font-medium">saved $42/mo</span></span>
+            </div>
+            <div class="task-item">
+              <span class="check">&#10003;</span>
+              <span>Disputed hidden fee <span class="text-slate-400">&middot;</span> <span class="text-green text-[11px] font-medium">refunded $89</span></span>
+            </div>
+            <div class="task-item">
+              <span class="check">&#10003;</span>
+              <span>Switched auto insurance <span class="text-slate-400">&middot;</span> <span class="text-green text-[11px] font-medium">saved $39/mo</span></span>
+            </div>
+          </div>
         </div>
-    </div>
 
-    <!-- Fixed Bottom CTA -->
-    <div class="fixed-cta">
-        <div class="cta-container">
-            <input type="email" id="early-access-email" placeholder="Email Address" required>
-            <button onclick="startEarlyAccess()">Join the Waitlist</button>
+        <!-- Card #1: Smart Spending -->
+        <div class="glass-card rounded-2xl reveal">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-teal/10 border border-teal/20 flex-shrink-0">
+              <svg class="w-5 h-5 text-teal" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+            </div>
+            <h3 class="text-lg font-bold heading-display" style="color:#1D1D1F;">Smart Spending</h3>
+          </div>
+          <p class="text-slate-500 text-sm leading-relaxed mb-4">Monitor your spending and have natural conversations about your finances. Ask anything &mdash; get instant, accurate answers.</p>
+          <div class="flex items-end gap-[3px] h-8">
+            <div class="wave-bar" style="--wave-max: 18px; animation-delay: 0.00s;"></div>
+            <div class="wave-bar" style="--wave-max: 28px; animation-delay: 0.08s;"></div>
+            <div class="wave-bar" style="--wave-max: 14px; animation-delay: 0.16s;"></div>
+            <div class="wave-bar" style="--wave-max: 32px; animation-delay: 0.24s;"></div>
+            <div class="wave-bar" style="--wave-max: 20px; animation-delay: 0.32s;"></div>
+            <div class="wave-bar" style="--wave-max: 26px; animation-delay: 0.10s;"></div>
+            <div class="wave-bar" style="--wave-max: 12px; animation-delay: 0.18s;"></div>
+            <div class="wave-bar" style="--wave-max: 24px; animation-delay: 0.26s;"></div>
+            <div class="wave-bar" style="--wave-max: 16px; animation-delay: 0.34s;"></div>
+            <div class="wave-bar" style="--wave-max: 30px; animation-delay: 0.05s;"></div>
+            <div class="wave-bar" style="--wave-max: 22px; animation-delay: 0.13s;"></div>
+            <div class="wave-bar" style="--wave-max: 10px; animation-delay: 0.21s;"></div>
+            <div class="wave-bar" style="--wave-max: 28px; animation-delay: 0.29s;"></div>
+            <div class="wave-bar" style="--wave-max: 14px; animation-delay: 0.37s;"></div>
+          </div>
         </div>
-    </div>
 
-    <!-- Modals -->
-    <div id="login-modal" class="modal-overlay">
-        <div class="glass-card">
-            <button class="close-btn" onclick="closeModal('login-modal')">&times;</button>
-            <h2 style="margin-bottom:24px;font-family:var(--font-display);">Admin Login</h2>
-            <form id="login-form">
-                <input type="email" id="login-email" class="glass-input" placeholder="Email" required>
-                <input type="password" id="login-password" class="glass-input" placeholder="Password" required>
-                <div id="login-error" style="color:red;margin-bottom:10px;font-size:14px;"></div>
-                <button type="submit" style="width:100%;padding:14px;background:var(--cta-blue);color:white;border:none;border-radius:12px;font-size:16px;font-weight:600;cursor:pointer;">Sign In</button>
-            </form>
+        <!-- Card #2: Actionable Savings -->
+        <div class="glass-card rounded-2xl reveal">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-green/10 border border-green/20 flex-shrink-0">
+              <svg class="w-5 h-5 text-green" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+            </div>
+            <h3 class="text-lg font-bold heading-display" style="color:#1D1D1F;">Actionable Savings</h3>
+          </div>
+          <p class="text-slate-500 text-sm leading-relaxed mb-3">Personalized recommendations backed by real data. Approve with one tap &mdash; Yara handles the rest.</p>
+          <div class="plan-card-mini recommended">
+            <div>
+              <div class="text-slate-900 text-[11px] font-semibold">Progressive Auto Insurance</div>
+              <div class="text-[10px] text-green font-medium">Save $39/mo vs. current plan</div>
+            </div>
+            <div class="text-green text-xs font-bold">$129/mo</div>
+          </div>
         </div>
-    </div>
-    <div id="survey-modal" class="modal-overlay">
-        <div class="glass-card" style="max-width:800px;text-align:left;">
-            <button class="close-btn" onclick="surveyApp.saveAndExit()">&times;</button>
-            <div id="survey-progress-text" style="margin-bottom:10px;font-weight:600;"></div>
-            <div class="modal-content-inner"></div>
+
+        <!-- Card #3: Live Call Advocacy -->
+        <div class="glass-card rounded-2xl reveal">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-purple/10 border border-purple/20 flex-shrink-0">
+              <svg class="w-5 h-5 text-purple" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+            </div>
+            <h3 class="text-lg font-bold heading-display" style="color:#1D1D1F;">Live Call Advocacy</h3>
+          </div>
+          <p class="text-slate-500 text-sm leading-relaxed mb-3">Real-time support when you're on the phone with service providers. Competitor quotes, talking points, and data at your fingertips.</p>
+          <div class="flex items-center gap-3">
+            <div class="flex items-end gap-[2px] h-5">
+              <div class="wave-bar" style="--wave-max: 12px; animation-delay: 0.0s; width: 2px;"></div>
+              <div class="wave-bar" style="--wave-max: 18px; animation-delay: 0.1s; width: 2px;"></div>
+              <div class="wave-bar" style="--wave-max: 8px; animation-delay: 0.2s; width: 2px;"></div>
+              <div class="wave-bar" style="--wave-max: 16px; animation-delay: 0.3s; width: 2px;"></div>
+              <div class="wave-bar" style="--wave-max: 10px; animation-delay: 0.15s; width: 2px;"></div>
+              <div class="wave-bar" style="--wave-max: 20px; animation-delay: 0.25s; width: 2px;"></div>
+              <div class="wave-bar" style="--wave-max: 14px; animation-delay: 0.35s; width: 2px;"></div>
+              <div class="wave-bar" style="--wave-max: 8px; animation-delay: 0.05s; width: 2px;"></div>
+            </div>
+            <span class="text-[11px] text-slate-400">Listening &amp; providing data...</span>
+          </div>
         </div>
-    </div>
-    <div id="early-access-modal" class="modal-overlay">
-        <div class="glass-card">
-            <button class="close-btn" onclick="closeEarlyAccessModal()">&times;</button>
-            <div id="ea-step-text" style="margin-bottom:20px;color:var(--text-secondary);"></div>
-            <div id="ea-content"></div>
+
+        <!-- Card #7: Error Detection -->
+        <div class="glass-card rounded-2xl reveal">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-orange/10 border border-orange/20 flex-shrink-0">
+              <svg class="w-5 h-5 text-orange" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+            </div>
+            <h3 class="text-lg font-bold heading-display" style="color:#1D1D1F;">Error Detection</h3>
+          </div>
+          <p class="text-slate-500 text-sm leading-relaxed mb-3">Always-on monitoring across every bill, rate, and renewal. Catches billing errors, hidden fees, and unauthorized charges before you do.</p>
+          <div class="space-y-1.5">
+            <div class="notification-mini">
+              <span class="text-slate-700">Insurance up 12%.</span> Found $1,420.
+            </div>
+            <div class="notification-mini">
+              <span class="text-slate-700">APR increased to 24.9%.</span> 0% transfer available.
+            </div>
+          </div>
         </div>
+
+        <!-- Card #5: Post-Purchase Price Watch (Wide — spans 2 cols) -->
+        <div class="bento-wide glass-card rounded-2xl reveal">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-orange/10 border border-orange/20 flex-shrink-0">
+              <svg class="w-5 h-5 text-orange" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/></svg>
+            </div>
+            <h3 class="text-lg font-bold heading-display" style="color:#1D1D1F;">Post-Purchase Price Watch</h3>
+          </div>
+          <p class="text-slate-500 text-sm leading-relaxed mb-3">Prices drop. Policies change. Yara monitors after you buy and claims refunds, price adjustments, and better deals automatically.</p>
+          <div class="flex flex-wrap gap-2">
+            <div class="notification-mini flex items-center gap-2">
+              <svg class="w-3.5 h-3.5 text-green flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/></svg>
+              <span><span class="text-slate-700">AirPods Pro dropped $30.</span> Refund claimed.</span>
+            </div>
+            <div class="notification-mini flex items-center gap-2">
+              <svg class="w-3.5 h-3.5 text-green flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/></svg>
+              <span><span class="text-slate-700">Hotel rate dropped $45/night.</span> Rebooked.</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card #4: Conversation Memory -->
+        <div class="glass-card rounded-2xl reveal">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-teal/10 border border-teal/20 flex-shrink-0">
+              <svg class="w-5 h-5 text-teal" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+            </div>
+            <h3 class="text-lg font-bold heading-display" style="color:#1D1D1F;">Conversation Memory</h3>
+          </div>
+          <p class="text-slate-500 text-sm leading-relaxed mb-3">Every call, chat, and negotiation logged and searchable. Never lose track of what was said or promised.</p>
+          <div class="space-y-1.5">
+            <div class="notification-mini flex items-center justify-between">
+              <span class="text-slate-700 text-[11px]">Call w/ Comcast</span>
+              <span class="text-slate-400 text-[10px]">Jan 15, 3:42 PM</span>
+            </div>
+            <div class="notification-mini flex items-center justify-between">
+              <span class="text-slate-700 text-[11px]">Chat w/ Chase</span>
+              <span class="text-slate-400 text-[10px]">Jan 12, 11:20 AM</span>
+            </div>
+            <div class="notification-mini flex items-center justify-between">
+              <span class="text-slate-700 text-[11px]">Call w/ State Farm</span>
+              <span class="text-slate-400 text-[10px]">Jan 8, 2:15 PM</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
     </div>
+  </section>
 
-    <script src="survey-questions.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-    <script src="survey-app.js"></script>
-    <script src="early-access.js"></script>
-    <script>
-        function openModal(id) { document.getElementById(id).classList.add('active'); }
-        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            gsap.registerPlugin(ScrollTrigger);
-            const iphone = document.getElementById('iphone');
-            const screens = {
-                welcome: document.getElementById('screen-welcome'),
-                leveling: document.getElementById('screen-leveling'),
-                chat: document.getElementById('screen-chat'),
-                savings: document.getElementById('screen-savings'),
-                call: document.getElementById('screen-call')
-            };
+  <!-- ===== SECTION: HOW IT WORKS (3 steps) ===== -->
+  <section id="how-it-works" class="py-24 md:py-32 relative">
+    <div class="max-w-5xl mx-auto px-6 lg:px-8">
+      <!-- Section header -->
+      <div class="text-center mb-16 md:mb-24 reveal">
+        <p class="text-[13px] font-semibold tracking-[0.2em] uppercase text-teal mb-4">HOW IT WORKS</p>
+        <h2 class="section-heading">
+          Three steps to <span class="gradient-text-green">saving money</span>
+        </h2>
+      </div>
 
-            function setScreen(name) {
-                Object.values(screens).forEach(s => s.classList.remove('active'));
-                if (screens[name]) screens[name].classList.add('active');
-            }
+      <!-- Steps -->
+      <div class="relative">
+        <!-- Connecting line (desktop) -->
+        <div class="hidden md:block steps-line"></div>
 
-            function animateBubble(id, delay) {
-                const el = document.getElementById(id);
-                if (el) {
-                    gsap.to(el, {
-                        opacity: 1, scale: 1, y: 0,
-                        duration: 0.4, delay: delay || 0,
-                        ease: 'back.out(1.5)'
-                    });
-                }
-            }
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-8 relative z-10">
+          <!-- Step 1: Connect -->
+          <div class="text-center reveal">
+            <div class="flex justify-center mb-6">
+              <div class="number-badge bg-blue-500">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg>
+              </div>
+            </div>
+            <div class="glass-card rounded-2xl p-7 text-center">
+              <h3 class="text-lg font-bold heading-display mb-3" style="color:#1D1D1F;">Connect</h3>
+              <p class="text-slate-500 text-sm leading-relaxed">Link your accounts securely via Plaid. Bank accounts, credit cards, insurance, subscriptions.</p>
+            </div>
+          </div>
 
-            function resetBubbles(ids) {
-                ids.forEach(id => {
-                    const el = document.getElementById(id);
-                    if (el) gsap.set(el, { opacity: 0, scale: 0.9, y: 10 });
-                });
-            }
+          <!-- Step 2: Ask -->
+          <div class="text-center reveal" style="transition-delay: 0.15s;">
+            <div class="flex justify-center mb-6">
+              <div class="number-badge bg-teal">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+              </div>
+            </div>
+            <div class="glass-card rounded-2xl p-7 text-center">
+              <h3 class="text-lg font-bold heading-display mb-3" style="color:#1D1D1F;">Ask</h3>
+              <p class="text-slate-500 text-sm leading-relaxed">Ask anything about your spending, bills, or finances. Yara analyzes and finds opportunities.</p>
+            </div>
+          </div>
 
-            function animateCard(id, delay) {
-                const el = document.getElementById(id);
-                if (el) {
-                    gsap.to(el, {
-                        opacity: 1, x: 0,
-                        duration: 0.35, delay: delay || 0,
-                        ease: 'power2.out'
-                    });
-                }
-            }
+          <!-- Step 3: Save -->
+          <div class="text-center reveal" style="transition-delay: 0.3s;">
+            <div class="flex justify-center mb-6">
+              <div class="number-badge bg-green">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              </div>
+            </div>
+            <div class="glass-card rounded-2xl p-7 text-center">
+              <h3 class="text-lg font-bold heading-display mb-3" style="color:#1D1D1F;">Save</h3>
+              <p class="text-slate-500 text-sm leading-relaxed">Get verified recommendations that save you real money. Approve and Yara takes action.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-            function resetCards() {
-                gsap.set('.phone-column .savings-card', { opacity: 0, x: -20 });
-            }
 
-            // Level Playing Field - show leveling screen
-            ScrollTrigger.create({
-                trigger: '#sec-problem',
-                start: 'top 45%',
-                onEnter: () => setScreen('leveling'),
-                onLeaveBack: () => setScreen('welcome')
-            });
+  <!-- ===== CINEMATIC DIVIDER ===== -->
+  <section class="video-divider reveal">
+    <video autoplay muted loop playsinline>
+      <source src="divider-bg.mp4" type="video/mp4" />
+    </video>
+    <div class="divider-overlay"></div>
+    <div class="divider-content">
+      <h2>See how it <span style="background:linear-gradient(135deg,#8B5CF6,#06B6D4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">actually works</span></h2>
+      <p>Watch Yara find savings, compare quotes, and negotiate on your behalf — in real time.</p>
+    </div>
+  </section>
 
-            // Financial Intelligence - show chat, user bubble first
-            ScrollTrigger.create({
-                trigger: '#sec-f1',
-                start: 'top 45%',
-                onEnter: () => {
-                    setScreen('chat');
-                    resetBubbles(['chat-user-1', 'chat-yara-1']);
-                    setTimeout(() => animateBubble('chat-user-1', 0), 150);
-                },
-                onLeaveBack: () => setScreen('leveling')
-            });
 
-            // Financial Intelligence - Yara response when card is well centered
-            ScrollTrigger.create({
-                trigger: '#sec-f1',
-                start: 'top 25%',
-                onEnter: () => {
-                    animateBubble('chat-yara-1', 0);
-                }
-            });
+  <!-- ===== SECTION: SCROLLYTELLING (Pinned, 4 steps) ===== -->
+  <div id="scrolly-section" style="height:400vh;position:relative;background:#FAFAFA;">
 
-            // Verified Savings - show savings, staggered cards
-            ScrollTrigger.create({
-                trigger: '#sec-f2',
-                start: 'top 45%',
-                onEnter: () => {
-                    setScreen('savings');
-                    resetCards();
-                    setTimeout(() => animateCard('sav-1', 0), 150);
-                },
-                onLeaveBack: () => {
-                    setScreen('chat');
-                    resetBubbles(['chat-user-1', 'chat-yara-1']);
-                    setTimeout(() => {
-                        animateBubble('chat-user-1', 0);
-                        animateBubble('chat-yara-1', 0.2);
-                    }, 150);
-                }
-            });
+    <div id="scrolly-sticky" class="scrolly-sticky">
 
-            // Savings card 2 appears
-            ScrollTrigger.create({
-                trigger: '#sec-f2',
-                start: 'top 35%',
-                onEnter: () => animateCard('sav-2', 0)
-            });
+      <!-- LEFT: text panels -->
+      <div class="scrolly-text-side">
 
-            // Savings card 3 appears when card is well centered
-            ScrollTrigger.create({
-                trigger: '#sec-f2',
-                start: 'top 25%',
-                onEnter: () => animateCard('sav-3', 0)
-            });
+        <!-- Section header -->
+        <div class="scrolly-header">
+          <div class="eyebrow">How It Works</div>
+          <h2 style="font-family:'Plus Jakarta Sans',-apple-system,sans-serif;font-size:clamp(26px,3vw,38px);font-weight:700;letter-spacing:-0.02em;line-height:1.1;color:#1D1D1F;" class="max-w-[440px]">
+            See Yara In Action.
+          </h2>
+          <p style="margin-top:12px;font-size:14px;color:#6E6E73;line-height:1.6;" class="max-w-[380px]">
+            From finding savings to negotiating on your behalf -- watch how Yara works across your financial life.
+          </p>
+        </div>
 
-            // Silent Assistant - show call
-            ScrollTrigger.create({
-                trigger: '#sec-f3',
-                start: 'top 45%',
-                onEnter: () => {
-                    setScreen('call');
-                    gsap.to('#call-banner', { opacity: 1, y: 0, duration: 0.4 });
-                    resetBubbles(['call-user-1', 'call-user-2', 'call-yara-1']);
-                    setTimeout(() => {
-                        animateBubble('call-user-1', 0);
-                        animateBubble('call-user-2', 0.4);
-                        animateBubble('call-yara-1', 0.8);
-                    }, 300);
-                },
-                onLeaveBack: () => {
-                    setScreen('savings');
-                    resetCards();
-                    setTimeout(() => {
-                        animateCard('sav-1', 0);
-                        animateCard('sav-2', 0.15);
-                        animateCard('sav-3', 0.3);
-                    }, 150);
-                }
-            });
+        <!-- Step panels (swap in/out) -->
+        <div class="scrolly-panels-container">
+          <!-- Step 1: Financial Intelligence - Ask question, get audit -->
+          <div class="scrolly-text-panel active" id="scrolly-panel-0">
+            <div class="scrolly-panel-label">Step 1 of 4</div>
+            <div class="scrolly-panel-title">Ask one question.<br>Get a full audit.</div>
+            <div class="scrolly-panel-body">One message surfaces every overpayment across every account -- auto, subscriptions, phone, utilities -- in seconds.</div>
+          </div>
 
-            // Privacy - 3D flip with front face hidden at midpoint
-            const iphoneFront = document.getElementById('iphone-front');
-            const flipTl = gsap.timeline({
-                scrollTrigger: {
-                    trigger: '#sec-privacy',
-                    start: 'top 50%',
-                    end: 'top 20%',
-                    scrub: true,
-                    onLeaveBack: () => {
-                        // Restore front face when scrolling back up past the flip
-                        gsap.set(iphoneFront, { visibility: 'visible' });
-                    }
-                }
-            });
-            flipTl
-                .to(iphone, { rotateY: 90, duration: 0.5, ease: 'none' })
-                .set(iphoneFront, { visibility: 'hidden' })
-                .to(iphone, { rotateY: 180, duration: 0.5, ease: 'none' });
+          <!-- Step 2: Financial Intelligence - Auto insurance -->
+          <div class="scrolly-text-panel" id="scrolly-panel-1">
+            <div class="scrolly-panel-label">Step 2 of 4</div>
+            <div class="scrolly-panel-title">Auto insurance is the #1 overpayment.</div>
+            <div class="scrolly-panel-body">Yara compares your coverage to 40+ carriers instantly. Average driver overpays by $468/year without knowing it.</div>
+          </div>
 
-            // Fade phone out AFTER Security on Device section leaves the screen
-            // preserve-3d breaks parent opacity cascading, so hide buttons via direct DOM
-            const sideButtons = iphone.querySelectorAll('.iphone-btn-vol-up, .iphone-btn-vol-down, .iphone-btn-power');
-            const fadeOutTl = gsap.timeline({
-                scrollTrigger: {
-                    trigger: '#sec-privacy',
-                    start: 'bottom 50%',
-                    end: 'bottom 20%',
-                    scrub: true,
-                    onEnter: () => {
-                        sideButtons.forEach(btn => btn.style.display = 'none');
-                    },
-                    onLeaveBack: () => {
-                        sideButtons.forEach(btn => btn.style.display = '');
-                        gsap.set(iphone, { opacity: 1, scale: 1 });
-                    }
-                }
-            });
-            fadeOutTl.to(iphone, { opacity: 0, scale: 0.9, duration: 1 });
+          <!-- Step 3: Call Advocacy - Competitor quotes -->
+          <div class="scrolly-text-panel" id="scrolly-panel-2">
+            <div class="scrolly-panel-label">Step 3 of 4</div>
+            <div class="scrolly-panel-title">Instant market comparison while you're on the phone.</div>
+            <div class="scrolly-panel-body">Know exactly what competitors charge before you say a word. Walk into every negotiation with the data companies don't want you to have.</div>
+          </div>
 
-            // Feature cards entrance (desktop only — mobile uses IntersectionObserver on sections)
-            if (window.innerWidth >= 768) {
-                gsap.utils.toArray('.feature-card').forEach(card => {
-                    gsap.fromTo(card,
-                        { opacity: 0, y: 40 },
-                        {
-                            opacity: 1, y: 0,
-                            scrollTrigger: {
-                                trigger: card,
-                                start: 'top 80%',
-                                end: 'top 50%',
-                                scrub: true
-                            }
-                        }
-                    );
-                });
-            }
-        });
+          <!-- Step 4: Call Advocacy - Result -->
+          <div class="scrolly-text-panel" id="scrolly-panel-3">
+            <div class="scrolly-panel-label">Step 4 of 4</div>
+            <div class="scrolly-panel-title">Average user saves $320 per call.</div>
+            <div class="scrolly-panel-body">Yara turns every customer service call into a negotiation you win. The company has AI. Now so do you.</div>
+          </div>
+        </div>
 
-        // Mobile: fade-in sections on scroll (IntersectionObserver, no GSAP needed)
-        // Content is visible by default; animation is progressive enhancement
-        if (window.matchMedia('(max-width: 767px)').matches) {
-            const mobileSections = document.querySelectorAll('.content-section, .final-section');
-            mobileSections.forEach(section => section.classList.add('mobile-animate'));
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('mobile-visible');
-                    }
-                });
-            }, { threshold: 0.1 });
-            mobileSections.forEach(section => observer.observe(section));
+      </div>
+
+      <!-- RIGHT: phone -->
+      <div class="scrolly-phone-side">
+        <div style="position:relative;">
+          <div class="phone-frame" style="position:relative;">
+            <!-- Phone glow - reduced for light mode -->
+            <div style="position:absolute;inset:-2px;border-radius:46px;background:linear-gradient(135deg,rgba(139,92,246,0.15),rgba(6,182,212,0.06));filter:blur(24px);z-index:-1;pointer-events:none;"></div>
+
+            <!-- Screen 0: "Where am I overpaying?" with $85/month savings (fin-screen-0) -->
+            <div class="scrolly-screen phone-screen active" id="scrolly-screen-0">
+              <div class="phone-status">
+                <span>9:41</span>
+                <span style="font-size:10px;color:rgba(255,255,255,0.35);">yara</span>
+              </div>
+              <div style="font-size:13px;font-weight:700;text-align:center;margin-bottom:16px;color:rgba(255,255,255,0.9);">Financial Review</div>
+              <div class="chat-user">Where am I overpaying?</div>
+              <div class="chat-ai" style="margin-top:4px;">
+                I analyzed your last 90 days across all accounts. Found <strong style="color:#22C55E;">4 opportunities</strong> to save.
+                <div style="margin-top:10px;padding:10px;border-radius:12px;background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.15);">
+                  <div style="font-size:11px;color:#22C55E;font-weight:700;">Total potential savings</div>
+                  <div style="font-size:22px;font-weight:900;letter-spacing:-0.03em;color:#22C55E;">$85/month</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Screen 1: Auto insurance opportunity card (fin-screen-1) -->
+            <div class="scrolly-screen phone-screen" id="scrolly-screen-1">
+              <div class="phone-status"><span>9:41</span><span style="font-size:10px;color:rgba(255,255,255,0.35);">Opportunity 1/4</span></div>
+              <div class="opp-card">
+                <div class="opp-tag" style="background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.2);color:#F59E0B;">
+                  <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                  Overpaying
+                </div>
+                <div class="opp-name">Auto Insurance -- Geico</div>
+                <div class="opp-detail">You're paying $168/mo for comparable coverage available from $129/mo with Progressive.</div>
+                <div class="opp-savings" style="color:#22C55E;">Save $468/year</div>
+              </div>
+              <div class="chat-ai">
+                I found 3 carriers that match your coverage level at a lower price. Want me to start the switch?
+              </div>
+            </div>
+
+            <!-- Screen 2: State Farm call with competitor quotes (call-screen-1) -->
+            <div class="scrolly-screen phone-screen" id="scrolly-screen-2">
+              <div class="phone-status"><span>9:41</span><span style="font-size:10px;color:#22C55E;">12:07</span></div>
+              <div class="call-banner">
+                <div style="width:8px;height:8px;border-radius:50%;background:#22C55E;animation:pulse-dot 1.5s ease-in-out infinite;"></div>
+                <span style="font-size:12px;font-weight:700;color:rgba(255,255,255,0.9);">State Farm</span>
+              </div>
+              <div class="call-yara-msg" style="margin-bottom:10px;">
+                <div style="font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#8B5CF6;margin-bottom:7px;">Competitor Quotes</div>
+                <div class="comp-row">
+                  <span style="color:rgba(255,255,255,0.8);">USAA</span>
+                  <span style="color:#22C55E;font-weight:700;">$1,420</span>
+                </div>
+                <div class="comp-row">
+                  <span style="color:rgba(255,255,255,0.8);">Lemonade</span>
+                  <span style="color:#22C55E;font-weight:700;">$1,380</span>
+                </div>
+                <div class="comp-row">
+                  <span style="color:rgba(255,255,255,0.8);">Allstate</span>
+                  <span style="color:rgba(255,255,255,0.5);">$1,510</span>
+                </div>
+              </div>
+              <div class="call-yara-msg">
+                Mention the USAA quote. State Farm has a "price match consideration" policy for clean-record customers.
+              </div>
+            </div>
+
+            <!-- Screen 3: Result - $1,520/year saved $320 (call-screen-3) -->
+            <div class="scrolly-screen phone-screen" id="scrolly-screen-3">
+              <div class="phone-status"><span>9:41</span><span style="font-size:10px;color:rgba(255,255,255,0.35);">Call ended</span></div>
+              <div style="text-align:center;padding-top:20px;">
+                <div style="width:64px;height:64px;border-radius:50%;background:rgba(34,197,94,0.12);border:1px solid rgba(34,197,94,0.3);display:flex;align-items:center;justify-content:center;margin:0 auto 14px;">
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#22C55E" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                </div>
+                <div style="font-size:13px;font-weight:700;color:rgba(255,255,255,0.9);margin-bottom:4px;">Negotiation Complete</div>
+                <div style="font-size:11px;color:rgba(255,255,255,0.4);">State Farm Auto Insurance</div>
+              </div>
+              <div style="margin-top:20px;padding:16px;border-radius:14px;background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.2);text-align:center;">
+                <div style="font-size:10px;color:#22C55E;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:6px;">Final result</div>
+                <div style="font-size:28px;font-weight:900;letter-spacing:-0.04em;color:#22C55E;">$1,520/year</div>
+                <div style="font-size:12px;color:rgba(255,255,255,0.5);margin-top:4px;">You saved <strong style="color:#22C55E;">$320</strong> from their opening offer</div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Progress dots -->
+          <div class="scrolly-dots" id="scrolly-dots">
+            <div class="sdot active" data-scrolly="scrolly" data-i="0"></div>
+            <div class="sdot" data-scrolly="scrolly" data-i="1"></div>
+            <div class="sdot" data-scrolly="scrolly" data-i="2"></div>
+            <div class="sdot" data-scrolly="scrolly" data-i="3"></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ===== SECTION 4: PRIVACY & SECURITY (consolidated) ===== -->
+  <section id="security" class="py-24 md:py-32 relative">
+    <div class="max-w-5xl mx-auto px-6 lg:px-8">
+      <!-- Section header -->
+      <div class="text-center mb-16 md:mb-20 reveal">
+        <p class="text-[13px] font-semibold tracking-[0.2em] uppercase text-teal mb-4">SECURITY</p>
+        <h2 class="section-heading mb-6">
+          Your Data. Your Device. Period.
+        </h2>
+        <p class="text-base md:text-lg leading-relaxed max-w-2xl mx-auto" style="color:#6E6E73;">
+          Bank accounts, insurance policies, credit cards, medical bills. Yara sees it all and stores it on your device or fully encrypted on the cloud. End-to-end encryption. Three-factor authentication. Zero data retention.
+        </p>
+      </div>
+
+      <!-- Security badges: 2x2 grid -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-12 reveal">
+        <!-- E2EE -->
+        <div class="security-badge flex items-center gap-5">
+          <div class="flex-shrink-0 w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-teal/10 border border-teal/20 flex items-center justify-center">
+            <svg class="w-7 h-7 text-teal" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+          </div>
+          <div class="text-left">
+            <div class="font-extrabold text-lg heading-display" style="color:#1D1D1F;">E2EE</div>
+            <div class="text-sm" style="color:#6E6E73;">Every message encrypted end-to-end</div>
+          </div>
+        </div>
+        <!-- 3FA -->
+        <div class="security-badge flex items-center gap-5">
+          <div class="flex-shrink-0 w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-purple/10 border border-purple/20 flex items-center justify-center">
+            <svg class="w-7 h-7 text-purple" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 11c0 1.104-.896 2-2 2s-2-.896-2-2 .896-2 2-2 2 .896 2 2zm0 0c0 1.104.896 2 2 2s2-.896 2-2-.896-2-2-2-2 .896-2 2zm-2 2v4m4-4v4"/></svg>
+          </div>
+          <div class="text-left">
+            <div class="font-extrabold text-lg heading-display" style="color:#1D1D1F;">3FA</div>
+            <div class="text-sm" style="color:#6E6E73;">Password + device + biometrics</div>
+          </div>
+        </div>
+        <!-- ZDR -->
+        <div class="security-badge flex items-center gap-5">
+          <div class="flex-shrink-0 w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-green/10 border border-green/20 flex items-center justify-center">
+            <svg class="w-7 h-7 text-green" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01"/></svg>
+          </div>
+          <div class="text-left">
+            <div class="font-extrabold text-lg heading-display" style="color:#1D1D1F;">ZDR</div>
+            <div class="text-sm" style="color:#6E6E73;">Zero data retention on servers</div>
+          </div>
+        </div>
+        <!-- Secure Tunnels -->
+        <div class="security-badge flex items-center gap-5">
+          <div class="flex-shrink-0 w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center">
+            <svg class="w-7 h-7 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+          </div>
+          <div class="text-left">
+            <div class="font-extrabold text-lg heading-display" style="color:#1D1D1F;">Secure Tunnels</div>
+            <div class="text-sm" style="color:#6E6E73;">Encrypted communication channels</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Zero counters row -->
+      <div class="reveal flex items-center justify-center gap-4 sm:gap-8 mb-8">
+        <div class="zero-counter">
+          <div class="zero-num text-4xl">0</div>
+          <div class="zero-label">Data Stored</div>
+        </div>
+        <div class="w-px h-12 bg-black/10"></div>
+        <div class="zero-counter">
+          <div class="zero-num text-4xl">0</div>
+          <div class="zero-label">Trackers</div>
+        </div>
+        <div class="w-px h-12 bg-black/10"></div>
+        <div class="zero-counter">
+          <div class="zero-num text-4xl">0</div>
+          <div class="zero-label">Third Parties</div>
+        </div>
+      </div>
+
+      <!-- Trust line -->
+      <div class="reveal text-center">
+        <p class="text-slate-500 text-sm">Connected to <span class="text-slate-900 font-medium">12,000+</span> financial institutions via Plaid's bank-grade security</p>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ===== SECTION 5: FINAL CTA ===== -->
+  <section id="waitlist" class="py-24 md:py-32 relative cta-radial">
+    <div class="max-w-3xl mx-auto px-6 lg:px-8 text-center">
+      <div class="reveal">
+        <h2 class="section-heading mb-5">
+          Take Back Control.
+        </h2>
+        <p class="text-base md:text-lg mb-10" style="color:#6E6E73;">
+          Be among the first to have AI that works for you, not against you.
+        </p>
+
+        <!-- Email input + button -->
+        <div class="flex flex-col sm:flex-row gap-3 justify-center max-w-lg mx-auto mb-8">
+          <input
+            type="email"
+            placeholder="Enter your email"
+            class="flex-1 bg-white border border-slate-200 text-slate-900 placeholder-slate-500 px-5 py-4 rounded-full text-sm focus:outline-none focus:border-purple/50 focus:ring-2 focus:ring-purple/20 transition-all shadow-sm"
+          />
+          <button class="btn-primary text-white font-semibold px-8 py-4 rounded-full text-sm whitespace-nowrap">
+            Join the Waitlist
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="border-t border-black/5 py-16 md:py-20">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
+      <div class="flex flex-col items-center text-center gap-6">
+        <!-- Brand -->
+        <a href="#" class="flex items-center gap-2" style="font-family:'Plus Jakarta Sans',-apple-system,sans-serif;font-size:20px;font-weight:700;color:#1D1D1F;letter-spacing:-0.02em;">
+          <img src="yara_butterfly.png" alt="Yara" class="w-8 h-8" style="filter: drop-shadow(0 1px 2px rgba(0,0,0,0.1));">
+          Yara
+        </a>
+        <!-- Links -->
+        <div class="flex flex-col sm:flex-row items-center gap-3 sm:gap-6">
+          <a href="#" class="text-sm text-slate-500 hover:text-slate-900 transition-colors">Terms of Service</a>
+          <span class="text-slate-300 hidden sm:inline">|</span>
+          <a href="#" class="text-sm text-slate-500 hover:text-slate-900 transition-colors">Privacy Policy</a>
+        </div>
+        <p class="text-slate-600 text-xs">By signing up, you agree to our Terms and Privacy Policy.</p>
+        <!-- Bottom -->
+        <div class="border-t border-black/5 pt-6 w-full">
+          <p class="text-slate-600 text-sm">&copy; 2026 Yara. All rights reserved.</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+
+  <!-- ===== JAVASCRIPT ===== -->
+  <script>
+    gsap.registerPlugin(ScrollTrigger);
+
+    // =====================================================
+    // MOBILE MENU TOGGLE
+    // =====================================================
+    const mobileToggle = document.getElementById('mobileToggle');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const hamburgerIcon = document.getElementById('hamburgerIcon');
+    const closeIcon = document.getElementById('closeIcon');
+
+    mobileToggle.addEventListener('click', () => {
+      const isOpen = mobileMenu.classList.toggle('open');
+      hamburgerIcon.classList.toggle('hidden', isOpen);
+      closeIcon.classList.toggle('hidden', !isOpen);
+    });
+
+    mobileMenu.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        mobileMenu.classList.remove('open');
+        hamburgerIcon.classList.remove('hidden');
+        closeIcon.classList.add('hidden');
+      });
+    });
+
+
+    // =========================================================
+    // CANVAS SETUP (Cinematic Hero -- Light Mode)
+    // =========================================================
+    const bgC = document.getElementById('bgCanvas');
+    const bgCtx = bgC.getContext('2d');
+    const ptC = document.getElementById('particleCanvas');
+    const ptCtx = ptC.getContext('2d');
+    const grC = document.getElementById('grainCanvas');
+    const grCtx = grC.getContext('2d');
+
+    let W, H;
+    function resizeCanvases() {
+      W = window.innerWidth; H = window.innerHeight;
+      [bgC, ptC, grC].forEach(c => { c.width = W; c.height = H; });
+    }
+    resizeCanvases();
+    window.addEventListener('resize', resizeCanvases);
+
+    // =========================================================
+    // COLOR PALETTES -- LIGHT MODE (soft pastels on white)
+    // =========================================================
+    const palettes = [
+      // Frame 0: Cool blue tint
+      { bg: [248,250,252], orbs: [
+        { x:0.3, y:0.35, r:0.5, color:[180,210,255,0.25] },
+        { x:0.7, y:0.55, r:0.4, color:[200,220,255,0.18] },
+        { x:0.5, y:0.7, r:0.35, color:[170,200,245,0.15] },
+      ]},
+      // Frame 1: Warm amber tint
+      { bg: [252,250,245], orbs: [
+        { x:0.4, y:0.4, r:0.5, color:[255,200,120,0.25] },
+        { x:0.7, y:0.3, r:0.4, color:[255,180,100,0.2] },
+        { x:0.3, y:0.65, r:0.35, color:[245,190,110,0.15] },
+      ]},
+      // Frame 2: Fresh green tint
+      { bg: [245,252,248], orbs: [
+        { x:0.5, y:0.45, r:0.55, color:[120,230,170,0.25] },
+        { x:0.3, y:0.6, r:0.4, color:[140,220,160,0.18] },
+        { x:0.7, y:0.35, r:0.35, color:[130,215,155,0.15] },
+      ]},
+      // Frame 3: Purple/teal (Yara brand)
+      { bg: [248,246,255], orbs: [
+        { x:0.35, y:0.35, r:0.55, color:[180,150,255,0.22] },
+        { x:0.65, y:0.6, r:0.5, color:[120,210,230,0.18] },
+        { x:0.5, y:0.4, r:0.3, color:[190,160,255,0.12] },
+      ]},
+    ];
+
+    const particleColors = [
+      { r:120, g:160, b:230 },
+      { r:220, g:160, b:80 },
+      { r:100, g:200, b:140 },
+      { r:160, g:130, b:230 },
+    ];
+
+    // Scroll progress (0-1), updated by ScrollTrigger
+    let scrollProgress = 0;
+
+    function lerp(a, b, t) { return a + (b - a) * t; }
+    function lerpArr(a, b, t) { return a.map((v, i) => v + (b[i] - v) * t); }
+
+    // Compute palette & particle color from progress
+    function getPaletteAtProgress(p) {
+      const breaks = [0, 0.20, 0.40, 0.60, 1.0];
+      let idx = 0;
+      if (p >= 0.60) idx = 3;
+      else if (p >= 0.40) idx = 2;
+      else if (p >= 0.20) idx = 1;
+      const nextIdx = Math.min(3, idx + 1);
+
+      const boundary = breaks[idx + 1 < breaks.length ? idx + 1 : idx];
+      const transHalf = 0.03;
+      let blend = 0;
+      if (idx < 3) {
+        const dist = boundary - p;
+        if (dist < transHalf) {
+          blend = 1 - dist / transHalf;
+          blend = blend * blend * (3 - 2 * blend);
         }
-    </script>
+      }
+
+      const A = palettes[idx];
+      const B = palettes[nextIdx];
+
+      const result = {
+        bg: lerpArr(A.bg, B.bg, blend),
+        orbs: A.orbs.map((o, i) => ({
+          x: lerp(o.x, B.orbs[i].x, blend),
+          y: lerp(o.y, B.orbs[i].y, blend),
+          r: lerp(o.r, B.orbs[i].r, blend),
+          color: lerpArr(o.color, B.orbs[i].color, blend),
+        })),
+      };
+
+      const cA = particleColors[idx];
+      const cB = particleColors[nextIdx];
+      const ptCol = {
+        r: lerp(cA.r, cB.r, blend),
+        g: lerp(cA.g, cB.g, blend),
+        b: lerp(cA.b, cB.b, blend),
+      };
+
+      return { palette: result, ptColor: ptCol };
+    }
+
+    // =========================================================
+    // BACKGROUND RENDERER
+    // =========================================================
+    let time = 0;
+    function drawBg(pal) {
+      const [r, g, b] = pal.bg;
+      bgCtx.fillStyle = `rgb(${r|0},${g|0},${b|0})`;
+      bgCtx.fillRect(0, 0, W, H);
+
+      pal.orbs.forEach((orb, i) => {
+        const breathe = Math.sin(time * 0.3 + i * 2.1) * 0.03;
+        const driftX = Math.sin(time * 0.15 + i * 1.3) * 0.02;
+        const driftY = Math.cos(time * 0.12 + i * 0.9) * 0.02;
+        const cx = (orb.x + driftX) * W;
+        const cy = (orb.y + driftY) * H;
+        const radius = (orb.r + breathe) * Math.max(W, H);
+        const grad = bgCtx.createRadialGradient(cx, cy, 0, cx, cy, radius);
+        const [cr, cg, cb, ca] = orb.color;
+        grad.addColorStop(0, `rgba(${cr|0},${cg|0},${cb|0},${ca})`);
+        grad.addColorStop(0.5, `rgba(${cr|0},${cg|0},${cb|0},${ca * 0.4})`);
+        grad.addColorStop(1, `rgba(${cr|0},${cg|0},${cb|0},0)`);
+        bgCtx.fillStyle = grad;
+        bgCtx.fillRect(0, 0, W, H);
+      });
+    }
+
+    // =========================================================
+    // PARTICLES -- 200 with glow + connections (lighter)
+    // =========================================================
+    const PCOUNT = 200;
+    const particles = [];
+    for (let i = 0; i < PCOUNT; i++) {
+      particles.push({
+        x: Math.random() * 2000, y: Math.random() * 1200,
+        vx: (Math.random() - 0.5) * 0.25,
+        vy: (Math.random() - 0.5) * 0.25 - 0.08,
+        size: 0.5 + Math.random() * 1.5,
+        baseAlpha: 0.1 + Math.random() * 0.25,
+        pulseSpeed: 0.5 + Math.random() * 1.5,
+        pulsePhase: Math.random() * Math.PI * 2,
+      });
+    }
+
+    function drawParticles(ptCol) {
+      ptCtx.clearRect(0, 0, W, H);
+      const { r, g, b } = ptCol;
+
+      const brightnessBoost = scrollProgress > 0.78 ? 1 + (scrollProgress - 0.78) / 0.22 * 0.4 : 1;
+
+      particles.forEach(p => {
+        p.x += p.vx; p.y += p.vy;
+        if (p.x < -10) p.x = W + 10;
+        if (p.x > W + 10) p.x = -10;
+        if (p.y < -10) p.y = H + 10;
+        if (p.y > H + 10) p.y = -10;
+
+        const pulse = Math.sin(time * p.pulseSpeed + p.pulsePhase) * 0.3 + 0.7;
+        const alpha = p.baseAlpha * pulse * brightnessBoost;
+        if (alpha < 0.01) return;
+
+        ptCtx.beginPath();
+        ptCtx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ptCtx.fillStyle = `rgba(${r|0},${g|0},${b|0},${alpha})`;
+        ptCtx.fill();
+
+        if (p.size > 1.2) {
+          const glow = ptCtx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.size * 4);
+          glow.addColorStop(0, `rgba(${r|0},${g|0},${b|0},${alpha * 0.25})`);
+          glow.addColorStop(1, `rgba(${r|0},${g|0},${b|0},0)`);
+          ptCtx.fillStyle = glow;
+          ptCtx.fillRect(p.x - p.size * 4, p.y - p.size * 4, p.size * 8, p.size * 8);
+        }
+      });
+
+      // Connection lines (sparse)
+      for (let i = 0; i < particles.length; i += 3) {
+        const a = particles[i];
+        for (let j = i + 3; j < particles.length; j += 5) {
+          const bP = particles[j];
+          const dx = a.x - bP.x, dy = a.y - bP.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < 120) {
+            const lineAlpha = (1 - dist / 120) * 0.04;
+            ptCtx.beginPath();
+            ptCtx.moveTo(a.x, a.y);
+            ptCtx.lineTo(bP.x, bP.y);
+            ptCtx.strokeStyle = `rgba(${r|0},${g|0},${b|0},${lineAlpha})`;
+            ptCtx.lineWidth = 0.5;
+            ptCtx.stroke();
+          }
+        }
+      }
+    }
+
+    // =========================================================
+    // FILM GRAIN (very subtle for light mode)
+    // =========================================================
+    let grainData;
+    function drawGrain() {
+      if (!grainData || grainData.width !== W) grainData = grCtx.createImageData(W, H);
+      const d = grainData.data;
+      for (let i = 0; i < d.length; i += 16) {
+        const v = Math.random() * 255;
+        for (let k = 0; k < 16 && i+k < d.length; k += 4) {
+          d[i+k] = d[i+k+1] = d[i+k+2] = v; d[i+k+3] = 255;
+        }
+      }
+      grCtx.putImageData(grainData, 0, 0);
+    }
+
+    // =========================================================
+    // RENDER LOOP
+    // =========================================================
+    function render() {
+      time += 0.016;
+      const { palette, ptColor } = getPaletteAtProgress(scrollProgress);
+      // drawBg(palette); // disabled — video is the background
+      drawParticles(ptColor);
+      if (Math.random() < 0.3) drawGrain();
+      requestAnimationFrame(render);
+    }
+    render();
+
+    // =========================================================
+    // GSAP SCROLL-DRIVEN TIMELINE (Cinematic Hero)
+    // =========================================================
+
+    // Pin the viewport
+    ScrollTrigger.create({
+      trigger: '#scroll-runway',
+      start: 'top top',
+      end: 'bottom bottom',
+      pin: '#pinned',
+      pinSpacing: false,
+    });
+
+    // Master progress tracker
+    ScrollTrigger.create({
+      trigger: '#scroll-runway',
+      start: 'top top',
+      end: 'bottom bottom',
+      onUpdate: self => { scrollProgress = self.progress; },
+    });
+
+    // --- Scroll hint: fade out quickly ---
+    gsap.to('#scroll-hint', {
+      opacity: 0,
+      scrollTrigger: {
+        trigger: '#scroll-runway',
+        start: 'top top',
+        end: '3% top',
+        scrub: true,
+      }
+    });
+
+    // --- Progress dots active state ---
+    const heroDots = document.querySelectorAll('.pd');
+    function setDot(i) { heroDots.forEach((d, j) => d.classList.toggle('on', j === i)); }
+
+    ScrollTrigger.create({
+      trigger: '#scroll-runway',
+      start: 'top top',
+      end: 'bottom bottom',
+      onUpdate: self => {
+        const p = self.progress;
+        if (p < 0.20) setDot(0);
+        else if (p < 0.40) setDot(1);
+        else if (p < 0.60) setDot(2);
+        else setDot(3);
+      }
+    });
+
+    // --- Helper: build a scrubbed frame timeline ---
+    function buildFrameTl(frameId, segStart, segEnd) {
+      const frame = document.getElementById(frameId);
+      const words = frame.querySelectorAll('.word');
+      const sub = frame.querySelector('.sub');
+      const cta = frame.querySelector('.cta-wrap');
+      const isLast = frameId === 'f3';
+      const isFirst = frameId === 'f0';
+
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: '#scroll-runway',
+          start: `${segStart * 100}% top`,
+          end: `${segEnd * 100}% top`,
+          scrub: 0.3,
+        }
+      });
+
+      const totalDur = 10;
+
+      if (isFirst) {
+        // Frame 0 is already visible on load — just hold then fade out
+        const holdEnd = totalDur * 0.72;
+
+        tl.to(frame, {
+          opacity: 0, scale: 0.97, filter: 'blur(4px)',
+          duration: totalDur - holdEnd,
+          ease: 'power2.in',
+        }, holdEnd);
+
+      } else if (!isLast) {
+        // Frames 1 & 2: fade in, hold, fade out
+        const revealEnd = totalDur * 0.25;
+        const holdEnd = totalDur * 0.72;
+
+        tl.fromTo(frame,
+          { opacity: 0 },
+          { opacity: 1, duration: revealEnd * 0.4, ease: 'none' },
+          0
+        );
+        tl.to(words, {
+          opacity: 1, y: 0, filter: 'blur(0px)',
+          duration: revealEnd * 0.85,
+          stagger: revealEnd * 0.06,
+          ease: 'power2.out',
+        }, revealEnd * 0.05);
+        tl.to(sub, {
+          opacity: 1, y: 0,
+          duration: revealEnd * 0.6,
+          ease: 'power2.out',
+        }, revealEnd * 0.45);
+
+        // Fade out
+        tl.to(frame, {
+          opacity: 0, scale: 0.97, filter: 'blur(4px)',
+          duration: totalDur - holdEnd,
+          ease: 'power2.in',
+        }, holdEnd);
+
+      } else {
+        // Frame 3 (last): fade in + hold, no fade out
+        const revealPortion = totalDur * 0.25;
+
+        tl.fromTo(frame,
+          { opacity: 0 },
+          { opacity: 1, duration: revealPortion * 0.35, ease: 'none' },
+          0
+        );
+        tl.to(words, {
+          opacity: 1, y: 0, filter: 'blur(0px)',
+          duration: revealPortion * 0.8,
+          stagger: revealPortion * 0.07,
+          ease: 'power2.out',
+        }, revealPortion * 0.05);
+        tl.to(sub, {
+          opacity: 1, y: 0,
+          duration: revealPortion * 0.6,
+          ease: 'power2.out',
+        }, revealPortion * 0.4);
+        tl.to(cta, {
+          opacity: 1, y: 0,
+          duration: revealPortion * 0.5,
+          ease: 'power2.out',
+        }, revealPortion * 0.65);
+      }
+
+      return tl;
+    }
+
+    // Frames 0-2: 20% each, Frame 3: 40% (reveal + long hold)
+    buildFrameTl('f0', 0.00, 0.20);
+    buildFrameTl('f1', 0.20, 0.40);
+    buildFrameTl('f2', 0.40, 0.60);
+    buildFrameTl('f3', 0.60, 1.00);
+
+
+    // =====================================================
+    // NAV PILL TRANSITION -- centered -> right on scroll
+    // =====================================================
+    const mainNav = document.getElementById('mainNav');
+    const navInner = document.getElementById('navInner');
+    const navPill = document.getElementById('navPill');
+    const navRight = document.getElementById('navRight');
+    const heroBtn = document.getElementById('hero-waitlist-btn');
+    let navCompact = false;
+
+    // Tell GSAP about the initial translateX(-50%) so it manages it properly
+    gsap.set(navPill, { xPercent: -50, x: 0 });
+
+    // Calculate how far right the pill needs to slide
+    function getPillSlideX() {
+      const pillRect = navPill.getBoundingClientRect();
+      const innerRect = navInner.getBoundingClientRect();
+      const btn = navRight.querySelector('#navJoinBtn');
+      const btnWidth = btn ? btn.offsetWidth : 140;
+      const pillCenter = pillRect.left + pillRect.width / 2;
+      const targetRightEdge = innerRect.right - btnWidth - 20;
+      const targetCenter = targetRightEdge - pillRect.width / 2;
+      return targetCenter - pillCenter;
+    }
+
+    ScrollTrigger.create({
+      trigger: heroBtn,
+      start: 'bottom top+=80',
+      onEnter: () => {
+        if (navCompact) return;
+        navCompact = true;
+        const slideX = getPillSlideX();
+
+        gsap.to(navPill, {
+          x: slideX,
+          background: 'rgba(0,0,0,0)',
+          borderColor: 'rgba(0,0,0,0)',
+          padding: '0px',
+          gap: '4px',
+          duration: 0.55,
+          ease: 'power3.inOut',
+        });
+        gsap.to('#navPill .nav-link', {
+          fontSize: '13px',
+          padding: '6px 12px',
+          color: 'rgba(0,0,0,0.45)',
+          duration: 0.55,
+          ease: 'power3.inOut',
+        });
+        gsap.to(navInner, {
+          height: 64,
+          duration: 0.55,
+          ease: 'power3.inOut',
+        });
+        gsap.to(navRight, {
+          opacity: 1,
+          pointerEvents: 'auto',
+          duration: 0.4,
+          delay: 0.2,
+          ease: 'power2.out',
+        });
+        mainNav.style.background = 'rgba(255, 255, 255, 0.95)';
+        mainNav.style.borderBottomColor = 'rgba(0, 0, 0, 0.08)';
+      },
+      onLeaveBack: () => {
+        if (!navCompact) return;
+        navCompact = false;
+
+        gsap.to(navPill, {
+          x: 0,
+          background: 'rgba(0,0,0,0.04)',
+          borderColor: 'rgba(0,0,0,0.08)',
+          padding: '6px 8px',
+          gap: '8px',
+          duration: 0.55,
+          ease: 'power3.inOut',
+        });
+        gsap.to('#navPill .nav-link', {
+          fontSize: '15px',
+          padding: '8px 18px',
+          color: 'rgba(0,0,0,0.6)',
+          duration: 0.55,
+          ease: 'power3.inOut',
+        });
+        gsap.to(navInner, {
+          height: 80,
+          duration: 0.55,
+          ease: 'power3.inOut',
+        });
+        navRight.classList.remove('email-open');
+        gsap.to(navPill, { opacity: 1, pointerEvents: 'auto', duration: 0.2 });
+        gsap.to(navRight, {
+          opacity: 0,
+          pointerEvents: 'none',
+          duration: 0.25,
+          ease: 'power2.in',
+        });
+        mainNav.style.background = 'rgba(255, 255, 255, 0.85)';
+        mainNav.style.borderBottomColor = 'rgba(0, 0, 0, 0.06)';
+      },
+    });
+
+    // Recalculate slide position on resize
+    window.addEventListener('resize', () => {
+      if (navCompact) {
+        gsap.set(navPill, { x: getPillSlideX() });
+      }
+    });
+
+
+    // =====================================================
+    // NAV JOIN BUTTON -- click to expand email input
+    // =====================================================
+    const navJoinBtn = document.getElementById('navJoinBtn');
+    const navEmailInput = navRight.querySelector('.nav-email-input');
+
+    function openNavEmail() {
+      navRight.classList.add('email-open');
+      // Fade out pill links to avoid overlap
+      gsap.to(navPill, { opacity: 0, pointerEvents: 'none', duration: 0.3, ease: 'power2.out' });
+      setTimeout(() => navEmailInput.focus(), 350);
+    }
+
+    function closeNavEmail() {
+      navRight.classList.remove('email-open');
+      // Bring pill links back
+      gsap.to(navPill, { opacity: 1, pointerEvents: 'auto', duration: 0.3, delay: 0.1, ease: 'power2.out' });
+    }
+
+    navJoinBtn.addEventListener('click', (e) => {
+      if (!navRight.classList.contains('email-open')) {
+        // First click: expand email input
+        e.preventDefault();
+        openNavEmail();
+      } else {
+        // Second click: submit (placeholder -- would send email)
+        const email = navEmailInput.value.trim();
+        if (email) {
+          navJoinBtn.textContent = 'Joined!';
+          navJoinBtn.style.background = '#22C55E';
+          setTimeout(() => {
+            navJoinBtn.textContent = 'Join the Waitlist';
+            navJoinBtn.style.background = '';
+            closeNavEmail();
+            navEmailInput.value = '';
+          }, 2000);
+        }
+      }
+    });
+
+    // Close email expansion when clicking outside
+    document.addEventListener('click', (e) => {
+      if (navRight.classList.contains('email-open') && !navRight.contains(e.target)) {
+        closeNavEmail();
+      }
+    });
+
+
+    // =====================================================
+    // SCROLL-REVEAL (IntersectionObserver)
+    // =====================================================
+    const revealElements = document.querySelectorAll('.reveal');
+
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const delay = parseFloat(entry.target.style.transitionDelay) || 0;
+          entry.target.style.transitionDelay = delay + 's';
+          entry.target.classList.add('visible');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, {
+      threshold: 0.08,
+      rootMargin: '0px 0px -40px 0px'
+    });
+
+    revealElements.forEach(el => revealObserver.observe(el));
+
+
+    // =====================================================
+    // SMOOTH SCROLL FOR ANCHOR LINKS
+    // =====================================================
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        const href = this.getAttribute('href');
+        if (href === '#') return;
+        e.preventDefault();
+        const target = document.querySelector(href);
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+
+
+    // =====================================================
+    // SCROLLYTELLING UTILITY (from scroll-animations.html)
+    // =====================================================
+    function buildScrollytelling({ containerId, stickyId, panelPrefix, screenPrefix, dotsId, numSteps }) {
+      const panels  = Array.from({ length: numSteps }, (_, i) => document.getElementById(`${panelPrefix}-${i}`));
+      const screens = Array.from({ length: numSteps }, (_, i) => document.getElementById(`${screenPrefix}-${i}`));
+      const dots    = dotsId ? document.getElementById(dotsId).querySelectorAll('.sdot') : [];
+
+      let current = -1;
+
+      function activate(idx) {
+        if (idx === current) return;
+        current = idx;
+
+        panels.forEach((el, i) => {
+          if (!el) return;
+          el.classList.toggle('active', i === idx);
+        });
+        screens.forEach((el, i) => {
+          if (!el) return;
+          el.classList.toggle('active', i === idx);
+        });
+        dots.forEach((dot, i) => {
+          dot.classList.toggle('active', i === idx);
+        });
+      }
+
+      // Pin the sticky frame for the full scroll height
+      ScrollTrigger.create({
+        trigger: `#${containerId}`,
+        start: 'top top',
+        end: 'bottom bottom',
+        pin: `#${stickyId}`,
+        pinSpacing: false,
+      });
+
+      // Drive steps via progress
+      ScrollTrigger.create({
+        trigger: `#${containerId}`,
+        start: 'top top',
+        end: 'bottom bottom',
+        onUpdate: (self) => {
+          const p = self.progress;
+          let step = Math.min(numSteps - 1, Math.floor(p * numSteps));
+          activate(step);
+        }
+      });
+
+      // Initial state
+      activate(0);
+    }
+
+    // Build the unified scrollytelling section
+    buildScrollytelling({
+      containerId: 'scrolly-section',
+      stickyId: 'scrolly-sticky',
+      panelPrefix: 'scrolly-panel',
+      screenPrefix: 'scrolly-screen',
+      dotsId: 'scrolly-dots',
+      numSteps: 4,
+    });
+
+
+    // =====================================================
+    // PERFORMANCE - Refresh after fonts, handle resize
+    // =====================================================
+    document.fonts.ready.then(() => {
+      ScrollTrigger.refresh();
+    });
+
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => ScrollTrigger.refresh(), 250);
+    });
+  </script>
+
 </body>
 </html>
