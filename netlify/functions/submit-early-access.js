@@ -56,12 +56,39 @@ exports.handler = async (event, context) => {
         };
     }
 
-    // 1. Get client IP and location from Netlify headers
+    // 1. Get client IP and location
     const clientIp = event.headers['x-nf-client-connection-ip'] || event.headers['client-ip'] || 'unknown';
-    const city = event.headers['x-bb-city'] || 'Unknown City';
-    const region = event.headers['x-bb-region'] || 'Unknown Region';
-    const country = event.headers['x-bb-country'] || 'Unknown Country';
-    
+
+    // Netlify provides geo data via context.geo (Pro+) or x-nf-geo header
+    let city = 'Unknown', region = 'Unknown', country = 'Unknown';
+    try {
+        if (context && context.geo) {
+            city = context.geo.city || 'Unknown';
+            region = (context.geo.subdivision && context.geo.subdivision.name) || 'Unknown';
+            country = (context.geo.country && context.geo.country.name) || 'Unknown';
+        } else if (event.headers['x-nf-geo']) {
+            const geo = JSON.parse(decodeURIComponent(event.headers['x-nf-geo']));
+            city = geo.city || 'Unknown';
+            region = geo.subdivision || geo.region || 'Unknown';
+            country = geo.country || 'Unknown';
+        }
+    } catch (geoErr) {
+        console.log('Geo lookup failed:', geoErr.message);
+    }
+
+    // Fallback: use free IP geolocation if still unknown
+    if (city === 'Unknown' && clientIp !== 'unknown') {
+        try {
+            const geoRes = await fetch(`https://ipapi.co/${clientIp}/json/`);
+            if (geoRes.ok) {
+                const geoData = await geoRes.json();
+                city = geoData.city || 'Unknown';
+                region = geoData.region || 'Unknown';
+                country = geoData.country_name || 'Unknown';
+            }
+        } catch (e) { /* non-critical */ }
+    }
+
     data.ipAddress = clientIp;
     data.location = `${city}, ${region}, ${country}`;
 
