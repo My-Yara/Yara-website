@@ -94,6 +94,44 @@ exports.handler = async (event, context) => {
         const results = await Promise.all(decryptPromises);
         const validEntries = results.filter(entry => entry !== null);
 
+        // Resolve locations for entries with unknown/missing location but valid IP
+        const needsGeo = validEntries.filter(e =>
+            e.ipAddress && e.ipAddress !== 'unknown' &&
+            (!e.location || e.location.includes('Unknown'))
+        );
+
+        if (needsGeo.length > 0) {
+            // Batch lookup: ipapi.co supports up to ~30 req/min on free tier
+            // Use ip-api.com batch endpoint for bulk lookups (free, up to 100 per request)
+            const ips = [...new Set(needsGeo.map(e => e.ipAddress))];
+            const ipToLocation = {};
+
+            try {
+                const batchRes = await fetch('http://ip-api.com/batch?fields=query,city,regionName,country,status', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(ips.map(ip => ({ query: ip })))
+                });
+                if (batchRes.ok) {
+                    const batchData = await batchRes.json();
+                    batchData.forEach(r => {
+                        if (r.status === 'success') {
+                            ipToLocation[r.query] = `${r.city || 'Unknown'}, ${r.regionName || 'Unknown'}, ${r.country || 'Unknown'}`;
+                        }
+                    });
+                }
+            } catch (geoErr) {
+                console.log('Batch geo lookup failed:', geoErr.message);
+            }
+
+            // Apply resolved locations
+            needsGeo.forEach(entry => {
+                if (ipToLocation[entry.ipAddress]) {
+                    entry.location = ipToLocation[entry.ipAddress];
+                }
+            });
+        }
+
         // Sort by timestamp descending
         validEntries.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
 
