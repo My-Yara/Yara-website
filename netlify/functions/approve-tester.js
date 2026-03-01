@@ -57,56 +57,58 @@ exports.handler = async (event, context) => {
         return { statusCode: 401, headers: corsHeaders, body: JSON.stringify({ message: 'Unauthorized' }) };
     }
 
-    if (!ASC_PRIVATE_KEY || !ASC_ISSUER_ID || !ASC_KEY_ID || !ASC_BETA_GROUP_ID) {
-        return { statusCode: 500, headers: corsHeaders, body: JSON.stringify({ message: 'App Store Connect not configured' }) };
+    let ascAdded = false;
+
+    // 2. Add to App Store Connect (optional — skip if not configured)
+    if (ASC_PRIVATE_KEY && ASC_ISSUER_ID && ASC_KEY_ID && ASC_BETA_GROUP_ID) {
+        try {
+            const token = generateASCToken();
+
+            const ascResponse = await fetch('https://api.appstoreconnect.apple.com/v1/betaTesters', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    data: {
+                        type: 'betaTesters',
+                        attributes: {
+                            email: userEmail,
+                            firstName: 'Yara',
+                            lastName: 'Beta'
+                        },
+                        relationships: {
+                            betaGroups: {
+                                data: [{
+                                    type: 'betaGroups',
+                                    id: ASC_BETA_GROUP_ID
+                                }]
+                            }
+                        }
+                    }
+                })
+            });
+
+            const ascResult = await ascResponse.json();
+
+            if (!ascResponse.ok && ascResponse.status !== 409) {
+                console.error('App Store Connect API Error:', ascResult);
+                // Don't block approval — still update GitHub status
+            } else {
+                ascAdded = true;
+            }
+        } catch (ascErr) {
+            console.error('ASC error (non-blocking):', ascErr.message);
+        }
+    } else {
+        console.log('App Store Connect not configured — skipping TestFlight invite');
     }
 
     try {
-        // 2. Add to App Store Connect
-        const token = generateASCToken();
-        
-        const ascResponse = await fetch('https://api.appstoreconnect.apple.com/v1/betaTesters', {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                data: {
-                    type: 'betaTesters',
-                    attributes: {
-                        email: userEmail,
-                        firstName: 'Yara',
-                        lastName: 'Beta'
-                    },
-                    relationships: {
-                        betaGroups: {
-                            data: [{
-                                type: 'betaGroups',
-                                id: ASC_BETA_GROUP_ID
-                            }]
-                        }
-                    }
-                }
-            })
-        });
-
-        const ascResult = await ascResponse.json();
-
-        if (!ascResponse.ok) {
-            // 409 Conflict means tester already exists
-            if (ascResponse.status !== 409) {
-                console.error('App Store Connect API Error:', ascResult);
-                return {
-                    statusCode: ascResponse.status,
-                    headers: corsHeaders,
-                    body: JSON.stringify({ message: 'Apple API Error', details: ascResult })
-                };
-            }
-        }
-
         // 3. Update status in GitHub
-        const githubUrl = `https://api.github.com/repos/${GITHUB_ORG}/${DATA_REPO}/contents/${filename}`;
+        const filePath = filename.includes('/') ? filename : `early-access/${filename}`;
+        const githubUrl = `https://api.github.com/repos/${GITHUB_ORG}/${DATA_REPO}/contents/${filePath}`;
         
         const githubGetResponse = await fetch(githubUrl, {
             headers: {
@@ -152,7 +154,7 @@ exports.handler = async (event, context) => {
         return {
             statusCode: 200,
             headers: corsHeaders,
-            body: JSON.stringify({ message: 'Tester approved successfully', email: userEmail })
+            body: JSON.stringify({ message: 'Tester approved successfully', email: userEmail, testflight: ascAdded })
         };
 
     } catch (error) {
