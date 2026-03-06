@@ -1812,7 +1812,7 @@
 
     // Map frame index to scrollProgress for particle palette
     const frameProgressMap = [0.0, 0.25, 0.45, 0.75];
-    const SLIDE_DURATION = 5000; // ms per slide
+    const SLIDE_DURATION = 3750; // ms per slide
 
     // --- Build progress ring dots ---
     const segments = [];
@@ -1915,7 +1915,7 @@
       // Animate scrollProgress for particle palette
       gsap.to({ val: scrollProgress }, {
         val: frameProgressMap[index],
-        duration: 0.6,
+        duration: 0.45,
         ease: 'power2.inOut',
         onUpdate: function() { scrollProgress = this.targets()[0].val; },
       });
@@ -1924,7 +1924,7 @@
       const tlOut = gsap.timeline();
       tlOut.to(oldFrame, {
         x: slideOut, opacity: 0, filter: 'blur(4px)',
-        duration: 0.6, ease: 'power2.in',
+        duration: 0.45, ease: 'power2.in',
         onComplete: () => {
           gsap.set(oldFrame, { x: 0, opacity: 0, filter: 'blur(0px)', pointerEvents: 'none' });
         }
@@ -1935,19 +1935,19 @@
       gsap.set(newSub, { opacity: 0, y: 20 });
       gsap.set(newFrame, { x: slideIn, opacity: 0, filter: 'blur(0px)', pointerEvents: 'auto' });
 
-      const tlIn = gsap.timeline({ delay: 0.15 });
+      const tlIn = gsap.timeline({ delay: 0.11 });
       tlIn.to(newFrame, {
         x: 0, opacity: 1,
-        duration: 0.6, ease: 'power2.out',
+        duration: 0.45, ease: 'power2.out',
       });
       tlIn.to(newWords, {
         opacity: 1, y: 0, filter: 'blur(0px)',
-        duration: 0.5, stagger: 0.06, ease: 'power2.out',
-      }, 0.1);
+        duration: 0.375, stagger: 0.045, ease: 'power2.out',
+      }, 0.075);
       tlIn.to(newSub, {
         opacity: 1, y: 0,
-        duration: 0.4, ease: 'power2.out',
-      }, 0.25);
+        duration: 0.3, ease: 'power2.out',
+      }, 0.19);
 
       tlIn.call(() => {
         currentFrame = index;
