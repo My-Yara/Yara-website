@@ -3,15 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Yara - Your Personal AI Advocate</title>
+  <title>Yara - Your Personal AI Advocate (DM Sans)</title>
   <meta name="description" content="Every company you pay uses AI to optimize what they charge you. Yara is the AI that fights back across every bill, subscription, and policy you have." />
   <link rel="icon" type="image/png" href="yara_butterfly.png" />
   <link rel="apple-touch-icon" href="yara_butterfly.png" />
 
-  <!-- Google Fonts: Inter + Plus Jakarta Sans -->
+  <!-- Google Fonts: DM Sans -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,500&display=swap" rel="stylesheet" />
 
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -25,16 +25,18 @@
       theme: {
         extend: {
           fontFamily: {
-            inter: ['Inter', '-apple-system', 'sans-serif'],
-            display: ['Plus Jakarta Sans', '-apple-system', 'sans-serif'],
+            outfit: ['DM Sans', '-apple-system', 'sans-serif'],
+            display: ['DM Sans', '-apple-system', 'sans-serif'],
           },
           colors: {
-            base: '#FAFAFA',
-            surface: '#FFFFFF',
-            purple: '#8B5CF6',
-            teal: '#06B6D4',
+            base: '#0B0D17',
+            surface: '#14172A',
+            card: '#1A1D2E',
+            accent: '#6C3AED',
+            'accent-hover': '#5B21B6',
+            teal: '#14B8A6',
             green: '#22C55E',
-            orange: '#F59E0B',
+            gold: '#F59E0B',
           },
         },
       },
@@ -43,32 +45,47 @@
 
   <style>
     *, *::before, *::after { box-sizing: border-box; }
-    html { font-family: 'Inter', -apple-system, sans-serif; -webkit-font-smoothing: antialiased; scrollbar-color: rgba(120,120,120,0.35) transparent; scrollbar-width: thin; }
+    html {
+      font-family: 'DM Sans', -apple-system, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      scrollbar-color: rgba(108,58,237,0.2) transparent;
+      scrollbar-width: thin;
+    }
     ::-webkit-scrollbar { width: 10px; }
     ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb { background: rgba(120,120,120,0.35); border-radius: 5px; }
-    ::-webkit-scrollbar-thumb:hover { background: rgba(120,120,120,0.55); }
+    ::-webkit-scrollbar-thumb { background: rgba(108,58,237,0.15); border-radius: 5px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(108,58,237,0.3); }
+
     body {
-      background-color: #FAFAFA;
-      color: #334155;
+      background-color: #FFFFFF;
+      color: #4A4A68;
       overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }
 
     /* --- Gradient text variants --- */
     .gradient-text-purple-teal {
-      background: linear-gradient(135deg, #8B5CF6 0%, #06B6D4 100%);
+      background: linear-gradient(135deg, #A78BFA 0%, #14B8A6 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
     }
     .gradient-text-teal-green {
-      background: linear-gradient(135deg, #06B6D4 0%, #22C55E 100%);
+      background: linear-gradient(135deg, #0D9488 0%, #16A34A 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
     }
     .gradient-text-green {
-      background: linear-gradient(135deg, #22C55E 0%, #4ADE80 100%);
+      background: linear-gradient(135deg, #16A34A 0%, #22C55E 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .gradient-text-gold {
+      background: linear-gradient(135deg, #F59E0B 0%, #FBBF24 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
@@ -76,44 +93,44 @@
 
     /* --- Buttons --- */
     .btn-primary {
-      background: #8B5CF6;
+      background: #6C3AED;
       transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
     .btn-primary:hover {
       transform: translateY(-2px);
-      box-shadow: 0 8px 32px rgba(139, 92, 246, 0.4);
+      box-shadow: 0 8px 32px rgba(108,58,237,0.4);
     }
     .btn-ghost {
-      border: 1px solid rgba(139, 92, 246, 0.5);
+      border: 1px solid rgba(108,58,237,0.3);
       transition: all 0.3s ease;
     }
     .btn-ghost:hover {
-      border-color: rgba(139, 92, 246, 0.9);
-      background: rgba(139, 92, 246, 0.1);
-      box-shadow: 0 0 30px rgba(139, 92, 246, 0.15);
+      border-color: rgba(108,58,237,0.7);
+      background: rgba(108,58,237,0.08);
+      box-shadow: 0 0 30px rgba(108,58,237,0.12);
     }
 
-    /* --- Glass card --- */
+    /* --- Glass card (light sections) --- */
     .glass-card {
       background: #FFFFFF;
-      border: 1px solid rgba(0, 0, 0, 0.08);
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+      border: 1px solid rgba(0,0,0,0.07);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
       transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
     }
     .glass-card:hover {
       transform: translateY(-4px);
-      box-shadow: 0 20px 60px rgba(139, 92, 246, 0.1), 0 8px 24px rgba(6, 182, 212, 0.08);
-      border-color: rgba(139, 92, 246, 0.3);
+      box-shadow: 0 20px 60px rgba(108,58,237,0.08);
+      border-color: rgba(108,58,237,0.15);
     }
 
-    /* --- Glass nav --- transparent over hero, glass on scroll */
+    /* --- Glass nav --- */
     .glass-nav {
-      background: rgba(255, 255, 255, 0.95);
-      backdrop-filter: blur(24px);
-      -webkit-backdrop-filter: blur(24px);
-      border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-      box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.03);
-      transition: background 0.5s ease, border-color 0.5s ease, box-shadow 0.5s ease;
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(0,0,0,0.06);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+      transition: background 0.5s ease, border-color 0.5s ease;
     }
 
     /* --- Nav inner layout --- */
@@ -125,7 +142,7 @@
       position: relative;
     }
 
-    /* --- Nav links pill (centered on viewport) --- hero state: dark on light */
+    /* --- Nav links pill --- */
     #navPill {
       position: absolute;
       left: 50%;
@@ -137,34 +154,35 @@
       display: flex;
       align-items: center;
       gap: 6px;
-      background: rgba(0, 0, 0, 0.04);
-      border: 1px solid rgba(0, 0, 0, 0.08);
+      background: rgba(0,0,0,0.03);
+      border: 1px solid rgba(0,0,0,0.06);
       border-radius: 9999px;
       padding: 5px 7px;
     }
     #navPill a.nav-link {
+      font-family: 'DM Sans', -apple-system, sans-serif;
       font-size: 13.5px;
       font-weight: 500;
-      color: rgba(0, 0, 0, 0.45);
+      color: #4A4A68;
       padding: 7px 14px;
       border-radius: 9999px;
-      transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+      transition: background 0.3s ease, color 0.3s ease, transform 0.2s ease;
       white-space: nowrap;
       position: relative;
     }
     #navPill a.nav-link:hover {
-      color: #0f172a !important;
-      background: rgba(0, 0, 0, 0.06) !important;
+      color: #1A1A2E !important;
+      background: rgba(0,0,0,0.04) !important;
       transform: translateY(-1px);
     }
     #navPill a.nav-link:active {
       transform: scale(0.96);
     }
-    /* Active link -- hero state (dark on light) */
+    /* Active link */
     #navPill a.nav-link.active {
-      color: #1D1D1F !important;
-      background: rgba(139, 92, 246, 0.08);
-      box-shadow: 0 0 0 1px rgba(139, 92, 246, 0.12);
+      color: #6C3AED !important;
+      background: rgba(108,58,237,0.06);
+      box-shadow: 0 0 0 1px rgba(108,58,237,0.12);
     }
     #navPill a.nav-link.active::after {
       content: '';
@@ -175,46 +193,33 @@
       width: 12px;
       height: 2px;
       border-radius: 1px;
-      background: linear-gradient(90deg, #8B5CF6, #06B6D4);
+      background: linear-gradient(90deg, #A78BFA, #14B8A6);
       animation: navIndicatorIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
     @keyframes navIndicatorIn {
       from { width: 0; opacity: 0; }
       to { width: 12px; opacity: 1; }
     }
-    /* Active link -- scrolled state (dark) */
-    .nav-scrolled #navPill a.nav-link:hover {
-      color: #0f172a !important;
-      background: rgba(0, 0, 0, 0.06) !important;
-    }
-    .nav-scrolled #navPill a.nav-link.active {
-      color: #1D1D1F !important;
-      background: rgba(139, 92, 246, 0.08);
-      box-shadow: 0 0 0 1px rgba(139, 92, 246, 0.12);
-    }
-    .nav-scrolled #navPill a.nav-link.active::after {
-      background: linear-gradient(90deg, #8B5CF6, #06B6D4);
-    }
 
     /* --- Auth button --- */
     .auth-btn {
-      background: rgba(0, 0, 0, 0.04);
-      border: 1px solid rgba(0, 0, 0, 0.08);
+      background: rgba(0,0,0,0.03);
+      border: 1px solid rgba(0,0,0,0.06);
       transition: all 0.3s ease;
     }
     .auth-btn:hover {
-      background: rgba(0, 0, 0, 0.08);
-      border-color: rgba(0, 0, 0, 0.15);
+      background: rgba(0,0,0,0.06);
+      border-color: rgba(0,0,0,0.12);
     }
 
     /* --- Coming Soon badge --- */
     .coming-soon-badge {
-      border: 1px solid rgba(245, 158, 11, 0.4);
+      border: 1px solid rgba(108,58,237,0.3);
       font-size: 10px;
       font-weight: 600;
       letter-spacing: 0.12em;
       text-transform: uppercase;
-      color: #F59E0B;
+      color: #6C3AED;
       padding: 3px 10px;
       border-radius: 9999px;
       display: inline-flex;
@@ -226,63 +231,35 @@
     .hiw-step-card {
       position: relative;
       background: #FFFFFF;
-      border-radius: 24px;
+      border-radius: 20px;
       padding: 36px 32px 32px;
-      border: 1px solid rgba(0, 0, 0, 0.07);
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+      border: 1px solid rgba(0,0,0,0.06);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
       overflow: hidden;
       transition: transform 0.35s ease, box-shadow 0.35s ease;
     }
-    .hiw-step-card::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      border-radius: 24px;
-      padding: 1px;
-      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-      -webkit-mask-composite: xor;
-      mask-composite: exclude;
-      pointer-events: none;
-      opacity: 0;
-      transition: opacity 0.35s ease;
-    }
     .hiw-step-card:hover {
       transform: translateY(-6px);
-      box-shadow: 0 24px 64px rgba(0, 0, 0, 0.08), 0 8px 24px rgba(0, 0, 0, 0.04);
+      box-shadow: 0 20px 60px rgba(108,58,237,0.08);
     }
-    .hiw-step-card:hover::before { opacity: 1; }
-
-    .hiw-step-card--connect::before {
-      background: linear-gradient(135deg, #3B82F6, transparent 60%) border-box;
-    }
-    .hiw-step-card--ask::before {
-      background: linear-gradient(135deg, #06B6D4, transparent 60%) border-box;
-    }
-    .hiw-step-card--save::before {
-      background: linear-gradient(135deg, #22C55E, transparent 60%) border-box;
-    }
-
-    .hiw-step-card:hover.hiw-step-card--connect { box-shadow: 0 24px 64px rgba(59,130,246,0.1), 0 8px 24px rgba(59,130,246,0.06); }
-    .hiw-step-card:hover.hiw-step-card--ask     { box-shadow: 0 24px 64px rgba(6,182,212,0.1),  0 8px 24px rgba(6,182,212,0.06); }
-    .hiw-step-card:hover.hiw-step-card--save    { box-shadow: 0 24px 64px rgba(34,197,94,0.1),  0 8px 24px rgba(34,197,94,0.06); }
 
     /* Ghost number watermark */
     .hiw-step-num {
       position: absolute;
       top: -12px;
       right: 20px;
-      font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+      font-family: 'DM Sans', -apple-system, sans-serif;
       font-size: 96px;
-      font-weight: 900;
+      font-weight: 700;
       line-height: 1;
       letter-spacing: -0.04em;
       pointer-events: none;
       user-select: none;
       -webkit-user-select: none;
     }
-    .hiw-step-num--connect { color: rgba(59, 130, 246, 0.07); }
-    .hiw-step-num--ask     { color: rgba(6, 182, 212, 0.07); }
-    .hiw-step-num--save    { color: rgba(34, 197, 94, 0.07); }
+    .hiw-step-num--connect { color: rgba(108, 58, 237, 0.06); }
+    .hiw-step-num--ask     { color: rgba(20, 184, 166, 0.06); }
+    .hiw-step-num--save    { color: rgba(34, 197, 94, 0.06); }
 
     /* Icon container */
     .hiw-icon-wrap {
@@ -296,16 +273,16 @@
       flex-shrink: 0;
     }
     .hiw-icon-wrap--connect {
-      background: rgba(59, 130, 246, 0.1);
-      border: 1px solid rgba(59, 130, 246, 0.18);
+      background: rgba(108, 58, 237, 0.08);
+      border: 1px solid rgba(108, 58, 237, 0.15);
     }
     .hiw-icon-wrap--ask {
-      background: rgba(6, 182, 212, 0.1);
-      border: 1px solid rgba(6, 182, 212, 0.18);
+      background: rgba(20, 184, 166, 0.08);
+      border: 1px solid rgba(20, 184, 166, 0.15);
     }
     .hiw-icon-wrap--save {
-      background: rgba(34, 197, 94, 0.1);
-      border: 1px solid rgba(34, 197, 94, 0.18);
+      background: rgba(34, 197, 94, 0.08);
+      border: 1px solid rgba(34, 197, 94, 0.15);
     }
 
     /* Step label pill */
@@ -322,16 +299,33 @@
       margin-bottom: 14px;
     }
     .hiw-step-label--connect {
-      color: #3B82F6;
-      background: rgba(59, 130, 246, 0.08);
+      color: #6C3AED;
+      background: rgba(108, 58, 237, 0.08);
     }
     .hiw-step-label--ask {
-      color: #06B6D4;
-      background: rgba(6, 182, 212, 0.08);
+      color: #0D9488;
+      background: rgba(20, 184, 166, 0.1);
     }
     .hiw-step-label--save {
-      color: #22C55E;
-      background: rgba(34, 197, 94, 0.08);
+      color: #16A34A;
+      background: rgba(34, 197, 94, 0.1);
+    }
+
+    /* Section header eyebrow for How It Works */
+    .hiw-section-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border-radius: 999px;
+      margin-bottom: 14px;
+      color: #6C3AED;
+      background: rgba(108, 58, 237, 0.08);
+      border: 1px solid rgba(108, 58, 237, 0.12);
     }
 
     /* Arrow connector between cards */
@@ -340,7 +334,7 @@
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
-      color: rgba(0,0,0,0.15);
+      color: rgba(0,0,0,0.12);
     }
     @media (min-width: 1024px) {
       .hiw-arrow { display: flex; }
@@ -348,7 +342,7 @@
 
     /* Section background treatment */
     #how-it-works {
-      background: #FAFAFA;
+      background: #F7F8FC;
     }
 
     /* --- Keyframe animations --- */
@@ -365,10 +359,6 @@
       33% { transform: translateY(-15px) translateX(10px); }
       66% { transform: translateY(5px) translateX(-5px); }
     }
-    @keyframes pulseGlow {
-      0%, 100% { box-shadow: 0 0 40px rgba(139, 92, 246, 0.1), 0 0 80px rgba(6, 182, 212, 0.06); }
-      50% { box-shadow: 0 0 60px rgba(139, 92, 246, 0.18), 0 0 120px rgba(6, 182, 212, 0.1); }
-    }
     .fade-in-up {
       opacity: 0;
       animation: fadeInUp 0.8s ease forwards;
@@ -376,11 +366,6 @@
     .stagger-1 { animation-delay: 0.1s; }
     .stagger-2 { animation-delay: 0.2s; }
     .stagger-3 { animation-delay: 0.3s; }
-
-    /* --- Phone glow --- */
-    .phone-glow {
-      animation: pulseGlow 4s ease-in-out infinite;
-    }
 
     /* --- Scroll-triggered animation --- */
     .reveal {
@@ -397,41 +382,26 @@
     .mobile-menu { display: none; }
     .mobile-menu.open { display: flex; }
 
-    /* Hide nav pill on mobile (ID specificity overrides Tailwind .hidden) */
+    /* Hide nav pill on mobile */
     @media (max-width: 767px) {
       #navPill { display: none !important; }
-    }
-
-    /* Scrollbar styles moved to top of file (transparent track) */
-
-    /* Aurora orbs */
-    .aurora-orb {
-      position: absolute;
-      border-radius: 50%;
-      filter: blur(120px);
-      pointer-events: none;
     }
 
     /* ============================== */
     /* CINEMATIC HERO STYLES          */
     /* ============================== */
 
-    /* Scroll runway -- single viewport hero */
     #scroll-runway { position: relative; height: 100vh; width: 100% }
 
-    /* Pinned viewport */
-    #pinned { position: relative; width: 100%; height: 100vh; overflow: hidden; background: #fff; }
-
-    /* Canvases */
-    #bgCanvas, #particleCanvas, #grainCanvas { position: absolute; inset: 0; width: 100%; height: 100% }
-    #bgCanvas { z-index: 1 }
-    #particleCanvas { z-index: 2 }
-    #grainCanvas { z-index: 3; opacity: 0.03; pointer-events: none; mix-blend-mode: multiply }
-
-    /* Vignette -- light mode: subtle edge fade */
-    #vignette {
-      position: absolute; inset: 0; z-index: 4; pointer-events: none;
-      background: radial-gradient(ellipse at center, transparent 50%, rgba(255,255,255,0.6) 100%);
+    #pinned {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      overflow: hidden;
+      background: #F7F8FC;
+      background-image:
+        radial-gradient(ellipse 60% 50% at 50% 40%, rgba(108,58,237,0.06) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 30% at 30% 60%, rgba(20,184,166,0.04) 0%, transparent 70%);
     }
 
     /* Content layer */
@@ -443,38 +413,96 @@
       text-align: center; padding: 0 40px; opacity: 0; pointer-events: none; will-change: opacity, transform;
     }
 
-    /* Typography -- dark text for light mode */
-    .frame h1 { font-family: 'Plus Jakarta Sans', -apple-system, sans-serif; font-size: clamp(40px,6vw,72px); font-weight: 800; letter-spacing: -0.02em; line-height: 1.1; color: #1D1D1F; margin-bottom: 20px }
+    /* Typography -- DM Sans headings */
+    .frame h1 {
+      font-family: 'DM Sans', -apple-system, sans-serif;
+      font-size: clamp(44px, 6vw, 80px);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1.05;
+      color: #1A1A2E;
+      margin-bottom: 20px;
+    }
     .frame h1 .word { display: inline-block; opacity: 0; transform: translateY(40px); filter: blur(8px); will-change: opacity, transform, filter }
-    .frame .sub { font-size: clamp(16px,2vw,20px); font-weight: 400; color: rgba(0,0,0,0.55); max-width: 560px; line-height: 1.6; opacity: 0; transform: translateY(20px) }
+    .frame .sub {
+      font-family: 'DM Sans', -apple-system, sans-serif;
+      font-size: clamp(16px, 2vw, 20px);
+      font-weight: 400;
+      color: #4A4A68;
+      max-width: 560px;
+      line-height: 1.6;
+      opacity: 0;
+      transform: translateY(20px);
+    }
 
     /* Gradient text (hero) */
-    .gpt { background: linear-gradient(135deg,#8B5CF6 0%,#06b6d4 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text }
-    .gg { background: linear-gradient(135deg,#22C55E 0%,#4ADE80 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; padding-bottom: 0.1em; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
+    .gpt {
+      background: linear-gradient(135deg, #A78BFA 0%, #14B8A6 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      filter: drop-shadow(0 0 20px rgba(108,58,237,0.15));
+    }
+    .gg {
+      background: linear-gradient(135deg, #22C55E 0%, #4ADE80 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      padding-bottom: 0.1em;
+      -webkit-box-decoration-break: clone;
+      box-decoration-break: clone;
+      filter: drop-shadow(0 0 16px rgba(34,197,94,0.2));
+    }
 
-    /* Fixed CTA — single persistent bar across entire site */
+    /* Fixed CTA bar */
     .fixed-cta {
       position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
       z-index: 9999; display: flex; gap: 0; align-items: center;
-      background: #ffffff; border: 1.5px solid rgba(139,92,246,0.25);
-      border-radius: 999px; padding: 5px 5px 5px 6px;
-      box-shadow: 0 8px 32px rgba(139,92,246,0.15), 0 2px 8px rgba(0,0,0,0.08);
+      background: rgba(255,255,255,0.95);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(0,0,0,0.08);
+      border-radius: 999px;
+      padding: 6px 6px 6px 8px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.12);
       animation: ctaEntrance 0.6s ease-out 1s both;
     }
     @keyframes ctaEntrance { from { opacity: 0; transform: translateX(-50%) translateY(20px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
     .fixed-cta input {
-      width: 220px; background: #f4f0ff; border: none; color: #0f172a;
-      padding: 12px 16px; font-size: 14px; outline: none; font-family: inherit;
+      width: 220px;
+      background: #F5F6FA;
+      border: 1px solid rgba(0,0,0,0.08);
+      color: #1A1A2E;
+      padding: 12px 16px; font-size: 14px; outline: none;
+      font-family: 'DM Sans', -apple-system, sans-serif;
       border-radius: 999px; margin-right: 6px;
+      transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
     }
-    .fixed-cta input::placeholder { color: rgba(100,80,160,0.45) }
-    .fixed-cta input:focus { background: #ede8ff; box-shadow: inset 0 0 0 1.5px rgba(139,92,246,0.3); }
+    .fixed-cta input::placeholder { color: #8888A4; }
+    .fixed-cta input:focus {
+      background: #FFFFFF;
+      border-color: #6C3AED;
+      box-shadow: 0 0 0 3px rgba(108,58,237,0.1);
+    }
     .fixed-cta button {
-      background: #8b5cf6; color: #fff; font-weight: 700; font-size: 14px; padding: 12px 28px;
-      border-radius: 999px; border: none; cursor: pointer; font-family: inherit; white-space: nowrap;
-      box-shadow: 0 4px 16px rgba(139,92,246,0.35); transition: all 0.2s ease;
+      background: #6C3AED;
+      color: #fff;
+      font-weight: 700;
+      font-size: 14px;
+      padding: 12px 28px;
+      border-radius: 999px;
+      border: none;
+      cursor: pointer;
+      font-family: 'DM Sans', -apple-system, sans-serif;
+      white-space: nowrap;
+      box-shadow: 0 4px 16px rgba(108,58,237,0.3);
+      transition: all 0.2s ease;
     }
-    .fixed-cta button:hover { background: #7c3aed; box-shadow: 0 6px 24px rgba(139,92,246,0.45); transform: translateY(-1px); }
+    .fixed-cta button:hover {
+      background: #5B21B6;
+      box-shadow: 0 6px 24px rgba(108,58,237,0.4);
+      transform: translateY(-1px);
+    }
     .cta-form { display: flex; align-items: center; gap: 0; width: 100%; }
     .fixed-cta .btn-spinner, .fixed-cta .btn-check { display: none; width: 18px; height: 18px; }
     .fixed-cta button.loading .btn-label { display: none; }
@@ -482,7 +510,7 @@
     .fixed-cta button.loading { pointer-events: none; opacity: 0.85; }
     .fixed-cta button.success .btn-label { display: none; }
     .fixed-cta button.success .btn-check { display: block; }
-    .fixed-cta button.success { background: #22C55E; box-shadow: 0 4px 16px rgba(34,197,94,0.35); }
+    .fixed-cta button.success { background: #22C55E; color: #fff; box-shadow: 0 4px 20px rgba(34,197,94,0.35); }
     .cta-error {
       position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%);
       background: rgba(239,68,68,0.95); color: #fff; font-size: 13px; font-weight: 500;
@@ -492,7 +520,7 @@
     }
     .cta-error.visible { opacity: 1; }
 
-    /* Hero progress -- ring dots (modern 2025 style) */
+    /* Hero progress -- ring dots */
     .hero-progress {
       position: absolute;
       bottom: 96px;
@@ -521,10 +549,10 @@
       transform: scale(1.4);
     }
     .hero-progress__dot--completed {
-      background: rgba(0,0,0,0.5);
+      background: rgba(0,0,0,0.35);
     }
     .hero-progress__dot--active {
-      background: rgba(0,0,0,0.85);
+      background: rgba(0,0,0,0.8);
     }
     .hero-progress__ring {
       position: absolute;
@@ -540,7 +568,7 @@
       stroke-width: 1;
     }
     .hero-progress__ring .ring-fill {
-      stroke: rgba(0,0,0,0.4);
+      stroke: rgba(0,0,0,0.5);
       stroke-width: 1.5;
       stroke-linecap: round;
       stroke-dasharray: 50.27;
@@ -558,118 +586,137 @@
       .hero-progress { gap: 10px; bottom: 84px; left: 20px; }
     }
 
-    /* Charge you more -- amber text */
-    .amber-text { color: #FBBF24; -webkit-text-fill-color: #FBBF24; }
+    /* Charge you more -- amber/gold text */
+    .amber-text {
+      color: #D97706;
+      -webkit-text-fill-color: #D97706;
+      filter: drop-shadow(0 0 12px rgba(217,119,6,0.15));
+    }
 
     @media (max-width: 768px) {
-      .frame h1 { font-size: clamp(28px, 7vw, 44px); }
+      .frame h1 { font-size: clamp(32px, 7vw, 52px); }
       .fixed-cta { left: 16px; right: 16px; transform: none; padding: 5px 5px 5px 6px; }
       .fixed-cta input { width: auto; flex: 1; min-width: 0; font-size: 14px; margin-right: 4px; }
       @keyframes ctaEntrance { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
     }
     @media (max-width: 480px) {
-      .frame h1 { font-size: 26px; }
+      .frame h1 { font-size: 28px; }
       .frame .sub { font-size: 15px; }
-    }
-
-    /* Zero counter */
-    .zero-counter { text-align: center; padding: 12px 16px; }
-    .zero-counter .zero-num {
-      font-size: 36px;
-      font-weight: 900;
-      color: #22C55E;
-      line-height: 1;
-    }
-    .zero-counter .zero-label {
-      font-size: 11px;
-      color: #94a3b8;
-      margin-top: 4px;
     }
 
     /* Security badge card */
     .security-badge {
       background: #FFFFFF;
-      border: 1px solid rgba(0, 0, 0, 0.08);
+      border: 1px solid rgba(0,0,0,0.06);
       border-radius: 16px;
       padding: 24px;
       text-align: center;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
-    }
-
-    /* Section tints */
-    .section-blue-tint {
-      background: radial-gradient(ellipse at 60% 50%, rgba(59, 130, 246, 0.06) 0%, transparent 70%);
     }
 
     /* CTA radial gradient */
     .cta-radial {
-      background: radial-gradient(ellipse at 50% 50%, rgba(139, 92, 246, 0.08) 0%, rgba(139, 92, 246, 0.03) 40%, transparent 70%);
+      background: radial-gradient(ellipse at 50% 50%, rgba(108,58,237,0.06) 0%, rgba(108,58,237,0.02) 40%, transparent 70%);
     }
 
-    /* Video divider band */
+    /* Video / CTA divider band */
     .video-divider {
       position: relative;
-      height: 50vh;
-      min-height: 340px;
-      max-height: 500px;
+      min-height: 500px;
       overflow: hidden;
       display: flex;
       align-items: center;
       justify-content: center;
-    }
-    .video-divider video {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
+      padding: 120px 24px;
+      background: linear-gradient(160deg, #0B0D17 0%, #1A1030 50%, #0B0D17 100%);
     }
     .video-divider .divider-overlay {
       position: absolute;
       inset: 0;
-      background: rgba(0, 0, 0, 0.45);
+      background: radial-gradient(ellipse 60% 50% at 50% 50%, rgba(108,58,237,0.1) 0%, transparent 70%);
       z-index: 1;
     }
     .video-divider .divider-content {
       position: relative;
       z-index: 2;
       text-align: center;
-      padding: 0 24px;
       max-width: 700px;
     }
     .video-divider .divider-content h2 {
-      font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
-      font-size: clamp(28px, 4vw, 48px);
+      font-family: 'DM Sans', -apple-system, sans-serif;
+      font-size: clamp(40px, 7vw, 80px);
       font-weight: 700;
-      letter-spacing: -0.02em;
-      line-height: 1.1;
-      color: #fff;
-      margin-bottom: 16px;
+      letter-spacing: -0.03em;
+      line-height: 1.05;
+      color: #EDEDED;
+      margin-bottom: 20px;
     }
     .video-divider .divider-content p {
-      font-size: clamp(15px, 1.8vw, 18px);
-      color: rgba(255, 255, 255, 0.7);
+      font-size: clamp(16px, 2vw, 20px);
+      color: rgba(255,255,255,0.5);
       line-height: 1.6;
     }
 
-    /* Mobile: taller video divider for more impact */
     @media (max-width: 768px) {
       .video-divider {
-        height: 60vh !important;
-        min-height: 380px !important;
-        max-height: none !important;
-      }
-      .video-divider .divider-content {
-        padding: 40px 24px;
+        padding: 80px 24px;
+        min-height: 380px;
       }
     }
 
+    /* Stats section */
+    .stats-section {
+      background: #FFFFFF;
+    }
+    .stat-number {
+      font-family: 'DM Sans', -apple-system, sans-serif;
+      font-size: clamp(36px, 5vw, 56px);
+      font-weight: 700;
+      color: #6C3AED;
+      line-height: 1;
+    }
+    .stat-label {
+      font-size: 15px;
+      color: #4A4A68;
+      margin-top: 8px;
+      line-height: 1.5;
+    }
 
-    /* ============================== */
-    /* SCROLLYTELLING STYLES          */
-    /* ============================== */
+    /* Section headings for light sections */
+    .section-heading-dark {
+      font-family: 'DM Sans', -apple-system, sans-serif;
+      font-size: clamp(32px, 5vw, 56px);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      color: #1A1A2E;
+    }
+
+    /* Production typography utilities */
+    .section-heading {
+      font-family: 'DM Sans', -apple-system, sans-serif;
+      font-size: clamp(32px, 5vw, 56px);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      color: #1A1A2E;
+    }
+    .heading-display {
+      font-family: 'DM Sans', -apple-system, sans-serif;
+    }
+
+    /* Eyebrow */
+    .eyebrow {
+      display: inline-block;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #6C3AED;
+      margin-bottom: 20px;
+    }
+
+    /* Scrollytelling (kept for utility, not actively used) */
     .scrolly-container { position: relative; }
-
     .scrolly-sticky {
       position: sticky;
       top: 0;
@@ -686,397 +733,28 @@
     @media (min-width: 769px) {
       .scrolly-sticky { padding: 0 60px; }
     }
-
-    .scrolly-text-side {
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      height: 100%;
-    }
-
-    .scrolly-header {
-      margin-bottom: 32px;
-      flex-shrink: 0;
-    }
-
-    .scrolly-panels-container {
-      position: relative;
-      min-height: 200px;
-      flex-shrink: 0;
-    }
-
-    .scrolly-text-panel {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-start;
-      opacity: 0;
-      transform: translateY(24px);
-      transition: opacity 0.5s ease, transform 0.5s ease;
-      pointer-events: none;
-    }
-    .scrolly-text-panel.active {
-      opacity: 1;
-      transform: translateY(0);
-      pointer-events: auto;
-    }
-
-    .scrolly-panel-label {
-      font-size: 13px;
-      font-weight: 600;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: #8B5CF6;
-      margin-bottom: 16px;
-    }
-    .scrolly-panel-title {
-      font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
-      font-size: clamp(22px, 2.5vw, 32px);
-      font-weight: 700;
-      letter-spacing: -0.02em;
-      line-height: 1.15;
-      margin-bottom: 14px;
-      color: #1D1D1F;
-    }
-    .scrolly-panel-body {
-      font-size: 14px;
-      color: #6E6E73;
-      line-height: 1.6;
-      max-width: 420px;
-    }
-
-    .scrolly-phone-side {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      position: relative;
-    }
-    .scrolly-phone-screens { position: relative; }
-
-
-    /* Progress dots */
-    .scrolly-dots {
-      position: absolute;
-      right: -48px;
-      top: 50%;
-      transform: translateY(-50%);
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-    .sdot {
-      width: 5px;
-      height: 5px;
-      border-radius: 50%;
-      background: rgba(0,0,0,0.15);
-      transition: background 0.3s, transform 0.3s;
-    }
-    .sdot.active {
-      background: #8B5CF6;
-      transform: scale(1.6);
-    }
-
-    /* Phone frame - kept dark themed */
-
-
-    /* ====================================== */
-    /* FEATURES iPHONE 15 PRO FRAME          */
-    /* (matches index.html exactly)          */
-    /* ====================================== */
-    .feat-iphone-wrapper {
-      width: 340px; height: 738px; position: relative; flex-shrink: 0;
-      transform: scale(0.9); transform-origin: center center;
-      margin: -37px -17px;
-    }
-    .feat-iphone-frame {
-      position: absolute; width: 100%; height: 100%;
-      background: linear-gradient(145deg, #3A3A3C, #1D1D1F, #2C2C2E);
-      border-radius: 50px; padding: 4px;
-      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.15), 0 25px 50px -12px rgba(0,0,0,0.35);
-      backface-visibility: hidden;
-    }
-    .feat-iphone-screen {
-      width: 100%; height: 100%; background: #fff;
-      border-radius: 46px; overflow: hidden; position: relative;
-      backface-visibility: hidden;
-      font-family: 'Inter', -apple-system, sans-serif;
-      color: #1D1D1F;
-      -webkit-font-smoothing: antialiased;
-    }
-    /* Reset Tailwind preflight inside phone screen so it matches original index.html */
-    .feat-iphone-screen img { display: inline; max-width: none; }
-    .feat-iphone-screen svg { display: inline; }
-    .feat-iphone-btn-vol-up, .feat-iphone-btn-vol-down, .feat-iphone-btn-power {
-      position: absolute;
-      background: linear-gradient(145deg, #3A3A3C, #2C2C2E);
-      z-index: 5; box-shadow: 0 1px 2px rgba(0,0,0,0.3);
-    }
-    .feat-iphone-btn-vol-up { width: 4px; height: 32px; left: -3px; top: 120px; border-radius: 2px 0 0 2px; }
-    .feat-iphone-btn-vol-down { width: 4px; height: 32px; left: -3px; top: 162px; border-radius: 2px 0 0 2px; }
-    .feat-iphone-btn-power { width: 4px; height: 50px; right: -3px; top: 140px; border-radius: 0 2px 2px 0; }
-    .feat-dynamic-island {
-      position: absolute; top: 10px; left: 50%; transform: translateX(-50%);
-      width: 100px; height: 28px; background: #000; border-radius: 16px; z-index: 100;
-    }
-    .feat-status-bar {
-      position: absolute; top: 16px; left: 0; right: 0; height: 20px;
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 0 28px; font-size: 13px; font-weight: 600; z-index: 50;
-    }
-    .feat-status-bar .time { color: #000; font-weight: 600; }
-    .feat-screen-content {
-      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-      opacity: 0; transition: opacity 0.5s ease;
-      display: flex; flex-direction: column;
-    }
-    .feat-screen-content.active { opacity: 1; }
-
-    /* ====================================== */
-    /* FEATURES PHONE SCREENS (light iOS)     */
-    /* (scoped under .feat-iphone-screen)     */
-    /* ====================================== */
-    .feat-iphone-screen .chat-header,
-    .feat-iphone-screen .savings-header,
-    .feat-iphone-screen .call-header {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 55px 20px 16px;
-    }
-    .feat-iphone-screen .chat-header img,
-    .feat-iphone-screen .savings-header img { width: 30px; height: 30px; }
-    .feat-iphone-screen .chat-header-icon {
-      width: 28px; height: 28px; display: flex; align-items: center; justify-content: center;
-      color: #1D1D1F;
-    }
-
-    /* Chat */
-    .feat-iphone-screen .chat-messages {
-      flex: 1; padding: 16px 20px; display: flex; flex-direction: column; gap: 16px; overflow: hidden;
-    }
-    .feat-iphone-screen .chat-bubble {
-      max-width: 90%; font-size: 14px; line-height: 1.45;
-    }
-    .feat-iphone-screen .chat-bubble.user {
-      align-self: flex-end; background: #E3F2FD; color: #1D1D1F;
-      padding: 10px 16px; border-radius: 18px; border: 1px solid #BBDEFB;
-    }
-    .feat-iphone-screen .chat-bubble.yara {
-      align-self: flex-start; background: transparent; color: #1D1D1F; padding: 0;
-    }
-    .feat-iphone-screen .chat-actions { display: flex; gap: 12px; margin-top: 8px; }
-    .feat-iphone-screen .chat-actions span { font-size: 14px; color: #C7C7CC; cursor: pointer; }
-    .feat-iphone-screen .chat-suggestions {
-      display: flex; gap: 10px; padding: 12px 20px; overflow-x: auto;
-      scrollbar-width: none; /* Firefox */
-      -ms-overflow-style: none; /* IE/Edge */
-    }
-    .feat-iphone-screen .chat-suggestions::-webkit-scrollbar { display: none; }
-    .feat-iphone-screen .chat-suggestion {
-      display: flex; align-items: center; gap: 8px; padding: 8px 12px;
-      background: #fff; border: 1px solid #E5E5EA; border-radius: 20px;
-      font-size: 12px; color: #007AFF; white-space: nowrap; font-weight: 500;
-    }
-    .feat-iphone-screen .chat-suggestion-icon {
-      width: 20px; height: 20px; background: #007AFF; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-    }
-    .feat-iphone-screen .chat-suggestion-icon svg { width: 11px; height: 11px; }
-    .feat-iphone-screen .chat-input-bar {
-      display: flex; align-items: center; gap: 12px; padding: 10px 14px 24px; background: #fff;
-    }
-    .feat-iphone-screen .chat-input-bar .plus {
-      width: 32px; height: 32px; background: transparent; display: flex;
-      align-items: center; justify-content: center; font-size: 24px; color: #8E8E93; font-weight: 300;
-    }
-    .feat-iphone-screen .chat-input {
-      flex: 1; padding: 10px 16px; background: #F5F5F7; border-radius: 24px;
-      font-size: 14px; color: #8E8E93;
-      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-    }
-    .feat-iphone-screen .mic-btn {
-      width: 38px; height: 38px; background: #007AFF; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-    }
-    .feat-iphone-screen .mic-btn svg { width: 20px; height: 20px; fill: white; }
-    .feat-iphone-screen .waveform-btn {
-      width: 38px; height: 38px; background: #F5F5F7; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-    }
-    .feat-iphone-screen .waveform-btn svg { width: 22px; height: 22px; fill: #007AFF; }
-
-    /* Leveling */
-    .feat-iphone-screen .leveling-content {
-      flex: 1; padding: 12px 20px; display: flex; flex-direction: column;
-    }
-    .feat-iphone-screen .leveling-greeting { text-align: center; margin-bottom: 12px; }
-    .feat-iphone-screen .leveling-greeting h2 { font-family: 'Plus Jakarta Sans', -apple-system, sans-serif; font-size: 20px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.1; margin-bottom: 4px; color: #1D1D1F; }
-    .feat-iphone-screen .leveling-greeting p { font-size: 13px; color: #6E6E73; line-height: 1.4; }
-    .feat-iphone-screen .leveling-help-title { font-size: 13px; font-weight: 600; margin-bottom: 10px; color: #1D1D1F; }
-    .feat-iphone-screen .leveling-item {
-      display: flex; align-items: flex-start; gap: 10px; margin-bottom: 10px;
-      font-size: 12px; line-height: 1.4; color: #6E6E73;
-    }
-    .feat-iphone-screen .leveling-check {
-      width: 18px; height: 18px; background: #007AFF; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px;
-    }
-    .feat-iphone-screen .leveling-check svg { width: 10px; height: 10px; fill: white; }
-    .feat-iphone-screen .leveling-cta {
-      display: flex; align-items: center; gap: 8px; margin-top: 12px;
-      font-size: 12px; color: #1D1D1F; font-weight: 500;
-    }
-    .feat-iphone-screen .leveling-cta-icon { color: #007AFF; font-size: 14px; }
-
-    /* Savings */
-    .feat-iphone-screen .savings-header img { width: 30px; height: 30px; }
-    .feat-iphone-screen .savings-title {
-      padding: 12px 18px 4px; font-size: 14px; font-weight: 600;
-      display: flex; align-items: center; gap: 8px; color: #1D1D1F;
-    }
-    .feat-iphone-screen .savings-subtitle { padding: 0 18px 10px; font-size: 12px; color: #6E6E73; }
-    .feat-iphone-screen .savings-list {
-      padding: 0 14px; display: flex; flex-direction: column; gap: 10px; flex: 1; overflow: hidden;
-    }
-    .feat-iphone-screen .savings-card {
-      background: #fff; border: 1px solid #E5E5EA; border-radius: 14px; padding: 14px;
-    }
-    .feat-iphone-screen .savings-card-header {
-      display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 4px;
-    }
-    .feat-iphone-screen .savings-card-provider { font-size: 14px; font-weight: 600; color: #1D1D1F; }
-    .feat-iphone-screen .savings-card-plan { font-size: 11px; color: #6E6E73; margin-top: 2px; }
-    .feat-iphone-screen .savings-card-match { font-size: 11px; color: #007AFF; font-weight: 500; }
-    .feat-iphone-screen .savings-card-price { font-size: 24px; font-weight: 700; color: #1D1D1F; margin: 6px 0 10px; }
-    .feat-iphone-screen .savings-card-actions { display: flex; gap: 10px; }
-    .feat-iphone-screen .savings-btn {
-      flex: 1; padding: 10px; border-radius: 10px; font-size: 13px; font-weight: 600;
-      text-align: center; cursor: pointer;
-    }
-    .feat-iphone-screen .savings-btn.outline { border: 1.5px solid #007AFF; color: #007AFF; background: transparent; }
-    .feat-iphone-screen .savings-btn.filled { background: #007AFF; color: white; border: none; }
-
-    /* Call */
-    .feat-iphone-screen .call-status { font-size: 14px; font-weight: 500; color: #1D1D1F; }
-    .feat-iphone-screen .call-banner {
-      display: flex; align-items: center; gap: 12px; margin: 0 14px 14px;
-      padding: 8px 12px; background: #E8F5E9; border-radius: 12px;
-    }
-    .feat-iphone-screen .call-banner-phone {
-      width: 20px; height: 20px; background: #34C759; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-    }
-    .feat-iphone-screen .call-banner-phone svg { width: 11px; fill: white; }
-    .feat-iphone-screen .call-banner-num { font-size: 12px; font-weight: 500; color: #34C759; }
-    .feat-iphone-screen .call-banner-time { font-size: 12px; color: #34C759; font-weight: 500; }
-    .feat-iphone-screen .call-banner-badge {
-      font-size: 11px; padding: 4px 10px; background: #F5F5F7; border-radius: 6px;
-      color: #8E8E93; font-weight: 500; margin-left: auto;
-    }
-    .feat-iphone-screen .call-messages {
-      flex: 1; padding: 0 16px; display: flex; flex-direction: column; gap: 14px; overflow: hidden;
-    }
-    .feat-iphone-screen .call-input-bar {
-      display: flex; align-items: center; gap: 10px; padding: 10px 14px 24px;
-    }
-    .feat-iphone-screen .call-input {
-      flex: 1; padding: 10px 16px; background: #F5F5F7; border-radius: 24px;
-      font-size: 13px; color: #8E8E93;
-      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-    }
-    .feat-iphone-screen .call-input-bar .plus {
-      width: 32px; height: 32px; background: transparent; display: flex;
-      align-items: center; justify-content: center; font-size: 24px; color: #8E8E93; font-weight: 300;
-    }
-    .feat-iphone-screen .call-btns { display: flex; gap: 10px; }
-    .feat-iphone-screen .call-btn {
-      width: 36px; height: 36px; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-    }
-    .feat-iphone-screen .call-btn svg { width: 16px; height: 16px; }
-    .feat-iphone-screen .call-btn.mic { background: #FF3B30; }
-    .feat-iphone-screen .call-btn.mic svg { fill: white; }
-    .feat-iphone-screen .call-btn.speaker { background: #34C759; }
-    .feat-iphone-screen .call-btn.speaker svg { fill: white; }
-    .feat-iphone-screen .call-btn.keypad { background: #F5F5F7; }
-    .feat-iphone-screen .call-btn.keypad svg { fill: #1D1D1F; }
-    .feat-iphone-screen .call-btn.end { background: #FF3B30; }
-    .feat-iphone-screen .call-btn.end svg { fill: white; }
-
-    /* Screen backgrounds */
-    .feat-iphone-screen .savings-screen { background: #fff; }
-    .feat-iphone-screen .call-screen { background: #fff; }
-    .feat-iphone-screen .chat-screen { background: #fff; }
-    .feat-iphone-screen .leveling-screen { background: #fff; }
-
-    /* Eyebrow */
-    .eyebrow {
-      display: inline-block;
-      font-size: 13px;
-      font-weight: 600;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: #8B5CF6;
-      margin-bottom: 20px;
-    }
-
-    /* Mobile responsive for scrollytelling */
-    @media (max-width: 768px) {
-      .scrolly-sticky {
-        grid-template-columns: 1fr;
-        padding: 0 24px;
-        gap: 40px;
-      }
-      .scrolly-phone-side { display: none; }
-      .scrolly-dots { display: none; }
-      /* Reduce scroll distance when phone is hidden (text-only needs less scroll) */
-      #features { height: 180vh !important; }
-    }
-    /* Small phone breakpoint */
-    @media (max-width: 480px) {
-      .scrolly-panel-title { font-size: clamp(18px, 5vw, 24px); }
-      .scrolly-panel-body { font-size: 13px; }
-      .security-badge { padding: 16px; }
-      .security-badge .text-lg { font-size: 16px; }
-      #features { height: 160vh !important; }
-    }
-
-    /* Production typography utilities */
-    .section-heading {
-      font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
-      font-size: clamp(32px, 5vw, 56px);
-      font-weight: 700;
-      letter-spacing: -0.02em;
-      line-height: 1.1;
-      color: #1D1D1F;
-    }
-    .heading-display {
-      font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
-    }
   </style>
 </head>
-<body class="font-inter antialiased">
+<body class="font-outfit antialiased">
 
   <!-- ===== NAVIGATION ===== -->
   <nav id="mainNav" class="glass-nav fixed top-0 left-0 right-0 z-40">
     <div class="max-w-7xl mx-auto px-6 lg:px-8 relative">
       <div id="navInner">
         <!-- Logo -->
-        <a href="#" id="navLogo" class="flex items-center gap-2 relative z-10" style="font-family:'Plus Jakarta Sans',-apple-system,sans-serif;font-size:20px;font-weight:700;color:#1D1D1F;letter-spacing:-0.02em;">
-          <img src="yara_butterfly.png" alt="Yara" class="w-8 h-8" style="filter: drop-shadow(0 1px 2px rgba(0,0,0,0.1));">
+        <a href="#" id="navLogo" class="flex items-center gap-2 relative z-10" style="font-family:'DM Sans',-apple-system,sans-serif;font-size:20px;font-weight:700;color:#1A1A2E;letter-spacing:-0.02em;">
+          <img src="yara_butterfly.png" alt="Yara" class="w-8 h-8" style="filter: drop-shadow(0 1px 3px rgba(108,58,237,0.2));">
           Yara
         </a>
 
-        <!-- Centered nav pill (desktop) -- moves right on scroll -->
+        <!-- Centered nav pill (desktop) -->
         <div id="navPill" class="hidden md:flex">
           <a href="#how-it-works" class="nav-link">How It Works</a>
           <a href="#waitlist" class="nav-link">Get Early Access</a>
         </div>
 
         <!-- Mobile hamburger -->
-        <button id="mobileToggle" class="md:hidden p-2 relative z-10" style="color:#1D1D1F;" aria-label="Toggle navigation menu">
+        <button id="mobileToggle" class="md:hidden p-2 relative z-10" style="color:#1A1A2E;" aria-label="Toggle navigation menu">
           <svg id="hamburgerIcon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
           </svg>
@@ -1087,9 +765,9 @@
       </div>
     </div>
     <!-- Mobile menu -->
-    <div id="mobileMenu" class="mobile-menu flex-col gap-4 px-6 pb-6 md:hidden" style="background:rgba(255,255,255,0.97);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);">
-      <a href="#how-it-works" class="text-sm text-slate-600 hover:text-slate-900 transition-colors">How It Works</a>
-      <a href="#waitlist" class="text-sm text-slate-600 hover:text-slate-900 transition-colors">Get Early Access</a>
+    <div id="mobileMenu" class="mobile-menu flex-col gap-4 px-6 pb-6 md:hidden" style="background:rgba(255,255,255,0.98);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);">
+      <a href="#how-it-works" class="text-sm transition-colors" style="color:#4A4A68;" onmouseover="this.style.color='#1A1A2E'" onmouseout="this.style.color='#4A4A68'">How It Works</a>
+      <a href="#waitlist" class="text-sm transition-colors" style="color:#4A4A68;" onmouseover="this.style.color='#1A1A2E'" onmouseout="this.style.color='#4A4A68'">Get Early Access</a>
     </div>
   </nav>
 
@@ -1098,12 +776,6 @@
   <!-- ===== CINEMATIC HERO ===== -->
   <div id="scroll-runway">
     <div id="pinned">
-
-      <div id="vignette"></div>
-
-      <canvas id="bgCanvas"></canvas>
-      <canvas id="particleCanvas"></canvas>
-      <canvas id="grainCanvas"></canvas>
 
       <nav class="hero-progress" id="heroProgress" role="tablist" aria-label="Slide navigation"></nav>
 
@@ -1116,17 +788,17 @@
         <!-- Frame 1 -->
         <div class="frame" id="f1">
           <h1><span class="word">They</span> <span class="word">use</span> <span class="word">it</span> <span class="word">to</span><br><span class="word amber-text">charge</span> <span class="word amber-text">you</span> <span class="word amber-text">more</span></h1>
-          <p class="sub">Dynamic pricing, hidden fees, automatic rate increases. Their AI works around the clock against your wallet.</p>
+          <p class="sub">They decide what you pay, how long you wait on hold, and what discount to offer when you threaten to leave. Loyal customers pay more.</p>
         </div>
         <!-- Frame 2 -->
         <div class="frame" id="f2">
           <h1><span class="word">It's</span> <span class="word">time</span> <span class="word">to</span><br><span class="word gg">fight</span> <span class="word gg">back</span></h1>
-          <p class="sub">What if you had AI that worked just as hard for you?</p>
+          <p class="sub">Now you have AI that reviews your bills, finds savings, calls your provider, and negotiates on your behalf.</p>
         </div>
         <!-- Frame 3 -->
         <div class="frame" id="f3">
           <h1><span class="word">Meet</span> <span class="word gpt">Yara</span></h1>
-          <p class="sub">Your Personal AI Advocate. Fights every bill, subscription, and policy you have.</p>
+          <p class="sub">She analyzes every bill for errors and overcharges. She finds better plans based on your actual usage. She picks up the phone and negotiates. She logs into provider portals and makes changes directly.</p>
         </div>
       </div>
 
@@ -1136,26 +808,21 @@
 
 
 
-
   <!-- ===== SECTION: HOW IT WORKS (3 steps) ===== -->
-  <section id="how-it-works" class="py-12 md:py-16 relative overflow-hidden" style="padding-bottom:100px;">
-
-    <!-- Ambient background blobs -->
-    <div aria-hidden="true" style="position:absolute;top:-80px;left:-120px;width:520px;height:520px;background:radial-gradient(circle,rgba(59,130,246,0.05) 0%,transparent 70%);pointer-events:none;"></div>
-    <div aria-hidden="true" style="position:absolute;bottom:-60px;right:-100px;width:480px;height:480px;background:radial-gradient(circle,rgba(34,197,94,0.06) 0%,transparent 70%);pointer-events:none;"></div>
+  <section id="how-it-works" class="py-20 md:py-28 relative overflow-hidden">
 
     <div class="max-w-5xl mx-auto px-6 lg:px-8 relative">
 
       <!-- Section header -->
-      <div class="text-center mb-8 md:mb-10 reveal">
-        <span class="hiw-step-label hiw-step-label--ask" style="font-family:'Plus Jakarta Sans',-apple-system,sans-serif;margin-bottom:20px;">
-          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><circle cx="6" cy="6" r="3" fill="#06B6D4"/></svg>
+      <div class="text-center mb-10 md:mb-14 reveal">
+        <span class="hiw-section-eyebrow">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><circle cx="6" cy="6" r="3" fill="#6C3AED"/></svg>
           How It Works
         </span>
-        <h2 class="section-heading" style="margin-top:4px;">
+        <h2 class="section-heading-dark" style="margin-top:12px;">
           Three steps to <span class="gradient-text-green">saving money</span>
         </h2>
-        <p class="text-base leading-relaxed mt-4 mx-auto" style="color:#6E6E73;max-width:480px;">
+        <p class="text-base leading-relaxed mt-4 mx-auto" style="color:#4A4A68;max-width:480px;">
           From connecting your first account to real dollars back in your pocket — in minutes.
         </p>
       </div>
@@ -1171,7 +838,7 @@
 
             <!-- Icon -->
             <div class="hiw-icon-wrap hiw-icon-wrap--connect">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#6C3AED" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <path d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.1"/>
                 <path d="M10.172 13.828a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/>
               </svg>
@@ -1181,13 +848,13 @@
             <div class="hiw-step-label hiw-step-label--connect">Step 1</div>
 
             <!-- Content -->
-            <h3 class="heading-display font-bold mb-3" style="font-size:22px;letter-spacing:-0.02em;color:#1D1D1F;">Connect</h3>
-            <p style="font-size:14px;line-height:1.65;color:#6E6E73;">Link your accounts securely via Plaid. Bank accounts, credit cards, insurance, subscriptions — all in one place.</p>
+            <h3 class="heading-display font-bold mb-3" style="font-size:22px;letter-spacing:-0.02em;color:#1A1A2E;">Connect</h3>
+            <p style="font-size:14px;line-height:1.65;color:#4A4A68;">Link your accounts securely via Plaid. Bank accounts, credit cards, insurance, subscriptions — all in one place.</p>
 
             <!-- Mini trust signal -->
             <div class="flex items-center gap-2 mt-6 pt-5" style="border-top:1px solid rgba(0,0,0,0.06);">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-              <span style="font-size:12px;font-weight:600;color:#3B82F6;">Bank-level encryption</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6C3AED" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              <span style="font-size:12px;font-weight:600;color:#6C3AED;">Bank-level encryption</span>
             </div>
           </div>
         </div>
@@ -1207,7 +874,7 @@
 
             <!-- Icon -->
             <div class="hiw-icon-wrap hiw-icon-wrap--ask">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#06B6D4" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#14B8A6" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
               </svg>
             </div>
@@ -1216,13 +883,13 @@
             <div class="hiw-step-label hiw-step-label--ask">Step 2</div>
 
             <!-- Content -->
-            <h3 class="heading-display font-bold mb-3" style="font-size:22px;letter-spacing:-0.02em;color:#1D1D1F;">Ask</h3>
-            <p style="font-size:14px;line-height:1.65;color:#6E6E73;">Ask anything about your spending, bills, or finances. Yara analyzes every account and surfaces real opportunities.</p>
+            <h3 class="heading-display font-bold mb-3" style="font-size:22px;letter-spacing:-0.02em;color:#1A1A2E;">Ask</h3>
+            <p style="font-size:14px;line-height:1.65;color:#4A4A68;">Upload a bill or connect your accounts. Yara analyzes every line item for overcharges, hidden fees, and plans that don't match your usage.</p>
 
             <!-- Mini trust signal -->
             <div class="flex items-center gap-2 mt-6 pt-5" style="border-top:1px solid rgba(0,0,0,0.06);">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#06B6D4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
-              <span style="font-size:12px;font-weight:600;color:#06B6D4;">Responds in seconds</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#14B8A6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+              <span style="font-size:12px;font-weight:600;color:#0D9488;">Responds in seconds</span>
             </div>
           </div>
         </div>
@@ -1252,13 +919,13 @@
             <div class="hiw-step-label hiw-step-label--save">Step 3</div>
 
             <!-- Content -->
-            <h3 class="heading-display font-bold mb-3" style="font-size:22px;letter-spacing:-0.02em;color:#1D1D1F;">Save</h3>
-            <p style="font-size:14px;line-height:1.65;color:#6E6E73;">Get verified recommendations that save you real money. Approve and Yara takes action on your behalf.</p>
+            <h3 class="heading-display font-bold mb-3" style="font-size:22px;letter-spacing:-0.02em;color:#1A1A2E;">Save</h3>
+            <p style="font-size:14px;line-height:1.65;color:#4A4A68;">Get recommendations with exact dollar amounts and evidence from your bills. Approve, and Yara calls the provider, negotiates the rate, or switches the plan.</p>
 
             <!-- Mini trust signal -->
             <div class="flex items-center gap-2 mt-6 pt-5" style="border-top:1px solid rgba(0,0,0,0.06);">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#22C55E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
-              <span style="font-size:12px;font-weight:600;color:#22C55E;">Avg. $312 saved per year</span>
+              <span style="font-size:12px;font-weight:600;color:#16A34A;">Avg. $150/mo in savings found</span>
             </div>
           </div>
         </div>
@@ -1268,26 +935,24 @@
       <!-- Security trust line -->
       <div class="reveal text-center mt-12 pt-10" style="border-top:1px solid rgba(0,0,0,0.06);">
         <div class="flex items-center justify-center gap-2 mb-3">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#06B6D4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-          <span class="heading-display font-bold text-lg" style="color:#1D1D1F;">Your data. Your device. Period.</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#14B8A6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          <span class="heading-display font-bold text-lg" style="color:#1A1A2E;">Your data. Your device. Period.</span>
         </div>
-        <p style="font-size:15px;color:#6E6E73;max-width:520px;margin:0 auto;line-height:1.6;">End-to-end encrypted. Zero data retention. We never see your data &mdash; because we never store it.</p>
+        <p style="font-size:15px;color:#4A4A68;max-width:520px;margin:0 auto;line-height:1.6;">End-to-end encrypted. Zero data retention. We never see your data &mdash; because we never store it.</p>
       </div>
 
     </div>
   </section>
 
 
-  <!-- ===== SECTION 5: FINAL CTA ===== -->
-  <section id="waitlist" class="video-divider reveal" style="height:auto;min-height:400px;">
-    <video id="dividerVideo" muted loop playsinline webkit-playsinline preload="none" data-src="divider-bg.mp4">
-    </video>
+  <!-- ===== SECTION: FINAL CTA ===== -->
+  <section id="waitlist" class="video-divider reveal">
     <div class="divider-overlay"></div>
-    <div class="divider-content" style="padding:80px 24px;">
-      <h2 style="font-family:'Plus Jakarta Sans',-apple-system,sans-serif;font-size:clamp(32px,5vw,56px);font-weight:700;letter-spacing:-0.02em;line-height:1.1;color:#fff;margin-bottom:16px;">
+    <div class="divider-content">
+      <h2>
         Take Back Control.
       </h2>
-      <p style="font-size:clamp(15px,1.8vw,18px);color:rgba(255,255,255,0.7);line-height:1.6;">
+      <p>
         Be among the first to have AI that works for you, not against you.
       </p>
     </div>
@@ -1298,42 +963,6 @@
   <script>
     gsap.registerPlugin(ScrollTrigger);
 
-    // =====================================================
-
-    // =====================================================
-    // LAZY-LOAD DIVIDER VIDEO (avoid iOS two-video conflict)
-    // =====================================================
-    (function() {
-      const dividerVideo = document.getElementById('dividerVideo');
-      if (!dividerVideo) return;
-      const src = dividerVideo.getAttribute('data-src');
-      if (!src) return;
-
-      let loaded = false;
-
-      if ('IntersectionObserver' in window) {
-        const obs = new IntersectionObserver(entries => {
-          entries.forEach(entry => {
-            if (entry.isIntersecting) {
-              if (!loaded) {
-                loaded = true;
-                const source = document.createElement('source');
-                source.src = src;
-                source.type = 'video/mp4';
-                dividerVideo.appendChild(source);
-                dividerVideo.load();
-              }
-              dividerVideo.muted = true;
-              const p = dividerVideo.play();
-              if (p && p.catch) p.catch(() => {});
-            } else if (loaded) {
-              dividerVideo.pause();
-            }
-          });
-        }, { threshold: 0.15 });
-        obs.observe(dividerVideo);
-      }
-    })();
 
     // =====================================================
     // MOBILE MENU TOGGLE
@@ -1359,234 +988,6 @@
 
 
     // =========================================================
-    // CANVAS SETUP (Cinematic Hero -- Light Mode)
-    // =========================================================
-    const bgC = document.getElementById('bgCanvas');
-    const bgCtx = bgC.getContext('2d');
-    const ptC = document.getElementById('particleCanvas');
-    const ptCtx = ptC.getContext('2d');
-    const grC = document.getElementById('grainCanvas');
-    const grCtx = grC.getContext('2d');
-
-    let W, H;
-    function resizeCanvases() {
-      W = window.innerWidth; H = window.innerHeight;
-      [bgC, ptC, grC].forEach(c => { c.width = W; c.height = H; });
-    }
-    resizeCanvases();
-    window.addEventListener('resize', resizeCanvases);
-
-    // =========================================================
-    // COLOR PALETTES -- LIGHT MODE (soft pastels on white)
-    // =========================================================
-    const palettes = [
-      // Frame 0: Cool blue tint
-      { bg: [248,250,252], orbs: [
-        { x:0.3, y:0.35, r:0.5, color:[180,210,255,0.25] },
-        { x:0.7, y:0.55, r:0.4, color:[200,220,255,0.18] },
-        { x:0.5, y:0.7, r:0.35, color:[170,200,245,0.15] },
-      ]},
-      // Frame 1: Warm amber tint
-      { bg: [252,250,245], orbs: [
-        { x:0.4, y:0.4, r:0.5, color:[255,200,120,0.25] },
-        { x:0.7, y:0.3, r:0.4, color:[255,180,100,0.2] },
-        { x:0.3, y:0.65, r:0.35, color:[245,190,110,0.15] },
-      ]},
-      // Frame 2: Fresh green tint
-      { bg: [245,252,248], orbs: [
-        { x:0.5, y:0.45, r:0.55, color:[120,230,170,0.25] },
-        { x:0.3, y:0.6, r:0.4, color:[140,220,160,0.18] },
-        { x:0.7, y:0.35, r:0.35, color:[130,215,155,0.15] },
-      ]},
-      // Frame 3: Purple/teal (Yara brand)
-      { bg: [248,246,255], orbs: [
-        { x:0.35, y:0.35, r:0.55, color:[180,150,255,0.22] },
-        { x:0.65, y:0.6, r:0.5, color:[120,210,230,0.18] },
-        { x:0.5, y:0.4, r:0.3, color:[190,160,255,0.12] },
-      ]},
-    ];
-
-    const particleColors = [
-      { r:120, g:160, b:230 },
-      { r:220, g:160, b:80 },
-      { r:100, g:200, b:140 },
-      { r:160, g:130, b:230 },
-    ];
-
-    // Scroll progress (0-1), updated by ScrollTrigger
-    let scrollProgress = 0;
-
-    function lerp(a, b, t) { return a + (b - a) * t; }
-    function lerpArr(a, b, t) { return a.map((v, i) => v + (b[i] - v) * t); }
-
-    // Compute palette & particle color from progress
-    function getPaletteAtProgress(p) {
-      const breaks = [0, 0.20, 0.40, 0.60, 1.0];
-      let idx = 0;
-      if (p >= 0.60) idx = 3;
-      else if (p >= 0.40) idx = 2;
-      else if (p >= 0.20) idx = 1;
-      const nextIdx = Math.min(3, idx + 1);
-
-      const boundary = breaks[idx + 1 < breaks.length ? idx + 1 : idx];
-      const transHalf = 0.03;
-      let blend = 0;
-      if (idx < 3) {
-        const dist = boundary - p;
-        if (dist < transHalf) {
-          blend = 1 - dist / transHalf;
-          blend = blend * blend * (3 - 2 * blend);
-        }
-      }
-
-      const A = palettes[idx];
-      const B = palettes[nextIdx];
-
-      const result = {
-        bg: lerpArr(A.bg, B.bg, blend),
-        orbs: A.orbs.map((o, i) => ({
-          x: lerp(o.x, B.orbs[i].x, blend),
-          y: lerp(o.y, B.orbs[i].y, blend),
-          r: lerp(o.r, B.orbs[i].r, blend),
-          color: lerpArr(o.color, B.orbs[i].color, blend),
-        })),
-      };
-
-      const cA = particleColors[idx];
-      const cB = particleColors[nextIdx];
-      const ptCol = {
-        r: lerp(cA.r, cB.r, blend),
-        g: lerp(cA.g, cB.g, blend),
-        b: lerp(cA.b, cB.b, blend),
-      };
-
-      return { palette: result, ptColor: ptCol };
-    }
-
-    // =========================================================
-    // BACKGROUND RENDERER
-    // =========================================================
-    let time = 0;
-    function drawBg(pal) {
-      const [r, g, b] = pal.bg;
-      bgCtx.fillStyle = `rgb(${r|0},${g|0},${b|0})`;
-      bgCtx.fillRect(0, 0, W, H);
-
-      pal.orbs.forEach((orb, i) => {
-        const breathe = Math.sin(time * 0.3 + i * 2.1) * 0.03;
-        const driftX = Math.sin(time * 0.15 + i * 1.3) * 0.02;
-        const driftY = Math.cos(time * 0.12 + i * 0.9) * 0.02;
-        const cx = (orb.x + driftX) * W;
-        const cy = (orb.y + driftY) * H;
-        const radius = (orb.r + breathe) * Math.max(W, H);
-        const grad = bgCtx.createRadialGradient(cx, cy, 0, cx, cy, radius);
-        const [cr, cg, cb, ca] = orb.color;
-        grad.addColorStop(0, `rgba(${cr|0},${cg|0},${cb|0},${ca})`);
-        grad.addColorStop(0.5, `rgba(${cr|0},${cg|0},${cb|0},${ca * 0.4})`);
-        grad.addColorStop(1, `rgba(${cr|0},${cg|0},${cb|0},0)`);
-        bgCtx.fillStyle = grad;
-        bgCtx.fillRect(0, 0, W, H);
-      });
-    }
-
-    // =========================================================
-    // PARTICLES -- 200 with glow + connections (lighter)
-    // =========================================================
-    const PCOUNT = 200;
-    const particles = [];
-    for (let i = 0; i < PCOUNT; i++) {
-      particles.push({
-        x: Math.random() * 2000, y: Math.random() * 1200,
-        vx: (Math.random() - 0.5) * 0.25,
-        vy: (Math.random() - 0.5) * 0.25 - 0.08,
-        size: 0.5 + Math.random() * 1.5,
-        baseAlpha: 0.1 + Math.random() * 0.25,
-        pulseSpeed: 0.5 + Math.random() * 1.5,
-        pulsePhase: Math.random() * Math.PI * 2,
-      });
-    }
-
-    function drawParticles(ptCol) {
-      ptCtx.clearRect(0, 0, W, H);
-      const { r, g, b } = ptCol;
-
-      const brightnessBoost = scrollProgress > 0.78 ? 1 + (scrollProgress - 0.78) / 0.22 * 0.4 : 1;
-
-      particles.forEach(p => {
-        p.x += p.vx; p.y += p.vy;
-        if (p.x < -10) p.x = W + 10;
-        if (p.x > W + 10) p.x = -10;
-        if (p.y < -10) p.y = H + 10;
-        if (p.y > H + 10) p.y = -10;
-
-        const pulse = Math.sin(time * p.pulseSpeed + p.pulsePhase) * 0.3 + 0.7;
-        const alpha = p.baseAlpha * pulse * brightnessBoost;
-        if (alpha < 0.01) return;
-
-        ptCtx.beginPath();
-        ptCtx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-        ptCtx.fillStyle = `rgba(${r|0},${g|0},${b|0},${alpha})`;
-        ptCtx.fill();
-
-        if (p.size > 1.2) {
-          const glow = ptCtx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.size * 4);
-          glow.addColorStop(0, `rgba(${r|0},${g|0},${b|0},${alpha * 0.25})`);
-          glow.addColorStop(1, `rgba(${r|0},${g|0},${b|0},0)`);
-          ptCtx.fillStyle = glow;
-          ptCtx.fillRect(p.x - p.size * 4, p.y - p.size * 4, p.size * 8, p.size * 8);
-        }
-      });
-
-      // Connection lines (sparse)
-      for (let i = 0; i < particles.length; i += 3) {
-        const a = particles[i];
-        for (let j = i + 3; j < particles.length; j += 5) {
-          const bP = particles[j];
-          const dx = a.x - bP.x, dy = a.y - bP.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < 120) {
-            const lineAlpha = (1 - dist / 120) * 0.04;
-            ptCtx.beginPath();
-            ptCtx.moveTo(a.x, a.y);
-            ptCtx.lineTo(bP.x, bP.y);
-            ptCtx.strokeStyle = `rgba(${r|0},${g|0},${b|0},${lineAlpha})`;
-            ptCtx.lineWidth = 0.5;
-            ptCtx.stroke();
-          }
-        }
-      }
-    }
-
-    // =========================================================
-    // FILM GRAIN (very subtle for light mode)
-    // =========================================================
-    let grainData;
-    function drawGrain() {
-      if (!grainData || grainData.width !== W) grainData = grCtx.createImageData(W, H);
-      const d = grainData.data;
-      for (let i = 0; i < d.length; i += 16) {
-        const v = Math.random() * 255;
-        for (let k = 0; k < 16 && i+k < d.length; k += 4) {
-          d[i+k] = d[i+k+1] = d[i+k+2] = v; d[i+k+3] = 255;
-        }
-      }
-      grCtx.putImageData(grainData, 0, 0);
-    }
-
-    // =========================================================
-    // RENDER LOOP
-    // =========================================================
-    function render() {
-      time += 0.016;
-      const { palette, ptColor } = getPaletteAtProgress(scrollProgress);
-      // drawBg(palette); // disabled — video is the background
-      drawParticles(ptColor);
-      if (Math.random() < 0.3) drawGrain();
-      requestAnimationFrame(render);
-    }
-    render();
-
-    // =========================================================
     // HORIZONTAL TIMED HERO (replaces scroll-driven timeline)
     // =========================================================
 
@@ -1603,8 +1004,6 @@
     let autoTimer = null;
     let heroInView = true;
 
-    // Map frame index to scrollProgress for particle palette
-    const frameProgressMap = [0.0, 0.25, 0.45, 0.75];
     const SLIDE_DURATION = 3750; // ms per slide
 
     // --- Build progress ring dots ---
@@ -1626,7 +1025,6 @@
     function stopAutoAdvance() {
       clearTimeout(autoTimer);
       autoTimer = null;
-      // Kill all ring animations
       segments.forEach(dot => {
         const fill = dot.querySelector('.ring-fill');
         fill.style.animation = 'none';
@@ -1636,17 +1034,14 @@
     function startAutoAdvance(activeIdx) {
       stopAutoAdvance();
 
-      // Visual: start ring fill CSS animation
       const activeDot = segments[activeIdx];
       const fill = activeDot.querySelector('.ring-fill');
       void fill.offsetHeight; // force reflow
       fill.style.animation = 'ringProgress ' + SLIDE_DURATION + 'ms linear forwards';
 
-      // Timing: use setTimeout (reliable, doesn't depend on CSS animationend)
       autoTimer = setTimeout(() => {
         autoTimer = null;
         if (document.hidden || !heroInView) {
-          // If hidden, don't advance — will restart when visible
           return;
         }
         const next = (activeIdx + 1) % 4;
@@ -1682,7 +1077,6 @@
         progressContainer.classList.add('hero-progress--paused');
       } else {
         progressContainer.classList.remove('hero-progress--paused');
-        // Restart ring + auto-advance for the current frame
         updateSegments(currentFrame);
         startAutoAdvance(currentFrame);
       }
@@ -1692,7 +1086,6 @@
       if (isAnimating || index === currentFrame) return;
       if (index < 0 || index > 3) return;
 
-      // Immediately stop any pending auto-advance
       stopAutoAdvance();
       isAnimating = true;
 
@@ -1704,14 +1097,6 @@
       const newFrame = heroFrames[index];
       const newWords = newFrame.querySelectorAll('.word');
       const newSub = newFrame.querySelector('.sub');
-
-      // Animate scrollProgress for particle palette
-      gsap.to({ val: scrollProgress }, {
-        val: frameProgressMap[index],
-        duration: 0.45,
-        ease: 'power2.inOut',
-        onUpdate: function() { scrollProgress = this.targets()[0].val; },
-      });
 
       // --- Animate old frame OUT ---
       const tlOut = gsap.timeline();
@@ -1752,7 +1137,6 @@
 
     // --- Click anywhere on hero to advance ---
     pinnedEl.addEventListener('click', e => {
-      // Don't advance if clicking on the CTA, progress segments, or interactive elements
       if (e.target.closest('.fixed-cta, .hero-progress, a, button, input')) return;
       const next = (currentFrame + 1) % 4;
       goToFrame(next, 'forward');
@@ -1774,7 +1158,7 @@
       }
     }, { passive: true });
 
-    // --- Wheel navigation (horizontal + vertical) ---
+    // --- Wheel navigation ---
     let wheelCooldown = false;
     pinnedEl.addEventListener('wheel', e => {
       if (!heroInView || wheelCooldown) return;
@@ -1825,12 +1209,10 @@
     // --- Initialize ---
     updateSegments(0);
     startAutoAdvance(0);
-    scrollProgress = frameProgressMap[0];
-
 
 
     // =====================================================
-    // NAV PILL TRANSITION -- centered -> right on scroll
+    // NAV PILL TRANSITION -- centered -> stays on scroll
     // =====================================================
     const mainNav = document.getElementById('mainNav');
     const navInner = document.getElementById('navInner');
@@ -1847,16 +1229,15 @@
         navCompact = true;
         mainNav.classList.add('nav-scrolled');
 
-        // Nav bar: glass background
-        mainNav.style.background = 'rgba(255, 255, 255, 0.95)';
-        mainNav.style.backdropFilter = 'blur(24px)';
-        mainNav.style.webkitBackdropFilter = 'blur(24px)';
-        mainNav.style.borderBottomColor = 'rgba(0, 0, 0, 0.08)';
-        mainNav.style.boxShadow = '0 1px 3px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.03)';
+        mainNav.style.background = 'rgba(255,255,255,0.92)';
+        mainNav.style.backdropFilter = 'blur(20px)';
+        mainNav.style.webkitBackdropFilter = 'blur(20px)';
+        mainNav.style.borderBottomColor = 'rgba(0,0,0,0.06)';
+        mainNav.style.boxShadow = '0 1px 3px rgba(0,0,0,0.03)';
 
         gsap.to(navPill, {
-          background: 'rgba(0,0,0,0.04)',
-          borderColor: 'rgba(0,0,0,0.08)',
+          background: 'rgba(0,0,0,0.03)',
+          borderColor: 'rgba(0,0,0,0.06)',
           padding: '4px 6px',
           gap: '4px',
           duration: 0.55,
@@ -1865,7 +1246,7 @@
         gsap.to('#navPill .nav-link', {
           fontSize: '13px',
           padding: '6px 12px',
-          color: 'rgba(0,0,0,0.45)',
+          color: '#4A4A68',
           duration: 0.55,
           ease: 'power3.inOut',
         });
@@ -1874,26 +1255,24 @@
           duration: 0.55,
           ease: 'power3.inOut',
         });
-        // Logo + hamburger: dark
-        gsap.to('#navLogo', { color: '#1D1D1F', duration: 0.55, ease: 'power3.inOut' });
-        gsap.to('#mobileToggle', { color: '#1D1D1F', duration: 0.55, ease: 'power3.inOut' });
-        document.querySelector('#navLogo img').style.filter = 'drop-shadow(0 1px 2px rgba(0,0,0,0.1))';
+        gsap.to('#navLogo', { color: '#1A1A2E', duration: 0.55, ease: 'power3.inOut' });
+        gsap.to('#mobileToggle', { color: '#1A1A2E', duration: 0.55, ease: 'power3.inOut' });
+        document.querySelector('#navLogo img').style.filter = 'drop-shadow(0 1px 3px rgba(108,58,237,0.2))';
       },
       onLeaveBack: () => {
         if (!navCompact) return;
         navCompact = false;
         mainNav.classList.remove('nav-scrolled');
 
-        // Nav bar: keep glass background at top
-        mainNav.style.background = 'rgba(255, 255, 255, 0.95)';
-        mainNav.style.backdropFilter = 'blur(24px)';
-        mainNav.style.webkitBackdropFilter = 'blur(24px)';
-        mainNav.style.borderBottomColor = 'rgba(0, 0, 0, 0.08)';
-        mainNav.style.boxShadow = '0 1px 3px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.03)';
+        mainNav.style.background = 'rgba(255,255,255,0.92)';
+        mainNav.style.backdropFilter = 'blur(20px)';
+        mainNav.style.webkitBackdropFilter = 'blur(20px)';
+        mainNav.style.borderBottomColor = 'rgba(0,0,0,0.06)';
+        mainNav.style.boxShadow = '0 1px 3px rgba(0,0,0,0.03)';
 
         gsap.to(navPill, {
-          background: 'rgba(0,0,0,0.04)',
-          borderColor: 'rgba(0,0,0,0.08)',
+          background: 'rgba(0,0,0,0.03)',
+          borderColor: 'rgba(0,0,0,0.06)',
           padding: '5px 7px',
           gap: '6px',
           duration: 0.55,
@@ -1902,7 +1281,7 @@
         gsap.to('#navPill .nav-link', {
           fontSize: '13.5px',
           padding: '7px 14px',
-          color: 'rgba(0,0,0,0.45)',
+          color: '#4A4A68',
           duration: 0.55,
           ease: 'power3.inOut',
         });
@@ -1911,10 +1290,9 @@
           duration: 0.55,
           ease: 'power3.inOut',
         });
-        // Logo + hamburger: dark
-        gsap.to('#navLogo', { color: '#1D1D1F', duration: 0.55, ease: 'power3.inOut' });
-        gsap.to('#mobileToggle', { color: '#1D1D1F', duration: 0.55, ease: 'power3.inOut' });
-        document.querySelector('#navLogo img').style.filter = 'drop-shadow(0 1px 2px rgba(0,0,0,0.1))';
+        gsap.to('#navLogo', { color: '#1A1A2E', duration: 0.55, ease: 'power3.inOut' });
+        gsap.to('#mobileToggle', { color: '#1A1A2E', duration: 0.55, ease: 'power3.inOut' });
+        document.querySelector('#navLogo img').style.filter = 'drop-shadow(0 1px 3px rgba(108,58,237,0.2))';
       },
     });
 
@@ -1929,7 +1307,6 @@
 
     function updateScrollspy() {
       let activeId = '';
-      // Use getBoundingClientRect so pinned (GSAP) sections report correct position
       scrollSpySections.forEach(section => {
         const rect = section.getBoundingClientRect();
         if (rect.top <= 200 && rect.bottom > 200) {
@@ -1946,56 +1323,6 @@
       });
     }
     window.addEventListener('scroll', updateScrollspy, { passive: true });
-
-
-    // =====================================================
-    // PINNED SCROLL-REVEAL: HOW IT WORKS
-    // =====================================================
-    (function() {
-      const hiwSection = document.getElementById('how-it-works');
-      if (!hiwSection) return;
-
-      const hiwHeader = hiwSection.querySelector('.text-center');
-      const hiwStepCards = Array.from(hiwSection.querySelectorAll('.hiw-step-card')).map(c => c.parentElement);
-      const hiwArrows = Array.from(hiwSection.querySelectorAll('.hiw-arrow'));
-
-      // Remove from IntersectionObserver system
-      [hiwHeader, ...hiwStepCards].forEach(el => { if (el) el.classList.remove('reveal', 'visible'); });
-
-      // Only use pinned scroll animation on desktop (>= 1024px)
-      if (window.innerWidth >= 1024) {
-        gsap.set(hiwStepCards, { opacity: 0, y: 30 });
-        gsap.set(hiwArrows, { opacity: 0, scale: 0.8 });
-
-        const hiwTl = gsap.timeline({
-          scrollTrigger: {
-            trigger: hiwSection,
-            start: 'top top+=56',
-            end: '+=80%',
-            pin: true,
-            scrub: 0.6,
-            anticipatePin: 1,
-          }
-        });
-
-        hiwTl
-          .to(hiwStepCards[0], { opacity: 1, y: 0, duration: 0.12, ease: 'power2.out' })
-          .to(hiwArrows[0], { opacity: 1, scale: 1, duration: 0.06 }, '-=0.04')
-          .to(hiwStepCards[1], { opacity: 1, y: 0, duration: 0.12, ease: 'power2.out' }, '+=0.02')
-          .to(hiwArrows[1], { opacity: 1, scale: 1, duration: 0.06 }, '-=0.04')
-          .to(hiwStepCards[2], { opacity: 1, y: 0, duration: 0.12, ease: 'power2.out' }, '+=0.02')
-          .to({}, { duration: 0.6 });
-      } else {
-        // Mobile/tablet: just show cards immediately, no animation needed
-        hiwStepCards.forEach(card => {
-          gsap.set(card, { opacity: 1, y: 0 });
-        });
-        // Remove excessive bottom padding on mobile
-        hiwSection.style.paddingBottom = '40px';
-      }
-    })();
-
-
 
 
     // =====================================================
@@ -2037,61 +1364,6 @@
 
 
     // =====================================================
-    // SCROLLYTELLING UTILITY (from scroll-animations.html)
-    // =====================================================
-    function buildScrollytelling({ containerId, stickyId, panelPrefix, screenPrefix, dotsId, numSteps }) {
-      const panels  = Array.from({ length: numSteps }, (_, i) => document.getElementById(`${panelPrefix}-${i}`));
-      const screens = Array.from({ length: numSteps }, (_, i) => document.getElementById(`${screenPrefix}-${i}`));
-      const dots    = dotsId ? document.getElementById(dotsId).querySelectorAll('.sdot') : [];
-
-      let current = -1;
-
-      function activate(idx) {
-        if (idx === current) return;
-        current = idx;
-
-        panels.forEach((el, i) => {
-          if (!el) return;
-          el.classList.toggle('active', i === idx);
-        });
-        screens.forEach((el, i) => {
-          if (!el) return;
-          el.classList.toggle('active', i === idx);
-        });
-        dots.forEach((dot, i) => {
-          dot.classList.toggle('active', i === idx);
-        });
-      }
-
-      // Pin the sticky frame for the full scroll height
-      ScrollTrigger.create({
-        trigger: `#${containerId}`,
-        start: 'top top',
-        end: 'bottom bottom',
-        pin: `#${stickyId}`,
-        pinSpacing: false,
-      });
-
-      // Drive steps via progress
-      ScrollTrigger.create({
-        trigger: `#${containerId}`,
-        start: 'top top',
-        end: 'bottom bottom',
-        onUpdate: (self) => {
-          const p = self.progress;
-          let step = Math.min(numSteps - 1, Math.floor(p * numSteps));
-          activate(step);
-        }
-      });
-
-      // Initial state
-      activate(0);
-    }
-
-
-
-
-    // =====================================================
     // PERFORMANCE - Refresh after fonts, handle resize
     // =====================================================
     document.fonts.ready.then(() => {
@@ -2126,7 +1398,6 @@
     const emailInput = document.getElementById('waitlistEmail');
     const btn = document.getElementById('waitlistBtn');
     const errorEl = document.getElementById('ctaError');
-    const cta = document.getElementById('fixedCta');
 
     function validateEmail(email) {
       return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -2153,7 +1424,6 @@
       emailInput.disabled = true;
       btn.disabled = true;
 
-      // Reset after 4s so they could sign up another email
       setTimeout(() => {
         btn.classList.remove('success');
         emailInput.placeholder = 'Enter your email';
