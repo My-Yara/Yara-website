@@ -390,9 +390,11 @@
             </div>
           `;
 
-          // Redirect to admin after brief pause
+          // Redirect after brief pause (respect ?redirect= param)
           setTimeout(() => {
-            window.location.href = '/admin.html';
+            const params = new URLSearchParams(window.location.search);
+            const redirect = params.get('redirect') || '/admin.html';
+            window.location.href = redirect;
           }, 1500);
         } else {
           errorMsg.textContent = result.message || 'Invalid email or password.';

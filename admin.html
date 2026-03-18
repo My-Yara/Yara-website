@@ -127,10 +127,16 @@
 
   <div id="dashboard" style="display:none;">
     <div class="topbar">
-      <a href="/" class="brand">
-        <img src="yara_butterfly.png" alt="Yara" />
-        <span>Yara Admin</span>
-      </a>
+      <div style="display:flex;align-items:center;gap:16px;">
+        <a href="/" class="brand">
+          <img src="yara_butterfly.png" alt="Yara" />
+          <span>Yara</span>
+        </a>
+        <div style="display:flex;gap:4px;">
+          <a href="/admin.html" style="padding:5px 12px;border-radius:6px;font-size:12px;font-weight:500;background:rgba(139,92,246,0.15);color:#8B5CF6;text-decoration:none;">Waitlist</a>
+          <a href="/analytics.html" style="padding:5px 12px;border-radius:6px;font-size:12px;font-weight:500;color:rgba(255,255,255,0.5);text-decoration:none;transition:all .15s;" onmouseover="this.style.background='rgba(255,255,255,0.06)';this.style.color='#fff'" onmouseout="this.style.background='none';this.style.color='rgba(255,255,255,0.5)'">Analytics</a>
+        </div>
+      </div>
       <div class="right">
         <span class="user-email" id="userEmail"></span>
         <button class="btn-sm" id="logoutBtn">Sign Out</button>
