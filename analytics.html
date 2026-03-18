@@ -67,10 +67,27 @@
     .timeline-labels{display:flex;gap:2px;margin-top:6px}
     .timeline-labels span{flex:1;text-align:center;font-size:9px;color:rgba(255,255,255,0.2)}
 
-    /* Keyword cloud */
-    .keyword-list{display:flex;flex-wrap:wrap;gap:6px}
-    .keyword-tag{padding:4px 10px;background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.15);border-radius:99px;font-size:11px;color:rgba(139,92,246,0.8);white-space:nowrap}
-    .keyword-tag.high{background:rgba(139,92,246,0.2);color:#8B5CF6;font-weight:600}
+    /* Theme bars */
+    .theme-bar-row{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+    .theme-label{font-size:12px;color:rgba(255,255,255,0.6);min-width:140px;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .theme-track{flex:1;height:28px;background:rgba(255,255,255,0.04);border-radius:6px;overflow:hidden;position:relative;cursor:pointer}
+    .theme-fill{height:100%;border-radius:6px;transition:width 0.6s ease;min-width:2px;display:flex;align-items:center;padding-left:8px}
+    .theme-fill span{font-size:10px;font-weight:600;color:rgba(255,255,255,0.9);white-space:nowrap}
+    .theme-pct{font-size:11px;color:rgba(255,255,255,0.4);min-width:40px;font-variant-numeric:tabular-nums;text-align:right}
+    .theme-track:hover .theme-fill{filter:brightness(1.2)}
+
+    /* Insight cards */
+    .insight-card{background:rgba(139,92,246,0.06);border:1px solid rgba(139,92,246,0.1);border-radius:10px;padding:14px;margin-bottom:10px}
+    .insight-title{font-size:11px;font-weight:700;color:#8B5CF6;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:6px}
+    .insight-text{font-size:13px;color:rgba(255,255,255,0.6);line-height:1.5}
+    .insight-stat{font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;color:#fff}
+
+    /* Sample quotes */
+    .quote-list{margin-top:8px}
+    .quote-item{font-size:12px;color:rgba(255,255,255,0.4);line-height:1.4;padding:6px 0 6px 12px;border-left:2px solid rgba(139,92,246,0.2);margin-bottom:6px;font-style:italic}
+
+    /* Full-width chart card */
+    .chart-card-full{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:16px;margin-bottom:20px}
 
     /* Donut chart (CSS) */
     .donut-wrap{display:flex;align-items:center;gap:20px}
@@ -177,21 +194,27 @@
           <div id="statusChart"><div class="state-box"><div class="spinner-sm"></div></div></div>
         </div>
         <div class="chart-card">
-          <div class="chart-title">Top Keywords (Financial Goals)</div>
-          <div id="keywordChart"><div class="state-box"><div class="spinner-sm"></div></div></div>
+          <div class="chart-title">Key Insights</div>
+          <div id="insightsPanel"><div class="state-box"><div class="spinner-sm"></div></div></div>
         </div>
       </div>
 
-      <!-- Charts row 3 -->
-      <div class="charts-grid">
-        <div class="chart-card">
-          <div class="chart-title">Top Keywords (Rights & Protection)</div>
-          <div id="keywordRightsChart"><div class="state-box"><div class="spinner-sm"></div></div></div>
-        </div>
-        <div class="chart-card">
-          <div class="chart-title">Top Keywords (Ideal Outcome)</div>
-          <div id="keywordOutcomeChart"><div class="state-box"><div class="spinner-sm"></div></div></div>
-        </div>
+      <!-- Theme Analysis: Financial Goals -->
+      <div class="chart-card-full">
+        <div class="chart-title">What are users trying to achieve? (Financial Goals)</div>
+        <div id="themeGoalsChart"><div class="state-box"><div class="spinner-sm"></div></div></div>
+      </div>
+
+      <!-- Theme Analysis: Rights & Protection -->
+      <div class="chart-card-full">
+        <div class="chart-title">What do users want protected? (Rights & Protection)</div>
+        <div id="themeRightsChart"><div class="state-box"><div class="spinner-sm"></div></div></div>
+      </div>
+
+      <!-- Theme Analysis: Ideal Outcome -->
+      <div class="chart-card-full">
+        <div class="chart-title">What does success look like? (Ideal Outcome)</div>
+        <div id="themeOutcomeChart"><div class="state-box"><div class="spinner-sm"></div></div></div>
       </div>
 
       <!-- Recent responses -->
@@ -269,6 +292,42 @@
       });
     });
 
+    // --- Theme definitions ---
+    // Each theme has patterns (regex) that match user intent, not just keywords
+    const THEMES = {
+      financialGoals: [
+        { name: 'Reduce bills & expenses', patterns: [/reduc\w* (bill|expense|cost|spending|payment)/i, /lower.*(bill|cost|rate|payment)/i, /cut.*(cost|expense|bill|spending)/i, /save.*(bill|expense|money on)/i, /spend\w* less/i, /minimize.*(cost|expense|bill)/i, /decrease.*(bill|expense)/i], color: '#8B5CF6' },
+        { name: 'Negotiate better deals', patterns: [/negotiat/i, /better (deal|rate|price|offer|term)/i, /bargain/i, /haggl/i, /lower.*(rate|interest|price)/i, /get.*(discount|deal)/i, /renegotiat/i], color: '#06B6D4' },
+        { name: 'Build savings', patterns: [/build.*(saving|wealth|nest)/i, /grow.*(saving|money|wealth)/i, /save (more|money|up)/i, /saving/i, /accumulate/i, /emergency fund/i, /put.*away/i, /maximize.*saving/i], color: '#22C55E' },
+        { name: 'Manage debt', patterns: [/debt/i, /pay\s*(off|down)/i, /loan/i, /credit card/i, /interest rate/i, /consolidat/i, /owe/i, /mortgage/i, /student loan/i], color: '#F59E0B' },
+        { name: 'Budget & track spending', patterns: [/budget/i, /track.*(spend|expense|money|financ)/i, /monitor.*(spend|financ|money)/i, /overview/i, /where.*money.*go/i, /financial.*plan/i, /organiz/i, /manage.*financ/i], color: '#EC4899' },
+        { name: 'Cancel unwanted subscriptions', patterns: [/cancel/i, /subscription/i, /recurring/i, /unsubscrib/i, /membership/i, /auto.*(renew|charge|pay)/i, /unwanted.*(charge|fee)/i, /stop.*paying/i], color: '#F43F5E' },
+        { name: 'Maximize income & investments', patterns: [/invest/i, /income/i, /portfolio/i, /return/i, /stock/i, /retire/i, /passive income/i, /side hustle/i, /earn.*more/i, /wealth.*build/i], color: '#14B8A6' },
+        { name: 'Dispute charges & refunds', patterns: [/disput/i, /refund/i, /chargeback/i, /overcharg/i, /incorrect.*(charge|bill|fee)/i, /wrong.*(charge|bill)/i, /fight.*(charge|fee|bill)/i, /contest/i], color: '#6366F1' },
+        { name: 'Financial literacy', patterns: [/understand/i, /learn/i, /educat/i, /literacy/i, /knowledge/i, /financial.*health/i, /credit.*score/i, /improve.*credit/i, /financial.*aware/i], color: '#A855F7' },
+      ],
+      rightsProtection: [
+        { name: 'Consumer rights awareness', patterns: [/consumer/i, /right/i, /entitle/i, /protect.*as.*customer/i, /know.*right/i, /advocate/i], color: '#8B5CF6' },
+        { name: 'Data privacy & security', patterns: [/privacy/i, /data/i, /personal.*info/i, /security/i, /identity/i, /breach/i, /hack/i, /surveillance/i, /tracking/i, /GDPR/i, /sell.*data/i], color: '#06B6D4' },
+        { name: 'Hidden fees & unfair pricing', patterns: [/hidden.*(fee|charge|cost)/i, /unfair.*(pric|charg|fee)/i, /surprise.*(fee|charge|bill)/i, /fine print/i, /transparen/i, /unclear.*(fee|charge|pric)/i, /mislead/i, /decepti/i, /bait/i], color: '#22C55E' },
+        { name: 'Predatory lending & practices', patterns: [/predator/i, /exploit/i, /scam/i, /fraud/i, /payday/i, /usur/i, /predatory.*lend/i, /loan.*shark/i, /taken.*advantage/i], color: '#F59E0B' },
+        { name: 'Contract & terms fairness', patterns: [/contract/i, /terms/i, /agree/i, /clause/i, /small.*print/i, /condition/i, /binding/i, /cancel.*policy/i, /lock.*(in|period)/i, /early.*termination/i], color: '#EC4899' },
+        { name: 'Dispute resolution support', patterns: [/disput/i, /complain/i, /resolv/i, /mediati/i, /arbitrat/i, /legal/i, /lawsuit/i, /sue/i, /fight.*back/i, /escalat/i, /ombudsman/i], color: '#F43F5E' },
+        { name: 'Insurance & healthcare billing', patterns: [/insurance/i, /health.*bill/i, /medical/i, /claim/i, /coverage/i, /denied.*claim/i, /premium/i, /copay/i, /deductible/i, /healthcare/i], color: '#14B8A6' },
+        { name: 'Credit & lending rights', patterns: [/credit/i, /lend/i, /interest/i, /apr/i, /credit.*report/i, /collection/i, /garnish/i, /repossess/i, /debt.*collect/i, /credit.*bureau/i], color: '#6366F1' },
+      ],
+      idealOutcome: [
+        { name: 'Save money (tangible)', patterns: [/save.*(money|\$|dollar|hundred|thousand)/i, /\d+.*(month|year|annual)/i, /reduc.*(bill|cost|expense)/i, /keep.*more/i, /extra.*money/i, /money.*back/i, /cash.*back/i], color: '#22C55E' },
+        { name: 'Peace of mind & less stress', patterns: [/peace.*mind/i, /stress/i, /worry/i, /relax/i, /anxiety/i, /sleep.*better/i, /comfort/i, /relief/i, /calm/i, /not.*worry/i, /less.*stress/i, /ease/i], color: '#8B5CF6' },
+        { name: 'Financial control & empowerment', patterns: [/control/i, /empower/i, /charge.*financ/i, /own.*financ/i, /confiden/i, /independen/i, /autonom/i, /take.*control/i, /on top of/i, /master/i], color: '#06B6D4' },
+        { name: 'Automated money management', patterns: [/automat/i, /hands.*(off|free)/i, /set.*forget/i, /auto.*(sav|pay|manag|optimi)/i, /without.*think/i, /effortless/i, /seamless/i, /passive/i, /background/i], color: '#F59E0B' },
+        { name: 'Better deals & rates', patterns: [/better.*(deal|rate|price|offer|term)/i, /best.*(deal|rate|price|offer)/i, /compet.*(rate|price|offer)/i, /lowest.*(rate|price)/i, /fair.*(price|deal|rate)/i, /good.*deal/i], color: '#EC4899' },
+        { name: 'Time savings', patterns: [/time/i, /hours/i, /quick/i, /fast/i, /efficien/i, /less.*time/i, /don't.*spend.*time/i, /hassle/i, /convenient/i, /easy/i, /simple/i], color: '#14B8A6' },
+        { name: 'Protection from being taken advantage of', patterns: [/protect/i, /safe/i, /secure/i, /taken.*advantage/i, /rip.*off/i, /cheat/i, /trust/i, /fair.*treat/i, /not.*scam/i, /shield/i, /guard/i], color: '#F43F5E' },
+        { name: 'Financial freedom & goals', patterns: [/free/i, /goal/i, /dream/i, /retire/i, /travel/i, /house/i, /wealth/i, /future/i, /long.*term/i, /milestone/i, /achiev/i], color: '#6366F1' },
+      ]
+    };
+
     // --- Render all ---
     function render() {
       const data = getFiltered();
@@ -276,9 +335,10 @@
       renderTimeline(data);
       renderLocations(data);
       renderStatus(data);
-      renderKeywords(data, 'financialGoals', 'keywordChart');
-      renderKeywords(data, 'rightsProtection', 'keywordRightsChart');
-      renderKeywords(data, 'idealOutcome', 'keywordOutcomeChart');
+      renderThemes(data, 'financialGoals', 'themeGoalsChart');
+      renderThemes(data, 'rightsProtection', 'themeRightsChart');
+      renderThemes(data, 'idealOutcome', 'themeOutcomeChart');
+      renderInsights(data);
       renderResponses(data);
     }
 
@@ -424,29 +484,147 @@
       container.innerHTML = html;
     }
 
-    // --- Keywords ---
-    function renderKeywords(data, field, containerId) {
-      const container = document.getElementById(containerId);
-      const stopWords = new Set(['i','me','my','we','our','the','a','an','to','and','of','in','for','is','it','that','on','with','as','be','at','by','from','or','not','but','are','was','this','have','has','had','do','does','did','will','would','could','should','can','may','been','being','more','most','very','just','also','so','than','too','some','all','any','no','if','then','into','about','out','up','what','which','who','when','where','how','each','other','its','these','those','through','over','after','before','between','such','both','same','own','only','get','like','want','need','make','know','take','come','think','see','go','really','things','them','they','their','you','your','feel','am','don\'t','doesn\'t','won\'t','didn\'t','haven\'t','shouldn\'t','wouldn\'t','couldn\'t','isn\'t','aren\'t','wasn\'t','weren\'t']);
+    // --- Theme classifier ---
+    function classifyResponse(text, themes) {
+      const matched = [];
+      themes.forEach(theme => {
+        for (const pattern of theme.patterns) {
+          if (pattern.test(text)) {
+            matched.push(theme.name);
+            break; // one match per theme is enough
+          }
+        }
+      });
+      return matched.length > 0 ? matched : ['Other / Unclassified'];
+    }
 
-      const wordCounts = {};
+    function renderThemes(data, field, containerId) {
+      const container = document.getElementById(containerId);
+      const themes = THEMES[field];
+      if (!themes || data.length === 0) { container.innerHTML = '<div class="state-box"><p>No data</p></div>'; return; }
+
+      // Classify each response and count themes
+      const themeCounts = {};
+      const themeExamples = {}; // store sample quotes per theme
+      themes.forEach(t => { themeCounts[t.name] = 0; themeExamples[t.name] = []; });
+      themeCounts['Other / Unclassified'] = 0;
+      themeExamples['Other / Unclassified'] = [];
+
       data.forEach(e => {
-        const text = (e[field] || '').toLowerCase();
-        // Extract meaningful phrases (2-3 word combos) and single words
-        const words = text.replace(/[^a-z\s]/g, '').split(/\s+/).filter(w => w.length > 2 && !stopWords.has(w));
-        words.forEach(w => { wordCounts[w] = (wordCounts[w] || 0) + 1; });
+        const text = e[field] || '';
+        if (!text.trim()) return;
+        const matched = classifyResponse(text, themes);
+        matched.forEach(name => {
+          themeCounts[name] = (themeCounts[name] || 0) + 1;
+          if ((themeExamples[name] || []).length < 3) {
+            if (!themeExamples[name]) themeExamples[name] = [];
+            // Truncate long responses
+            const snippet = text.length > 120 ? text.slice(0, 120) + '...' : text;
+            themeExamples[name].push(snippet);
+          }
+        });
       });
 
-      const sorted = Object.entries(wordCounts).sort((a, b) => b[1] - a[1]).slice(0, 15);
+      // Sort by count descending
+      const sorted = Object.entries(themeCounts)
+        .filter(([, count]) => count > 0)
+        .sort((a, b) => b[1] - a[1]);
+
       if (sorted.length === 0) { container.innerHTML = '<div class="state-box"><p>No data</p></div>'; return; }
 
-      const maxCount = sorted[0][1];
-      let html = '<div class="keyword-list">';
-      sorted.forEach(([word, count]) => {
-        const isHigh = count >= maxCount * 0.6;
-        html += '<span class="keyword-tag' + (isHigh ? ' high' : '') + '">' + esc(word) + ' <span style="opacity:0.5">(' + count + ')</span></span>';
+      const total = data.filter(e => (e[field] || '').trim()).length;
+      const max = sorted[0][1];
+
+      // Get theme color
+      const colorMap = {};
+      themes.forEach(t => { colorMap[t.name] = t.color; });
+      colorMap['Other / Unclassified'] = 'rgba(255,255,255,0.15)';
+
+      let html = '';
+      sorted.forEach(([name, count]) => {
+        const pct = total > 0 ? Math.round(count / total * 100) : 0;
+        const barPct = (count / max * 100).toFixed(1);
+        const color = colorMap[name] || '#666';
+        const examples = themeExamples[name] || [];
+
+        html += '<div class="theme-bar-row">';
+        html += '<div class="theme-label" title="' + esc(name) + '">' + esc(name) + '</div>';
+        html += '<div class="theme-track" onclick="this.nextElementSibling.nextElementSibling.style.display=this.nextElementSibling.nextElementSibling.style.display===\'none\'?\'block\':\'none\'">';
+        html += '<div class="theme-fill" style="width:' + barPct + '%;background:' + color + '"><span>' + count + ' responses</span></div>';
+        html += '</div>';
+        html += '<div class="theme-pct">' + pct + '%</div>';
+
+        // Collapsible sample quotes
+        html += '<div class="quote-list" style="display:none;grid-column:1/-1;margin-left:150px;">';
+        examples.forEach(q => {
+          html += '<div class="quote-item">"' + esc(q) + '"</div>';
+        });
+        html += '</div>';
+        html += '</div>';
       });
+
+      container.innerHTML = html;
+    }
+
+    // --- Key Insights ---
+    function renderInsights(data) {
+      const container = document.getElementById('insightsPanel');
+      if (data.length === 0) { container.innerHTML = '<div class="state-box"><p>No data</p></div>'; return; }
+
+      // Find top theme per question
+      function getTopTheme(field) {
+        const themes = THEMES[field];
+        const counts = {};
+        themes.forEach(t => { counts[t.name] = 0; });
+        const total = data.filter(e => (e[field] || '').trim()).length;
+        data.forEach(e => {
+          const text = e[field] || '';
+          if (!text.trim()) return;
+          classifyResponse(text, themes).forEach(name => {
+            counts[name] = (counts[name] || 0) + 1;
+          });
+        });
+        const top = Object.entries(counts).sort((a, b) => b[1] - a[1])[0];
+        return top ? { name: top[0], count: top[1], pct: total > 0 ? Math.round(top[1] / total * 100) : 0 } : null;
+      }
+
+      const topGoal = getTopTheme('financialGoals');
+      const topRight = getTopTheme('rightsProtection');
+      const topOutcome = getTopTheme('idealOutcome');
+
+      // Response length analysis
+      const avgLen = Math.round(data.reduce((sum, e) => {
+        return sum + ((e.financialGoals || '').length + (e.rightsProtection || '').length + (e.idealOutcome || '').length);
+      }, 0) / data.length);
+
+      let html = '';
+
+      if (topGoal) {
+        html += '<div class="insight-card">';
+        html += '<div class="insight-title">Top Financial Goal</div>';
+        html += '<div class="insight-text"><span class="insight-stat">' + topGoal.pct + '%</span> of users want to <strong>' + esc(topGoal.name.toLowerCase()) + '</strong></div>';
+        html += '</div>';
+      }
+
+      if (topRight) {
+        html += '<div class="insight-card">';
+        html += '<div class="insight-title">Top Protection Need</div>';
+        html += '<div class="insight-text"><span class="insight-stat">' + topRight.pct + '%</span> care about <strong>' + esc(topRight.name.toLowerCase()) + '</strong></div>';
+        html += '</div>';
+      }
+
+      if (topOutcome) {
+        html += '<div class="insight-card">';
+        html += '<div class="insight-title">What Success Means</div>';
+        html += '<div class="insight-text"><span class="insight-stat">' + topOutcome.pct + '%</span> define success as <strong>' + esc(topOutcome.name.toLowerCase()) + '</strong></div>';
+        html += '</div>';
+      }
+
+      html += '<div class="insight-card">';
+      html += '<div class="insight-title">Engagement</div>';
+      html += '<div class="insight-text">Avg response length: <span class="insight-stat">' + avgLen + ' chars</span> across all 3 questions</div>';
       html += '</div>';
+
       container.innerHTML = html;
     }
 
