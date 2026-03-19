@@ -1028,11 +1028,11 @@
   <div id="scroll-runway">
     <div id="pinned">
 
-      <!-- Video: <video> for desktop, <img> fallback for iOS -->
-      <video id="heroVideo" autoplay muted loop playsinline webkit-playsinline preload="auto" class="hero-video-el">
+      <!-- img shown first (no play button), video takes over once playing -->
+      <img id="heroVideoImg" src="hero-bg-silent.mp4" class="hero-video-el" aria-hidden="true" />
+      <video id="heroVideo" autoplay muted loop playsinline webkit-playsinline preload="auto" class="hero-video-el" style="opacity:0;transition:opacity 0.3s;">
         <source src="hero-bg-silent.mp4" type="video/mp4">
       </video>
-      <img id="heroVideoImg" src="hero-bg-silent.mp4" class="hero-video-el" style="display:none;" aria-hidden="true" />
       <div id="heroVideoOverlay"></div>
 
       <nav class="hero-progress" id="heroProgress" role="tablist" aria-label="Slide navigation"></nav>
@@ -1222,45 +1222,32 @@
     gsap.registerPlugin(ScrollTrigger);
 
     // =========================================================
-    // iOS AUTOPLAY FIX
-    // Strategy: try <video> autoplay first. If blocked (iOS Low
-    // Power Mode etc.), fall back to <img src="video.mp4"> which
-    // iOS renders as a looping silent video with zero restrictions.
+    // VIDEO AUTOPLAY — img-first strategy (no play button ever)
+    // <img src="video.mp4"> shows instantly (iOS autoplays it).
+    // <video> is hidden (opacity:0) until confirmed playing,
+    // then fades in over the img for smoother looping.
     // =========================================================
     (function() {
       var vid = document.getElementById('heroVideo');
-      var img = document.getElementById('heroVideoImg');
       if (!vid) return;
 
-      var fell = false;
-      function fallbackToImg() {
-        if (fell || !img) return;
-        fell = true;
-        vid.style.display = 'none';
-        img.style.display = '';
+      function promoteVideo() {
+        vid.style.opacity = '1';
       }
 
       vid.muted = true;
+      vid.addEventListener('playing', promoteVideo, { once: true });
+
       var p = vid.play();
-      if (p && typeof p.then === 'function') {
-        p.then(function() {
-          // Autoplay worked — hide the img fallback
-          if (img) img.style.display = 'none';
-        }).catch(function() {
-          // Autoplay blocked — try once on first touch
-          function onTouch() {
-            vid.muted = true;
-            var p2 = vid.play();
-            if (p2 && p2.catch) p2.catch(function() { fallbackToImg(); });
-            document.removeEventListener('touchstart', onTouch);
-          }
-          document.addEventListener('touchstart', onTouch, { once: true, passive: true });
-          // Also set a timeout — if still not playing after 2s, use img
-          setTimeout(function() {
-            if (vid.paused) fallbackToImg();
-          }, 2000);
-        });
-      }
+      if (p && p.catch) p.catch(function() {
+        // Autoplay blocked — try on first interaction
+        function onTouch() {
+          vid.muted = true;
+          var p2 = vid.play();
+          if (p2 && p2.catch) p2.catch(function() {});
+        }
+        document.addEventListener('touchstart', onTouch, { once: true, passive: true });
+      });
     })();
 
 
