@@ -1756,9 +1756,9 @@
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             email,
-            financialGoals: 'Signed up via waitlist (website-v4)',
-            rightsProtection: 'Signed up via waitlist (website-v4)',
-            idealOutcome: 'Signed up via waitlist (website-v4)',
+            financialGoals: '(waitlist signup only)',
+            rightsProtection: '(waitlist signup only)',
+            idealOutcome: '(waitlist signup only)',
             timestamp: new Date().toISOString(),
           }),
         });
@@ -1931,7 +1931,7 @@
     }
 
     async function submitSurvey() {
-      // Only submit if user answered at least one question
+      // Only submit if user answered at least one question — avoids duplicate entry
       const hasAnswers = Object.values(answers).some(v => v.length > 0);
       if (hasAnswers) {
         try {
@@ -1943,6 +1943,7 @@
               financialGoals: answers.financialGoals || '(skipped)',
               rightsProtection: answers.rightsProtection || '(skipped)',
               idealOutcome: answers.idealOutcome || '(skipped)',
+              surveyUpdate: true,
               timestamp: new Date().toISOString(),
             }),
           });
