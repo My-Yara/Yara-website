@@ -441,7 +441,7 @@
       overflow: hidden;
       background: #0B0D17;
     }
-    /* Hero video — desktop only */
+    /* Hero video — all devices */
     #heroVideo {
       position: absolute;
       inset: 0;
@@ -456,15 +456,6 @@
       z-index: 1;
       pointer-events: none;
       background: rgba(11,13,23,0.4);
-    }
-    @media (max-width: 768px) {
-      #heroVideo, #heroVideoOverlay { display: none; }
-      #pinned {
-        background: #F5F2FF;
-        background-image:
-          radial-gradient(ellipse 50% 40% at 50% 40%, rgba(108,58,237,0.07) 0%, transparent 70%),
-          radial-gradient(ellipse 35% 30% at 25% 65%, rgba(167,139,250,0.05) 0%, transparent 70%);
-      }
     }
 
     /* Content layer */
@@ -657,15 +648,7 @@
     }
 
     @media (max-width: 768px) {
-      .frame h1 { font-size: clamp(32px, 7vw, 52px); color: #1A1A2E; }
-      .frame .sub { color: #4A4A68; }
-      .amber-text { color: #D97706; -webkit-text-fill-color: #D97706; }
-      .hero-progress__dot { background: rgba(0,0,0,0.2); }
-      .hero-progress__dot:hover { background: rgba(0,0,0,0.4); }
-      .hero-progress__dot--completed { background: rgba(0,0,0,0.35); }
-      .hero-progress__dot--active { background: rgba(0,0,0,0.8); }
-      .hero-progress__ring .ring-bg { stroke: rgba(0,0,0,0.08); }
-      .hero-progress__ring .ring-fill { stroke: rgba(0,0,0,0.5); }
+      .frame h1 { font-size: clamp(32px, 7vw, 52px); }
       .fixed-cta { left: 16px; right: 16px; transform: none; padding: 5px 5px 5px 6px; }
       .fixed-cta input { width: auto; flex: 1; min-width: 0; font-size: 14px; margin-right: 4px; }
       @keyframes ctaEntrance { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
@@ -1045,7 +1028,8 @@
   <div id="scroll-runway">
     <div id="pinned">
 
-      <video id="heroVideo" autoplay muted loop playsinline webkit-playsinline>
+      <video id="heroVideo" autoplay muted loop playsinline webkit-playsinline
+        preload="auto" poster="yara_butterfly.png">
         <source src="hero-bg.mp4" type="video/mp4">
       </video>
       <div id="heroVideoOverlay"></div>
@@ -1235,6 +1219,58 @@
   <!-- ===== JAVASCRIPT ===== -->
   <script>
     gsap.registerPlugin(ScrollTrigger);
+
+    // =========================================================
+    // iOS AUTOPLAY FIX — aggressive play triggers
+    // Safari blocks autoplay in Low Power Mode / Data Saver.
+    // We try: load event, visibility change, first touch/scroll.
+    // =========================================================
+    (function() {
+      const vid = document.getElementById('heroVideo');
+      if (!vid) return;
+
+      function tryPlay() {
+        vid.muted = true; // must be muted for autoplay
+        const p = vid.play();
+        if (p && p.catch) p.catch(function() {});
+      }
+
+      // Attempt 1: as soon as enough data is buffered
+      vid.addEventListener('canplay', tryPlay, { once: true });
+
+      // Attempt 2: on window load
+      window.addEventListener('load', tryPlay, { once: true });
+
+      // Attempt 3: on first user interaction (touch/scroll/click)
+      function onInteraction() {
+        tryPlay();
+        document.removeEventListener('touchstart', onInteraction);
+        document.removeEventListener('scroll', onInteraction);
+        document.removeEventListener('click', onInteraction);
+      }
+      document.addEventListener('touchstart', onInteraction, { once: true, passive: true });
+      document.addEventListener('scroll', onInteraction, { once: true, passive: true });
+      document.addEventListener('click', onInteraction, { once: true });
+
+      // Attempt 4: when tab becomes visible
+      document.addEventListener('visibilitychange', function() {
+        if (!document.hidden) tryPlay();
+      });
+
+      // Attempt 5: IntersectionObserver — play when hero is in view
+      if ('IntersectionObserver' in window) {
+        var obs = new IntersectionObserver(function(entries) {
+          entries.forEach(function(entry) {
+            if (entry.isIntersecting) tryPlay();
+            else vid.pause();
+          });
+        }, { threshold: 0.25 });
+        obs.observe(vid);
+      }
+
+      // Immediate attempt
+      tryPlay();
+    })();
 
 
 
