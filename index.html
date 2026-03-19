@@ -439,10 +439,32 @@
       width: 100%;
       height: 100vh;
       overflow: hidden;
-      background: #F5F2FF;
-      background-image:
-        radial-gradient(ellipse 50% 40% at 50% 40%, rgba(108,58,237,0.07) 0%, transparent 70%),
-        radial-gradient(ellipse 35% 30% at 25% 65%, rgba(167,139,250,0.05) 0%, transparent 70%);
+      background: #0B0D17;
+    }
+    /* Hero video — desktop only */
+    #heroVideo {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 0;
+    }
+    #heroVideoOverlay {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      background: rgba(11,13,23,0.4);
+    }
+    @media (max-width: 768px) {
+      #heroVideo, #heroVideoOverlay { display: none; }
+      #pinned {
+        background: #F5F2FF;
+        background-image:
+          radial-gradient(ellipse 50% 40% at 50% 40%, rgba(108,58,237,0.07) 0%, transparent 70%),
+          radial-gradient(ellipse 35% 30% at 25% 65%, rgba(167,139,250,0.05) 0%, transparent 70%);
+      }
     }
 
     /* Content layer */
@@ -461,7 +483,7 @@
       font-weight: 700;
       letter-spacing: -0.03em;
       line-height: 1.05;
-      color: #1A1A2E;
+      color: #EDEDED;
       margin-bottom: 20px;
     }
     .frame h1 .word { display: inline-block; opacity: 0; transform: translateY(40px); filter: blur(8px); will-change: opacity, transform, filter }
@@ -469,7 +491,7 @@
       font-family: 'DM Sans', -apple-system, sans-serif;
       font-size: clamp(16px, 2vw, 20px);
       font-weight: 400;
-      color: #4A4A68;
+      color: rgba(255,255,255,0.7);
       max-width: 560px;
       line-height: 1.6;
       opacity: 0;
@@ -482,7 +504,7 @@
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
-      filter: drop-shadow(0 0 20px rgba(108,58,237,0.15));
+      filter: drop-shadow(0 0 30px rgba(108,58,237,0.4));
     }
     .gg {
       background: linear-gradient(135deg, #8B5CF6 0%, #A78BFA 100%);
@@ -578,7 +600,7 @@
     .hero-progress__dot {
       width: 6px; height: 6px;
       border-radius: 50%;
-      background: rgba(0,0,0,0.2);
+      background: rgba(255,255,255,0.3);
       cursor: pointer;
       border: none; padding: 0;
       position: relative;
@@ -586,14 +608,14 @@
       user-select: none; -webkit-user-select: none;
     }
     .hero-progress__dot:hover {
-      background: rgba(0,0,0,0.4);
+      background: rgba(255,255,255,0.6);
       transform: scale(1.4);
     }
     .hero-progress__dot--completed {
-      background: rgba(0,0,0,0.35);
+      background: rgba(255,255,255,0.6);
     }
     .hero-progress__dot--active {
-      background: rgba(0,0,0,0.8);
+      background: rgba(255,255,255,0.9);
     }
     .hero-progress__ring {
       position: absolute;
@@ -605,11 +627,11 @@
     }
     .hero-progress__ring circle { fill: none; }
     .hero-progress__ring .ring-bg {
-      stroke: rgba(0,0,0,0.08);
+      stroke: rgba(255,255,255,0.15);
       stroke-width: 1;
     }
     .hero-progress__ring .ring-fill {
-      stroke: rgba(0,0,0,0.5);
+      stroke: rgba(255,255,255,0.75);
       stroke-width: 1.5;
       stroke-linecap: round;
       stroke-dasharray: 50.27;
@@ -629,13 +651,21 @@
 
     /* Charge you more -- amber/gold text */
     .amber-text {
-      color: #D97706;
-      -webkit-text-fill-color: #D97706;
-      filter: drop-shadow(0 0 12px rgba(217,119,6,0.15));
+      color: #FBBF24;
+      -webkit-text-fill-color: #FBBF24;
+      filter: drop-shadow(0 0 20px rgba(251,191,36,0.3));
     }
 
     @media (max-width: 768px) {
-      .frame h1 { font-size: clamp(32px, 7vw, 52px); }
+      .frame h1 { font-size: clamp(32px, 7vw, 52px); color: #1A1A2E; }
+      .frame .sub { color: #4A4A68; }
+      .amber-text { color: #D97706; -webkit-text-fill-color: #D97706; }
+      .hero-progress__dot { background: rgba(0,0,0,0.2); }
+      .hero-progress__dot:hover { background: rgba(0,0,0,0.4); }
+      .hero-progress__dot--completed { background: rgba(0,0,0,0.35); }
+      .hero-progress__dot--active { background: rgba(0,0,0,0.8); }
+      .hero-progress__ring .ring-bg { stroke: rgba(0,0,0,0.08); }
+      .hero-progress__ring .ring-fill { stroke: rgba(0,0,0,0.5); }
       .fixed-cta { left: 16px; right: 16px; transform: none; padding: 5px 5px 5px 6px; }
       .fixed-cta input { width: auto; flex: 1; min-width: 0; font-size: 14px; margin-right: 4px; }
       @keyframes ctaEntrance { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
@@ -1014,6 +1044,11 @@
   <!-- ===== CINEMATIC HERO ===== -->
   <div id="scroll-runway">
     <div id="pinned">
+
+      <video id="heroVideo" autoplay muted loop playsinline webkit-playsinline>
+        <source src="hero-bg.mp4" type="video/mp4">
+      </video>
+      <div id="heroVideoOverlay"></div>
 
       <nav class="hero-progress" id="heroProgress" role="tablist" aria-label="Slide navigation"></nav>
 
