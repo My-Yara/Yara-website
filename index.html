@@ -442,7 +442,7 @@
       background: #0B0D17;
     }
     /* Hero video — all devices */
-    #heroVideo {
+    .hero-video-el {
       position: absolute;
       inset: 0;
       width: 100%;
@@ -1028,10 +1028,11 @@
   <div id="scroll-runway">
     <div id="pinned">
 
-      <video id="heroVideo" autoplay muted loop playsinline webkit-playsinline
-        preload="auto" poster="yara_butterfly.png">
-        <source src="hero-bg.mp4" type="video/mp4">
+      <!-- Video: <video> for desktop, <img> fallback for iOS -->
+      <video id="heroVideo" autoplay muted loop playsinline webkit-playsinline preload="auto" class="hero-video-el">
+        <source src="hero-bg-silent.mp4" type="video/mp4">
       </video>
+      <img id="heroVideoImg" src="hero-bg-silent.mp4" class="hero-video-el" style="display:none;" aria-hidden="true" />
       <div id="heroVideoOverlay"></div>
 
       <nav class="hero-progress" id="heroProgress" role="tablist" aria-label="Slide navigation"></nav>
@@ -1221,55 +1222,45 @@
     gsap.registerPlugin(ScrollTrigger);
 
     // =========================================================
-    // iOS AUTOPLAY FIX — aggressive play triggers
-    // Safari blocks autoplay in Low Power Mode / Data Saver.
-    // We try: load event, visibility change, first touch/scroll.
+    // iOS AUTOPLAY FIX
+    // Strategy: try <video> autoplay first. If blocked (iOS Low
+    // Power Mode etc.), fall back to <img src="video.mp4"> which
+    // iOS renders as a looping silent video with zero restrictions.
     // =========================================================
     (function() {
-      const vid = document.getElementById('heroVideo');
+      var vid = document.getElementById('heroVideo');
+      var img = document.getElementById('heroVideoImg');
       if (!vid) return;
 
-      function tryPlay() {
-        vid.muted = true; // must be muted for autoplay
-        const p = vid.play();
-        if (p && p.catch) p.catch(function() {});
+      var fell = false;
+      function fallbackToImg() {
+        if (fell || !img) return;
+        fell = true;
+        vid.style.display = 'none';
+        img.style.display = '';
       }
 
-      // Attempt 1: as soon as enough data is buffered
-      vid.addEventListener('canplay', tryPlay, { once: true });
-
-      // Attempt 2: on window load
-      window.addEventListener('load', tryPlay, { once: true });
-
-      // Attempt 3: on first user interaction (touch/scroll/click)
-      function onInteraction() {
-        tryPlay();
-        document.removeEventListener('touchstart', onInteraction);
-        document.removeEventListener('scroll', onInteraction);
-        document.removeEventListener('click', onInteraction);
+      vid.muted = true;
+      var p = vid.play();
+      if (p && typeof p.then === 'function') {
+        p.then(function() {
+          // Autoplay worked — hide the img fallback
+          if (img) img.style.display = 'none';
+        }).catch(function() {
+          // Autoplay blocked — try once on first touch
+          function onTouch() {
+            vid.muted = true;
+            var p2 = vid.play();
+            if (p2 && p2.catch) p2.catch(function() { fallbackToImg(); });
+            document.removeEventListener('touchstart', onTouch);
+          }
+          document.addEventListener('touchstart', onTouch, { once: true, passive: true });
+          // Also set a timeout — if still not playing after 2s, use img
+          setTimeout(function() {
+            if (vid.paused) fallbackToImg();
+          }, 2000);
+        });
       }
-      document.addEventListener('touchstart', onInteraction, { once: true, passive: true });
-      document.addEventListener('scroll', onInteraction, { once: true, passive: true });
-      document.addEventListener('click', onInteraction, { once: true });
-
-      // Attempt 4: when tab becomes visible
-      document.addEventListener('visibilitychange', function() {
-        if (!document.hidden) tryPlay();
-      });
-
-      // Attempt 5: IntersectionObserver — play when hero is in view
-      if ('IntersectionObserver' in window) {
-        var obs = new IntersectionObserver(function(entries) {
-          entries.forEach(function(entry) {
-            if (entry.isIntersecting) tryPlay();
-            else vid.pause();
-          });
-        }, { threshold: 0.25 });
-        obs.observe(vid);
-      }
-
-      // Immediate attempt
-      tryPlay();
     })();
 
 
