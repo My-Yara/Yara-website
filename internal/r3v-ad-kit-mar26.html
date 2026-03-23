@@ -1,0 +1,1174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow, noarchive" />
+  <title>Yara — Meta Ad Creative Kit</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'DM Sans', -apple-system, sans-serif;
+      background: #0B0D17;
+      color: #fff;
+      padding: 40px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    h1 {
+      font-size: 36px;
+      font-weight: 800;
+      margin-bottom: 8px;
+      letter-spacing: -0.03em;
+    }
+    .kit-subtitle {
+      color: #8888A4;
+      font-size: 16px;
+      margin-bottom: 60px;
+    }
+
+    .section-label {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #6C3AED;
+      margin-bottom: 8px;
+    }
+    .section-title {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 6px;
+      letter-spacing: -0.02em;
+    }
+    .section-desc {
+      font-size: 14px;
+      color: #8888A4;
+      margin-bottom: 30px;
+      max-width: 600px;
+    }
+    .section-divider {
+      border: none;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      margin: 80px 0;
+    }
+
+    /* ---- Ad frame wrapper ---- */
+    .ad-frame {
+      display: inline-block;
+      position: relative;
+      margin-bottom: 40px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .ad-frame-label {
+      position: absolute;
+      top: -28px;
+      left: 0;
+      font-size: 11px;
+      font-weight: 600;
+      color: #8888A4;
+      letter-spacing: 0.05em;
+    }
+
+    /* ---- STATIC FEED AD (1080x1080) ---- */
+    .static-ad {
+      width: 1080px;
+      height: 1080px;
+      background: linear-gradient(160deg, #0B0D17 0%, #1A1038 50%, #0B0D17 100%);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 80px;
+    }
+
+    /* Ambient glow */
+    .static-ad::before {
+      content: '';
+      position: absolute;
+      top: -200px;
+      right: -200px;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(108,58,237,0.15) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .static-ad::after {
+      content: '';
+      position: absolute;
+      bottom: -150px;
+      left: -150px;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(20,184,166,0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .static-ad .eyebrow {
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: #A78BFA;
+      margin-bottom: 32px;
+      position: relative;
+      z-index: 1;
+    }
+    .static-ad .headline {
+      font-size: 72px;
+      font-weight: 800;
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      color: #FFFFFF;
+      margin-bottom: 24px;
+      max-width: 900px;
+      position: relative;
+      z-index: 1;
+    }
+    .static-ad .headline em {
+      font-style: normal;
+      background: linear-gradient(135deg, #A78BFA 0%, #14B8A6 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .static-ad .subline {
+      font-size: 26px;
+      font-weight: 400;
+      line-height: 1.5;
+      color: #8888A4;
+      max-width: 700px;
+      margin-bottom: 48px;
+      position: relative;
+      z-index: 1;
+    }
+    .static-ad .cta-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: #6C3AED;
+      color: #fff;
+      font-size: 22px;
+      font-weight: 700;
+      padding: 20px 48px;
+      border-radius: 14px;
+      position: relative;
+      z-index: 1;
+      box-shadow: 0 8px 32px rgba(108,58,237,0.4);
+    }
+    .static-ad .cta-btn svg {
+      width: 20px;
+      height: 20px;
+    }
+    .static-ad .logo-bar {
+      position: absolute;
+      bottom: 50px;
+      left: 0;
+      right: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      z-index: 1;
+    }
+    .static-ad .logo-bar img {
+      width: 32px;
+      height: 32px;
+    }
+    .static-ad .logo-bar span {
+      font-size: 18px;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: -0.01em;
+    }
+    .static-ad .logo-bar .domain {
+      font-size: 14px;
+      color: #8888A4;
+      margin-left: 8px;
+      font-weight: 400;
+    }
+
+    /* ---- CAROUSEL CARDS (1080x1080 each) ---- */
+    .carousel-row {
+      display: flex;
+      gap: 24px;
+      overflow-x: auto;
+      padding-bottom: 20px;
+    }
+
+    .carousel-card {
+      width: 1080px;
+      height: 1080px;
+      flex-shrink: 0;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 80px;
+    }
+
+    /* Card 1: Problem */
+    .card-problem {
+      background: linear-gradient(160deg, #0B0D17 0%, #1A0A0A 50%, #0B0D17 100%);
+    }
+    .card-problem::before {
+      content: '';
+      position: absolute;
+      top: -100px;
+      right: -100px;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(239,68,68,0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    /* Card 2: Connect */
+    .card-connect {
+      background: linear-gradient(160deg, #0B0D17 0%, #150D2E 50%, #0B0D17 100%);
+    }
+    .card-connect::before {
+      content: '';
+      position: absolute;
+      top: -100px;
+      left: -100px;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(108,58,237,0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    /* Card 3: Converse */
+    .card-converse {
+      background: linear-gradient(160deg, #0B0D17 0%, #0D1A1E 50%, #0B0D17 100%);
+    }
+    .card-converse::before {
+      content: '';
+      position: absolute;
+      top: -100px;
+      right: -100px;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(20,184,166,0.10) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    /* Card 4: Champion */
+    .card-champion {
+      background: linear-gradient(160deg, #0B0D17 0%, #1A1038 50%, #0B0D17 100%);
+    }
+    .card-champion::before {
+      content: '';
+      position: absolute;
+      top: -100px;
+      left: -100px;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(108,58,237,0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    /* Card 5: CTA */
+    .card-cta {
+      background: linear-gradient(160deg, #0B0D17 0%, #1A1038 50%, #0B0D17 100%);
+      text-align: center;
+      align-items: center;
+    }
+    .card-cta::before {
+      content: '';
+      position: absolute;
+      bottom: -200px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 800px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(108,58,237,0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .carousel-card .step-num {
+      font-size: 120px;
+      font-weight: 800;
+      color: rgba(108,58,237,0.06);
+      position: absolute;
+      top: 40px;
+      right: 60px;
+      line-height: 1;
+      z-index: 0;
+    }
+    .carousel-card .card-eyebrow {
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+      position: relative;
+      z-index: 1;
+    }
+    .carousel-card .card-headline {
+      font-size: 64px;
+      font-weight: 800;
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+      color: #fff;
+      margin-bottom: 28px;
+      max-width: 850px;
+      position: relative;
+      z-index: 1;
+    }
+    .carousel-card .card-headline em {
+      font-style: normal;
+      background: linear-gradient(135deg, #A78BFA 0%, #14B8A6 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .carousel-card .card-headline .teal {
+      color: #14B8A6;
+      -webkit-text-fill-color: #14B8A6;
+      background: none;
+    }
+    .carousel-card .card-body {
+      font-size: 28px;
+      font-weight: 400;
+      line-height: 1.55;
+      color: #8888A4;
+      max-width: 800px;
+      position: relative;
+      z-index: 1;
+    }
+    .carousel-card .card-body strong {
+      color: #fff;
+      font-weight: 600;
+    }
+
+    .carousel-card .savings-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(108,58,237,0.12);
+      border: 1px solid rgba(108,58,237,0.25);
+      border-radius: 16px;
+      padding: 16px 32px;
+      margin-top: 36px;
+      position: relative;
+      z-index: 1;
+    }
+    .carousel-card .savings-badge .amount {
+      font-size: 42px;
+      font-weight: 800;
+      background: linear-gradient(135deg, #A78BFA 0%, #14B8A6 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .carousel-card .savings-badge .label {
+      font-size: 18px;
+      color: #8888A4;
+      line-height: 1.3;
+    }
+
+    .carousel-card .icon-circle {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 28px;
+      position: relative;
+      z-index: 1;
+    }
+    .icon-circle--purple { background: rgba(108,58,237,0.12); border: 1px solid rgba(108,58,237,0.25); }
+    .icon-circle--teal { background: rgba(20,184,166,0.12); border: 1px solid rgba(20,184,166,0.25); }
+    .icon-circle--red { background: rgba(239,68,68,0.12); border: 1px solid rgba(239,68,68,0.25); }
+
+    .carousel-card .icon-circle svg {
+      width: 36px;
+      height: 36px;
+    }
+
+    .carousel-card .cta-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: #6C3AED;
+      color: #fff;
+      font-size: 26px;
+      font-weight: 700;
+      padding: 24px 56px;
+      border-radius: 16px;
+      position: relative;
+      z-index: 1;
+      box-shadow: 0 8px 32px rgba(108,58,237,0.4);
+      margin-top: 36px;
+    }
+
+    .carousel-card .trust-line {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 32px;
+      position: relative;
+      z-index: 1;
+    }
+    .carousel-card .trust-line svg {
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+    }
+    .carousel-card .trust-line span {
+      font-size: 17px;
+      font-weight: 600;
+    }
+
+    .carousel-card .logo-bar {
+      position: absolute;
+      bottom: 50px;
+      left: 80px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      z-index: 1;
+    }
+    .card-cta .logo-bar {
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    .carousel-card .logo-bar img {
+      width: 28px;
+      height: 28px;
+    }
+    .carousel-card .logo-bar span {
+      font-size: 16px;
+      font-weight: 700;
+      color: #fff;
+    }
+    .carousel-card .logo-bar .domain {
+      font-size: 13px;
+      color: #8888A4;
+      margin-left: 6px;
+      font-weight: 400;
+    }
+
+    /* ---- STORY AD (1080x1920) ---- */
+    .story-ad {
+      width: 1080px;
+      height: 1920px;
+      background: linear-gradient(170deg, #0B0D17 0%, #1A1038 40%, #0B0D17 100%);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 100px 80px;
+    }
+    .story-ad::before {
+      content: '';
+      position: absolute;
+      top: 100px;
+      right: -100px;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(108,58,237,0.15) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .story-ad::after {
+      content: '';
+      position: absolute;
+      bottom: 200px;
+      left: -100px;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(20,184,166,0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .story-ad .eyebrow {
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: #A78BFA;
+      margin-bottom: 40px;
+      position: relative;
+      z-index: 1;
+    }
+    .story-ad .headline {
+      font-size: 80px;
+      font-weight: 800;
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+      color: #fff;
+      margin-bottom: 36px;
+      max-width: 900px;
+      position: relative;
+      z-index: 1;
+    }
+    .story-ad .headline em {
+      font-style: normal;
+      background: linear-gradient(135deg, #A78BFA 0%, #14B8A6 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .story-ad .subline {
+      font-size: 30px;
+      font-weight: 400;
+      line-height: 1.55;
+      color: #8888A4;
+      max-width: 800px;
+      margin-bottom: 48px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .story-ad .steps-list {
+      text-align: left;
+      max-width: 700px;
+      position: relative;
+      z-index: 1;
+      margin-bottom: 56px;
+    }
+    .story-ad .step-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 20px;
+      margin-bottom: 28px;
+    }
+    .story-ad .step-item:last-child {
+      margin-bottom: 0;
+    }
+    .story-ad .step-dot {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      font-weight: 800;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .step-dot--purple { background: rgba(108,58,237,0.15); color: #A78BFA; border: 1px solid rgba(108,58,237,0.3); }
+    .step-dot--teal { background: rgba(20,184,166,0.15); color: #14B8A6; border: 1px solid rgba(20,184,166,0.3); }
+    .story-ad .step-text {
+      font-size: 26px;
+      line-height: 1.5;
+      color: #8888A4;
+    }
+    .story-ad .step-text strong {
+      color: #fff;
+      font-weight: 700;
+    }
+
+    .story-ad .savings-callout {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      background: rgba(108,58,237,0.10);
+      border: 1px solid rgba(108,58,237,0.2);
+      border-radius: 20px;
+      padding: 24px 40px;
+      margin-bottom: 56px;
+      position: relative;
+      z-index: 1;
+    }
+    .story-ad .savings-callout .amount {
+      font-size: 52px;
+      font-weight: 800;
+      background: linear-gradient(135deg, #A78BFA 0%, #14B8A6 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .story-ad .savings-callout .label {
+      font-size: 20px;
+      color: #8888A4;
+      line-height: 1.3;
+    }
+
+    .story-ad .cta-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      background: #6C3AED;
+      color: #fff;
+      font-size: 28px;
+      font-weight: 700;
+      padding: 28px 64px;
+      border-radius: 18px;
+      position: relative;
+      z-index: 1;
+      box-shadow: 0 8px 40px rgba(108,58,237,0.45);
+      margin-bottom: 24px;
+    }
+    .story-ad .swipe-hint {
+      font-size: 16px;
+      color: #8888A4;
+      position: relative;
+      z-index: 1;
+    }
+    .story-ad .logo-bar {
+      position: absolute;
+      top: 60px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      z-index: 1;
+    }
+    .story-ad .logo-bar img {
+      width: 36px;
+      height: 36px;
+    }
+    .story-ad .logo-bar span {
+      font-size: 22px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    /* ---- COPY SPEC SECTION ---- */
+    .copy-section {
+      background: #14172A;
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 16px;
+      padding: 40px;
+      margin-bottom: 30px;
+      max-width: 800px;
+    }
+    .copy-section h3 {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      color: #A78BFA;
+    }
+    .copy-field {
+      margin-bottom: 20px;
+    }
+    .copy-field:last-child {
+      margin-bottom: 0;
+    }
+    .copy-field .label {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #6C3AED;
+      margin-bottom: 6px;
+    }
+    .copy-field .value {
+      font-size: 16px;
+      line-height: 1.6;
+      color: #ccc;
+      background: rgba(0,0,0,0.3);
+      padding: 12px 16px;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.04);
+      white-space: pre-wrap;
+    }
+    .copy-field .value em {
+      font-style: normal;
+      color: #8888A4;
+      font-size: 13px;
+    }
+
+    /* ---- REEL STORYBOARD ---- */
+    .storyboard {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 20px;
+      max-width: 1400px;
+    }
+    .sb-frame {
+      background: #14172A;
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 16px;
+      padding: 28px;
+    }
+    .sb-frame .sb-time {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      color: #6C3AED;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+    .sb-frame .sb-visual {
+      font-size: 14px;
+      color: #8888A4;
+      margin-bottom: 12px;
+      line-height: 1.5;
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .sb-frame .sb-text-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      color: #A78BFA;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .sb-frame .sb-text {
+      font-size: 18px;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.3;
+    }
+    .sb-frame .sb-note {
+      font-size: 12px;
+      color: #4A4A68;
+      margin-top: 10px;
+      font-style: italic;
+    }
+
+    /* Scale helper */
+    .scale-note {
+      font-size: 13px;
+      color: #4A4A68;
+      margin-bottom: 20px;
+      padding: 12px 16px;
+      background: rgba(108,58,237,0.06);
+      border: 1px solid rgba(108,58,237,0.12);
+      border-radius: 8px;
+      display: inline-block;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Yara — Meta Ad Creative Kit</h1>
+  <p class="kit-subtitle">Production-ready creatives for Instagram &amp; Facebook. Open in browser at 100% zoom, screenshot each ad at native resolution.</p>
+
+  <!-- ============================================================ -->
+  <!-- 1. STATIC FEED AD (1080x1080) -->
+  <!-- ============================================================ -->
+
+  <div class="section-label">Format 1</div>
+  <div class="section-title">Static Feed Ad</div>
+  <p class="section-desc">1080 &times; 1080px &mdash; Works for Feed, Explore, and Lead Gen. Screenshot this at 100% browser zoom for pixel-perfect export.</p>
+  <p class="scale-note">Tip: Use browser zoom to 100%, then Cmd+Shift+4 (Mac) to screenshot the exact ad area, or use a browser extension like "GoFullPage" to capture.</p>
+
+  <div class="ad-frame">
+    <div class="static-ad">
+      <div class="eyebrow">Every company you pay uses AI</div>
+      <div class="headline">Now you have<br>one that <em>fights back</em></div>
+      <div class="subline">Yara analyzes your bills, finds overcharges, and negotiates better rates. You approve. She handles the rest.</div>
+      <div class="cta-btn">
+        Join the Waitlist
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </div>
+      <div class="logo-bar">
+        <img src="yara_butterfly.png" alt="Yara">
+        <span>Yara</span>
+        <span class="domain">my-yara.com</span>
+      </div>
+    </div>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- ============================================================ -->
+  <!-- 2. CAROUSEL (5 cards, 1080x1080 each) -->
+  <!-- ============================================================ -->
+
+  <div class="section-label">Format 2</div>
+  <div class="section-title">Carousel Ad &mdash; 5 Cards</div>
+  <p class="section-desc">1080 &times; 1080px each &mdash; Scroll right to see all cards. Screenshot each individually.</p>
+  <p class="scale-note">Swipe order: Problem &rarr; Connect &rarr; Converse &rarr; Champion &rarr; CTA</p>
+
+  <div class="carousel-row">
+
+    <!-- Card 1: Problem -->
+    <div class="ad-frame">
+      <div class="carousel-card card-problem">
+        <div class="icon-circle icon-circle--red">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+            <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+          </svg>
+        </div>
+        <div class="card-eyebrow" style="color:#EF4444;">The Problem</div>
+        <div class="card-headline">Every company you pay<br>uses AI to charge you <em>more</em></div>
+        <div class="card-body">Banks. Insurers. Telecoms. Utilities. Their algorithms decide what you pay, how long you hold, and what discount to offer when you threaten to leave.<br><br><strong>Loyal customers pay the most.</strong></div>
+        <div class="logo-bar">
+          <img src="yara_butterfly.png" alt="Yara">
+          <span>Yara</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 2: Connect -->
+    <div class="ad-frame">
+      <div class="carousel-card card-connect">
+        <span class="step-num">1</span>
+        <div class="icon-circle icon-circle--purple">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#A78BFA" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.1"/>
+            <path d="M10.172 13.828a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/>
+          </svg>
+        </div>
+        <div class="card-eyebrow" style="color:#A78BFA;">Step 1</div>
+        <div class="card-headline"><em>Connect</em></div>
+        <div class="card-body">Link your accounts via Plaid or upload a bill. Bank accounts, credit cards, insurance, subscriptions &mdash; <strong>all in one place.</strong></div>
+        <div class="trust-line">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#6C3AED" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          <span style="color:#A78BFA;">Bank-level encryption</span>
+        </div>
+        <div class="logo-bar">
+          <img src="yara_butterfly.png" alt="Yara">
+          <span>Yara</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 3: Converse -->
+    <div class="ad-frame">
+      <div class="carousel-card card-converse">
+        <span class="step-num" style="color:rgba(20,184,166,0.06);">2</span>
+        <div class="icon-circle icon-circle--teal">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#14B8A6" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+          </svg>
+        </div>
+        <div class="card-eyebrow" style="color:#14B8A6;">Step 2</div>
+        <div class="card-headline" style="color:#14B8A6;-webkit-text-fill-color:#14B8A6;">Converse</div>
+        <div class="card-body">Talk to Yara about your spending, your bills, or your options. She analyzes every line item and finds <strong>overcharges, hidden fees, and plans that don't match your usage.</strong></div>
+        <div class="trust-line">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#14B8A6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="8 12 11 15 16 9"/></svg>
+          <span style="color:#14B8A6;">Real savings, not guesswork</span>
+        </div>
+        <div class="logo-bar">
+          <img src="yara_butterfly.png" alt="Yara">
+          <span>Yara</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 4: Champion -->
+    <div class="ad-frame">
+      <div class="carousel-card card-champion">
+        <span class="step-num">3</span>
+        <div class="icon-circle icon-circle--purple">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#A78BFA" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="1" x2="12" y2="23"/>
+            <path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/>
+          </svg>
+        </div>
+        <div class="card-eyebrow" style="color:#A78BFA;">Step 3</div>
+        <div class="card-headline"><em>Champion</em></div>
+        <div class="card-body">Yara calls your provider, negotiates a better rate, switches your plan, or cancels subscriptions you forgot about.<br><br><strong>You approve. She handles the rest.</strong></div>
+        <div class="savings-badge">
+          <div class="amount">$150</div>
+          <div class="label">avg. monthly savings<br>found per user</div>
+        </div>
+        <div class="logo-bar">
+          <img src="yara_butterfly.png" alt="Yara">
+          <span>Yara</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 5: CTA -->
+    <div class="ad-frame">
+      <div class="carousel-card card-cta">
+        <div class="card-eyebrow" style="color:#A78BFA;">It's time</div>
+        <div class="card-headline" style="text-align:center;">Take Back<br><em>Control</em></div>
+        <div class="card-body" style="text-align:center;">Be among the first to have AI that works <strong>for</strong> you, not against you.</div>
+        <div class="cta-btn">
+          Join the Waitlist
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </div>
+        <div class="logo-bar">
+          <img src="yara_butterfly.png" alt="Yara">
+          <span>Yara</span>
+          <span class="domain">my-yara.com</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- ============================================================ -->
+  <!-- 3. STORY AD (1080x1920) -->
+  <!-- ============================================================ -->
+
+  <div class="section-label">Format 3</div>
+  <div class="section-title">Story / Vertical Ad</div>
+  <p class="section-desc">1080 &times; 1920px &mdash; Instagram/Facebook Stories and Reels placements. Screenshot at 100% zoom.</p>
+
+  <div class="ad-frame">
+    <div class="story-ad">
+      <div class="logo-bar">
+        <img src="yara_butterfly.png" alt="Yara">
+        <span>Yara</span>
+      </div>
+
+      <div class="eyebrow">Every company you pay uses AI against you</div>
+      <div class="headline">Now you have<br>one that <em>fights back</em></div>
+      <div class="subline">Meet Yara &mdash; the AI that reads your bills, finds savings, and negotiates on your behalf.</div>
+
+      <div class="steps-list">
+        <div class="step-item">
+          <div class="step-dot step-dot--purple">1</div>
+          <div class="step-text"><strong>Connect</strong> &mdash; Link your accounts or upload a bill</div>
+        </div>
+        <div class="step-item">
+          <div class="step-dot step-dot--teal">2</div>
+          <div class="step-text"><strong>Converse</strong> &mdash; Yara finds overcharges &amp; better plans</div>
+        </div>
+        <div class="step-item">
+          <div class="step-dot step-dot--purple">3</div>
+          <div class="step-text"><strong>Champion</strong> &mdash; She calls, negotiates &amp; switches for you</div>
+        </div>
+      </div>
+
+      <div class="savings-callout">
+        <div class="amount">$150</div>
+        <div class="label">avg. monthly savings<br>found per user</div>
+      </div>
+
+      <div class="cta-btn">
+        Join the Waitlist
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </div>
+      <div class="swipe-hint">Swipe up to sign up &mdash; my-yara.com</div>
+    </div>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- ============================================================ -->
+  <!-- 4. REEL STORYBOARD -->
+  <!-- ============================================================ -->
+
+  <div class="section-label">Format 4</div>
+  <div class="section-title">Reel / Video Script &mdash; 30s</div>
+  <p class="section-desc">Shot-by-shot storyboard for a 30-second vertical reel. Build in CapCut, Canva, or After Effects. Use DM Sans for all text overlays.</p>
+
+  <div class="storyboard">
+
+    <div class="sb-frame">
+      <div class="sb-time">0:00 &ndash; 0:04</div>
+      <div class="sb-visual">Dark screen. Subtle purple glow pulses in center. Text slams in with a quick zoom.</div>
+      <div class="sb-text-label">On Screen</div>
+      <div class="sb-text">Every company you pay<br>uses AI</div>
+      <div class="sb-note">Sound: low tension drone or bass hit</div>
+    </div>
+
+    <div class="sb-frame">
+      <div class="sb-time">0:04 &ndash; 0:07</div>
+      <div class="sb-visual">Text transitions with a glitch/cut effect. Red tint briefly flashes.</div>
+      <div class="sb-text-label">On Screen</div>
+      <div class="sb-text">They use it to charge<br>you more</div>
+      <div class="sb-note">Sound: glitch SFX + tension rise</div>
+    </div>
+
+    <div class="sb-frame">
+      <div class="sb-time">0:07 &ndash; 0:10</div>
+      <div class="sb-visual">Quick montage: phone bill, insurance statement, subscription charges. Each flashes for ~1s with a subtle red highlight on the total.</div>
+      <div class="sb-text-label">On Screen</div>
+      <div class="sb-text">Hidden fees. Overcharges.<br>Plans you don't need.</div>
+      <div class="sb-note">Sound: paper shuffle / notification sounds</div>
+    </div>
+
+    <div class="sb-frame">
+      <div class="sb-time">0:10 &ndash; 0:13</div>
+      <div class="sb-visual">Screen wipe to purple. Yara butterfly logo appears with a clean animation. Purple-to-teal gradient text.</div>
+      <div class="sb-text-label">On Screen</div>
+      <div class="sb-text">It's time to fight back.<br>Meet Yara.</div>
+      <div class="sb-note">Sound: uplifting tonal shift, resolving chord</div>
+    </div>
+
+    <div class="sb-frame">
+      <div class="sb-time">0:13 &ndash; 0:17</div>
+      <div class="sb-visual">3 steps appear one by one, stacking vertically with a fade-slide-up. Each step has its icon circle (purple/teal/purple).</div>
+      <div class="sb-text-label">On Screen</div>
+      <div class="sb-text">Connect. Converse. Champion.</div>
+      <div class="sb-note">Each word appears on beat, ~1.3s apart</div>
+    </div>
+
+    <div class="sb-frame">
+      <div class="sb-time">0:17 &ndash; 0:22</div>
+      <div class="sb-visual">Quick demo-style sequence: abstract UI showing "Analyzing your phone bill..." &rarr; "Found: $47/mo overcharge" &rarr; "Calling provider..." &rarr; "Rate reduced."</div>
+      <div class="sb-text-label">On Screen</div>
+      <div class="sb-text">She finds the savings.<br>She makes the call.<br>You keep the money.</div>
+      <div class="sb-note">Sound: subtle UI sounds, satisfying "ding" at end</div>
+    </div>
+
+    <div class="sb-frame">
+      <div class="sb-time">0:22 &ndash; 0:26</div>
+      <div class="sb-visual">$150 number animates in large, gradient text. Subtle particle/sparkle effect.</div>
+      <div class="sb-text-label">On Screen</div>
+      <div class="sb-text">$150/mo<br>avg. savings found</div>
+      <div class="sb-note">Sound: cash register or coin drop</div>
+    </div>
+
+    <div class="sb-frame">
+      <div class="sb-time">0:26 &ndash; 0:30</div>
+      <div class="sb-visual">Yara logo centered. CTA button pulses once. URL fades in below. Dark background with ambient purple glow.</div>
+      <div class="sb-text-label">On Screen</div>
+      <div class="sb-text">Join the Waitlist<br>my-yara.com</div>
+      <div class="sb-note">Sound: clean resolve, music fades out. Hold for 2s.</div>
+    </div>
+
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- ============================================================ -->
+  <!-- 5. META ADS MANAGER COPY -->
+  <!-- ============================================================ -->
+
+  <div class="section-label">Copy &amp; Settings</div>
+  <div class="section-title">Meta Ads Manager Copy</div>
+  <p class="section-desc">Paste these directly into Meta Ads Manager. Covers all three formats.</p>
+
+  <!-- Static Ad Copy -->
+  <div class="copy-section">
+    <h3>Static Feed Ad</h3>
+    <div class="copy-field">
+      <div class="label">Primary Text</div>
+      <div class="value">Every company you pay uses AI to optimize what they charge you. Banks, insurers, telecoms, utilities — their algorithms decide your rate, your hold time, and your discount.
+
+Loyal customers pay the most.
+
+Yara is the AI that fights back. She reads your bills, finds overcharges and hidden fees, then calls your provider and negotiates a better rate — or switches your plan entirely.
+
+You approve. She handles the rest.
+
+Average savings found: $150/mo.
+
+Join the waitlist. Take back control.</div>
+    </div>
+    <div class="copy-field">
+      <div class="label">Headline</div>
+      <div class="value">Your AI Bill Negotiator — Join the Waitlist</div>
+    </div>
+    <div class="copy-field">
+      <div class="label">Link Description</div>
+      <div class="value">Yara analyzes your bills, finds savings, and negotiates on your behalf. Bank-level encryption. Zero data retention.</div>
+    </div>
+    <div class="copy-field">
+      <div class="label">CTA Button</div>
+      <div class="value">Sign Up</div>
+    </div>
+    <div class="copy-field">
+      <div class="label">Destination URL</div>
+      <div class="value">https://www.my-yara.com</div>
+    </div>
+  </div>
+
+  <!-- Carousel Ad Copy -->
+  <div class="copy-section">
+    <h3>Carousel Ad</h3>
+    <div class="copy-field">
+      <div class="label">Primary Text</div>
+      <div class="value">Every company you pay uses AI to charge you more. Now you have one that fights back.
+
+Meet Yara — she connects to your accounts, analyzes every line item, and negotiates better rates on your behalf. Swipe to see how it works.
+
+Average savings: $150/mo. Join the waitlist today.</div>
+    </div>
+    <div class="copy-field">
+      <div class="label">Card 1 Headline</div>
+      <div class="value">They Use AI Against You</div>
+    </div>
+    <div class="copy-field">
+      <div class="label">Card 2 Headline</div>
+      <div class="value">Step 1: Connect Your Accounts</div>
+    </div>
+    <div class="copy-field">
+      <div class="label">Card 3 Headline</div>
+      <div class="value">Step 2: Converse With Yara</div>
+    </div>
+    <div class="copy-field">
+      <div class="label">Card 4 Headline</div>
+      <div class="value">Step 3: She Champions Your Savings</div>
+    </div>
+    <div class="copy-field">
+      <div class="label">Card 5 Headline</div>
+      <div class="value">Take Back Control — Join the Waitlist</div>
+    </div>
+    <div class="copy-field">
+      <div class="label">CTA Button</div>
+      <div class="value">Sign Up</div>
+    </div>
+    <div class="copy-field">
+      <div class="label">Destination URL (all cards)</div>
+      <div class="value">https://www.my-yara.com</div>
+    </div>
+  </div>
+
+  <!-- Story Ad Copy -->
+  <div class="copy-section">
+    <h3>Story / Vertical Ad</h3>
+    <div class="copy-field">
+      <div class="label">Primary Text</div>
+      <div class="value">Every company you pay uses AI against you. Yara is the AI that fights back — she finds overcharges, negotiates rates, and switches plans so you don't have to.
+
+$150/mo avg. savings found. Join the waitlist.</div>
+    </div>
+    <div class="copy-field">
+      <div class="label">Headline</div>
+      <div class="value">AI That Fights for Your Wallet</div>
+    </div>
+    <div class="copy-field">
+      <div class="label">CTA Button</div>
+      <div class="value">Sign Up</div>
+    </div>
+    <div class="copy-field">
+      <div class="label">Destination URL</div>
+      <div class="value">https://www.my-yara.com</div>
+    </div>
+  </div>
+
+  <!-- Lead Gen Specific -->
+  <div class="copy-section">
+    <h3>Lead Gen Form Settings <em style="color:#8888A4;font-weight:400;">(if using Meta Lead Gen objective)</em></h3>
+    <div class="copy-field">
+      <div class="label">Form Headline</div>
+      <div class="value">Join the Yara Waitlist</div>
+    </div>
+    <div class="copy-field">
+      <div class="label">Form Description</div>
+      <div class="value">Be among the first to have AI that reads your bills, finds savings, and negotiates on your behalf. Bank-level encryption. Zero data retention.</div>
+    </div>
+    <div class="copy-field">
+      <div class="label">Fields to Collect</div>
+      <div class="value">Email (required), Full Name (optional)</div>
+    </div>
+    <div class="copy-field">
+      <div class="label">Privacy Policy URL</div>
+      <div class="value">https://www.my-yara.com <em>(add /privacy when available)</em></div>
+    </div>
+    <div class="copy-field">
+      <div class="label">Thank You Screen Headline</div>
+      <div class="value">You're on the list!</div>
+    </div>
+    <div class="copy-field">
+      <div class="label">Thank You Screen Description</div>
+      <div class="value">We'll notify you when Yara is ready. In the meantime, visit my-yara.com to learn more about how Yara fights for your wallet.</div>
+    </div>
+    <div class="copy-field">
+      <div class="label">Thank You Screen Button</div>
+      <div class="value">Visit Website &rarr; https://www.my-yara.com</div>
+    </div>
+  </div>
+
+</body>
+</html>
