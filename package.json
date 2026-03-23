@@ -19,5 +19,8 @@
     "netlify"
   ],
   "author": "Yara Team",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "@playwright/test": "^1.58.2"
+  }
 }
