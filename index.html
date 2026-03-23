@@ -1734,9 +1734,10 @@
     function setSuccess(email) {
       localStorage.setItem('yara_waitlist_email', email);
 
-      // Conversion tracking: Meta Pixel + GA4
+      // Conversion tracking: Meta Pixel + GA4 + visitor analytics
       if (typeof fbq === 'function') fbq('track', 'Lead');
       if (typeof gtag === 'function') gtag('event', 'sign_up', { method: 'waitlist' });
+      if (typeof window._yaraMarkConversion === 'function') window._yaraMarkConversion();
 
       btn.classList.remove('loading');
       btn.classList.add('success');
@@ -1998,6 +1999,104 @@
 
     // Expose open function globally for the waitlist form
     window.openSurveyModal = open;
+  })();
+  </script>
+
+  <!-- Visitor Analytics: time on page, scroll depth, traffic source -->
+  <script>
+  (function() {
+    var VISIT_API = 'https://yara-survey-api.netlify.app/.netlify/functions/submit-pageview';
+    var startTime = Date.now();
+    var maxScroll = 0;
+    var engaged = false;
+    var converted = false;
+    var sent = false;
+
+    // Track scroll depth
+    var docH, winH;
+    function updateHeights() { docH = document.documentElement.scrollHeight; winH = window.innerHeight; }
+    updateHeights();
+    window.addEventListener('resize', updateHeights, { passive: true });
+    window.addEventListener('scroll', function() {
+      if (!docH || docH <= winH) return;
+      var pct = Math.round((window.scrollY + winH) / docH * 100);
+      if (pct > maxScroll) maxScroll = pct;
+    }, { passive: true });
+
+    // Track engagement (form interaction)
+    var emailField = document.getElementById('waitlistEmail');
+    if (emailField) {
+      emailField.addEventListener('focus', function() { engaged = true; }, { once: true });
+    }
+
+    // Track conversion (set by waitlist success)
+    window._yaraMarkConversion = function() { converted = true; };
+
+    // Parse traffic source
+    function getSource() {
+      var params = new URLSearchParams(window.location.search);
+      var utmSource = params.get('utm_source') || '';
+      var utmMedium = params.get('utm_medium') || '';
+      var utmCampaign = params.get('utm_campaign') || '';
+      var utmContent = params.get('utm_content') || '';
+      var ref = document.referrer || '';
+
+      var source = 'direct';
+      if (utmSource) {
+        source = utmSource;
+      } else if (ref) {
+        try {
+          var host = new URL(ref).hostname;
+          if (/facebook|instagram|fb\./i.test(host)) source = 'meta';
+          else if (/google/i.test(host)) source = 'google';
+          else if (/twitter|x\.com/i.test(host)) source = 'twitter';
+          else if (/tiktok/i.test(host)) source = 'tiktok';
+          else if (/linkedin/i.test(host)) source = 'linkedin';
+          else if (/youtube/i.test(host)) source = 'youtube';
+          else source = host;
+        } catch (e) { source = 'referral'; }
+      }
+
+      return { source: source, referrer: ref, utmSource: utmSource, utmMedium: utmMedium, utmCampaign: utmCampaign, utmContent: utmContent };
+    }
+
+    function sendVisit() {
+      if (sent) return;
+      sent = true;
+      var duration = Math.round((Date.now() - startTime) / 1000);
+      if (duration < 1) return; // skip sub-second visits (bots, prefetch)
+
+      var srcData = getSource();
+      var payload = {
+        duration: duration,
+        maxScroll: maxScroll,
+        engaged: engaged,
+        converted: converted,
+        source: srcData.source,
+        referrer: srcData.referrer,
+        utmSource: srcData.utmSource,
+        utmMedium: srcData.utmMedium,
+        utmCampaign: srcData.utmCampaign,
+        utmContent: srcData.utmContent,
+        timestamp: new Date().toISOString()
+      };
+
+      // Use sendBeacon for reliability on page exit
+      if (navigator.sendBeacon) {
+        navigator.sendBeacon(VISIT_API, JSON.stringify(payload));
+      } else {
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', VISIT_API, false); // sync as last resort
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.send(JSON.stringify(payload));
+      }
+    }
+
+    // Fire on page exit (visibilitychange is more reliable than beforeunload on mobile)
+    document.addEventListener('visibilitychange', function() {
+      if (document.visibilityState === 'hidden') sendVisit();
+    });
+    window.addEventListener('beforeunload', sendVisit);
   })();
   </script>
 

@@ -217,6 +217,29 @@
         <div id="themeOutcomeChart"><div class="state-box"><div class="spinner-sm"></div></div></div>
       </div>
 
+      <!-- Visitor Analytics -->
+      <div class="chart-card-full" id="visitorSection" style="display:none;">
+        <div class="chart-title">Visitor Analytics</div>
+        <div class="stats-grid" style="margin-bottom:16px;">
+          <div class="stat-card"><div class="stat-label">Total Visits</div><div class="stat-value cyan" id="vTotal">-</div></div>
+          <div class="stat-card"><div class="stat-label">Bounce Rate</div><div class="stat-value rose" id="vBounce">-</div><div class="stat-sub">(&lt;10s, &lt;25% scroll, no interaction)</div></div>
+          <div class="stat-card"><div class="stat-label">Avg Time on Page</div><div class="stat-value green" id="vAvgTime">-</div></div>
+          <div class="stat-card"><div class="stat-label">Conversion Rate</div><div class="stat-value purple" id="vConversion">-</div><div class="stat-sub">visits → signups</div></div>
+          <div class="stat-card"><div class="stat-label">Avg Scroll Depth</div><div class="stat-value amber" id="vAvgScroll">-</div></div>
+          <div class="stat-card"><div class="stat-label">Engagement Rate</div><div class="stat-value cyan" id="vEngagement">-</div><div class="stat-sub">interacted with form</div></div>
+        </div>
+        <div class="charts-grid">
+          <div class="chart-card">
+            <div class="chart-title">Traffic Sources</div>
+            <div id="sourceChart"><div class="state-box"><div class="spinner-sm"></div></div></div>
+          </div>
+          <div class="chart-card">
+            <div class="chart-title">UTM Campaigns</div>
+            <div id="campaignChart"><div class="state-box"><div class="spinner-sm"></div></div></div>
+          </div>
+        </div>
+      </div>
+
       <!-- Recent responses -->
       <div class="responses-section">
         <div class="responses-title">Recent Responses <span id="responseCount" style="color:rgba(255,255,255,0.2)"></span></div>
@@ -668,8 +691,142 @@
 
     function esc(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
 
+    // --- Visitor Analytics ---
+    const VISITS_API = 'https://yara-survey-api.netlify.app/.netlify/functions/list-visits';
+    let visitData = [];
+
+    async function fetchVisits() {
+      try {
+        const res = await fetch(VISITS_API, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: session.email || session.userId, password: session.password }),
+        });
+        if (!res.ok) return;
+        visitData = await res.json();
+        if (visitData.length > 0) {
+          document.getElementById('visitorSection').style.display = '';
+          renderVisitorStats();
+        }
+      } catch (err) {
+        console.log('Visits fetch failed:', err.message);
+      }
+    }
+
+    function getFilteredVisits() {
+      if (activeRange === 'all') return visitData;
+      var now = Date.now();
+      var ms = parseInt(activeRange) * 86400000;
+      return visitData.filter(function(v) {
+        return v.timestamp && new Date(v.timestamp).getTime() > now - ms;
+      });
+    }
+
+    function renderVisitorStats() {
+      var data = getFilteredVisits();
+      if (data.length === 0) {
+        document.getElementById('visitorSection').style.display = 'none';
+        return;
+      }
+      document.getElementById('visitorSection').style.display = '';
+
+      // Bounce: <10s duration AND <25% scroll AND not engaged
+      var bounces = data.filter(function(v) { return v.duration < 10 && (v.maxScroll || 0) < 25 && !v.engaged; });
+      var bounceRate = Math.round(bounces.length / data.length * 100);
+
+      var avgDuration = Math.round(data.reduce(function(s, v) { return s + (v.duration || 0); }, 0) / data.length);
+      var mins = Math.floor(avgDuration / 60);
+      var secs = avgDuration % 60;
+      var avgTimeStr = mins > 0 ? mins + 'm ' + secs + 's' : secs + 's';
+
+      var conversions = data.filter(function(v) { return v.converted; }).length;
+      var convRate = Math.round(conversions / data.length * 100);
+
+      var avgScroll = Math.round(data.reduce(function(s, v) { return s + (v.maxScroll || 0); }, 0) / data.length);
+
+      var engaged = data.filter(function(v) { return v.engaged; }).length;
+      var engRate = Math.round(engaged / data.length * 100);
+
+      document.getElementById('vTotal').textContent = data.length;
+      document.getElementById('vBounce').textContent = bounceRate + '%';
+      document.getElementById('vAvgTime').textContent = avgTimeStr;
+      document.getElementById('vConversion').textContent = convRate + '%';
+      document.getElementById('vAvgScroll').textContent = avgScroll + '%';
+      document.getElementById('vEngagement').textContent = engRate + '%';
+
+      renderSourceChart(data);
+      renderCampaignChart(data);
+    }
+
+    function renderSourceChart(data) {
+      var container = document.getElementById('sourceChart');
+      var counts = {};
+      data.forEach(function(v) {
+        var src = v.source || 'direct';
+        counts[src] = (counts[src] || 0) + 1;
+      });
+
+      var sorted = Object.entries(counts).sort(function(a, b) { return b[1] - a[1]; }).slice(0, 8);
+      if (sorted.length === 0) { container.innerHTML = '<div class="state-box"><p>No data</p></div>'; return; }
+
+      var max = sorted[0][1];
+      var colors = ['#8B5CF6', '#06B6D4', '#22C55E', '#F59E0B', '#F43F5E', '#EC4899', '#6366F1', '#14B8A6'];
+      var total = data.length;
+
+      var html = '<div class="bar-chart">';
+      sorted.forEach(function(entry, i) {
+        var src = entry[0], count = entry[1];
+        var pct = (count / max * 100).toFixed(1);
+        var pctOfTotal = Math.round(count / total * 100);
+        html += '<div class="bar-row">';
+        html += '<div class="bar-label" title="' + esc(src) + '">' + esc(src) + '</div>';
+        html += '<div class="bar-track"><div class="bar-fill" style="width:' + pct + '%;background:' + colors[i % colors.length] + '"></div></div>';
+        html += '<div class="bar-count">' + count + ' (' + pctOfTotal + '%)</div>';
+        html += '</div>';
+      });
+      html += '</div>';
+      container.innerHTML = html;
+    }
+
+    function renderCampaignChart(data) {
+      var container = document.getElementById('campaignChart');
+      var counts = {};
+      data.forEach(function(v) {
+        var campaign = v.utmCampaign;
+        if (!campaign) return;
+        counts[campaign] = (counts[campaign] || 0) + 1;
+      });
+
+      var sorted = Object.entries(counts).sort(function(a, b) { return b[1] - a[1]; }).slice(0, 8);
+      if (sorted.length === 0) { container.innerHTML = '<div class="state-box"><p>No campaign data yet</p><p style="font-size:11px;margin-top:4px;">UTM campaigns will appear here once ads go live</p></div>'; return; }
+
+      var max = sorted[0][1];
+      var colors = ['#22C55E', '#8B5CF6', '#06B6D4', '#F59E0B', '#F43F5E', '#EC4899', '#6366F1', '#14B8A6'];
+      var total = data.length;
+
+      var html = '<div class="bar-chart">';
+      sorted.forEach(function(entry, i) {
+        var campaign = entry[0], count = entry[1];
+        var pct = (count / max * 100).toFixed(1);
+        var pctOfTotal = Math.round(count / total * 100);
+        html += '<div class="bar-row">';
+        html += '<div class="bar-label" title="' + esc(campaign) + '">' + esc(campaign) + '</div>';
+        html += '<div class="bar-track"><div class="bar-fill" style="width:' + pct + '%;background:' + colors[i % colors.length] + '"></div></div>';
+        html += '<div class="bar-count">' + count + ' (' + pctOfTotal + '%)</div>';
+        html += '</div>';
+      });
+      html += '</div>';
+      container.innerHTML = html;
+    }
+
+    // Hook date filter to also re-render visitor stats
+    var origDateClickHandler = null;
+    document.querySelectorAll('.date-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() { if (visitData.length > 0) renderVisitorStats(); });
+    });
+
     // --- Init ---
-    if (checkAuth()) { fetchData(); }
+    if (checkAuth()) { fetchData(); fetchVisits(); }
   </script>
 
 </body>
