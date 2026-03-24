@@ -241,7 +241,7 @@ class YaraSurveyApp {
         const btn = document.getElementById(`btn-approve-${index}`);
         if (!btn) return;
 
-        if (!confirm(`Approve ${userEmail} for TestFlight beta?`)) return;
+        if (!confirm(`Approve ${userEmail} for Yara Early Access?`)) return;
 
         btn.disabled = true;
         btn.textContent = 'Approving...';
@@ -264,7 +264,7 @@ class YaraSurveyApp {
             if (response.ok) {
                 // Refresh list to show updated status
                 await this.fetchWaitlist();
-                alert(`Successfully approved ${userEmail}! They will receive a TestFlight invite from Apple.`);
+                alert(`Successfully approved ${userEmail}! They will receive an email with the App Store download link.`);
             } else {
                 throw new Error(result.message || 'Approval failed');
             }

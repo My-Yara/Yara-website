@@ -1,8 +1,7 @@
-// approve-tester.js - Approves a waitlist user and adds to TestFlight via App Store Connect API
+// approve-tester.js - Approves a waitlist user and sends email with unlisted App Store link
 
 const fetch = require('node-fetch');
 const crypto = require('crypto');
-const jwt = require('jsonwebtoken');
 
 // --- Configuration ---
 const GITHUB_PAT = process.env.GITHUB_PAT_TOKEN;
@@ -13,12 +12,10 @@ const AUTH_CREDENTIALS = process.env.AUTH_CREDENTIALS;
 const ALGORITHM = 'aes-256-cbc';
 const IV_LENGTH = 16;
 
-// App Store Connect Config
-const ASC_ISSUER_ID = process.env.ASC_ISSUER_ID;
-const ASC_KEY_ID = process.env.ASC_KEY_ID;
-// Use split/join to avoid regex syntax issues during deployment
-const ASC_PRIVATE_KEY = process.env.ASC_PRIVATE_KEY ? process.env.ASC_PRIVATE_KEY.split('\\n').join('\n') : null;
-const ASC_BETA_GROUP_ID = process.env.ASC_BETA_GROUP_ID;
+// Email config
+const RESEND_API_KEY = process.env.RESEND_API_KEY;
+const UNLISTED_APP_STORE_LINK = process.env.UNLISTED_APP_STORE_LINK || 'https://apps.apple.com/app/yara/id000000000'; // placeholder until YARA-833
+const EMAIL_FROM = process.env.EMAIL_FROM || 'Yara <hello@my-yara.com>';
 
 // CORS headers
 const corsHeaders = {
@@ -57,59 +54,11 @@ exports.handler = async (event, context) => {
         return { statusCode: 401, headers: corsHeaders, body: JSON.stringify({ message: 'Unauthorized' }) };
     }
 
-    let ascAdded = false;
-
-    // 2. Add to App Store Connect (optional — skip if not configured)
-    if (ASC_PRIVATE_KEY && ASC_ISSUER_ID && ASC_KEY_ID && ASC_BETA_GROUP_ID) {
-        try {
-            const token = generateASCToken();
-
-            const ascResponse = await fetch('https://api.appstoreconnect.apple.com/v1/betaTesters', {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    data: {
-                        type: 'betaTesters',
-                        attributes: {
-                            email: userEmail,
-                            firstName: 'Yara',
-                            lastName: 'Beta'
-                        },
-                        relationships: {
-                            betaGroups: {
-                                data: [{
-                                    type: 'betaGroups',
-                                    id: ASC_BETA_GROUP_ID
-                                }]
-                            }
-                        }
-                    }
-                })
-            });
-
-            const ascResult = await ascResponse.json();
-
-            if (!ascResponse.ok && ascResponse.status !== 409) {
-                console.error('App Store Connect API Error:', ascResult);
-                // Don't block approval — still update GitHub status
-            } else {
-                ascAdded = true;
-            }
-        } catch (ascErr) {
-            console.error('ASC error (non-blocking):', ascErr.message);
-        }
-    } else {
-        console.log('App Store Connect not configured — skipping TestFlight invite');
-    }
-
     try {
-        // 3. Update status in GitHub
+        // 2. Update status in GitHub
         const filePath = filename.includes('/') ? filename : `early-access/${filename}`;
         const githubUrl = `https://api.github.com/repos/${GITHUB_ORG}/${DATA_REPO}/contents/${filePath}`;
-        
+
         const githubGetResponse = await fetch(githubUrl, {
             headers: {
                 'Authorization': `token ${GITHUB_PAT}`,
@@ -121,10 +70,10 @@ exports.handler = async (event, context) => {
         if (githubGetResponse.ok) {
             const fileData = await githubGetResponse.json();
             const encryptedContent = Buffer.from(fileData.content, 'base64').toString();
-            
+
             const decrypted = decryptData(encryptedContent, ENCRYPTION_KEY);
             const data = JSON.parse(decrypted);
-            
+
             // Mark as approved
             data.status = 'approved';
             data.approvedAt = new Date().toISOString();
@@ -151,10 +100,22 @@ exports.handler = async (event, context) => {
             });
         }
 
+        // 3. Send approval email with App Store link
+        let emailSent = false;
+        if (RESEND_API_KEY) {
+            emailSent = await sendApprovalEmail(userEmail);
+        } else {
+            console.log('RESEND_API_KEY not configured — skipping email');
+        }
+
         return {
             statusCode: 200,
             headers: corsHeaders,
-            body: JSON.stringify({ message: 'Tester approved successfully', email: userEmail, testflight: ascAdded })
+            body: JSON.stringify({
+                message: 'Tester approved successfully',
+                email: userEmail,
+                emailSent: emailSent
+            })
         };
 
     } catch (error) {
@@ -167,22 +128,81 @@ exports.handler = async (event, context) => {
     }
 };
 
-function generateASCToken() {
-    const payload = {
-        iss: ASC_ISSUER_ID,
-        iat: Math.floor(Date.now() / 1000),
-        exp: Math.floor(Date.now() / 1000) + (20 * 60), // 20 mins
-        aud: 'appstoreconnect-v1'
-    };
+async function sendApprovalEmail(toEmail) {
+    try {
+        const res = await fetch('https://api.resend.com/emails', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${RESEND_API_KEY}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                from: EMAIL_FROM,
+                to: [toEmail],
+                subject: 'You\'re approved for Yara Early Access',
+                html: buildApprovalEmailHtml(toEmail)
+            })
+        });
 
-    return jwt.sign(payload, ASC_PRIVATE_KEY, {
-        algorithm: 'ES256',
-        header: {
-            alg: 'ES256',
-            kid: ASC_KEY_ID,
-            typ: 'JWT'
+        if (!res.ok) {
+            const err = await res.json();
+            console.error('Resend API error:', err);
+            return false;
         }
-    });
+        return true;
+    } catch (err) {
+        console.error('Email send error:', err.message);
+        return false;
+    }
+}
+
+function buildApprovalEmailHtml(email) {
+    return `
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
+<body style="margin:0;padding:0;background:#0A0A0A;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
+  <div style="max-width:520px;margin:0 auto;padding:40px 24px;">
+    <div style="text-align:center;margin-bottom:32px;">
+      <h1 style="color:#fff;font-size:24px;font-weight:700;margin:0;">Welcome to Yara</h1>
+      <p style="color:rgba(255,255,255,0.5);font-size:14px;margin:8px 0 0;">You're in. Early access is yours.</p>
+    </div>
+
+    <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:24px;margin-bottom:24px;">
+      <p style="color:rgba(255,255,255,0.8);font-size:15px;line-height:1.6;margin:0 0 16px;">
+        Your early access request has been approved. You can now download Yara directly from the App Store.
+      </p>
+
+      <div style="text-align:center;margin:24px 0;">
+        <a href="${UNLISTED_APP_STORE_LINK}" style="display:inline-block;background:linear-gradient(135deg,#8B5CF6,#7C3AED);color:#fff;text-decoration:none;padding:14px 32px;border-radius:10px;font-size:16px;font-weight:600;">
+          Download Yara
+        </a>
+      </div>
+
+      <p style="color:rgba(255,255,255,0.5);font-size:13px;line-height:1.5;margin:16px 0 0;">
+        Open this link on your iPhone to install. The app is available exclusively to early access members like you.
+      </p>
+    </div>
+
+    <div style="background:rgba(139,92,246,0.08);border:1px solid rgba(139,92,246,0.15);border-radius:10px;padding:20px;margin-bottom:24px;">
+      <p style="color:#8B5CF6;font-size:13px;font-weight:600;margin:0 0 8px;">Getting started</p>
+      <ul style="color:rgba(255,255,255,0.6);font-size:13px;line-height:1.8;margin:0;padding:0 0 0 18px;">
+        <li>Open Yara and sign in with <strong style="color:rgba(255,255,255,0.8);">${email}</strong></li>
+        <li>Connect a bank account to unlock financial insights</li>
+        <li>Ask Yara anything about your bills, subscriptions, or spending</li>
+        <li>Share feedback directly in the app — we read every message</li>
+      </ul>
+    </div>
+
+    <div style="text-align:center;padding-top:16px;border-top:1px solid rgba(255,255,255,0.06);">
+      <p style="color:rgba(255,255,255,0.25);font-size:11px;margin:0;">
+        Yara — Your Personal AI Advocate<br>
+        <a href="https://my-yara.com" style="color:rgba(139,92,246,0.6);text-decoration:none;">my-yara.com</a>
+      </p>
+    </div>
+  </div>
+</body>
+</html>`.trim();
 }
 
 function encryptData(text, secret) {
