@@ -1778,8 +1778,10 @@
       emailInput.placeholder = 'You\'re on the list!';
     }
 
+    let submitting = false;
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
+      if (submitting) return;
       const email = emailInput.value.trim();
 
       if (!email) {
@@ -1794,6 +1796,7 @@
         return;
       }
 
+      submitting = true;
       setLoading(true);
 
       try {
@@ -1817,6 +1820,8 @@
       } catch (err) {
         setLoading(false);
         showError(err.message || 'Something went wrong. Please try again.');
+      } finally {
+        submitting = false;
       }
     });
 
@@ -1977,9 +1982,9 @@
     }
 
     async function submitSurvey() {
-      // Only submit if user answered at least one question — avoids duplicate entry
-      const hasAnswers = Object.values(answers).some(v => v.length > 0);
-      if (hasAnswers) {
+      // Only submit if user provided at least one real answer (not just skipped all)
+      const hasRealAnswers = Object.values(answers).some(v => v.length > 0);
+      if (hasRealAnswers) {
         try {
           await fetch(WAITLIST_API, {
             method: 'POST',

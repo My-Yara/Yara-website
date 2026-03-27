@@ -92,23 +92,78 @@ exports.handler = async (event, context) => {
     data.ipAddress = clientIp;
     data.location = `${city}, ${region}, ${country}`;
 
-    // 2. Encrypt the response data before saving
+    const emailPrefix = data.email.replace('@', '_at_');
+    const isSurveyUpdate = data.surveyUpdate === true;
+
+    // Check for existing entry by this email to prevent duplicates
+    let existingFile = null;
+    try {
+        const searchUrl = `https://api.github.com/repos/${GITHUB_ORG}/${DATA_REPO}/contents/early-access?ref=main`;
+        const listRes = await fetch(searchUrl, {
+            headers: {
+                'Authorization': `token ${GITHUB_PAT}`,
+                'Accept': 'application/vnd.github.v3+json',
+                'User-Agent': 'Netlify-Function-Yara-App'
+            }
+        });
+        if (listRes.ok) {
+            const files = await listRes.json();
+            // Find the most recent file for this email
+            const matches = files
+                .filter(f => f.name.startsWith(emailPrefix) && f.name.endsWith('.encrypted'))
+                .sort((a, b) => b.name.localeCompare(a.name));
+            if (matches.length > 0) {
+                existingFile = matches[0];
+            }
+        }
+    } catch (e) {
+        console.log('Existing entry check failed (non-critical):', e.message);
+    }
+
+    // If this is a plain waitlist signup and an entry already exists, skip (idempotent)
+    if (existingFile && !isSurveyUpdate) {
+        return {
+            statusCode: 200,
+            headers: corsHeaders,
+            body: JSON.stringify({
+                message: 'Already signed up!',
+                email: data.email
+            })
+        };
+    }
+
+    // Encrypt the response data before saving
     const plaintext = JSON.stringify(data);
     const encryptedContent = encryptData(plaintext, ENCRYPTION_KEY);
 
-    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-    // Save in early-access folder with .encrypted extension
-    const filename = `early-access/${data.email.replace('@', '_at_')}_${timestamp}.encrypted`;
+    // If survey update with existing entry, overwrite the same file; otherwise create new
+    let filename;
+    let fileSha;
+    let commitMessage;
 
-    // 2. Prepare GitHub API request
+    if (isSurveyUpdate && existingFile) {
+        filename = `early-access/${existingFile.name}`;
+        fileSha = existingFile.sha;
+        commitMessage = `Survey update for ${data.email}`;
+    } else {
+        const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+        filename = `early-access/${emailPrefix}_${timestamp}.encrypted`;
+        fileSha = null;
+        commitMessage = `New ENCRYPTED early access signup from ${data.email}`;
+    }
+
+    // Prepare GitHub API request
     const contentEncoded = Buffer.from(encryptedContent).toString('base64');
     const githubApiUrl = `https://api.github.com/repos/${GITHUB_ORG}/${DATA_REPO}/contents/${filename}`;
 
     const commitData = {
-        message: `New ENCRYPTED early access signup from ${data.email}`,
+        message: commitMessage,
         content: contentEncoded,
         branch: 'main'
     };
+    if (fileSha) {
+        commitData.sha = fileSha;
+    }
 
     try {
         const response = await fetch(githubApiUrl, {
@@ -136,7 +191,9 @@ exports.handler = async (event, context) => {
             statusCode: 200,
             headers: corsHeaders,
             body: JSON.stringify({
-                message: 'Early access response saved and encrypted successfully!',
+                message: isSurveyUpdate
+                    ? 'Survey response updated successfully!'
+                    : 'Early access response saved and encrypted successfully!',
                 email: data.email
             })
         };
