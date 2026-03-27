@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Yara Meta Ad Previews</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #1a1a2e;
+    color: #f0f0f8;
+    padding: 40px 20px;
+  }
+  h1 {
+    font-family: 'DM Sans', sans-serif;
+    text-align: center;
+    font-size: 28px;
+    margin-bottom: 8px;
+    background: linear-gradient(135deg, #8B5CF6, #14B8A6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .subtitle {
+    text-align: center;
+    color: rgba(240,240,248,0.5);
+    margin-bottom: 48px;
+    font-size: 14px;
+  }
+  .preview-section {
+    max-width: 1200px;
+    margin: 0 auto 60px;
+  }
+  .section-title {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 24px;
+    color: #A78BFA;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    text-align: center;
+  }
+  .preview-row {
+    display: flex;
+    gap: 40px;
+    justify-content: center;
+    flex-wrap: wrap;
+    align-items: flex-start;
+  }
+
+  /* ─── FEED AD CREATIVE (1080x1080 scaled) ─── */
+  .feed-creative {
+    width: 540px;
+    height: 540px;
+    background: #0B0D17;
+    border-radius: 8px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .feed-creative::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 30% 40%, rgba(108,58,237,0.15) 0%, transparent 60%),
+                radial-gradient(ellipse at 70% 70%, rgba(20,184,166,0.08) 0%, transparent 50%);
+  }
+  .glass-card {
+    position: relative;
+    z-index: 1;
+    width: 440px;
+    padding: 48px 40px;
+    background: rgba(255,255,255,0.04);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 24px;
+    text-align: center;
+  }
+  .glass-card .hook {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 1.25;
+    color: #F0F0F8;
+    margin-bottom: 24px;
+  }
+  .glass-card .divider {
+    width: 60px;
+    height: 1px;
+    background: rgba(255,255,255,0.12);
+    margin: 0 auto 24px;
+  }
+  .glass-card .tagline {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 22px;
+    font-weight: 600;
+    line-height: 1.3;
+    background: linear-gradient(135deg, #8B5CF6, #14B8A6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 32px;
+  }
+  .glass-card .cta-pill {
+    display: inline-block;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    color: #fff;
+    background: linear-gradient(135deg, #6C3AED, #8B5CF6);
+    padding: 12px 32px;
+    border-radius: 50px;
+    letter-spacing: 0.3px;
+  }
+  .logo-bottom {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    color: rgba(167,139,250,0.6);
+    letter-spacing: 2px;
+  }
+
+  /* ─── FACEBOOK FEED WRAPPER ─── */
+  .fb-feed-wrapper {
+    width: 540px;
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.3);
+  }
+  .fb-header {
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .fb-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #6C3AED, #14B8A6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    color: #fff;
+  }
+  .fb-header-text {
+    flex: 1;
+  }
+  .fb-page-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1c1e21;
+  }
+  .fb-sponsored {
+    font-size: 12px;
+    color: #65676b;
+  }
+  .fb-post-text {
+    padding: 0 16px 12px;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #1c1e21;
+  }
+  .fb-post-text .see-more {
+    color: #65676b;
+    cursor: pointer;
+  }
+  .fb-cta-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    border-top: 1px solid #e4e6eb;
+    background: #f0f2f5;
+  }
+  .fb-cta-left {
+    flex: 1;
+  }
+  .fb-cta-left .fb-headline {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1c1e21;
+  }
+  .fb-cta-left .fb-desc {
+    font-size: 12px;
+    color: #65676b;
+    margin-top: 2px;
+  }
+  .fb-cta-left .fb-domain {
+    font-size: 11px;
+    color: #65676b;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    margin-bottom: 2px;
+  }
+  .fb-signup-btn {
+    background: #6C3AED;
+    color: #fff;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+
+  /* ─── INSTAGRAM STORY WRAPPER ─── */
+  .story-wrapper {
+    width: 300px;
+    flex-shrink: 0;
+  }
+  .story-phone {
+    width: 300px;
+    height: 650px;
+    background: #000;
+    border-radius: 40px;
+    padding: 8px;
+    position: relative;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  }
+  .story-screen {
+    width: 100%;
+    height: 100%;
+    border-radius: 32px;
+    overflow: hidden;
+    position: relative;
+    background: #0B0D17;
+  }
+  .story-screen::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 50% 30%, rgba(108,58,237,0.2) 0%, transparent 60%),
+                radial-gradient(ellipse at 50% 80%, rgba(20,184,166,0.1) 0%, transparent 50%);
+    z-index: 0;
+  }
+  .story-progress {
+    display: flex;
+    gap: 4px;
+    padding: 12px 16px 0;
+    position: relative;
+    z-index: 2;
+  }
+  .story-progress .bar {
+    flex: 1;
+    height: 2px;
+    background: rgba(255,255,255,0.3);
+    border-radius: 2px;
+  }
+  .story-progress .bar.active {
+    background: #fff;
+  }
+  .story-ig-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    position: relative;
+    z-index: 2;
+  }
+  .story-ig-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #6C3AED, #14B8A6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 700;
+    font-size: 11px;
+    color: #fff;
+  }
+  .story-ig-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: #fff;
+  }
+  .story-ig-sponsored {
+    font-size: 11px;
+    color: rgba(255,255,255,0.6);
+  }
+  .story-content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: calc(100% - 160px);
+    padding: 0 28px;
+    text-align: center;
+  }
+  .story-content .s-hook {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 26px;
+    font-weight: 700;
+    color: #F0F0F8;
+    line-height: 1.2;
+    margin-bottom: 16px;
+  }
+  .story-content .s-divider {
+    width: 40px;
+    height: 1px;
+    background: rgba(255,255,255,0.15);
+    margin-bottom: 16px;
+  }
+  .story-content .s-tagline {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 1.3;
+    background: linear-gradient(135deg, #8B5CF6, #14B8A6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 12px;
+  }
+  .story-content .s-sub {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    color: rgba(240,240,248,0.55);
+    line-height: 1.5;
+    margin-bottom: 24px;
+  }
+  .story-cta-bottom {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 2;
+    text-align: center;
+    padding: 16px;
+    background: linear-gradient(transparent, rgba(0,0,0,0.6));
+    border-radius: 0 0 32px 32px;
+  }
+  .story-cta-btn {
+    display: inline-block;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: #fff;
+    background: linear-gradient(135deg, #6C3AED, #8B5CF6);
+    padding: 12px 40px;
+    border-radius: 50px;
+    border: none;
+    letter-spacing: 0.3px;
+  }
+  .story-swipe {
+    font-size: 11px;
+    color: rgba(255,255,255,0.5);
+    margin-top: 8px;
+  }
+
+  /* ─── INSTAGRAM FEED WRAPPER ─── */
+  .ig-feed-wrapper {
+    width: 540px;
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.3);
+  }
+  .ig-header {
+    padding: 12px 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid #efefef;
+  }
+  .ig-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #6C3AED, #14B8A6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 700;
+    font-size: 11px;
+    color: #fff;
+  }
+  .ig-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: #262626;
+    flex: 1;
+  }
+  .ig-sponsored-tag {
+    font-size: 11px;
+    color: #8e8e8e;
+  }
+  .ig-actions {
+    padding: 10px 14px 4px;
+    display: flex;
+    gap: 16px;
+  }
+  .ig-icon {
+    font-size: 22px;
+    color: #262626;
+    cursor: pointer;
+  }
+  .ig-cta-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 14px;
+  }
+  .ig-learn-more {
+    font-size: 13px;
+    font-weight: 600;
+    color: #6C3AED;
+  }
+  .ig-signup-btn {
+    background: #6C3AED;
+    color: #fff;
+    border: none;
+    padding: 7px 18px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .ig-caption {
+    padding: 4px 14px 14px;
+    font-size: 13px;
+    line-height: 1.5;
+    color: #262626;
+  }
+  .ig-caption strong {
+    font-weight: 600;
+  }
+
+  /* ─── LEAD FORM PREVIEW ─── */
+  .lead-form-wrapper {
+    width: 380px;
+    flex-shrink: 0;
+  }
+  .lead-form-phone {
+    width: 380px;
+    background: #fff;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+  }
+  .lf-header {
+    background: linear-gradient(135deg, #0B0D17, #1a1a2e);
+    padding: 32px 24px 24px;
+    text-align: center;
+  }
+  .lf-logo {
+    width: 56px;
+    height: 56px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #6C3AED, #14B8A6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 800;
+    font-size: 20px;
+    color: #fff;
+    margin: 0 auto 16px;
+  }
+  .lf-title {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: #F0F0F8;
+    margin-bottom: 8px;
+  }
+  .lf-desc {
+    font-size: 14px;
+    color: rgba(240,240,248,0.6);
+    line-height: 1.5;
+  }
+  .lf-body {
+    padding: 24px;
+  }
+  .lf-field {
+    margin-bottom: 16px;
+  }
+  .lf-label {
+    font-size: 13px;
+    font-weight: 500;
+    color: #4B5563;
+    margin-bottom: 6px;
+  }
+  .lf-input {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid #d1d5db;
+    border-radius: 10px;
+    font-size: 15px;
+    color: #1c1e21;
+    background: #f9fafb;
+  }
+  .lf-input.prefilled {
+    color: #111827;
+    background: #f0fdf4;
+    border-color: #86efac;
+  }
+  .lf-prefill-tag {
+    font-size: 11px;
+    color: #16a34a;
+    margin-top: 4px;
+  }
+  .lf-select {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid #d1d5db;
+    border-radius: 10px;
+    font-size: 15px;
+    color: #6b7280;
+    background: #f9fafb;
+    appearance: none;
+  }
+  .lf-optional {
+    font-size: 11px;
+    color: #9ca3af;
+    font-weight: 400;
+  }
+  .lf-submit {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(135deg, #6C3AED, #8B5CF6);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 8px;
+  }
+  .lf-privacy {
+    text-align: center;
+    font-size: 11px;
+    color: #9ca3af;
+    margin-top: 12px;
+    line-height: 1.4;
+  }
+  .lf-privacy a {
+    color: #6C3AED;
+    text-decoration: none;
+  }
+
+  /* ─── LABELS ─── */
+  .format-label {
+    text-align: center;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    color: rgba(240,240,248,0.4);
+    margin-top: 16px;
+    letter-spacing: 0.5px;
+  }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 768px) {
+    .preview-row { flex-direction: column; align-items: center; }
+    .fb-feed-wrapper, .ig-feed-wrapper, .feed-creative { width: 100%; max-width: 540px; }
+    .feed-creative { height: auto; aspect-ratio: 1; }
+  }
+</style>
+</head>
+<body>
+
+<h1>Yara — Meta Ad Previews</h1>
+<p class="subtitle">Hero Ad: "Take Control" &mdash; All Placement Formats</p>
+
+<!-- ════════════════════════════════════════════ -->
+<!-- SECTION 1: FACEBOOK FEED -->
+<!-- ════════════════════════════════════════════ -->
+<div class="preview-section">
+  <div class="section-title">Facebook Feed Ad</div>
+  <div class="preview-row">
+    <div>
+      <div class="fb-feed-wrapper">
+        <!-- FB Header -->
+        <div class="fb-header">
+          <div class="fb-avatar">Y</div>
+          <div class="fb-header-text">
+            <div class="fb-page-name">Yara</div>
+            <div class="fb-sponsored">Sponsored &middot; <span style="font-size:11px">&#127758;</span></div>
+          </div>
+          <span style="color:#65676b; font-size:20px; cursor:pointer">&#8943;</span>
+        </div>
+        <!-- Post Text -->
+        <div class="fb-post-text">
+          Every company you pay has an AI working against you.<br><br>
+          Your wireless carrier. Your insurance company. Your streaming services.
+          They use AI to optimize what they charge you — raising rates, hiding fees,
+          and betting you won't notice.<br><br>
+          Yara is the AI that fights back. <span class="see-more">... See more</span>
+        </div>
+        <!-- Creative -->
+        <div class="feed-creative">
+          <div class="glass-card">
+            <div class="hook">Every company you pay has AI working against you.</div>
+            <div class="divider"></div>
+            <div class="tagline">Yara is the AI that fights back.</div>
+            <div class="cta-pill">Join the Waitlist &rarr;</div>
+          </div>
+          <div class="logo-bottom">YARA</div>
+        </div>
+        <!-- CTA Bar -->
+        <div class="fb-cta-bar">
+          <div class="fb-cta-left">
+            <div class="fb-domain">my-yara.com</div>
+            <div class="fb-headline">Stop overpaying. Let Yara fight for you.</div>
+            <div class="fb-desc">AI-powered advocate that calls providers and negotiates rates.</div>
+          </div>
+          <button class="fb-signup-btn">Sign Up</button>
+        </div>
+      </div>
+      <div class="format-label">Facebook Feed &mdash; 1080 &times; 1080</div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════ -->
+<!-- SECTION 2: INSTAGRAM FEED -->
+<!-- ════════════════════════════════════════════ -->
+<div class="preview-section">
+  <div class="section-title">Instagram Feed Ad</div>
+  <div class="preview-row">
+    <div>
+      <div class="ig-feed-wrapper">
+        <!-- IG Header -->
+        <div class="ig-header">
+          <div class="ig-avatar">Y</div>
+          <div class="ig-name">yara.ai</div>
+          <div class="ig-sponsored-tag">Sponsored</div>
+          <span style="color:#262626; font-size:18px; cursor:pointer">&#8943;</span>
+        </div>
+        <!-- Creative -->
+        <div class="feed-creative">
+          <div class="glass-card">
+            <div class="hook">Every company you pay has AI working against you.</div>
+            <div class="divider"></div>
+            <div class="tagline">Yara is the AI that fights back.</div>
+            <div class="cta-pill">Join the Waitlist &rarr;</div>
+          </div>
+          <div class="logo-bottom">YARA</div>
+        </div>
+        <!-- CTA -->
+        <div class="ig-cta-bar">
+          <div class="ig-learn-more">Sign Up</div>
+          <button class="ig-signup-btn">Sign Up</button>
+        </div>
+        <!-- Caption -->
+        <div class="ig-caption">
+          <strong>yara.ai</strong> She reviews your bills. Finds overcharges.
+          Calls your providers. Negotiates better rates.
+          You approve — she handles the rest. 💜<br>
+          <span style="color:#00376b">#AI #SaveMoney #BillNegotiation #PersonalFinance #ConsumerAdvocate</span>
+        </div>
+      </div>
+      <div class="format-label">Instagram Feed &mdash; 1080 &times; 1080</div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════ -->
+<!-- SECTION 3: INSTAGRAM STORY + LEAD FORM -->
+<!-- ════════════════════════════════════════════ -->
+<div class="preview-section">
+  <div class="section-title">Instagram Story + Meta Lead Form</div>
+  <div class="preview-row">
+    <!-- Story -->
+    <div class="story-wrapper">
+      <div class="story-phone">
+        <div class="story-screen">
+          <!-- Progress -->
+          <div class="story-progress">
+            <div class="bar active"></div>
+            <div class="bar active"></div>
+            <div class="bar active"></div>
+            <div class="bar active"></div>
+            <div class="bar"></div>
+          </div>
+          <!-- IG Header -->
+          <div class="story-ig-header">
+            <div class="story-ig-avatar">Y</div>
+            <div>
+              <div class="story-ig-name">yara.ai</div>
+              <div class="story-ig-sponsored">Sponsored</div>
+            </div>
+          </div>
+          <!-- Content -->
+          <div class="story-content">
+            <div class="s-hook">Every company you pay has AI.</div>
+            <div class="s-divider"></div>
+            <div class="s-tagline">It's time to fight back.</div>
+            <div class="s-sub">
+              Yara reviews your bills, calls your providers,<br>
+              and negotiates on your behalf.
+            </div>
+          </div>
+          <!-- CTA -->
+          <div class="story-cta-bottom">
+            <button class="story-cta-btn">Join the Waitlist</button>
+            <div class="story-swipe">Learn More</div>
+          </div>
+        </div>
+      </div>
+      <div class="format-label">Instagram Story &mdash; 1080 &times; 1920</div>
+    </div>
+
+    <!-- Lead Form -->
+    <div class="lead-form-wrapper">
+      <div class="lead-form-phone">
+        <div class="lf-header">
+          <div class="lf-logo">Y</div>
+          <div class="lf-title">Get Early Access to Yara</div>
+          <div class="lf-desc">AI that fights to save you money &mdash; reviewing bills, calling providers, and negotiating on your behalf.</div>
+        </div>
+        <div class="lf-body">
+          <div class="lf-field">
+            <div class="lf-label">Email</div>
+            <input class="lf-input prefilled" value="jane.smith@gmail.com" readonly>
+            <div class="lf-prefill-tag">&#10003; Pre-filled from your profile</div>
+          </div>
+          <div class="lf-field">
+            <div class="lf-label">First Name</div>
+            <input class="lf-input prefilled" value="Jane" readonly>
+            <div class="lf-prefill-tag">&#10003; Pre-filled from your profile</div>
+          </div>
+          <div class="lf-field">
+            <div class="lf-label">Biggest bill headache? <span class="lf-optional">(optional)</span></div>
+            <select class="lf-select">
+              <option>Select one...</option>
+              <option>Wireless / Cable / Internet</option>
+              <option>Insurance</option>
+              <option>Subscriptions</option>
+              <option>Utilities</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <button class="lf-submit">Submit</button>
+          <div class="lf-privacy">
+            By submitting, you agree to Yara's <a href="#">Privacy Policy</a>.<br>
+            Your info is shared with Yara to follow up on your request.
+          </div>
+        </div>
+      </div>
+      <div class="format-label">Meta Instant Lead Form</div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
