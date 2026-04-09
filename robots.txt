@@ -1,0 +1,13 @@
+# https://www.my-yara.com/robots.txt
+User-agent: *
+Allow: /
+Disallow: /admin.html
+Disallow: /analytics.html
+Disallow: /login.html
+Disallow: /internal/
+Disallow: /mockup/
+Disallow: /netlify/
+Disallow: /test-results/
+Disallow: /node_modules/
+
+Sitemap: https://www.my-yara.com/sitemap.xml
