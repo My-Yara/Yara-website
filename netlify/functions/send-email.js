@@ -1,15 +1,18 @@
-// send-email.js — Sends a custom email to a waitlist invitee using the stored template
+// send-email.js — Sends a custom email to a waitlist invitee using the stored template + Gmail API
 
 const fetch = require('node-fetch');
 const crypto = require('crypto');
+const { google } = require('googleapis');
 
 const GITHUB_PAT = process.env.GITHUB_PAT_TOKEN;
 const DATA_REPO = process.env.GITHUB_DATA_REPO;
 const GITHUB_ORG = 'My-Yara';
 const AUTH_CREDENTIALS = process.env.AUTH_CREDENTIALS;
-const RESEND_API_KEY = process.env.RESEND_API_KEY;
-const EMAIL_FROM = process.env.EMAIL_FROM || 'Yara <hello@my-yara.com>';
 const UNLISTED_APP_STORE_LINK = process.env.UNLISTED_APP_STORE_LINK || 'https://apps.apple.com/app/yara/id000000000';
+
+// Gmail API config
+const GMAIL_FROM_EMAIL = process.env.GMAIL_FROM_EMAIL || 'hello@my-yara.com';
+const GMAIL_FROM_NAME  = process.env.GMAIL_FROM_NAME  || 'Yara';
 
 const corsHeaders = {
     'Access-Control-Allow-Origin': '*',
@@ -46,8 +49,8 @@ exports.handler = async (event) => {
         return { statusCode: 400, headers: corsHeaders, body: JSON.stringify({ message: 'toEmail is required' }) };
     }
 
-    if (!RESEND_API_KEY) {
-        return { statusCode: 500, headers: corsHeaders, body: JSON.stringify({ message: 'Email service not configured (RESEND_API_KEY missing)' }) };
+    if (!process.env.GOOGLE_SERVICE_ACCOUNT_JSON) {
+        return { statusCode: 500, headers: corsHeaders, body: JSON.stringify({ message: 'Email service not configured (GOOGLE_SERVICE_ACCOUNT_JSON missing)' }) };
     }
 
     // Load template from GitHub (falls back to default if not found)
@@ -71,47 +74,67 @@ exports.handler = async (event) => {
         console.log('Template load failed, using fallback:', e.message);
     }
 
-    // Default subject/body if no saved template
     if (!subject) subject = "You're approved for Yara Early Access";
-    if (!htmlTemplate) {
-        htmlTemplate = buildDefaultHtml();
-    }
+    if (!htmlTemplate) htmlTemplate = buildDefaultHtml();
 
-    // Substitute variables: {{email}}, {{appStoreLink}}
+    // Substitute variables
     const firstName = toEmail.split('@')[0].replace(/[._+]/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
     const html = htmlTemplate
         .replace(/\{\{email\}\}/g, escapeHtml(toEmail))
         .replace(/\{\{firstName\}\}/g, escapeHtml(firstName))
         .replace(/\{\{appStoreLink\}\}/g, UNLISTED_APP_STORE_LINK);
 
-    // Send via Resend
+    // Send via Gmail API
     try {
-        const res = await fetch('https://api.resend.com/emails', {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${RESEND_API_KEY}`,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ from: EMAIL_FROM, to: [toEmail], subject, html })
-        });
-
-        if (!res.ok) {
-            const err = await res.json();
-            console.error('Resend error:', err);
-            return { statusCode: 502, headers: corsHeaders, body: JSON.stringify({ message: 'Email delivery failed', details: err }) };
-        }
-
+        await sendViaGmail(toEmail, subject, html);
         return {
             statusCode: 200,
             headers: corsHeaders,
             body: JSON.stringify({ message: 'Email sent', to: toEmail })
         };
-
     } catch (err) {
-        console.error('send-email error:', err);
-        return { statusCode: 500, headers: corsHeaders, body: JSON.stringify({ message: err.message }) };
+        console.error('send-email Gmail error:', err);
+        return { statusCode: 502, headers: corsHeaders, body: JSON.stringify({ message: 'Email delivery failed', details: err.message }) };
     }
 };
+
+// ── Gmail API helper ──────────────────────────────────────────────────────────
+async function sendViaGmail(toEmail, subject, html) {
+    const serviceAccount = JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT_JSON);
+
+    const auth = new google.auth.JWT({
+        email: serviceAccount.client_email,
+        key:   serviceAccount.private_key,
+        scopes: ['https://www.googleapis.com/auth/gmail.send'],
+        subject: GMAIL_FROM_EMAIL  // impersonate this Workspace user
+    });
+
+    const gmail = google.gmail({ version: 'v1', auth });
+
+    // RFC 2822 message — encode subject for non-ASCII safety
+    const encodedSubject = `=?utf-8?B?${Buffer.from(subject).toString('base64')}?=`;
+    const message = [
+        `From: ${GMAIL_FROM_NAME} <${GMAIL_FROM_EMAIL}>`,
+        `To: ${toEmail}`,
+        `Subject: ${encodedSubject}`,
+        'MIME-Version: 1.0',
+        'Content-Type: text/html; charset=utf-8',
+        'Content-Transfer-Encoding: base64',
+        '',
+        Buffer.from(html).toString('base64')
+    ].join('\r\n');
+
+    // base64url encode the full RFC 2822 message
+    const raw = Buffer.from(message).toString('base64')
+        .replace(/\+/g, '-')
+        .replace(/\//g, '_')
+        .replace(/=+$/, '');
+
+    await gmail.users.messages.send({
+        userId: 'me',
+        requestBody: { raw }
+    });
+}
 
 function escapeHtml(s) {
     return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
