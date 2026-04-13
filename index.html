@@ -486,14 +486,14 @@
       width: 100%;
       height: 100vh;
       overflow: hidden;
-      background: #0B0D17;
+      background: #ffffff;
     }
-    /* Hero gradient background — replaces video */
+    /* Hero gradient background */
     #heroBg {
       position: absolute;
       inset: 0;
       z-index: 0;
-      background: #0B0D17;
+      background: #ffffff;
       overflow: hidden;
     }
     #heroBg::before {
@@ -501,7 +501,7 @@
       position: absolute;
       width: 900px; height: 900px;
       top: -200px; left: -100px;
-      background: radial-gradient(circle, rgba(139,92,246,0.18) 0%, transparent 70%);
+      background: radial-gradient(circle, rgba(139,92,246,0.10) 0%, transparent 70%);
       animation: blobDrift 14s ease-in-out infinite alternate;
     }
     #heroBg::after {
@@ -509,7 +509,7 @@
       position: absolute;
       width: 700px; height: 700px;
       bottom: -150px; right: -80px;
-      background: radial-gradient(circle, rgba(20,184,166,0.13) 0%, transparent 70%);
+      background: radial-gradient(circle, rgba(20,184,166,0.08) 0%, transparent 70%);
       animation: blobDrift 18s ease-in-out infinite alternate-reverse;
     }
     @keyframes blobDrift {
@@ -533,7 +533,7 @@
       font-weight: 700;
       letter-spacing: -0.03em;
       line-height: 1.05;
-      color: #EDEDED;
+      color: #1A1A2E;
       margin-bottom: 20px;
     }
     .frame h1 .word { display: inline-block; opacity: 0; transform: translateY(40px); filter: blur(8px); will-change: opacity, transform, filter }
@@ -541,7 +541,7 @@
       font-family: 'DM Sans', -apple-system, sans-serif;
       font-size: clamp(16px, 2vw, 20px);
       font-weight: 400;
-      color: rgba(255,255,255,0.7);
+      color: #4A4A68;
       max-width: 560px;
       line-height: 1.6;
       opacity: 0;
@@ -650,7 +650,7 @@
     .hero-progress__dot {
       width: 6px; height: 6px;
       border-radius: 50%;
-      background: rgba(255,255,255,0.3);
+      background: rgba(0,0,0,0.18);
       cursor: pointer;
       border: none; padding: 0;
       position: relative;
@@ -658,14 +658,14 @@
       user-select: none; -webkit-user-select: none;
     }
     .hero-progress__dot:hover {
-      background: rgba(255,255,255,0.6);
+      background: rgba(0,0,0,0.4);
       transform: scale(1.4);
     }
     .hero-progress__dot--completed {
-      background: rgba(255,255,255,0.6);
+      background: rgba(0,0,0,0.35);
     }
     .hero-progress__dot--active {
-      background: rgba(255,255,255,0.9);
+      background: #6C3AED;
     }
     .hero-progress__ring {
       position: absolute;
@@ -677,11 +677,11 @@
     }
     .hero-progress__ring circle { fill: none; }
     .hero-progress__ring .ring-bg {
-      stroke: rgba(255,255,255,0.15);
+      stroke: rgba(0,0,0,0.1);
       stroke-width: 1;
     }
     .hero-progress__ring .ring-fill {
-      stroke: rgba(255,255,255,0.75);
+      stroke: #6C3AED;
       stroke-width: 1.5;
       stroke-linecap: round;
       stroke-dasharray: 50.27;
@@ -701,9 +701,9 @@
 
     /* Charge you more -- amber/gold text */
     .amber-text {
-      color: #FBBF24;
-      -webkit-text-fill-color: #FBBF24;
-      filter: drop-shadow(0 0 20px rgba(251,191,36,0.3));
+      color: #B45309;
+      -webkit-text-fill-color: #B45309;
+      filter: drop-shadow(0 0 16px rgba(180,83,9,0.15));
     }
 
     @media (max-width: 768px) {
