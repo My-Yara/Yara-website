@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <title>Yara - Email Template</title>
+  <link rel="icon" type="image/png" href="yara_butterfly.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet" /><!-- nosemgrep: html.security.audit.missing-integrity.missing-integrity -->
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html,body{height:100%;font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;-webkit-font-smoothing:antialiased;background:#0A0A0A;color:#fff}
+
+    /* Topbar */
+    .topbar{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:10px 20px;background:rgba(10,10,10,0.9);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,0.06)}
+    .topbar .brand{display:flex;align-items:center;gap:8px;text-decoration:none}
+    .topbar .brand img{width:24px;height:24px;filter:brightness(0) invert(1)}
+    .topbar .brand span{font-family:'Plus Jakarta Sans',sans-serif;font-size:16px;font-weight:700;color:#fff;letter-spacing:-0.02em}
+    .topbar .right{display:flex;align-items:center;gap:12px}
+    .topbar .user-email{font-size:12px;color:rgba(255,255,255,0.4)}
+    .nav-link{padding:5px 12px;border-radius:6px;font-size:12px;font-weight:500;color:rgba(255,255,255,0.5);text-decoration:none;transition:all .15s}
+    .nav-link:hover{background:rgba(255,255,255,0.06);color:#fff}
+    .nav-link.active{background:rgba(139,92,246,0.15);color:#8B5CF6}
+    .btn-sm{padding:5px 12px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:rgba(255,255,255,0.7);font-size:12px;font-weight:500;cursor:pointer;transition:all .15s;font-family:inherit}
+    .btn-sm:hover{background:rgba(255,255,255,0.1);color:#fff}
+
+    /* Layout */
+    .main{display:grid;grid-template-columns:1fr 1fr;gap:0;height:calc(100vh - 45px);overflow:hidden}
+
+    /* Editor pane */
+    .editor-pane{display:flex;flex-direction:column;border-right:1px solid rgba(255,255,255,0.06);overflow:hidden}
+    .pane-header{padding:14px 20px;border-bottom:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+    .pane-title{font-size:12px;font-weight:600;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:0.05em}
+    .editor-body{flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:16px}
+
+    /* Form fields */
+    .field-label{font-size:11px;font-weight:600;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:6px}
+    .field-input{width:100%;padding:9px 12px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:8px;font-size:13px;font-family:'Inter',sans-serif;color:#fff;outline:none;transition:border-color .15s}
+    .field-input:focus{border-color:rgba(139,92,246,0.5)}
+    .field-input::placeholder{color:rgba(255,255,255,0.2)}
+    textarea.field-input{resize:vertical;min-height:380px;font-family:'Fira Code','SF Mono',monospace;font-size:12px;line-height:1.6}
+
+    /* Variables reference */
+    .vars-card{background:rgba(139,92,246,0.06);border:1px solid rgba(139,92,246,0.12);border-radius:8px;padding:12px 14px}
+    .vars-title{font-size:10px;font-weight:700;color:#8B5CF6;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px}
+    .vars-grid{display:flex;flex-wrap:wrap;gap:6px}
+    .var-chip{padding:3px 8px;background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.2);border-radius:4px;font-size:11px;font-family:'Fira Code','SF Mono',monospace;color:#a78bfa;cursor:pointer;user-select:all}
+    .var-chip:hover{background:rgba(139,92,246,0.2)}
+    .vars-desc{margin-top:8px;font-size:11px;color:rgba(255,255,255,0.3);line-height:1.5}
+
+    /* Action bar */
+    .action-bar{padding:12px 20px;border-top:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;gap:10px;flex-shrink:0}
+    .btn-save{padding:8px 20px;background:linear-gradient(135deg,#8B5CF6,#7C3AED);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s}
+    .btn-save:hover:not(:disabled){box-shadow:0 4px 16px rgba(139,92,246,0.3);transform:translateY(-1px)}
+    .btn-save:disabled{opacity:0.5;cursor:not-allowed}
+    .btn-reset{padding:8px 16px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.6);border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;font-family:inherit;transition:all .15s}
+    .btn-reset:hover{background:rgba(255,255,255,0.1);color:#fff}
+    .save-status{font-size:12px;color:rgba(255,255,255,0.3);margin-left:auto}
+    .save-status.ok{color:#22C55E}
+    .save-status.err{color:#EF4444}
+
+    /* Preview pane */
+    .preview-pane{display:flex;flex-direction:column;overflow:hidden}
+    .preview-tabs{padding:0 20px;border-bottom:1px solid rgba(255,255,255,0.06);display:flex;gap:2px;flex-shrink:0;padding-top:8px}
+    .preview-tab{padding:6px 14px;border-radius:6px 6px 0 0;font-size:12px;font-weight:500;color:rgba(255,255,255,0.4);cursor:pointer;transition:all .15s;border:none;background:none;font-family:inherit}
+    .preview-tab.active{background:rgba(255,255,255,0.06);color:#fff}
+    .preview-frame{flex:1;overflow:hidden;position:relative}
+    iframe#previewFrame{width:100%;height:100%;border:none;background:#fff}
+    .preview-source{flex:1;overflow-y:auto;padding:16px 20px;font-family:'Fira Code','SF Mono',monospace;font-size:11px;line-height:1.6;color:rgba(255,255,255,0.5);white-space:pre-wrap;word-break:break-all;display:none}
+
+    /* Auth gate */
+    .auth-gate{display:flex;align-items:center;justify-content:center;height:100vh;text-align:center}
+    .auth-gate p{color:rgba(255,255,255,0.4);font-size:14px;margin-bottom:16px}
+    .btn-login{padding:10px 24px;background:linear-gradient(135deg,#8B5CF6,#7C3AED);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s}
+    .btn-login:hover{box-shadow:0 8px 24px rgba(139,92,246,0.3);transform:translateY(-1px)}
+
+    .spinner-sm{width:20px;height:20px;border:2px solid rgba(255,255,255,0.1);border-top-color:#8B5CF6;border-radius:50%;animation:spin .6s linear infinite;display:inline-block;vertical-align:middle;margin-right:6px}
+    @keyframes spin{to{transform:rotate(360deg)}}
+
+    /* Toast */
+    .toast{position:fixed;bottom:24px;right:24px;padding:10px 18px;border-radius:8px;font-size:13px;font-weight:500;color:#fff;opacity:0;transform:translateY(8px);transition:all .25s;pointer-events:none;z-index:999}
+    .toast.show{opacity:1;transform:translateY(0)}
+    .toast.success{background:#16a34a}
+    .toast.error{background:#dc2626}
+
+    @media(max-width:900px){
+      .main{grid-template-columns:1fr;grid-template-rows:1fr 1fr}
+      .editor-pane{border-right:none;border-bottom:1px solid rgba(255,255,255,0.06)}
+    }
+  </style>
+</head>
+<body>
+
+  <div id="authGate" class="auth-gate" style="display:none;">
+    <div>
+      <img src="yara_butterfly.png" alt="Yara" style="width:48px;height:48px;filter:brightness(0) invert(1);margin-bottom:20px;">
+      <p>You need to sign in to access this page.</p>
+      <button class="btn-login" onclick="window.location.href='/login.html?redirect=/email-template.html'">Sign In</button>
+    </div>
+  </div>
+
+  <div id="app" style="display:none;">
+    <div class="topbar">
+      <div style="display:flex;align-items:center;gap:16px;">
+        <a href="/" class="brand">
+          <img src="yara_butterfly.png" alt="Yara" />
+          <span>Yara</span>
+        </a>
+        <div style="display:flex;gap:4px;">
+          <a href="/admin.html" class="nav-link">Waitlist</a>
+          <a href="/analytics.html" class="nav-link">Analytics</a>
+          <a href="/email-template.html" class="nav-link active">Email Template</a>
+        </div>
+      </div>
+      <div class="right">
+        <span class="user-email" id="userEmail"></span>
+        <button class="btn-sm" id="logoutBtn">Sign Out</button>
+      </div>
+    </div>
+
+    <div class="main">
+      <!-- ── Editor pane ── -->
+      <div class="editor-pane">
+        <div class="pane-header">
+          <span class="pane-title">Template Editor</span>
+          <span id="lastUpdated" style="font-size:11px;color:rgba(255,255,255,0.25);"></span>
+        </div>
+        <div class="editor-body">
+
+          <div>
+            <div class="field-label">Subject Line</div>
+            <input type="text" id="subjectInput" class="field-input" placeholder="e.g. You're approved for Yara Early Access" />
+          </div>
+
+          <div>
+            <div class="field-label">HTML Body</div>
+            <textarea id="htmlInput" class="field-input" placeholder="Paste your HTML email here..."></textarea>
+          </div>
+
+          <div class="vars-card">
+            <div class="vars-title">Available Variables</div>
+            <div class="vars-grid">
+              <span class="var-chip" title="Click to copy">{{email}}</span>
+              <span class="var-chip" title="Click to copy">{{firstName}}</span>
+              <span class="var-chip" title="Click to copy">{{appStoreLink}}</span>
+            </div>
+            <div class="vars-desc">
+              <strong style="color:rgba(255,255,255,0.5);">{{email}}</strong> — recipient's full email address<br>
+              <strong style="color:rgba(255,255,255,0.5);">{{firstName}}</strong> — derived from email prefix (e.g. john.doe@… → John Doe)<br>
+              <strong style="color:rgba(255,255,255,0.5);">{{appStoreLink}}</strong> — App Store download URL (from env)
+            </div>
+          </div>
+
+        </div>
+        <div class="action-bar">
+          <button class="btn-save" id="saveBtn">Save Template</button>
+          <button class="btn-reset" id="resetBtn">Reset to Default</button>
+          <span class="save-status" id="saveStatus"></span>
+        </div>
+      </div>
+
+      <!-- ── Preview pane ── -->
+      <div class="preview-pane">
+        <div style="padding:14px 20px 0;border-bottom:1px solid rgba(255,255,255,0.06);flex-shrink:0;display:flex;align-items:center;justify-content:space-between;">
+          <div class="preview-tabs" style="padding:0;border:none;">
+            <button class="preview-tab active" id="tabRendered">Rendered</button>
+            <button class="preview-tab" id="tabSource">Source</button>
+          </div>
+          <span style="font-size:11px;color:rgba(255,255,255,0.2);padding-bottom:8px;">Live preview</span>
+        </div>
+        <div class="preview-frame" id="renderedPane">
+          <iframe id="previewFrame" title="Email preview" sandbox="allow-same-origin"></iframe>
+        </div>
+        <div class="preview-source" id="sourcePane"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast"></div>
+
+  <script>
+    const GET_TEMPLATE_API  = 'https://yara-survey-api.netlify.app/.netlify/functions/get-email-template';
+    const SAVE_TEMPLATE_API = 'https://yara-survey-api.netlify.app/.netlify/functions/save-email-template';
+
+    let session = null;
+    let currentSha = null;  // GitHub file sha for updates
+    let previewDebounce = null;
+
+    // ── Auth ──────────────────────────────────────────────
+    function checkAuth() {
+      const raw = sessionStorage.getItem('yara_auth');
+      if (!raw) { document.getElementById('authGate').style.display = 'flex'; return false; }
+      try {
+        session = JSON.parse(raw);
+        if (!session.password) {
+          sessionStorage.removeItem('yara_auth');
+          window.location.href = '/login.html?redirect=/email-template.html&v=' + Date.now();
+          return false;
+        }
+        document.getElementById('app').style.display = 'block';
+        document.getElementById('userEmail').textContent = session.email || session.userId;
+        return true;
+      } catch { document.getElementById('authGate').style.display = 'flex'; return false; }
+    }
+
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+      sessionStorage.removeItem('yara_auth');
+      window.location.href = '/login.html';
+    });
+
+    // ── Load template ─────────────────────────────────────
+    async function loadTemplate() {
+      const saveBtn = document.getElementById('saveBtn');
+      saveBtn.disabled = true;
+      saveBtn.innerHTML = '<span class="spinner-sm"></span>Loading...';
+
+      try {
+        const res = await fetch(GET_TEMPLATE_API, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: session.email || session.userId, password: session.password })
+        });
+        const data = await res.json();
+
+        document.getElementById('subjectInput').value = data.subject || '';
+        document.getElementById('htmlInput').value = data.html || '';
+        currentSha = data.sha || null;
+
+        if (data.updatedAt) {
+          document.getElementById('lastUpdated').textContent =
+            'Last saved ' + new Date(data.updatedAt).toLocaleString();
+        } else if (data.isDefault) {
+          document.getElementById('lastUpdated').textContent = 'Using default template';
+        }
+
+        updatePreview();
+      } catch (err) {
+        showToast('Failed to load template: ' + err.message, 'error');
+      } finally {
+        saveBtn.disabled = false;
+        saveBtn.textContent = 'Save Template';
+      }
+    }
+
+    // ── Save template ─────────────────────────────────────
+    document.getElementById('saveBtn').addEventListener('click', async () => {
+      const subject = document.getElementById('subjectInput').value.trim();
+      const html = document.getElementById('htmlInput').value.trim();
+
+      if (!subject) { showToast('Subject line is required.', 'error'); return; }
+      if (!html) { showToast('HTML body is required.', 'error'); return; }
+
+      const saveBtn = document.getElementById('saveBtn');
+      const status = document.getElementById('saveStatus');
+      saveBtn.disabled = true;
+      saveBtn.innerHTML = '<span class="spinner-sm"></span>Saving...';
+      status.textContent = '';
+      status.className = 'save-status';
+
+      try {
+        const res = await fetch(SAVE_TEMPLATE_API, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email: session.email || session.userId,
+            password: session.password,
+            subject,
+            html,
+            sha: currentSha
+          })
+        });
+        const data = await res.json();
+
+        if (res.ok) {
+          currentSha = data.sha;
+          status.textContent = '✓ Saved ' + new Date().toLocaleTimeString();
+          status.className = 'save-status ok';
+          document.getElementById('lastUpdated').textContent = 'Last saved just now';
+          showToast('Template saved successfully', 'success');
+        } else {
+          throw new Error(data.message || 'Save failed');
+        }
+      } catch (err) {
+        status.textContent = '✗ ' + err.message;
+        status.className = 'save-status err';
+        showToast('Save failed: ' + err.message, 'error');
+      } finally {
+        saveBtn.disabled = false;
+        saveBtn.textContent = 'Save Template';
+      }
+    });
+
+    // ── Reset to default ──────────────────────────────────
+    document.getElementById('resetBtn').addEventListener('click', async () => {
+      if (!confirm('Reset to the built-in default template? Your current edits will be lost.')) return;
+      currentSha = null;
+      await loadTemplate();
+    });
+
+    // ── Live preview ──────────────────────────────────────
+    function updatePreview() {
+      const html = document.getElementById('htmlInput').value;
+      const interpolated = html
+        .replace(/\{\{email\}\}/g, 'jane.doe@example.com')
+        .replace(/\{\{firstName\}\}/g, 'Jane Doe')
+        .replace(/\{\{appStoreLink\}\}/g, '#');
+
+      const frame = document.getElementById('previewFrame');
+      const doc = frame.contentDocument || frame.contentWindow.document;
+      doc.open();
+      doc.write(interpolated);
+      doc.close();
+
+      document.getElementById('sourcePane').textContent = html;
+    }
+
+    // Debounce preview updates while typing
+    ['subjectInput', 'htmlInput'].forEach(id => {
+      document.getElementById(id).addEventListener('input', () => {
+        clearTimeout(previewDebounce);
+        previewDebounce = setTimeout(updatePreview, 400);
+      });
+    });
+
+    // ── Preview tabs ──────────────────────────────────────
+    document.getElementById('tabRendered').addEventListener('click', () => {
+      document.getElementById('tabRendered').classList.add('active');
+      document.getElementById('tabSource').classList.remove('active');
+      document.getElementById('renderedPane').style.display = '';
+      document.getElementById('sourcePane').style.display = 'none';
+    });
+    document.getElementById('tabSource').addEventListener('click', () => {
+      document.getElementById('tabSource').classList.add('active');
+      document.getElementById('tabRendered').classList.remove('active');
+      document.getElementById('renderedPane').style.display = 'none';
+      document.getElementById('sourcePane').style.display = 'block';
+    });
+
+    // ── Copy variable chips ───────────────────────────────
+    document.querySelectorAll('.var-chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        navigator.clipboard.writeText(chip.textContent).then(() => {
+          showToast('Copied ' + chip.textContent, 'success');
+        });
+      });
+    });
+
+    // ── Toast ─────────────────────────────────────────────
+    function showToast(msg, type) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.className = 'toast ' + type;
+      void t.offsetWidth;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 3500);
+    }
+
+    // ── Init ──────────────────────────────────────────────
+    if (checkAuth()) { loadTemplate(); }
+  </script>
+</body>
+</html>
