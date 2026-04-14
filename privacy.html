@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Privacy Policy — Yara</title>
+  <meta name="description" content="Yara's Privacy Policy — how we collect, protect, and use your data." />
+  <link rel="canonical" href="https://www.my-yara.com/privacy.html" /><!-- nosemgrep: html.security.audit.missing-integrity.missing-integrity -->
+  <link rel="icon" type="image/png" href="yara_butterfly.png" />
+  <link rel="apple-touch-icon" href="yara_butterfly.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700&display=swap" rel="stylesheet" /><!-- nosemgrep: html.security.audit.missing-integrity.missing-integrity -->
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --purple: #6C3AED;
+      --purple-light: #8B5CF6;
+      --text-main: #1A1A2E;
+      --text-body: #3D3D5C;
+      --text-muted: #6B6B8A;
+      --border: rgba(0,0,0,0.07);
+      --bg: #FAFAF9;
+      --bg-card: #FFFFFF;
+      --bg-highlight: #F5F2FF;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text-body);
+      font-size: 16px;
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Nav ─────────────────────────────────────── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(250,250,249,0.92);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 24px;
+    }
+    .nav-inner {
+      max-width: 800px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 56px;
+    }
+    .nav-brand {
+      display: flex; align-items: center; gap: 8px;
+      text-decoration: none; color: var(--text-main);
+      font-weight: 700; font-size: 17px; letter-spacing: -0.02em;
+    }
+    .nav-brand img { width: 26px; height: 26px; }
+    .nav-back {
+      font-size: 13px; font-weight: 500; color: var(--text-muted);
+      text-decoration: none; display: flex; align-items: center; gap: 4px;
+      transition: color 0.15s;
+    }
+    .nav-back:hover { color: var(--purple); }
+    .nav-back svg { width: 14px; height: 14px; }
+
+    /* ── Page layout ─────────────────────────────── */
+    .page {
+      max-width: 800px; margin: 0 auto;
+      padding: 56px 24px 96px;
+    }
+
+    /* ── Header ──────────────────────────────────── */
+    .page-header { margin-bottom: 48px; padding-bottom: 32px; border-bottom: 1px solid var(--border); }
+    .page-header .eyebrow {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: var(--bg-highlight);
+      color: var(--purple);
+      font-size: 12px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;
+      padding: 4px 10px; border-radius: 999px; margin-bottom: 16px;
+    }
+    .page-header h1 {
+      font-size: clamp(28px, 4vw, 40px);
+      font-weight: 700; letter-spacing: -0.03em;
+      color: var(--text-main); line-height: 1.15; margin-bottom: 12px;
+    }
+    .page-header .meta {
+      font-size: 13px; color: var(--text-muted);
+      display: flex; gap: 16px; flex-wrap: wrap;
+    }
+    .page-header .meta span { display: flex; align-items: center; gap: 4px; }
+
+    /* ── Commitment card ─────────────────────────── */
+    .commitment {
+      background: linear-gradient(135deg, #F5F2FF 0%, #EEF9F7 100%);
+      border: 1px solid rgba(108,58,237,0.12);
+      border-radius: 16px; padding: 28px 32px; margin-bottom: 48px;
+    }
+    .commitment h2 {
+      font-size: 18px; font-weight: 700; color: var(--text-main);
+      margin-bottom: 8px; letter-spacing: -0.02em;
+    }
+    .commitment p { font-size: 15px; color: var(--text-body); line-height: 1.65; }
+
+    /* ── Sections ────────────────────────────────── */
+    .section { margin-bottom: 48px; }
+
+    .section-number {
+      display: inline-block;
+      font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+      color: var(--purple); margin-bottom: 8px;
+    }
+
+    .section h2 {
+      font-size: 22px; font-weight: 700; letter-spacing: -0.02em;
+      color: var(--text-main); margin-bottom: 16px;
+      padding-bottom: 12px; border-bottom: 1px solid var(--border);
+    }
+
+    .section h3 {
+      font-size: 15px; font-weight: 600; color: var(--text-main);
+      margin: 20px 0 8px;
+    }
+
+    .section p { margin-bottom: 12px; font-size: 15px; }
+    .section p:last-child { margin-bottom: 0; }
+
+    .section ul {
+      list-style: none; padding: 0; margin: 8px 0 12px;
+    }
+    .section ul li {
+      font-size: 15px; padding: 5px 0 5px 20px; position: relative; color: var(--text-body);
+    }
+    .section ul li::before {
+      content: ''; position: absolute; left: 0; top: 13px;
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--purple-light);
+    }
+    .section ul li strong { color: var(--text-main); }
+
+    /* ── Highlight box ───────────────────────────── */
+    .highlight-box {
+      background: var(--bg-highlight);
+      border-left: 3px solid var(--purple);
+      border-radius: 0 10px 10px 0;
+      padding: 14px 18px; margin: 16px 0;
+      font-size: 14px; color: var(--text-body);
+    }
+    .highlight-box strong { color: var(--purple); }
+
+    /* ── Never box ───────────────────────────────── */
+    .never-box {
+      display: flex; align-items: flex-start; gap: 12px;
+      background: #F0FDF4; border: 1px solid #BBF7D0;
+      border-radius: 10px; padding: 16px 18px; margin: 16px 0;
+    }
+    .never-box .icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+    .never-box p { font-size: 14px; color: #166534; margin: 0; font-weight: 500; }
+
+    /* ── Rights grid ─────────────────────────────── */
+    .rights-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 12px; margin: 16px 0;
+    }
+    .right-card {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 10px; padding: 14px 16px;
+    }
+    .right-card .right-icon { font-size: 18px; margin-bottom: 6px; }
+    .right-card .right-name { font-size: 13px; font-weight: 600; color: var(--text-main); margin-bottom: 3px; }
+    .right-card .right-desc { font-size: 12px; color: var(--text-muted); line-height: 1.4; }
+
+    /* ── Retention table ─────────────────────────── */
+    .retention-table {
+      width: 100%; border-collapse: collapse; margin: 16px 0;
+      font-size: 14px;
+    }
+    .retention-table th {
+      text-align: left; padding: 10px 14px;
+      background: #F5F2FF; color: var(--purple);
+      font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;
+    }
+    .retention-table th:first-child { border-radius: 8px 0 0 8px; }
+    .retention-table th:last-child { border-radius: 0 8px 8px 0; }
+    .retention-table td { padding: 10px 14px; border-bottom: 1px solid var(--border); color: var(--text-body); }
+    .retention-table tr:last-child td { border-bottom: none; }
+
+    /* ── Security badges ─────────────────────────── */
+    .security-badges { display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0; }
+    .badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 6px 12px; border-radius: 999px;
+      background: var(--bg-card); border: 1px solid var(--border);
+      font-size: 12px; font-weight: 500; color: var(--text-body);
+    }
+    .badge svg { color: var(--purple); flex-shrink: 0; }
+
+    /* ── Contact card ────────────────────────────── */
+    .contact-card {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 16px; padding: 28px 32px;
+      display: flex; align-items: flex-start; justify-content: space-between;
+      gap: 24px; flex-wrap: wrap;
+    }
+    .contact-card h3 { font-size: 17px; font-weight: 700; color: var(--text-main); margin-bottom: 6px; }
+    .contact-card p { font-size: 14px; color: var(--text-muted); margin-bottom: 16px; }
+    .contact-link {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 10px 20px; border-radius: 999px;
+      background: var(--purple); color: #fff;
+      font-size: 14px; font-weight: 600; text-decoration: none;
+      transition: all 0.2s;
+    }
+    .contact-link:hover { background: #5B21B6; box-shadow: 0 4px 16px rgba(108,58,237,0.3); }
+
+    /* ── Region sections ─────────────────────────── */
+    .region-section {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 12px; padding: 20px 24px; margin-bottom: 12px;
+    }
+    .region-section h3 {
+      font-size: 15px; font-weight: 600; color: var(--text-main);
+      margin: 0 0 10px; display: flex; align-items: center; gap: 8px;
+    }
+    .region-badge {
+      font-size: 10px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase;
+      padding: 2px 7px; border-radius: 4px; background: #F5F2FF; color: var(--purple);
+    }
+
+    /* ── Footer ──────────────────────────────────── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 24px;
+      text-align: center;
+    }
+    footer .inner { max-width: 800px; margin: 0 auto; }
+    footer p { font-size: 13px; color: var(--text-muted); }
+    footer a { color: var(--purple); text-decoration: none; font-weight: 500; }
+    footer a:hover { opacity: 0.75; }
+
+    /* ── Responsive ──────────────────────────────── */
+    @media (max-width: 600px) {
+      .page { padding: 36px 18px 72px; }
+      .commitment { padding: 20px; }
+      .contact-card { padding: 20px; }
+      .rights-grid { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="nav-inner">
+      <a href="/" class="nav-brand">
+        <img src="yara_butterfly.png" alt="Yara" />
+        Yara
+      </a>
+      <a href="/" class="nav-back">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+        Back to home
+      </a>
+    </div>
+  </nav>
+
+  <div class="page">
+
+    <!-- Header -->
+    <div class="page-header">
+      <div class="eyebrow">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        Legal
+      </div>
+      <h1>Privacy Policy</h1>
+      <div class="meta">
+        <span>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          Effective Date: February 2026
+        </span>
+        <span>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          Last Updated: February 2026
+        </span>
+      </div>
+    </div>
+
+    <!-- Commitment -->
+    <div class="commitment">
+      <h2>Our Commitment to Your Privacy</h2>
+      <p>Yara is designed with privacy at its core. We believe your personal and financial information belongs to you, and we've built our technology to keep it that way.</p>
+    </div>
+
+    <!-- 1. Information We Collect -->
+    <div class="section">
+      <span class="section-number">Section 01</span>
+      <h2>Information We Collect</h2>
+
+      <h3>Information You Provide</h3>
+      <ul>
+        <li><strong>Account Information:</strong> Email address, name, phone number, and authentication credentials</li>
+        <li><strong>Financial Documents:</strong> Bills, statements, and service agreements you upload</li>
+        <li><strong>Preferences:</strong> Settings and customizations you configure</li>
+      </ul>
+
+      <h3>Information Collected Automatically</h3>
+      <ul>
+        <li><strong>Usage Data:</strong> How you interact with the app (anonymized)</li>
+        <li><strong>Device Information:</strong> Device type and operating system for compatibility</li>
+        <li><strong>Error Reports:</strong> Crash logs to improve stability</li>
+      </ul>
+
+      <h3>Information from Connected Financial Accounts</h3>
+      <p>When you choose to connect a financial account through Plaid, we may receive:</p>
+      <ul>
+        <li><strong>Account Information:</strong> Account name, type, and balances</li>
+        <li><strong>Transaction Data:</strong> Transaction history, descriptions, amounts, dates, and categories</li>
+        <li><strong>Institution Details:</strong> Name of your financial institution</li>
+      </ul>
+      <div class="highlight-box">
+        This data is retrieved through Plaid Inc.'s secure API services. We only access the categories of data you explicitly consent to when connecting your account. Plaid's collection and use of your data is also subject to <strong>Plaid's End User Privacy Policy</strong>.
+      </div>
+    </div>
+
+    <!-- 2. How We Protect Your Data -->
+    <div class="section">
+      <span class="section-number">Section 02</span>
+      <h2>How We Protect Your Data</h2>
+
+      <h3>End-to-End Encryption</h3>
+      <p>All your personal information is encrypted on your device before transmission. Our servers store only encrypted data that we cannot read without your active participation.</p>
+
+      <h3>Zero-Knowledge Architecture</h3>
+      <p>Your sensitive data is encrypted with keys derived from your credentials. Yara's servers cannot decrypt your stored data without your cooperation.</p>
+
+      <h3>Consent-Driven AI Sessions</h3>
+      <p>When you enable AI features, you grant temporary access for a limited time (1–24 hours). After the session expires, decrypted data is automatically purged from our servers.</p>
+
+      <h3>Financial Data Security</h3>
+      <p>Data retrieved from connected financial accounts through Plaid is:</p>
+      <ul>
+        <li>Transmitted over encrypted channels (TLS 1.3)</li>
+        <li>Stored only in encrypted form in our persistent databases</li>
+        <li>Accessible to our AI only during active, consent-driven sessions</li>
+        <li>Never stored in plaintext on disk</li>
+      </ul>
+
+      <div class="security-badges">
+        <span class="badge"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>AES-256 Encryption</span>
+        <span class="badge"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>TLS 1.3 in Transit</span>
+        <span class="badge"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>AICPA Trust Criteria</span>
+        <span class="badge"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>NIST 800-53</span>
+        <span class="badge"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>ISO 27002</span>
+      </div>
+    </div>
+
+    <!-- 3. How We Use Your Information -->
+    <div class="section">
+      <span class="section-number">Section 03</span>
+      <h2>How We Use Your Information</h2>
+      <p>We use your information to:</p>
+      <ul>
+        <li>Provide AI-powered bill analysis and recommendations</li>
+        <li>Assist with provider negotiations and calls</li>
+        <li>Deliver spending insights and financial optimization suggestions based on connected account data</li>
+        <li>Improve the Service through anonymized analytics</li>
+        <li>Communicate important updates about your account</li>
+      </ul>
+      <div class="never-box">
+        <span class="icon">🔒</span>
+        <p>We never sell your personal information to third parties — period.</p>
+      </div>
+    </div>
+
+    <!-- 4. Financial Account Connections -->
+    <div class="section">
+      <span class="section-number">Section 04</span>
+      <h2>Financial Account Connections (Plaid)</h2>
+
+      <h3>How Plaid Works</h3>
+      <p>Yara uses Plaid Inc. to securely connect to your financial institutions. When you link an account, Plaid retrieves your financial data directly from your bank or financial institution through authorized APIs — never through screen scraping or credential storage.</p>
+
+      <h3>Your Consent</h3>
+      <p>Before connecting any financial account, you will be asked to provide clear, informed consent specifying which financial institution you are connecting, what categories of data Yara will access, and how your data will be used. You may connect or disconnect accounts at any time through the app.</p>
+
+      <h3>How We Use Connected Account Data</h3>
+      <p>Data from connected financial accounts is used solely to:</p>
+      <ul>
+        <li>Surface transaction history and spending patterns within the app</li>
+        <li>Deliver AI-powered spending insights and savings recommendations</li>
+        <li>Support bill analysis and provider negotiation features</li>
+        <li>Provide personalized financial optimization</li>
+      </ul>
+      <div class="highlight-box">
+        We do not use your connected account data for advertising, and we do not share it with unrelated third parties. Plaid's collection, use, and handling of your data is governed by <strong>Plaid's End User Privacy Policy</strong>.
+      </div>
+    </div>
+
+    <!-- 5. AI and Third-Party Processors -->
+    <div class="section">
+      <span class="section-number">Section 05</span>
+      <h2>AI and Third-Party Processors</h2>
+
+      <h3>AI Model Usage</h3>
+      <p>When you use AI features, some data may be processed by AI models to provide responses. This data is:</p>
+      <ul>
+        <li>Never used to train AI models (unless you explicitly opt in)</li>
+        <li>Not retained by AI providers after processing</li>
+        <li>Subject to our privacy safeguards</li>
+      </ul>
+
+      <h3>Service Providers</h3>
+      <p>We work with trusted service providers who help us operate the Service, including:</p>
+      <ul>
+        <li><strong>Plaid Inc.</strong> — Financial account connectivity and transaction data retrieval</li>
+        <li><strong>AI Model Providers</strong> — Processing of AI-powered features</li>
+      </ul>
+      <p>All service providers are contractually bound to protect your information and use it only for the purposes of providing services to Yara.</p>
+    </div>
+
+    <!-- 6. Your Rights -->
+    <div class="section">
+      <span class="section-number">Section 06</span>
+      <h2>Your Rights and Choices</h2>
+      <div class="rights-grid">
+        <div class="right-card">
+          <div class="right-icon">👁</div>
+          <div class="right-name">Access</div>
+          <div class="right-desc">View all data we have about you</div>
+        </div>
+        <div class="right-card">
+          <div class="right-icon">📦</div>
+          <div class="right-name">Export</div>
+          <div class="right-desc">Download your data at any time</div>
+        </div>
+        <div class="right-card">
+          <div class="right-icon">🗑</div>
+          <div class="right-name">Delete</div>
+          <div class="right-desc">Request deletion of your account and all data</div>
+        </div>
+        <div class="right-card">
+          <div class="right-icon">🔌</div>
+          <div class="right-name">Disconnect</div>
+          <div class="right-desc">Remove connected financial accounts at any time</div>
+        </div>
+        <div class="right-card">
+          <div class="right-icon">⏱</div>
+          <div class="right-name">Control Sessions</div>
+          <div class="right-desc">End AI sessions and purge cached data anytime</div>
+        </div>
+        <div class="right-card">
+          <div class="right-icon">📋</div>
+          <div class="right-name">Audit</div>
+          <div class="right-desc">Review logs of all data access</div>
+        </div>
+      </div>
+      <h3>Deleting Connected Account Data</h3>
+      <p>When you disconnect a financial account, the associated data is removed from our systems. You may also request deletion of all your data by contacting us or through the app settings.</p>
+    </div>
+
+    <!-- 7. Data Retention -->
+    <div class="section">
+      <span class="section-number">Section 07</span>
+      <h2>Data Retention</h2>
+      <table class="retention-table">
+        <thead>
+          <tr>
+            <th>Data Type</th>
+            <th>Retention Period</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Active account data</td>
+            <td>Retained while your account is active</td>
+          </tr>
+          <tr>
+            <td>AI session data</td>
+            <td>Purged after session expires (max 24 hours)</td>
+          </tr>
+          <tr>
+            <td>Connected account data</td>
+            <td>Retained while connection is active; removed upon disconnection</td>
+          </tr>
+          <tr>
+            <td>Deleted account data</td>
+            <td>Permanently deleted within 30 days</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 8. Security Measures -->
+    <div class="section">
+      <span class="section-number">Section 08</span>
+      <h2>Security Measures</h2>
+      <p>We implement industry-standard security measures including:</p>
+      <ul>
+        <li>AES-256 encryption for data at rest</li>
+        <li>TLS 1.3 for data in transit</li>
+        <li>Regular security audits and penetration testing</li>
+        <li>Strict access controls and audit logging</li>
+        <li>Comprehensive information security program aligned with AICPA, NIST, and ISO standards</li>
+        <li>Security breach notification procedures in compliance with applicable laws</li>
+      </ul>
+    </div>
+
+    <!-- 9. Children's Privacy -->
+    <div class="section">
+      <span class="section-number">Section 09</span>
+      <h2>Children's Privacy</h2>
+      <p>Yara is not intended for users under 18 years of age. We do not knowingly collect information from children.</p>
+    </div>
+
+    <!-- 10. Changes -->
+    <div class="section">
+      <span class="section-number">Section 10</span>
+      <h2>Changes to This Policy</h2>
+      <p>We may update this Privacy Policy periodically. We will notify you of material changes through the app or by email.</p>
+    </div>
+
+    <!-- 11. Contact -->
+    <div class="section">
+      <span class="section-number">Section 11</span>
+      <h2>Contact Us</h2>
+      <div class="contact-card">
+        <div>
+          <h3>Privacy questions or concerns?</h3>
+          <p>Our team responds to all privacy inquiries. Reach out any time.</p>
+          <a href="mailto:privacy@yaraserves.com" class="contact-link">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            privacy@yaraserves.com
+          </a>
+        </div>
+        <div style="font-size:13px;color:var(--text-muted);line-height:1.6;">
+          <strong style="color:var(--text-main);display:block;margin-bottom:4px;">Yara Inc.</strong>
+          <a href="https://my-yara.com" style="color:var(--purple);text-decoration:none;">my-yara.com</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- 12 & 13. Regional rights -->
+    <div class="section">
+      <span class="section-number">Section 12–13</span>
+      <h2>Regional Privacy Rights</h2>
+
+      <div class="region-section">
+        <h3>
+          California Residents
+          <span class="region-badge">CCPA</span>
+        </h3>
+        <ul>
+          <li>Right to know what personal information is collected</li>
+          <li>Right to delete personal information</li>
+          <li>Right to opt-out of sale of personal information (we don't sell data)</li>
+          <li>Right to non-discrimination for exercising privacy rights</li>
+        </ul>
+      </div>
+
+      <div class="region-section">
+        <h3>
+          European Economic Area
+          <span class="region-badge">GDPR</span>
+        </h3>
+        <ul>
+          <li>Right to access and data portability</li>
+          <li>Right to rectification and erasure</li>
+          <li>Right to restrict processing</li>
+          <li>Right to object to processing</li>
+          <li>Right to withdraw consent</li>
+        </ul>
+      </div>
+    </div>
+
+  </div><!-- /page -->
+
+  <footer>
+    <div class="inner">
+      <p style="margin-bottom:8px;">
+        <a href="/">← Back to Yara</a>
+        &nbsp;·&nbsp;
+        <a href="mailto:privacy@yaraserves.com">privacy@yaraserves.com</a>
+      </p>
+      <p>&copy; 2026 Yara Inc. All rights reserved.</p>
+    </div>
+  </footer>
+
+</body>
+</html>
