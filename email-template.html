@@ -10,6 +10,12 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet" /><!-- nosemgrep: html.security.audit.missing-integrity.missing-integrity -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/quill/2.0.2/quill.snow.css"
+    integrity="sha512-ggYQiYwuFFyThzEv6Eo6g/uPLis4oUynsE88ovEde5b2swycOh9SlAI8FL/cL2AkGGNnWADPXcX2UnPIJS2ozw=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/quill/2.0.2/quill.min.js"
+    integrity="sha512-1nmY9t9/Iq3JU1fGf0OpNCn6uXMmwC1XYX9a6547vnfcjCY1KvU9TE5e8jHQvXBoEH7hcKLIbbOjneZ8HCeNLA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     html,body{height:100%;font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;-webkit-font-smoothing:antialiased;background:#0A0A0A;color:#fff}
@@ -98,6 +104,46 @@
       .main{grid-template-columns:1fr;grid-template-rows:1fr 1fr}
       .editor-pane{border-right:none;border-bottom:1px solid rgba(255,255,255,0.06)}
     }
+
+    /* ── Editor mode tabs (Visual / Source) ───────────────── */
+    .editor-mode-tabs{display:flex;gap:4px;margin-bottom:8px}
+    .editor-mode-tab{padding:5px 11px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:6px;color:rgba(255,255,255,0.5);font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .15s;display:inline-flex;align-items:center;gap:6px}
+    .editor-mode-tab:hover:not(.active){color:rgba(255,255,255,0.85);background:rgba(255,255,255,0.07)}
+    .editor-mode-tab.active{background:rgba(139,92,246,0.15);border-color:rgba(139,92,246,0.3);color:#a78bfa}
+    .editor-mode-hint{margin-left:auto;font-size:10px;color:rgba(255,255,255,0.3);font-weight:400}
+
+    .editor-mode-content{display:none}
+    .editor-mode-content.active{display:block}
+
+    /* ── Quill dark theme overrides ───────────────────────── */
+    .ql-toolbar.ql-snow{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-bottom:none;border-radius:8px 8px 0 0;padding:8px 10px}
+    .ql-container.ql-snow{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:0 0 8px 8px;font-family:'Inter',sans-serif;font-size:13px}
+    .ql-editor{color:#fff;min-height:340px;max-height:50vh;line-height:1.65;font-family:'Inter',sans-serif;padding:14px 16px}
+    .ql-editor.ql-blank::before{color:rgba(255,255,255,0.25);font-style:normal;font-family:'Inter',sans-serif;left:16px;right:16px}
+    .ql-editor h1,.ql-editor h2,.ql-editor h3{color:#fff;font-weight:700}
+    .ql-editor a{color:#a78bfa;text-decoration:underline}
+    .ql-editor blockquote{border-left:3px solid rgba(139,92,246,0.5);padding-left:12px;color:rgba(255,255,255,0.75)}
+
+    .ql-snow .ql-stroke{stroke:rgba(255,255,255,0.65)}
+    .ql-snow .ql-fill{fill:rgba(255,255,255,0.65)}
+    .ql-snow .ql-picker{color:rgba(255,255,255,0.65)}
+    .ql-snow .ql-picker-options{background:#1a1a1a;border-color:rgba(255,255,255,0.12)}
+    .ql-snow .ql-toolbar button:hover .ql-stroke,
+    .ql-snow .ql-toolbar .ql-picker-label:hover .ql-stroke{stroke:#a78bfa}
+    .ql-snow .ql-toolbar button:hover .ql-fill,
+    .ql-snow .ql-toolbar .ql-picker-label:hover .ql-fill{fill:#a78bfa}
+    .ql-snow .ql-toolbar button.ql-active .ql-stroke,
+    .ql-snow .ql-toolbar .ql-picker-label.ql-active .ql-stroke{stroke:#8B5CF6}
+    .ql-snow .ql-toolbar button.ql-active .ql-fill,
+    .ql-snow .ql-toolbar .ql-picker-label.ql-active .ql-fill{fill:#8B5CF6}
+    .ql-snow .ql-toolbar .ql-picker-label:hover,
+    .ql-snow .ql-toolbar .ql-picker-label.ql-active{color:#a78bfa}
+    .ql-snow .ql-picker-item:hover{color:#a78bfa}
+    .ql-snow a{color:#a78bfa}
+    .ql-tooltip{background:#1a1a1a!important;border:1px solid rgba(255,255,255,0.15)!important;border-radius:8px!important;color:#fff!important;box-shadow:0 8px 24px rgba(0,0,0,0.5)!important;padding:6px 10px!important}
+    .ql-tooltip input[type=text]{background:rgba(255,255,255,0.06)!important;border:1px solid rgba(255,255,255,0.15)!important;color:#fff!important;border-radius:4px!important}
+    .ql-tooltip::before{color:rgba(255,255,255,0.5)!important}
+    .ql-tooltip a.ql-action::after,.ql-tooltip a.ql-remove::before{color:#a78bfa!important}
   </style>
 </head>
 <body>
@@ -156,8 +202,22 @@
           </div>
 
           <div>
-            <div class="field-label">HTML Body</div>
-            <textarea id="htmlInput" class="field-input" placeholder="Paste your HTML email here..."></textarea>
+            <div class="field-label">Email Body</div>
+            <div class="editor-mode-tabs">
+              <button type="button" class="editor-mode-tab" data-mode="visual" title="Edit visually with formatting toolbar — best for simple text edits">
+                <span>✏️</span> Visual
+              </button>
+              <button type="button" class="editor-mode-tab active" data-mode="source" title="Paste or edit raw HTML — best for designs from email builders">
+                <span style="font-family:'Fira Code',monospace;">&lt;/&gt;</span> Source HTML
+              </button>
+              <span class="editor-mode-hint" id="editorModeHint">Source mode: paste HTML from email builders (Stripo, BeeFree, etc.)</span>
+            </div>
+            <div class="editor-mode-content" id="visualEditorWrap">
+              <div id="quillEditor"></div>
+            </div>
+            <div class="editor-mode-content active" id="sourceEditorWrap">
+              <textarea id="htmlInput" class="field-input" placeholder="Paste HTML from your email builder (Stripo, BeeFree, Mailchimp, etc.)…"></textarea>
+            </div>
           </div>
 
           <div class="vars-card">
@@ -209,6 +269,56 @@
     let currentSha = null;       // GitHub file sha for updates
     let previewDebounce = null;
     let currentType = 'invite';  // 'invite' | 'welcome'
+    let currentMode = 'source';  // 'visual' | 'source' — defaults to source so styled designs aren't mangled by Quill on load
+    let quill = null;            // Quill instance, initialized in initEditor()
+    let suppressQuillEvent = false; // guards programmatic Quill updates from re-firing handlers
+
+    // ── Init Quill rich-text editor ───────────────────────
+    function initEditor() {
+      quill = new Quill('#quillEditor', {
+        theme: 'snow',
+        placeholder: 'Write your email — bold, links, lists, headings supported. Variables like {{firstName}} work in plain text.',
+        modules: {
+          toolbar: [
+            [{ header: [1, 2, 3, false] }],
+            ['bold', 'italic', 'underline', 'strike'],
+            [{ color: [] }, { background: [] }],
+            [{ align: [] }],
+            [{ list: 'ordered' }, { list: 'bullet' }],
+            ['blockquote', 'link'],
+            ['clean']
+          ]
+        }
+      });
+
+      // Mirror visual edits into the textarea so preview/save always have current HTML.
+      quill.on('text-change', () => {
+        if (suppressQuillEvent) return;
+        document.getElementById('htmlInput').value = quill.root.innerHTML;
+        triggerPreview();
+      });
+    }
+
+    function setQuillFromTextarea() {
+      if (!quill) return;
+      const html = document.getElementById('htmlInput').value || '';
+      suppressQuillEvent = true;
+      // dangerouslyPasteHTML preserves arbitrary HTML — exactly what we want when round-tripping.
+      quill.clipboard.dangerouslyPasteHTML(html, 'silent');
+      suppressQuillEvent = false;
+    }
+
+    function triggerPreview() {
+      clearTimeout(previewDebounce);
+      previewDebounce = setTimeout(updatePreview, 400);
+    }
+
+    function getCurrentBodyHtml() {
+      if (currentMode === 'visual' && quill) {
+        return quill.root.innerHTML;
+      }
+      return document.getElementById('htmlInput').value;
+    }
 
     // ── Auth ──────────────────────────────────────────────
     function checkAuth() {
@@ -252,6 +362,7 @@
 
         document.getElementById('subjectInput').value = data.subject || '';
         document.getElementById('htmlInput').value = data.html || '';
+        setQuillFromTextarea();  // mirror loaded HTML into the visual editor
         currentSha = data.sha || null;
 
         if (data.updatedAt) {
@@ -272,6 +383,10 @@
 
     // ── Save template ─────────────────────────────────────
     document.getElementById('saveBtn').addEventListener('click', async () => {
+      // If user is in Visual mode, pull the latest from Quill before saving.
+      if (currentMode === 'visual' && quill) {
+        document.getElementById('htmlInput').value = quill.root.innerHTML;
+      }
       const subject = document.getElementById('subjectInput').value.trim();
       const html = document.getElementById('htmlInput').value.trim();
 
@@ -365,6 +480,35 @@
       document.getElementById('sourcePane').style.display = 'block';
     });
 
+    // ── Editor mode tabs (Visual / Source) ────────────────
+    document.querySelectorAll('.editor-mode-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        const newMode = tab.dataset.mode;
+        if (newMode === currentMode) return;
+
+        // Sync content between editors before switching
+        if (currentMode === 'visual' && newMode === 'source') {
+          // Visual → Source: copy Quill HTML into textarea
+          if (quill) document.getElementById('htmlInput').value = quill.root.innerHTML;
+        } else if (currentMode === 'source' && newMode === 'visual') {
+          // Source → Visual: copy textarea HTML back into Quill
+          setQuillFromTextarea();
+        }
+
+        currentMode = newMode;
+        document.querySelectorAll('.editor-mode-tab').forEach(t => t.classList.toggle('active', t.dataset.mode === newMode));
+        document.getElementById('visualEditorWrap').classList.toggle('active', newMode === 'visual');
+        document.getElementById('sourceEditorWrap').classList.toggle('active', newMode === 'source');
+
+        document.getElementById('editorModeHint').textContent =
+          newMode === 'visual'
+            ? 'Visual mode: format text without writing HTML'
+            : 'Source mode: paste HTML from email builders (Stripo, BeeFree, etc.)';
+
+        triggerPreview();
+      });
+    });
+
     // ── Template type tabs (Welcome / Invite) ─────────────
     document.querySelectorAll('.type-tab').forEach(tab => {
       tab.addEventListener('click', async () => {
@@ -401,7 +545,10 @@
     }
 
     // ── Init ──────────────────────────────────────────────
-    if (checkAuth()) { loadTemplate(); }
+    if (checkAuth()) {
+      initEditor();   // Quill must exist before loadTemplate() seeds it
+      loadTemplate();
+    }
   </script>
 </body>
 </html>
