@@ -115,6 +115,22 @@
     .editor-mode-content{display:none}
     .editor-mode-content.active{display:block}
 
+    /* ── Form mode fields ─────────────────────────────────── */
+    .form-section{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:14px 16px;margin-bottom:10px}
+    .form-section-title{font-size:10px;font-weight:700;color:#a78bfa;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+    .form-section-title .sec-num{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:4px;background:rgba(139,92,246,0.15);color:#a78bfa;font-size:9px;font-weight:700}
+    .form-field{margin-bottom:10px}
+    .form-field:last-child{margin-bottom:0}
+    .form-field-label{font-size:11px;font-weight:500;color:rgba(255,255,255,0.55);margin-bottom:5px;display:flex;align-items:center;gap:6px}
+    .form-field-label .hint{font-weight:400;color:rgba(255,255,255,0.3);font-size:10px}
+    .form-field input[type=text],
+    .form-field textarea{width:100%;padding:8px 11px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:6px;font-size:13px;font-family:'Inter',sans-serif;color:#fff;outline:none;transition:border-color .15s;line-height:1.5}
+    .form-field input[type=text]:focus,
+    .form-field textarea:focus{border-color:rgba(139,92,246,0.5);background:rgba(255,255,255,0.08)}
+    .form-field textarea{resize:vertical;min-height:70px;font-family:'Inter',sans-serif}
+    .form-field input[type=text]::placeholder,
+    .form-field textarea::placeholder{color:rgba(255,255,255,0.22)}
+
     /* ── Quill dark theme overrides ───────────────────────── */
     .ql-toolbar.ql-snow{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-bottom:none;border-radius:8px 8px 0 0;padding:8px 10px}
     .ql-container.ql-snow{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:0 0 8px 8px;font-family:'Inter',sans-serif;font-size:13px}
@@ -204,15 +220,21 @@
           <div>
             <div class="field-label">Email Body</div>
             <div class="editor-mode-tabs">
-              <button type="button" class="editor-mode-tab active" data-mode="visual" title="Write or paste from Word, Google Docs, Pages — formatting is preserved">
+              <button type="button" class="editor-mode-tab active" data-mode="form" title="Fill in labeled fields — generates the styled email automatically">
+                <span>📋</span> Form
+              </button>
+              <button type="button" class="editor-mode-tab" data-mode="visual" title="Write or paste from Word, Google Docs, Pages — formatting is preserved">
                 <span>✏️</span> Visual
               </button>
               <button type="button" class="editor-mode-tab" data-mode="source" title="Edit the underlying HTML — advanced">
                 <span style="font-family:'Fira Code',monospace;">&lt;/&gt;</span> Source HTML
               </button>
-              <span class="editor-mode-hint" id="editorModeHint">Paste from Word or Google Docs — formatting comes with it</span>
+              <span class="editor-mode-hint" id="editorModeHint">Form mode: fill in fields, the styled email is built for you</span>
             </div>
-            <div class="editor-mode-content active" id="visualEditorWrap">
+            <div class="editor-mode-content active" id="formEditorWrap">
+              <div id="formFields"></div>
+            </div>
+            <div class="editor-mode-content" id="visualEditorWrap">
               <div id="quillEditor"></div>
             </div>
             <div class="editor-mode-content" id="sourceEditorWrap">
@@ -269,7 +291,7 @@
     let currentSha = null;       // GitHub file sha for updates
     let previewDebounce = null;
     let currentType = 'invite';  // 'invite' | 'welcome'
-    let currentMode = 'visual';  // 'visual' | 'source' — defaults to Visual so users can paste from Word/Docs without seeing HTML
+    let currentMode = 'form';    // 'form' | 'visual' | 'source' — defaults to Form so non-HTML users get a structured editor
     let quill = null;            // Quill instance, initialized in initEditor()
     let suppressQuillEvent = false; // guards programmatic Quill updates from re-firing handlers
 
@@ -320,6 +342,216 @@
       return document.getElementById('htmlInput').value;
     }
 
+    // ── Form mode: schemas + renderers ────────────────────
+    // Each template type has its own field schema. Renderers turn field values into the styled HTML.
+    // Sections group related fields visually and aren't required by the renderers.
+    const FORM_SCHEMAS = {
+      welcome: [
+        { section: 'Header', fields: [
+          { key: 'headline',  label: 'Headline',          type: 'text',     placeholder: "You're on the list" },
+          { key: 'subtitle',  label: 'Subtitle',          type: 'text',     placeholder: 'Welcome to Yara, {{firstName}}.', hint: 'You can use {{firstName}}' }
+        ]},
+        { section: 'Intro', fields: [
+          { key: 'intro1', label: 'Greeting paragraph', type: 'textarea', placeholder: "Thanks for signing up — we're so glad you're here." },
+          { key: 'intro2', label: 'About Yara paragraph', type: 'textarea', placeholder: "Yara is your personal AI advocate for your finances. We're letting people in slowly so we can give every early member real attention and build the right thing with your help." }
+        ]},
+        { section: 'Free-access offer card', fields: [
+          { key: 'offerEyebrow',  label: 'Eyebrow',  type: 'text', placeholder: 'A thank-you for joining early' },
+          { key: 'offerTitle',    label: 'Title',    type: 'text', placeholder: '6 months of Yara, free on us' },
+          { key: 'offerSubtitle', label: 'Details',  type: 'text', placeholder: 'No card up front. No fine print. Yours when we open your spot.' }
+        ]},
+        { section: 'Body', fields: [
+          { key: 'body',          label: 'Body paragraph', type: 'textarea', placeholder: "We don't have a fixed date yet — but when your invite arrives, you'll get a private App Store link and a short onboarding email. Usually we ask for one piece of feedback in return, that's it." },
+          { key: 'whitelistAsk',  label: 'Whitelist ask',  type: 'textarea', placeholder: 'Add hello@my-yara.com to your contacts so our invite email lands in your inbox, not spam.' }
+        ]},
+        { section: 'Sign-off', fields: [
+          { key: 'closing', label: 'Closing line', type: 'text', placeholder: 'Questions? Just reply to this email — we read every message.' },
+          { key: 'signoff', label: 'Sign-off',     type: 'text', placeholder: '— The Yara team' }
+        ]}
+      ],
+      invite: [
+        { section: 'Header', fields: [
+          { key: 'headline', label: 'Headline', type: 'text', placeholder: 'Welcome to Yara' },
+          { key: 'subtitle', label: 'Subtitle', type: 'text', placeholder: "You're in. Early access is yours." }
+        ]},
+        { section: 'Intro', fields: [
+          { key: 'intro', label: 'Intro paragraph', type: 'textarea', placeholder: 'Your early access request has been approved. You can now download Yara directly from the App Store.' }
+        ]},
+        { section: 'CTA button', fields: [
+          { key: 'ctaLabel', label: 'Button text', type: 'text', placeholder: 'Download Yara' },
+          { key: 'ctaUrl',   label: 'Button URL',  type: 'text', placeholder: '{{appStoreLink}}', hint: 'Use {{appStoreLink}} to insert the live App Store URL' },
+          { key: 'ctaSubtext', label: 'Text below button', type: 'textarea', placeholder: 'Open this link on your iPhone to install. The app is available exclusively to early access members like you.' }
+        ]},
+        { section: 'Getting started', fields: [
+          { key: 'gettingStartedTitle', label: 'Section title', type: 'text', placeholder: 'Getting started' },
+          { key: 'bullets', label: 'Bullets (one per line)', type: 'textarea', placeholder: "Open Yara and sign in with {{email}}\nConnect a bank account to unlock financial insights\nAsk Yara anything about your bills, subscriptions, or spending\nShare feedback directly in the app — we read every message", hint: 'One bullet per line. {{email}} works.' }
+        ]},
+        { section: 'Footer', fields: [
+          { key: 'signoff', label: 'Signature line', type: 'text', placeholder: 'Yara — Your Personal AI Advocate' }
+        ]}
+      ]
+    };
+
+    // Per-template form values (in-memory state). Saved to GitHub when user clicks Save in form mode.
+    let formValues = { welcome: {}, invite: {} };
+
+    function buildFormUI(type) {
+      const schema = FORM_SCHEMAS[type];
+      const wrap = document.getElementById('formFields');
+      wrap.innerHTML = '';
+
+      schema.forEach((section, sIdx) => {
+        const secEl = document.createElement('div');
+        secEl.className = 'form-section';
+        const num = String(sIdx + 1).padStart(2, '0');
+        secEl.innerHTML = '<div class="form-section-title"><span class="sec-num">' + num + '</span>' + section.section + '</div>';
+
+        section.fields.forEach(field => {
+          const fieldEl = document.createElement('div');
+          fieldEl.className = 'form-field';
+          const labelHint = field.hint ? '<span class="hint">— ' + escapeHtml(field.hint) + '</span>' : '';
+          const inputId = 'form-field-' + field.key;
+          const value = (formValues[type][field.key] !== undefined && formValues[type][field.key] !== null)
+            ? formValues[type][field.key]
+            : field.placeholder;
+          const inputHtml = field.type === 'textarea'
+            ? '<textarea id="' + inputId + '" data-key="' + field.key + '" placeholder="' + escapeAttr(field.placeholder) + '">' + escapeHtml(value) + '</textarea>'
+            : '<input type="text" id="' + inputId + '" data-key="' + field.key + '" placeholder="' + escapeAttr(field.placeholder) + '" value="' + escapeAttr(value) + '" />';
+          fieldEl.innerHTML = '<div class="form-field-label"><label for="' + inputId + '">' + escapeHtml(field.label) + '</label>' + labelHint + '</div>' + inputHtml;
+          secEl.appendChild(fieldEl);
+        });
+
+        wrap.appendChild(secEl);
+      });
+
+      // Save defaults so any unset field still produces output
+      schema.forEach(section => {
+        section.fields.forEach(field => {
+          if (formValues[type][field.key] === undefined) {
+            formValues[type][field.key] = field.placeholder;
+          }
+        });
+      });
+
+      // Wire input events — every change debounces a regenerate+sync
+      wrap.querySelectorAll('input[data-key], textarea[data-key]').forEach(el => {
+        el.addEventListener('input', () => {
+          formValues[currentType][el.dataset.key] = el.value;
+          clearTimeout(previewDebounce);
+          previewDebounce = setTimeout(() => {
+            applyFormToHtml();
+          }, 300);
+        });
+      });
+    }
+
+    function applyFormToHtml() {
+      const html = renderFromForm(currentType, formValues[currentType]);
+      document.getElementById('htmlInput').value = html;
+      // Mirror to Quill as well so toggling Visual shows the latest
+      if (quill) {
+        suppressQuillEvent = true;
+        quill.clipboard.dangerouslyPasteHTML(html, 'silent');
+        suppressQuillEvent = false;
+      }
+      updatePreview();
+    }
+
+    function renderFromForm(type, f) {
+      return type === 'welcome' ? renderWelcomeHtml(f) : renderInviteHtml(f);
+    }
+
+    function paragraphsHtml(text) {
+      // Preserve paragraph breaks — split on blank lines, escape nothing (user content is HTML-safe in plain prose)
+      if (!text) return '';
+      return String(text).split(/\n{2,}/).map(p => p.trim()).filter(Boolean)
+        .map(p => '<p style="margin:0 0 12px;">' + p.replace(/\n/g, '<br>') + '</p>').join('');
+    }
+
+    function bulletsHtml(text) {
+      if (!text) return '';
+      const items = String(text).split(/\n+/).map(s => s.trim()).filter(Boolean);
+      return items.map(b => '<li>' + b + '</li>').join('');
+    }
+
+    function renderWelcomeHtml(f) {
+      return `<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
+<body style="margin:0;padding:0;background:#0A0A0A;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
+  <div style="max-width:520px;margin:0 auto;padding:40px 24px;">
+
+    <div style="text-align:center;margin-bottom:32px;">
+      <h1 style="color:#fff;font-size:26px;font-weight:700;margin:0;letter-spacing:-0.02em;">${f.headline || ''}</h1>
+      <p style="color:rgba(255,255,255,0.55);font-size:15px;margin:10px 0 0;">${f.subtitle || ''}</p>
+    </div>
+
+    <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:24px;margin-bottom:20px;">
+      <div style="color:rgba(255,255,255,0.85);font-size:15px;line-height:1.65;margin:0 0 14px;">${paragraphsHtml(f.intro1)}</div>
+      <div style="color:rgba(255,255,255,0.7);font-size:14px;line-height:1.65;">${paragraphsHtml(f.intro2)}</div>
+    </div>
+
+    <div style="background:linear-gradient(135deg,rgba(139,92,246,0.18),rgba(124,58,237,0.10));border:1px solid rgba(139,92,246,0.32);border-radius:12px;padding:24px;margin-bottom:20px;text-align:center;">
+      <p style="color:#c4b5fd;font-size:11px;font-weight:700;margin:0 0 10px;text-transform:uppercase;letter-spacing:0.08em;">${f.offerEyebrow || ''}</p>
+      <p style="color:#fff;font-size:20px;font-weight:700;margin:0 0 10px;line-height:1.3;">${f.offerTitle || ''}</p>
+      <p style="color:rgba(255,255,255,0.65);font-size:13px;line-height:1.6;margin:0;">${f.offerSubtitle || ''}</p>
+    </div>
+
+    <div style="color:rgba(255,255,255,0.7);font-size:14px;line-height:1.65;margin-bottom:20px;padding:0 4px;">${paragraphsHtml(f.body)}</div>
+
+    <div style="background:rgba(139,92,246,0.08);border:1px solid rgba(139,92,246,0.15);border-radius:10px;padding:18px 20px;margin-bottom:24px;">
+      <div style="color:rgba(255,255,255,0.7);font-size:13px;line-height:1.6;">${paragraphsHtml(f.whitelistAsk)}</div>
+    </div>
+
+    <div style="text-align:center;padding-top:8px;">
+      <p style="color:rgba(255,255,255,0.5);font-size:13px;line-height:1.6;margin:0 0 6px;">${f.closing || ''}</p>
+      <p style="color:rgba(255,255,255,0.4);font-size:13px;margin:0;">${f.signoff || ''}</p>
+    </div>
+
+    <div style="text-align:center;padding-top:24px;margin-top:24px;border-top:1px solid rgba(255,255,255,0.06);">
+      <p style="color:rgba(255,255,255,0.25);font-size:11px;margin:0;">Yara — Your Personal AI Advocate<br><a href="https://my-yara.com" style="color:rgba(139,92,246,0.6);text-decoration:none;">my-yara.com</a></p>
+    </div>
+  </div>
+</body>
+</html>`;
+    }
+
+    function renderInviteHtml(f) {
+      return `<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
+<body style="margin:0;padding:0;background:#0A0A0A;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
+  <div style="max-width:520px;margin:0 auto;padding:40px 24px;">
+
+    <div style="text-align:center;margin-bottom:32px;">
+      <h1 style="color:#fff;font-size:24px;font-weight:700;margin:0;">${f.headline || ''}</h1>
+      <p style="color:rgba(255,255,255,0.5);font-size:14px;margin:8px 0 0;">${f.subtitle || ''}</p>
+    </div>
+
+    <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:24px;margin-bottom:24px;">
+      <div style="color:rgba(255,255,255,0.8);font-size:15px;line-height:1.6;margin:0 0 16px;">${paragraphsHtml(f.intro)}</div>
+      <div style="text-align:center;margin:24px 0;">
+        <a href="${f.ctaUrl || '#'}" style="display:inline-block;background:linear-gradient(135deg,#8B5CF6,#7C3AED);color:#fff;text-decoration:none;padding:14px 32px;border-radius:10px;font-size:16px;font-weight:600;">${f.ctaLabel || ''}</a>
+      </div>
+      <div style="color:rgba(255,255,255,0.5);font-size:13px;line-height:1.5;margin:16px 0 0;">${paragraphsHtml(f.ctaSubtext)}</div>
+    </div>
+
+    <div style="background:rgba(139,92,246,0.08);border:1px solid rgba(139,92,246,0.15);border-radius:10px;padding:20px;margin-bottom:24px;">
+      <p style="color:#8B5CF6;font-size:13px;font-weight:600;margin:0 0 8px;">${f.gettingStartedTitle || ''}</p>
+      <ul style="color:rgba(255,255,255,0.6);font-size:13px;line-height:1.8;margin:0;padding:0 0 0 18px;">${bulletsHtml(f.bullets)}</ul>
+    </div>
+
+    <div style="text-align:center;padding-top:16px;border-top:1px solid rgba(255,255,255,0.06);">
+      <p style="color:rgba(255,255,255,0.25);font-size:11px;margin:0;">${f.signoff || ''}<br><a href="https://my-yara.com" style="color:rgba(139,92,246,0.6);text-decoration:none;">my-yara.com</a></p>
+    </div>
+  </div>
+</body>
+</html>`;
+    }
+
+    function escapeHtml(s) { return String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+    function escapeAttr(s) { return escapeHtml(s); }
+
     // ── Auth ──────────────────────────────────────────────
     function checkAuth() {
       const raw = sessionStorage.getItem('yara_auth');
@@ -363,6 +595,13 @@
         document.getElementById('subjectInput').value = data.subject || '';
         document.getElementById('htmlInput').value = data.html || '';
         setQuillFromTextarea();  // mirror loaded HTML into the visual editor
+
+        // Populate form values from saved fields (or fall back to schema defaults)
+        formValues[currentType] = (data.fields && typeof data.fields === 'object') ? { ...data.fields } : {};
+        buildFormUI(currentType);
+        // If we're starting in Form mode and there are no saved fields, keep the existing styled HTML;
+        // otherwise the form would overwrite it on first edit. We only re-render from form on user input.
+
         currentSha = data.sha || null;
 
         if (data.updatedAt) {
@@ -383,9 +622,11 @@
 
     // ── Save template ─────────────────────────────────────
     document.getElementById('saveBtn').addEventListener('click', async () => {
-      // If user is in Visual mode, pull the latest from Quill before saving.
+      // Pull latest from whichever editor is active so the saved html is current.
       if (currentMode === 'visual' && quill) {
         document.getElementById('htmlInput').value = quill.root.innerHTML;
+      } else if (currentMode === 'form') {
+        applyFormToHtml();  // ensure textarea has the freshest render before save
       }
       const subject = document.getElementById('subjectInput').value.trim();
       const html = document.getElementById('htmlInput').value.trim();
@@ -410,6 +651,9 @@
             templateType: currentType,
             subject,
             html,
+            // Persist form values so reopening in Form mode shows the same fields.
+            // Send for all modes — keeps the JSON consistent — but only Form mode mutates them.
+            fields: formValues[currentType] || null,
             sha: currentSha
           })
         });
@@ -480,30 +724,45 @@
       document.getElementById('sourcePane').style.display = 'block';
     });
 
-    // ── Editor mode tabs (Visual / Source) ────────────────
+    // ── Editor mode tabs (Form / Visual / Source) ─────────
     document.querySelectorAll('.editor-mode-tab').forEach(tab => {
       tab.addEventListener('click', () => {
         const newMode = tab.dataset.mode;
         if (newMode === currentMode) return;
 
+        // Visual/Source → Form: warn that switching to Form will replace the visual content
+        // with whatever is in the form fields the next time the user edits a field.
+        if ((currentMode === 'visual' || currentMode === 'source') && newMode === 'form') {
+          const ok = confirm(
+            'Switching to Form mode keeps your fields intact, but the moment you edit a field, ' +
+            'the styled email is rebuilt from the form — replacing your free-form edits.\n\nContinue?'
+          );
+          if (!ok) return;
+        }
+
         // Sync content between editors before switching
         if (currentMode === 'visual' && newMode === 'source') {
-          // Visual → Source: copy Quill HTML into textarea
           if (quill) document.getElementById('htmlInput').value = quill.root.innerHTML;
         } else if (currentMode === 'source' && newMode === 'visual') {
-          // Source → Visual: copy textarea HTML back into Quill
           setQuillFromTextarea();
+        } else if (currentMode === 'form' && newMode === 'visual') {
+          setQuillFromTextarea();  // textarea already has form-rendered HTML
         }
+        // Form → Source: textarea already has form-rendered HTML, nothing to do
+        // Visual/Source → Form: form already shows its own state
 
         currentMode = newMode;
         document.querySelectorAll('.editor-mode-tab').forEach(t => t.classList.toggle('active', t.dataset.mode === newMode));
+        document.getElementById('formEditorWrap').classList.toggle('active', newMode === 'form');
         document.getElementById('visualEditorWrap').classList.toggle('active', newMode === 'visual');
         document.getElementById('sourceEditorWrap').classList.toggle('active', newMode === 'source');
 
-        document.getElementById('editorModeHint').textContent =
-          newMode === 'visual'
-            ? 'Paste from Word or Google Docs — formatting comes with it'
-            : 'Advanced: raw HTML — useful for debugging or pasting builder exports';
+        const hints = {
+          form:   'Form mode: fill in fields, the styled email is built for you',
+          visual: 'Paste from Word or Google Docs — formatting comes with it',
+          source: 'Advanced: raw HTML — useful for debugging or pasting builder exports'
+        };
+        document.getElementById('editorModeHint').textContent = hints[newMode];
 
         triggerPreview();
       });

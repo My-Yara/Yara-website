@@ -43,7 +43,7 @@ exports.handler = async (event) => {
         return { statusCode: 401, headers: corsHeaders, body: JSON.stringify({ message: 'Unauthorized' }) };
     }
 
-    const { subject, html, sha } = body;
+    const { subject, html, sha, fields } = body;
     if (!subject || !html) {
         return { statusCode: 400, headers: corsHeaders, body: JSON.stringify({ message: 'subject and html are required' }) };
     }
@@ -52,6 +52,11 @@ exports.handler = async (event) => {
     const filePath = TEMPLATE_FILES[templateType];
 
     const template = { subject, html, updatedAt: new Date().toISOString(), updatedBy: body.email };
+    // fields are optional — only present when the user has edited in Form mode at least once.
+    // Storing them lets Form mode reopen with the same values next time.
+    if (fields && typeof fields === 'object' && !Array.isArray(fields)) {
+        template.fields = fields;
+    }
     const contentEncoded = Buffer.from(JSON.stringify(template, null, 2)).toString('base64');
 
     const commitBody = {
