@@ -1,9 +1,8 @@
-// send-email.js — Sends a custom email to a waitlist invitee using the stored template + Gmail API
+// send-email.js — Sends a custom email to a waitlist invitee using the stored template + Resend.
 // Supports two templates via `templateType` body field: 'invite' (default) and 'welcome'.
 
 const fetch = require('node-fetch');
 const crypto = require('crypto');
-const { google } = require('googleapis');
 
 const GITHUB_PAT = process.env.GITHUB_PAT_TOKEN;
 const DATA_REPO = process.env.GITHUB_DATA_REPO;
@@ -16,9 +15,9 @@ const TEMPLATE_FILES = {
     welcome: 'config/welcome-template.json'
 };
 
-// Gmail API config
-const GMAIL_FROM_EMAIL = process.env.GMAIL_FROM_EMAIL || 'hello@my-yara.com';
-const GMAIL_FROM_NAME  = process.env.GMAIL_FROM_NAME  || 'Yara';
+// Resend config — EMAIL_FROM/EMAIL_FROM_NAME canonical, GMAIL_* fallback for back-compat
+const EMAIL_FROM = process.env.EMAIL_FROM || process.env.GMAIL_FROM_EMAIL || 'hello@my-yara.com';
+const EMAIL_FROM_NAME = process.env.EMAIL_FROM_NAME || process.env.GMAIL_FROM_NAME || 'Yara';
 
 const corsHeaders = {
     'Access-Control-Allow-Origin': '*',
@@ -57,8 +56,8 @@ exports.handler = async (event) => {
         return { statusCode: 400, headers: corsHeaders, body: JSON.stringify({ message: 'toEmail is required' }) };
     }
 
-    if (!process.env.GOOGLE_SERVICE_ACCOUNT_JSON) {
-        return { statusCode: 500, headers: corsHeaders, body: JSON.stringify({ message: 'Email service not configured (GOOGLE_SERVICE_ACCOUNT_JSON missing)' }) };
+    if (!process.env.RESEND_API_KEY) {
+        return { statusCode: 500, headers: corsHeaders, body: JSON.stringify({ message: 'Email service not configured (RESEND_API_KEY missing)' }) };
     }
 
     // Load template from GitHub (falls back to default if not found)
@@ -96,56 +95,40 @@ exports.handler = async (event) => {
         .replace(/\{\{firstName\}\}/g, escapeHtml(firstName))
         .replace(/\{\{appStoreLink\}\}/g, UNLISTED_APP_STORE_LINK);
 
-    // Send via Gmail API
+    // Send via Resend
     try {
-        await sendViaGmail(toEmail, subject, html);
+        await sendViaResend(toEmail, subject, html);
         return {
             statusCode: 200,
             headers: corsHeaders,
             body: JSON.stringify({ message: 'Email sent', to: toEmail, templateType })
         };
     } catch (err) {
-        console.error('send-email Gmail error:', err);
+        console.error('send-email Resend error:', err);
         return { statusCode: 502, headers: corsHeaders, body: JSON.stringify({ message: 'Email delivery failed', details: err.message }) };
     }
 };
 
-// ── Gmail API helper ──────────────────────────────────────────────────────────
-async function sendViaGmail(toEmail, subject, html) {
-    const serviceAccount = JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT_JSON);
-
-    const auth = new google.auth.JWT({
-        email: serviceAccount.client_email,
-        key:   serviceAccount.private_key,
-        scopes: ['https://www.googleapis.com/auth/gmail.send'],
-        subject: GMAIL_FROM_EMAIL  // impersonate this Workspace user
+// ── Resend helper ─────────────────────────────────────────────────────────────
+async function sendViaResend(toEmail, subject, html) {
+    const res = await fetch('https://api.resend.com/emails', {
+        method: 'POST',
+        headers: {
+            'Authorization': `Bearer ${process.env.RESEND_API_KEY}`,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            from: `${EMAIL_FROM_NAME} <${EMAIL_FROM}>`,
+            to: toEmail,
+            subject,
+            html
+        })
     });
-
-    const gmail = google.gmail({ version: 'v1', auth });
-
-    // RFC 2822 message — encode subject for non-ASCII safety
-    const encodedSubject = `=?utf-8?B?${Buffer.from(subject).toString('base64')}?=`;
-    const message = [
-        `From: ${GMAIL_FROM_NAME} <${GMAIL_FROM_EMAIL}>`,
-        `To: ${toEmail}`,
-        `Subject: ${encodedSubject}`,
-        'MIME-Version: 1.0',
-        'Content-Type: text/html; charset=utf-8',
-        'Content-Transfer-Encoding: base64',
-        '',
-        Buffer.from(html).toString('base64')
-    ].join('\r\n');
-
-    // base64url encode the full RFC 2822 message
-    const raw = Buffer.from(message).toString('base64')
-        .replace(/\+/g, '-')
-        .replace(/\//g, '_')
-        .replace(/=+$/, '');
-
-    await gmail.users.messages.send({
-        userId: 'me',
-        requestBody: { raw }
-    });
+    if (!res.ok) {
+        const errText = await res.text().catch(() => 'unknown');
+        throw new Error(`Resend ${res.status}: ${errText}`);
+    }
+    return await res.json().catch(() => ({}));
 }
 
 function escapeHtml(s) {

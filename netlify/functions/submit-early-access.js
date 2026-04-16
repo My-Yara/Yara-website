@@ -1,9 +1,8 @@
 // submit-early-access.js - Saves early access questionnaire responses (ENCRYPTED)
-// Also fires a welcome email via Gmail API on genuinely new signups.
+// Also fires a welcome email via Resend on genuinely new signups.
 
 const fetch = require('node-fetch');
 const crypto = require('crypto');
-const { google } = require('googleapis');
 
 // --- Configuration ---
 const GITHUB_PAT = process.env.GITHUB_PAT_TOKEN;
@@ -13,9 +12,10 @@ const ENCRYPTION_KEY = process.env.ENCRYPTION_KEY;
 const ALGORITHM = 'aes-256-cbc';
 const IV_LENGTH = 16; // AES requires a 16-byte IV
 
-// Gmail welcome email config
-const GMAIL_FROM_EMAIL = process.env.GMAIL_FROM_EMAIL || 'hello@my-yara.com';
-const GMAIL_FROM_NAME  = process.env.GMAIL_FROM_NAME  || 'Yara';
+// Email config — Resend
+// EMAIL_FROM / EMAIL_FROM_NAME are the canonical names; older GMAIL_* vars work as fallback.
+const EMAIL_FROM = process.env.EMAIL_FROM || process.env.GMAIL_FROM_EMAIL || 'hello@my-yara.com';
+const EMAIL_FROM_NAME = process.env.EMAIL_FROM_NAME || process.env.GMAIL_FROM_NAME || 'Yara';
 const WELCOME_TEMPLATE_PATH = 'config/welcome-template.json';
 
 // CORS headers to allow requests from the website
@@ -241,8 +241,8 @@ function encryptData(text, secret) {
 
 // ── Welcome email ─────────────────────────────────────────────────────────────
 async function sendWelcomeEmail(toEmail) {
-    if (!process.env.GOOGLE_SERVICE_ACCOUNT_JSON) {
-        console.log('GOOGLE_SERVICE_ACCOUNT_JSON not configured — skipping welcome email');
+    if (!process.env.RESEND_API_KEY) {
+        console.log('RESEND_API_KEY not configured — skipping welcome email');
         return;
     }
 
@@ -275,42 +275,27 @@ async function sendWelcomeEmail(toEmail) {
         .replace(/\{\{firstName\}\}/g, escapeHtml(firstName))
         .replace(/\{\{appStoreLink\}\}/g, '#');
 
-    await sendViaGmail(toEmail, subject, html);
+    await sendViaResend(toEmail, subject, html);
 }
 
-async function sendViaGmail(toEmail, subject, html) {
-    const serviceAccount = JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT_JSON);
-
-    const auth = new google.auth.JWT({
-        email: serviceAccount.client_email,
-        key:   serviceAccount.private_key,
-        scopes: ['https://www.googleapis.com/auth/gmail.send'],
-        subject: GMAIL_FROM_EMAIL
+async function sendViaResend(toEmail, subject, html) {
+    const res = await fetch('https://api.resend.com/emails', {
+        method: 'POST',
+        headers: {
+            'Authorization': `Bearer ${process.env.RESEND_API_KEY}`,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            from: `${EMAIL_FROM_NAME} <${EMAIL_FROM}>`,
+            to: toEmail,
+            subject,
+            html
+        })
     });
-
-    const gmail = google.gmail({ version: 'v1', auth });
-
-    const encodedSubject = `=?utf-8?B?${Buffer.from(subject).toString('base64')}?=`;
-    const message = [
-        `From: ${GMAIL_FROM_NAME} <${GMAIL_FROM_EMAIL}>`,
-        `To: ${toEmail}`,
-        `Subject: ${encodedSubject}`,
-        'MIME-Version: 1.0',
-        'Content-Type: text/html; charset=utf-8',
-        'Content-Transfer-Encoding: base64',
-        '',
-        Buffer.from(html).toString('base64')
-    ].join('\r\n');
-
-    const raw = Buffer.from(message).toString('base64')
-        .replace(/\+/g, '-')
-        .replace(/\//g, '_')
-        .replace(/=+$/, '');
-
-    await gmail.users.messages.send({
-        userId: 'me',
-        requestBody: { raw }
-    });
+    if (!res.ok) {
+        const errText = await res.text().catch(() => 'unknown');
+        throw new Error(`Resend ${res.status}: ${errText}`);
+    }
 }
 
 function escapeHtml(s) {

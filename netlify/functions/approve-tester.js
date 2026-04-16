@@ -2,7 +2,6 @@
 
 const fetch = require('node-fetch');
 const crypto = require('crypto');
-const { google } = require('googleapis');
 
 // --- Configuration ---
 const GITHUB_PAT = process.env.GITHUB_PAT_TOKEN;
@@ -13,10 +12,10 @@ const AUTH_CREDENTIALS = process.env.AUTH_CREDENTIALS;
 const ALGORITHM = 'aes-256-cbc';
 const IV_LENGTH = 16;
 
-// Email config — Gmail API
+// Email config — Resend
 const UNLISTED_APP_STORE_LINK = process.env.UNLISTED_APP_STORE_LINK || 'https://apps.apple.com/app/yara/id000000000'; // placeholder until YARA-833
-const GMAIL_FROM_EMAIL = process.env.GMAIL_FROM_EMAIL || 'hello@my-yara.com';
-const GMAIL_FROM_NAME  = process.env.GMAIL_FROM_NAME  || 'Yara';
+const EMAIL_FROM = process.env.EMAIL_FROM || process.env.GMAIL_FROM_EMAIL || 'hello@my-yara.com';
+const EMAIL_FROM_NAME = process.env.EMAIL_FROM_NAME || process.env.GMAIL_FROM_NAME || 'Yara';
 
 // CORS headers
 const corsHeaders = {
@@ -103,10 +102,10 @@ exports.handler = async (event, context) => {
 
         // 3. Send approval email with App Store link
         let emailSent = false;
-        if (process.env.GOOGLE_SERVICE_ACCOUNT_JSON) {
+        if (process.env.RESEND_API_KEY) {
             emailSent = await sendApprovalEmail(userEmail);
         } else {
-            console.log('GOOGLE_SERVICE_ACCOUNT_JSON not configured — skipping email');
+            console.log('RESEND_API_KEY not configured — skipping email');
         }
 
         return {
@@ -133,7 +132,7 @@ async function sendApprovalEmail(toEmail) {
     try {
         const subject = "You're approved for Yara Early Access";
         const html = buildApprovalEmailHtml(toEmail);
-        await sendViaGmail(toEmail, subject, html);
+        await sendViaResend(toEmail, subject, html);
         return true;
     } catch (err) {
         console.error('Email send error:', err.message);
@@ -141,39 +140,24 @@ async function sendApprovalEmail(toEmail) {
     }
 }
 
-async function sendViaGmail(toEmail, subject, html) {
-    const serviceAccount = JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT_JSON);
-
-    const auth = new google.auth.JWT({
-        email: serviceAccount.client_email,
-        key:   serviceAccount.private_key,
-        scopes: ['https://www.googleapis.com/auth/gmail.send'],
-        subject: GMAIL_FROM_EMAIL  // impersonate this Workspace user
+async function sendViaResend(toEmail, subject, html) {
+    const res = await fetch('https://api.resend.com/emails', {
+        method: 'POST',
+        headers: {
+            'Authorization': `Bearer ${process.env.RESEND_API_KEY}`,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            from: `${EMAIL_FROM_NAME} <${EMAIL_FROM}>`,
+            to: toEmail,
+            subject,
+            html
+        })
     });
-
-    const gmail = google.gmail({ version: 'v1', auth });
-
-    const encodedSubject = `=?utf-8?B?${Buffer.from(subject).toString('base64')}?=`;
-    const message = [
-        `From: ${GMAIL_FROM_NAME} <${GMAIL_FROM_EMAIL}>`,
-        `To: ${toEmail}`,
-        `Subject: ${encodedSubject}`,
-        'MIME-Version: 1.0',
-        'Content-Type: text/html; charset=utf-8',
-        'Content-Transfer-Encoding: base64',
-        '',
-        Buffer.from(html).toString('base64')
-    ].join('\r\n');
-
-    const raw = Buffer.from(message).toString('base64')
-        .replace(/\+/g, '-')
-        .replace(/\//g, '_')
-        .replace(/=+$/, '');
-
-    await gmail.users.messages.send({
-        userId: 'me',
-        requestBody: { raw }
-    });
+    if (!res.ok) {
+        const errText = await res.text().catch(() => 'unknown');
+        throw new Error(`Resend ${res.status}: ${errText}`);
+    }
 }
 
 function buildApprovalEmailHtml(email) {
