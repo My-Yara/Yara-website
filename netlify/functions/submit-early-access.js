@@ -332,7 +332,19 @@ function buildDefaultWelcomeHtml() {
         Thanks for signing up — we're so glad you're here.
       </p>
       <p style="color:rgba(255,255,255,0.7);font-size:14px;line-height:1.65;margin:0;">
-        Yara is your personal AI advocate for your finances. We're letting people in carefully so we can give every early member real attention. We'll email you the moment your spot opens up.
+        Yara is your personal AI advocate for your finances. We're letting people in slowly so we can give every early member real attention and build the right thing with your help.
+      </p>
+    </div>
+    <div style="background:linear-gradient(135deg,rgba(139,92,246,0.18),rgba(124,58,237,0.10));border:1px solid rgba(139,92,246,0.32);border-radius:12px;padding:24px;margin-bottom:20px;text-align:center;">
+      <p style="color:#c4b5fd;font-size:11px;font-weight:700;margin:0 0 10px;text-transform:uppercase;letter-spacing:0.08em;">A thank-you for joining early</p>
+      <p style="color:#fff;font-size:20px;font-weight:700;margin:0 0 10px;line-height:1.3;">6 months of Yara, free on us</p>
+      <p style="color:rgba(255,255,255,0.65);font-size:13px;line-height:1.6;margin:0;">
+        No card up front. No fine print. Yours when we open your spot.
+      </p>
+    </div>
+    <div style="color:rgba(255,255,255,0.7);font-size:14px;line-height:1.65;margin-bottom:20px;padding:0 4px;">
+      <p style="margin:0;">
+        We don't have a fixed date yet — but when your invite arrives, you'll get a private App Store link and a short onboarding email. Usually we ask for one piece of feedback in return, that's it.
       </p>
     </div>
     <div style="background:rgba(139,92,246,0.08);border:1px solid rgba(139,92,246,0.15);border-radius:10px;padding:18px 20px;margin-bottom:24px;">
@@ -342,7 +354,7 @@ function buildDefaultWelcomeHtml() {
       </p>
     </div>
     <div style="text-align:center;padding-top:8px;">
-      <p style="color:rgba(255,255,255,0.5);font-size:13px;line-height:1.6;margin:0 0 6px;">Questions? Just reply to this email.</p>
+      <p style="color:rgba(255,255,255,0.5);font-size:13px;line-height:1.6;margin:0 0 6px;">Questions? Just reply to this email — we read every message.</p>
       <p style="color:rgba(255,255,255,0.4);font-size:13px;margin:0;">— The Yara team</p>
     </div>
     <div style="text-align:center;padding-top:24px;margin-top:24px;border-top:1px solid rgba(255,255,255,0.06);">
