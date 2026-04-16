@@ -204,19 +204,19 @@
           <div>
             <div class="field-label">Email Body</div>
             <div class="editor-mode-tabs">
-              <button type="button" class="editor-mode-tab" data-mode="visual" title="Edit visually with formatting toolbar — best for simple text edits">
+              <button type="button" class="editor-mode-tab active" data-mode="visual" title="Write or paste from Word, Google Docs, Pages — formatting is preserved">
                 <span>✏️</span> Visual
               </button>
-              <button type="button" class="editor-mode-tab active" data-mode="source" title="Paste or edit raw HTML — best for designs from email builders">
+              <button type="button" class="editor-mode-tab" data-mode="source" title="Edit the underlying HTML — advanced">
                 <span style="font-family:'Fira Code',monospace;">&lt;/&gt;</span> Source HTML
               </button>
-              <span class="editor-mode-hint" id="editorModeHint">Source mode: paste HTML from email builders (Stripo, BeeFree, etc.)</span>
+              <span class="editor-mode-hint" id="editorModeHint">Paste from Word or Google Docs — formatting comes with it</span>
             </div>
-            <div class="editor-mode-content" id="visualEditorWrap">
+            <div class="editor-mode-content active" id="visualEditorWrap">
               <div id="quillEditor"></div>
             </div>
-            <div class="editor-mode-content active" id="sourceEditorWrap">
-              <textarea id="htmlInput" class="field-input" placeholder="Paste HTML from your email builder (Stripo, BeeFree, Mailchimp, etc.)…"></textarea>
+            <div class="editor-mode-content" id="sourceEditorWrap">
+              <textarea id="htmlInput" class="field-input" placeholder="Advanced: raw HTML source of the email body…"></textarea>
             </div>
           </div>
 
@@ -269,7 +269,7 @@
     let currentSha = null;       // GitHub file sha for updates
     let previewDebounce = null;
     let currentType = 'invite';  // 'invite' | 'welcome'
-    let currentMode = 'source';  // 'visual' | 'source' — defaults to source so styled designs aren't mangled by Quill on load
+    let currentMode = 'visual';  // 'visual' | 'source' — defaults to Visual so users can paste from Word/Docs without seeing HTML
     let quill = null;            // Quill instance, initialized in initEditor()
     let suppressQuillEvent = false; // guards programmatic Quill updates from re-firing handlers
 
@@ -277,7 +277,7 @@
     function initEditor() {
       quill = new Quill('#quillEditor', {
         theme: 'snow',
-        placeholder: 'Write your email — bold, links, lists, headings supported. Variables like {{firstName}} work in plain text.',
+        placeholder: 'Write here, or paste from Microsoft Word, Google Docs, or Pages — formatting will be preserved. Variables like {{firstName}} work as plain text.',
         modules: {
           toolbar: [
             [{ header: [1, 2, 3, false] }],
@@ -502,8 +502,8 @@
 
         document.getElementById('editorModeHint').textContent =
           newMode === 'visual'
-            ? 'Visual mode: format text without writing HTML'
-            : 'Source mode: paste HTML from email builders (Stripo, BeeFree, etc.)';
+            ? 'Paste from Word or Google Docs — formatting comes with it'
+            : 'Advanced: raw HTML — useful for debugging or pasting builder exports';
 
         triggerPreview();
       });
