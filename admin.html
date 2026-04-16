@@ -75,6 +75,9 @@
     .btn-send-email{padding:4px 8px;background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.2);border-radius:6px;color:#8B5CF6;font-size:11px;font-weight:600;cursor:pointer;transition:all .15s;font-family:inherit;margin-left:4px}
     .btn-send-email:hover{background:rgba(139,92,246,0.2)}
     .btn-send-email:disabled{opacity:0.4;cursor:not-allowed}
+    .btn-send-welcome{padding:4px 8px;background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.25);border-radius:6px;color:#22C55E;font-size:11px;font-weight:600;cursor:pointer;transition:all .15s;font-family:inherit;margin-left:4px}
+    .btn-send-welcome:hover{background:rgba(34,197,94,0.18)}
+    .btn-send-welcome:disabled{opacity:0.4;cursor:not-allowed}
     .action-group{display:flex;align-items:center;gap:4px}
     .check-done{color:#22C55E;font-size:13px}
 
@@ -359,7 +362,8 @@
         } else {
           html += '<button class="btn-approve" data-email="' + esc(entry.email) + '" data-file="' + esc(entry.filename || '') + '" data-sha="' + esc(entry.sha || '') + '">Approve</button>';
         }
-        html += '<button class="btn-send-email" data-email="' + esc(entry.email) + '">&#9993; Email</button>';
+        html += '<button class="btn-send-welcome" data-email="' + esc(entry.email) + '" data-type="welcome" title="Send welcome / thank-you email">&#128075; Welcome</button>';
+        html += '<button class="btn-send-email" data-email="' + esc(entry.email) + '" data-type="invite" title="Send invite with App Store link">&#9993; Invite</button>';
         html += '<button class="btn-delete" data-email="' + esc(entry.email) + '" data-file="' + esc(entry.filename || '') + '" data-sha="' + esc(entry.sha || '') + '">Del</button>';
         html += '</div></td></tr>';
       });
@@ -380,8 +384,8 @@
       tb.querySelectorAll('.btn-delete').forEach(btn => {
         btn.addEventListener('click', () => deleteEntry(btn));
       });
-      // Bind send-email buttons
-      tb.querySelectorAll('.btn-send-email').forEach(btn => {
+      // Bind send-email buttons (invite + welcome)
+      tb.querySelectorAll('.btn-send-email, .btn-send-welcome').forEach(btn => {
         btn.addEventListener('click', () => sendEmail(btn));
       });
     }
@@ -546,10 +550,14 @@
       }
     }
 
-    // --- Send Email ---
+    // --- Send Email (welcome or invite) ---
     async function sendEmail(btn) {
       const email = btn.dataset.email;
-      if (!confirm('Send invitation email to ' + email + '?')) return;
+      const type = btn.dataset.type === 'welcome' ? 'welcome' : 'invite';
+      const label = type === 'welcome' ? 'welcome' : 'invitation';
+      const originalHtml = btn.innerHTML;
+
+      if (!confirm('Send ' + label + ' email to ' + email + '?')) return;
 
       btn.disabled = true;
       btn.textContent = '...';
@@ -562,11 +570,12 @@
             adminEmail: session.email || session.userId,
             adminPassword: session.password,
             toEmail: email,
+            templateType: type,
           }),
         });
 
         if (res.ok) {
-          showToast('Email sent to ' + email, 'success');
+          showToast((type === 'welcome' ? 'Welcome' : 'Invite') + ' email sent to ' + email, 'success');
         } else {
           const data = await res.json().catch(() => ({}));
           showToast(data.message || 'Failed to send email.', 'error');
@@ -575,7 +584,7 @@
         showToast('Error: ' + err.message, 'error');
       } finally {
         btn.disabled = false;
-        btn.innerHTML = '&#9993; Email';
+        btn.innerHTML = originalHtml;
       }
     }
 

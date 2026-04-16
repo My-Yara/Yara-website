@@ -36,6 +36,14 @@
     .pane-title{font-size:12px;font-weight:600;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:0.05em}
     .editor-body{flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:16px}
 
+    /* Template type switcher */
+    .type-tabs{display:flex;gap:0;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:3px;flex-shrink:0;margin:14px 20px 0}
+    .type-tab{flex:1;padding:7px 12px;border:none;background:none;color:rgba(255,255,255,0.5);font-size:12px;font-weight:600;cursor:pointer;border-radius:6px;transition:all .15s;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:6px}
+    .type-tab:hover:not(.active){color:rgba(255,255,255,0.8)}
+    .type-tab.active{background:linear-gradient(135deg,#8B5CF6,#7C3AED);color:#fff}
+    .type-tab .badge{font-size:10px;opacity:0.7;font-weight:500}
+    .type-tab.active .badge{opacity:1}
+
     /* Form fields */
     .field-label{font-size:11px;font-weight:600;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:6px}
     .field-input{width:100%;padding:9px 12px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:8px;font-size:13px;font-family:'Inter',sans-serif;color:#fff;outline:none;transition:border-color .15s}
@@ -128,6 +136,18 @@
           <span class="pane-title">Template Editor</span>
           <span id="lastUpdated" style="font-size:11px;color:rgba(255,255,255,0.25);"></span>
         </div>
+        <div class="type-tabs">
+          <button class="type-tab" data-type="welcome">
+            <span>👋</span>
+            <span>Welcome</span>
+            <span class="badge">on signup</span>
+          </button>
+          <button class="type-tab active" data-type="invite">
+            <span>✉</span>
+            <span>Invite</span>
+            <span class="badge">on approval</span>
+          </button>
+        </div>
         <div class="editor-body">
 
           <div>
@@ -150,7 +170,7 @@
             <div class="vars-desc">
               <strong style="color:rgba(255,255,255,0.5);">{{email}}</strong> — recipient's full email address<br>
               <strong style="color:rgba(255,255,255,0.5);">{{firstName}}</strong> — derived from email prefix (e.g. john.doe@… → John Doe)<br>
-              <strong style="color:rgba(255,255,255,0.5);">{{appStoreLink}}</strong> — App Store download URL (from env)
+              <strong style="color:rgba(255,255,255,0.5);">{{appStoreLink}}</strong> — App Store URL <em style="color:rgba(255,255,255,0.25);">(invite only — substituted to "#" in welcome emails)</em>
             </div>
           </div>
 
@@ -186,8 +206,9 @@
     const SAVE_TEMPLATE_API = 'https://yara-survey-api.netlify.app/.netlify/functions/save-email-template';
 
     let session = null;
-    let currentSha = null;  // GitHub file sha for updates
+    let currentSha = null;       // GitHub file sha for updates
     let previewDebounce = null;
+    let currentType = 'invite';  // 'invite' | 'welcome'
 
     // ── Auth ──────────────────────────────────────────────
     function checkAuth() {
@@ -221,7 +242,11 @@
         const res = await fetch(GET_TEMPLATE_API, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email: session.email || session.userId, password: session.password })
+          body: JSON.stringify({
+            email: session.email || session.userId,
+            password: session.password,
+            templateType: currentType
+          })
         });
         const data = await res.json();
 
@@ -267,6 +292,7 @@
           body: JSON.stringify({
             email: session.email || session.userId,
             password: session.password,
+            templateType: currentType,
             subject,
             html,
             sha: currentSha
@@ -337,6 +363,22 @@
       document.getElementById('tabRendered').classList.remove('active');
       document.getElementById('renderedPane').style.display = 'none';
       document.getElementById('sourcePane').style.display = 'block';
+    });
+
+    // ── Template type tabs (Welcome / Invite) ─────────────
+    document.querySelectorAll('.type-tab').forEach(tab => {
+      tab.addEventListener('click', async () => {
+        const newType = tab.dataset.type;
+        if (newType === currentType) return;
+        // Warn if there are unsaved-looking edits (we can't truly know without diffing, so just confirm)
+        if (!confirm('Switch to the ' + (newType === 'welcome' ? 'Welcome' : 'Invite') + ' template? Any unsaved changes will be lost.')) return;
+
+        currentType = newType;
+        document.querySelectorAll('.type-tab').forEach(t => t.classList.toggle('active', t.dataset.type === newType));
+        document.getElementById('saveStatus').textContent = '';
+        document.getElementById('saveStatus').className = 'save-status';
+        await loadTemplate();
+      });
     });
 
     // ── Copy variable chips ───────────────────────────────

@@ -1,4 +1,5 @@
 // save-email-template.js — Persists the admin-edited email template to GitHub
+// Supports two templates via `templateType` body field: 'invite' (default) and 'welcome'.
 
 const fetch = require('node-fetch');
 const crypto = require('crypto');
@@ -7,6 +8,11 @@ const GITHUB_PAT = process.env.GITHUB_PAT_TOKEN;
 const DATA_REPO = process.env.GITHUB_DATA_REPO;
 const GITHUB_ORG = 'My-Yara';
 const AUTH_CREDENTIALS = process.env.AUTH_CREDENTIALS;
+
+const TEMPLATE_FILES = {
+    invite: 'config/email-template.json',
+    welcome: 'config/welcome-template.json'
+};
 
 const corsHeaders = {
     'Access-Control-Allow-Origin': '*',
@@ -42,11 +48,14 @@ exports.handler = async (event) => {
         return { statusCode: 400, headers: corsHeaders, body: JSON.stringify({ message: 'subject and html are required' }) };
     }
 
+    const templateType = (body.templateType === 'welcome') ? 'welcome' : 'invite';
+    const filePath = TEMPLATE_FILES[templateType];
+
     const template = { subject, html, updatedAt: new Date().toISOString(), updatedBy: body.email };
     const contentEncoded = Buffer.from(JSON.stringify(template, null, 2)).toString('base64');
 
     const commitBody = {
-        message: `Update email template (by ${body.email})`,
+        message: `Update ${templateType} email template (by ${body.email})`,
         content: contentEncoded,
         branch: 'main'
     };
@@ -54,7 +63,7 @@ exports.handler = async (event) => {
     if (sha) commitBody.sha = sha;
 
     try {
-        const url = `https://api.github.com/repos/${GITHUB_ORG}/${DATA_REPO}/contents/config/email-template.json`;
+        const url = `https://api.github.com/repos/${GITHUB_ORG}/${DATA_REPO}/contents/${filePath}`;
         const res = await fetch(url, {
             method: 'PUT',
             headers: {
