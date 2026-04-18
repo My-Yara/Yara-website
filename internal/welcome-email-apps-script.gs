@@ -22,7 +22,7 @@ const RECIPIENTS = [
   { email: 'vikash@my-yara.com' }
 ];
 
-const FROM_ADDRESS   = 'Hassan@my-yara.com';     // must be a Send-mail-as alias in the account running the script
+// Sends from whichever Google account runs the script — sign in as the desired sender.
 const FROM_NAME      = 'Yara';                   // shown as sender display name
 const REPLY_TO       = 'hello@my-yara.com';
 const APP_STORE_LINK = '#';                      // welcome template doesn't use this, kept for parity
@@ -138,7 +138,6 @@ function sendWelcomeEmail() {
       GmailApp.sendEmail(r.email, subject, stripHtml_(html), {
         htmlBody: html,
         name: FROM_NAME,
-        from: FROM_ADDRESS,
         replyTo: REPLY_TO
       });
       sent++;
