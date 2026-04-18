@@ -36,7 +36,7 @@ const WELCOME_HTML_DEFAULT = `<!DOCTYPE html>
     </div>
 
     <div style="background:rgba(0,0,0,0.03);border:1px solid rgba(0,0,0,0.07);border-radius:20px;padding:24px;margin-bottom:20px;">
-      <p style="color:#1A1A2E;font-size:15px;line-height:1.65;margin:0 0 14px;">
+      <p style="color:#4A4A68;font-size:15px;line-height:1.65;margin:0 0 14px;">
         Thanks for signing up. We're glad you're here.
       </p>
       <p style="color:#4A4A68;font-size:14px;line-height:1.65;margin:0;">
@@ -54,7 +54,7 @@ const WELCOME_HTML_DEFAULT = `<!DOCTYPE html>
 
     <div style="color:#4A4A68;font-size:14px;line-height:1.65;margin-bottom:20px;padding:0 4px;">
       <p style="margin:0;">
-        We're letting people in carefully so she can give every early member real attention. We don't have a fixed date yet, but when your invite arrives, you'll get a private App Store link and be up and running in minutes.
+        We're letting people in carefully so Yara can give every early member real attention. We don't have a fixed date yet, but when your invite arrives, you'll get a private App Store link and be up and running in minutes.
       </p>
     </div>
 

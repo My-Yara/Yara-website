@@ -314,7 +314,7 @@ function buildDefaultWelcomeHtml() {
       <p style="color:#4A4A68;font-size:15px;margin:10px 0 0;font-weight:400;">Welcome.</p>
     </div>
     <div style="background:rgba(0,0,0,0.03);border:1px solid rgba(0,0,0,0.07);border-radius:20px;padding:24px;margin-bottom:20px;">
-      <p style="color:#1A1A2E;font-size:15px;line-height:1.65;margin:0 0 14px;">
+      <p style="color:#4A4A68;font-size:15px;line-height:1.65;margin:0 0 14px;">
         Thanks for signing up. We're glad you're here.
       </p>
       <p style="color:#4A4A68;font-size:14px;line-height:1.65;margin:0;">
@@ -327,7 +327,7 @@ function buildDefaultWelcomeHtml() {
       <p style="color:#8888A4;font-size:13px;line-height:1.6;margin:0;">No card up front. No fine print. Yours when we open your spot.</p>
     </div>
     <div style="color:#4A4A68;font-size:14px;line-height:1.65;margin-bottom:20px;padding:0 4px;">
-      <p style="margin:0;">We're letting people in carefully so she can give every early member real attention. We don't have a fixed date yet, but when your invite arrives, you'll get a private App Store link and be up and running in minutes.</p>
+      <p style="margin:0;">We're letting people in carefully so Yara can give every early member real attention. We don't have a fixed date yet, but when your invite arrives, you'll get a private App Store link and be up and running in minutes.</p>
     </div>
     <div style="background:rgba(108,58,237,0.05);border:1px solid rgba(108,58,237,0.12);border-radius:14px;padding:18px 20px;margin-bottom:24px;">
       <p style="color:#6C3AED;font-size:11px;font-weight:700;margin:0 0 6px;text-transform:uppercase;letter-spacing:0.1em;">One small favor</p>
