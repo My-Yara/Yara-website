@@ -343,7 +343,7 @@
       welcome: [
         { section: 'Header', fields: [
           { key: 'headline',  label: 'Headline',          type: 'text',     placeholder: "You're on the list" },
-          { key: 'subtitle',  label: 'Subtitle',          type: 'text',     placeholder: 'Welcome to Yara, {{firstName}}.', hint: 'You can use {{firstName}}' }
+          { key: 'subtitle',  label: 'Subtitle',          type: 'text',     placeholder: 'Welcome.' }
         ]},
         { section: 'Intro', fields: [
           { key: 'intro1', label: 'Greeting paragraph', type: 'textarea', placeholder: "Thanks for signing up — we're glad you're here." },
@@ -472,7 +472,7 @@
       return `<!DOCTYPE html>
 <html>
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
-<body style="margin:0;padding:0;background:#0B0D17;font-family:'DM Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
+<body style="margin:0;padding:0;background:#FDFCFF;font-family:'DM Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
   <div style="max-width:520px;margin:0 auto;padding:40px 24px;">
 
     <div style="text-align:center;margin-bottom:32px;">
@@ -480,20 +480,20 @@
       <p style="color:rgba(26,26,46,0.5);font-size:15px;margin:10px 0 0;font-weight:400;">${f.subtitle || ''}</p>
     </div>
 
-    <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(0,0,0,0.06);border-radius:20px;padding:24px;margin-bottom:20px;">
-      <div style="color:rgba(255,255,255,0.85);font-size:15px;line-height:1.65;margin:0 0 14px;">${paragraphsHtml(f.intro1)}</div>
+    <div style="background:rgba(0,0,0,0.03);border:1px solid rgba(0,0,0,0.06);border-radius:20px;padding:24px;margin-bottom:20px;">
+      <div style="color:#1A1A2E;font-size:15px;line-height:1.65;margin:0 0 14px;">${paragraphsHtml(f.intro1)}</div>
       <div style="color:rgba(26,26,46,0.65);font-size:14px;line-height:1.65;">${paragraphsHtml(f.intro2)}</div>
     </div>
 
-    <div style="background:linear-gradient(135deg,rgba(108,58,237,0.18),rgba(167,139,250,0.10));border:1px solid rgba(108,58,237,0.32);border-radius:20px;padding:24px;margin-bottom:20px;text-align:center;">
-      <p style="color:#A78BFA;font-size:11px;font-weight:700;margin:0 0 10px;text-transform:uppercase;letter-spacing:0.1em;">${f.offerEyebrow || ''}</p>
+    <div style="background:linear-gradient(135deg,rgba(108,58,237,0.08),rgba(167,139,250,0.05));border:1px solid rgba(108,58,237,0.2);border-radius:20px;padding:24px;margin-bottom:20px;text-align:center;">
+      <p style="color:#6C3AED;font-size:11px;font-weight:700;margin:0 0 10px;text-transform:uppercase;letter-spacing:0.1em;">${f.offerEyebrow || ''}</p>
       <p style="color:#1A1A2E;font-size:20px;font-weight:800;margin:0 0 10px;line-height:1.3;letter-spacing:-0.02em;">${f.offerTitle || ''}</p>
-      <p style="color:rgba(255,255,255,0.65);font-size:13px;line-height:1.6;margin:0;">${f.offerSubtitle || ''}</p>
+      <p style="color:#8888A4;font-size:13px;line-height:1.6;margin:0;">${f.offerSubtitle || ''}</p>
     </div>
 
     <div style="color:rgba(26,26,46,0.65);font-size:14px;line-height:1.65;margin-bottom:20px;padding:0 4px;">${paragraphsHtml(f.body)}</div>
 
-    <div style="background:rgba(108,58,237,0.08);border:1px solid rgba(108,58,237,0.15);border-radius:14px;padding:18px 20px;margin-bottom:24px;">
+    <div style="background:rgba(108,58,237,0.05);border:1px solid rgba(108,58,237,0.12);border-radius:14px;padding:18px 20px;margin-bottom:24px;">
       <div style="color:rgba(26,26,46,0.65);font-size:13px;line-height:1.6;">${paragraphsHtml(f.whitelistAsk)}</div>
     </div>
 
@@ -503,7 +503,7 @@
     </div>
 
     <div style="text-align:center;padding-top:24px;margin-top:24px;border-top:1px solid rgba(0,0,0,0.05);">
-      <p style="color:rgba(26,26,46,0.2);font-size:11px;margin:0;">Yara — Optimize Every Dollar. Protect Every Right.<br><a href="https://my-yara.com" style="color:#A78BFA;text-decoration:none;">my-yara.com</a></p>
+      <p style="color:rgba(26,26,46,0.2);font-size:11px;margin:0;">Yara — Optimize Every Dollar. Protect Every Right.<br><a href="https://my-yara.com" style="color:#6C3AED;text-decoration:none;">my-yara.com</a></p>
     </div>
   </div>
 </body>
@@ -522,21 +522,21 @@
       <p style="color:rgba(26,26,46,0.45);font-size:14px;margin:8px 0 0;">${f.subtitle || ''}</p>
     </div>
 
-    <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(0,0,0,0.08);border-radius:12px;padding:24px;margin-bottom:24px;">
-      <div style="color:rgba(255,255,255,0.8);font-size:15px;line-height:1.6;margin:0 0 16px;">${paragraphsHtml(f.intro)}</div>
+    <div style="background:rgba(0,0,0,0.03);border:1px solid rgba(0,0,0,0.08);border-radius:12px;padding:24px;margin-bottom:24px;">
+      <div style="color:#1A1A2E;font-size:15px;line-height:1.6;margin:0 0 16px;">${paragraphsHtml(f.intro)}</div>
       <div style="text-align:center;margin:24px 0;">
-        <a href="${f.ctaUrl || '#'}" style="display:inline-block;background:linear-gradient(135deg,#6C3AED,#7C3AED);color:#1A1A2E;text-decoration:none;padding:14px 32px;border-radius:10px;font-size:16px;font-weight:600;">${f.ctaLabel || ''}</a>
+        <a href="${f.ctaUrl || '#'}" style="display:inline-block;background:linear-gradient(135deg,#6C3AED,#7C3AED);color:#fff;text-decoration:none;padding:14px 32px;border-radius:999px;font-size:16px;font-weight:600;">${f.ctaLabel || ''}</a>
       </div>
       <div style="color:rgba(26,26,46,0.45);font-size:13px;line-height:1.5;margin:16px 0 0;">${paragraphsHtml(f.ctaSubtext)}</div>
     </div>
 
-    <div style="background:rgba(139,92,246,0.08);border:1px solid rgba(139,92,246,0.15);border-radius:10px;padding:20px;margin-bottom:24px;">
+    <div style="background:rgba(108,58,237,0.05);border:1px solid rgba(108,58,237,0.12);border-radius:10px;padding:20px;margin-bottom:24px;">
       <p style="color:#6C3AED;font-size:13px;font-weight:600;margin:0 0 8px;">${f.gettingStartedTitle || ''}</p>
       <ul style="color:rgba(26,26,46,0.55);font-size:13px;line-height:1.8;margin:0;padding:0 0 0 18px;">${bulletsHtml(f.bullets)}</ul>
     </div>
 
     <div style="text-align:center;padding-top:16px;border-top:1px solid rgba(0,0,0,0.05);">
-      <p style="color:rgba(26,26,46,0.2);font-size:11px;margin:0;">${f.signoff || ''}<br><a href="https://my-yara.com" style="color:rgba(139,92,246,0.6);text-decoration:none;">my-yara.com</a></p>
+      <p style="color:rgba(26,26,46,0.2);font-size:11px;margin:0;">${f.signoff || ''}<br><a href="https://my-yara.com" style="color:#6C3AED;text-decoration:none;">my-yara.com</a></p>
     </div>
   </div>
 </body>

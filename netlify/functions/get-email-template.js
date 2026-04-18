@@ -23,57 +23,57 @@ const TEMPLATE_FILES = {
 const WELCOME_HTML_DEFAULT = `<!DOCTYPE html>
 <html>
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
-<body style="margin:0;padding:0;background:#0B0D17;font-family:'DM Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
+<body style="margin:0;padding:0;background:#FDFCFF;font-family:'DM Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
   <div style="max-width:520px;margin:0 auto;padding:40px 24px;">
 
     <div style="text-align:center;margin-bottom:32px;">
-      <h1 style="color:#fff;font-size:26px;font-weight:800;margin:0;letter-spacing:-0.03em;">You're on the list.</h1>
-      <p style="color:rgba(255,255,255,0.55);font-size:15px;margin:10px 0 0;font-weight:400;">Welcome, {{firstName}}.</p>
+      <h1 style="color:#1A1A2E;font-size:26px;font-weight:800;margin:0;letter-spacing:-0.03em;">You're on the list.</h1>
+      <p style="color:#4A4A68;font-size:15px;margin:10px 0 0;font-weight:400;">Welcome.</p>
     </div>
 
-    <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:24px;margin-bottom:20px;">
-      <p style="color:rgba(255,255,255,0.85);font-size:15px;line-height:1.65;margin:0 0 14px;">
+    <div style="background:rgba(0,0,0,0.03);border:1px solid rgba(0,0,0,0.07);border-radius:20px;padding:24px;margin-bottom:20px;">
+      <p style="color:#1A1A2E;font-size:15px;line-height:1.65;margin:0 0 14px;">
         Thanks for signing up — we're glad you're here.
       </p>
-      <p style="color:rgba(255,255,255,0.7);font-size:14px;line-height:1.65;margin:0;">
+      <p style="color:#4A4A68;font-size:14px;line-height:1.65;margin:0;">
         Yara is an AI advocate that fights to save you money. She analyzes your bills, finds overcharges and better deals, then takes action — negotiating with providers, switching plans, and cancelling services you don't need. No more sitting on hold.
       </p>
     </div>
 
-    <div style="background:linear-gradient(135deg,rgba(108,58,237,0.18),rgba(167,139,250,0.10));border:1px solid rgba(108,58,237,0.32);border-radius:20px;padding:24px;margin-bottom:20px;text-align:center;">
-      <p style="color:#A78BFA;font-size:11px;font-weight:700;margin:0 0 10px;text-transform:uppercase;letter-spacing:0.1em;">A thank-you for joining early</p>
-      <p style="color:#fff;font-size:20px;font-weight:800;margin:0 0 10px;line-height:1.3;letter-spacing:-0.02em;">6 months of Yara, free on us</p>
-      <p style="color:rgba(255,255,255,0.65);font-size:13px;line-height:1.6;margin:0;">
+    <div style="background:linear-gradient(135deg,rgba(108,58,237,0.08),rgba(167,139,250,0.05));border:1px solid rgba(108,58,237,0.2);border-radius:20px;padding:24px;margin-bottom:20px;text-align:center;">
+      <p style="color:#6C3AED;font-size:11px;font-weight:700;margin:0 0 10px;text-transform:uppercase;letter-spacing:0.1em;">A thank-you for joining early</p>
+      <p style="color:#1A1A2E;font-size:20px;font-weight:800;margin:0 0 10px;line-height:1.3;letter-spacing:-0.02em;">6 months of Yara, free on us</p>
+      <p style="color:#8888A4;font-size:13px;line-height:1.6;margin:0;">
         No card up front. No fine print. Yours when we open your spot.
       </p>
     </div>
 
-    <div style="color:rgba(255,255,255,0.7);font-size:14px;line-height:1.65;margin-bottom:20px;padding:0 4px;">
+    <div style="color:#4A4A68;font-size:14px;line-height:1.65;margin-bottom:20px;padding:0 4px;">
       <p style="margin:0;">
         We're letting people in carefully so she can give every early member real attention. We don't have a fixed date yet — but when your invite arrives, you'll get a private App Store link and be up and running in minutes.
       </p>
     </div>
 
-    <div style="background:rgba(108,58,237,0.08);border:1px solid rgba(108,58,237,0.15);border-radius:14px;padding:18px 20px;margin-bottom:24px;">
-      <p style="color:#A78BFA;font-size:11px;font-weight:700;margin:0 0 6px;text-transform:uppercase;letter-spacing:0.1em;">One small favor</p>
-      <p style="color:rgba(255,255,255,0.7);font-size:13px;line-height:1.6;margin:0;">
-        Add <strong style="color:rgba(255,255,255,0.9);">hello@my-yara.com</strong> to your contacts so our invite lands in your inbox, not spam.
+    <div style="background:rgba(108,58,237,0.05);border:1px solid rgba(108,58,237,0.12);border-radius:14px;padding:18px 20px;margin-bottom:24px;">
+      <p style="color:#6C3AED;font-size:11px;font-weight:700;margin:0 0 6px;text-transform:uppercase;letter-spacing:0.1em;">One small favor</p>
+      <p style="color:#4A4A68;font-size:13px;line-height:1.6;margin:0;">
+        Add <strong style="color:#1A1A2E;">hello@my-yara.com</strong> to your contacts so our invite lands in your inbox, not spam.
       </p>
     </div>
 
     <div style="text-align:center;padding-top:8px;">
-      <p style="color:rgba(255,255,255,0.5);font-size:13px;line-height:1.6;margin:0 0 6px;">
+      <p style="color:#8888A4;font-size:13px;line-height:1.6;margin:0 0 6px;">
         Questions? Just reply — we read every message.
       </p>
-      <p style="color:rgba(255,255,255,0.4);font-size:13px;margin:0;">
+      <p style="color:#8888A4;font-size:13px;margin:0;">
         — The Yara team
       </p>
     </div>
 
-    <div style="text-align:center;padding-top:24px;margin-top:24px;border-top:1px solid rgba(255,255,255,0.06);">
-      <p style="color:rgba(255,255,255,0.25);font-size:11px;margin:0;">
+    <div style="text-align:center;padding-top:24px;margin-top:24px;border-top:1px solid rgba(0,0,0,0.06);">
+      <p style="color:rgba(26,26,46,0.3);font-size:11px;margin:0;">
         Yara — Optimize Every Dollar. Protect Every Right.<br>
-        <a href="https://my-yara.com" style="color:#A78BFA;text-decoration:none;">my-yara.com</a>
+        <a href="https://my-yara.com" style="color:#6C3AED;text-decoration:none;">my-yara.com</a>
       </p>
     </div>
   </div>
@@ -86,41 +86,41 @@ const DEFAULT_TEMPLATES = {
         html: `<!DOCTYPE html>
 <html>
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
-<body style="margin:0;padding:0;background:#0A0A0A;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
+<body style="margin:0;padding:0;background:#FDFCFF;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
   <div style="max-width:520px;margin:0 auto;padding:40px 24px;">
     <div style="text-align:center;margin-bottom:32px;">
-      <h1 style="color:#fff;font-size:24px;font-weight:700;margin:0;">Welcome to Yara</h1>
-      <p style="color:rgba(255,255,255,0.5);font-size:14px;margin:8px 0 0;">You're in. Early access is yours.</p>
+      <h1 style="color:#1A1A2E;font-size:24px;font-weight:700;margin:0;">Welcome to Yara</h1>
+      <p style="color:#8888A4;font-size:14px;margin:8px 0 0;">You're in. Early access is yours.</p>
     </div>
 
-    <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:24px;margin-bottom:24px;">
-      <p style="color:rgba(255,255,255,0.8);font-size:15px;line-height:1.6;margin:0 0 16px;">
+    <div style="background:rgba(0,0,0,0.03);border:1px solid rgba(0,0,0,0.08);border-radius:12px;padding:24px;margin-bottom:24px;">
+      <p style="color:#1A1A2E;font-size:15px;line-height:1.6;margin:0 0 16px;">
         Your early access request has been approved. You can now download Yara directly from the App Store.
       </p>
       <div style="text-align:center;margin:24px 0;">
-        <a href="{{appStoreLink}}" style="display:inline-block;background:linear-gradient(135deg,#8B5CF6,#7C3AED);color:#fff;text-decoration:none;padding:14px 32px;border-radius:10px;font-size:16px;font-weight:600;">
+        <a href="{{appStoreLink}}" style="display:inline-block;background:linear-gradient(135deg,#6C3AED,#7C3AED);color:#fff;text-decoration:none;padding:14px 32px;border-radius:999px;font-size:16px;font-weight:600;">
           Download Yara
         </a>
       </div>
-      <p style="color:rgba(255,255,255,0.5);font-size:13px;line-height:1.5;margin:16px 0 0;">
+      <p style="color:#8888A4;font-size:13px;line-height:1.5;margin:16px 0 0;">
         Open this link on your iPhone to install. The app is available exclusively to early access members like you.
       </p>
     </div>
 
-    <div style="background:rgba(139,92,246,0.08);border:1px solid rgba(139,92,246,0.15);border-radius:10px;padding:20px;margin-bottom:24px;">
-      <p style="color:#8B5CF6;font-size:13px;font-weight:600;margin:0 0 8px;">Getting started</p>
-      <ul style="color:rgba(255,255,255,0.6);font-size:13px;line-height:1.8;margin:0;padding:0 0 0 18px;">
-        <li>Open Yara and sign in with <strong style="color:rgba(255,255,255,0.8);">{{email}}</strong></li>
+    <div style="background:rgba(108,58,237,0.05);border:1px solid rgba(108,58,237,0.12);border-radius:10px;padding:20px;margin-bottom:24px;">
+      <p style="color:#6C3AED;font-size:13px;font-weight:600;margin:0 0 8px;">Getting started</p>
+      <ul style="color:#4A4A68;font-size:13px;line-height:1.8;margin:0;padding:0 0 0 18px;">
+        <li>Open Yara and sign in with <strong style="color:#1A1A2E;">{{email}}</strong></li>
         <li>Connect a bank account to unlock financial insights</li>
         <li>Ask Yara anything about your bills, subscriptions, or spending</li>
         <li>Share feedback directly in the app — we read every message</li>
       </ul>
     </div>
 
-    <div style="text-align:center;padding-top:16px;border-top:1px solid rgba(255,255,255,0.06);">
-      <p style="color:rgba(255,255,255,0.25);font-size:11px;margin:0;">
+    <div style="text-align:center;padding-top:16px;border-top:1px solid rgba(0,0,0,0.06);">
+      <p style="color:rgba(26,26,46,0.3);font-size:11px;margin:0;">
         Yara — Your Personal AI Advocate<br>
-        <a href="https://my-yara.com" style="color:rgba(139,92,246,0.6);text-decoration:none;">my-yara.com</a>
+        <a href="https://my-yara.com" style="color:#6C3AED;text-decoration:none;">my-yara.com</a>
       </p>
     </div>
   </div>
