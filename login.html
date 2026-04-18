@@ -26,8 +26,8 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      background: #0A0A0A;
-      color: #FFFFFF;
+      background: #FDFCFF;
+      color: #1A1A2E;
       overflow: hidden;
       position: relative;
     }
@@ -73,7 +73,7 @@
     .brand img {
       width: 36px;
       height: 36px;
-      filter: brightness(0) invert(1);
+      /* logo is naturally dark on light bg */
     }
 
     .brand span {
@@ -81,13 +81,13 @@
       font-size: 24px;
       font-weight: 700;
       letter-spacing: -0.02em;
-      color: #FFFFFF;
+      color: #1A1A2E;
     }
 
     /* Card */
     .login-card {
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(0,0,0,0.03);
+      border: 1px solid rgba(0,0,0,0.06);
       border-radius: 20px;
       padding: 40px 36px;
       backdrop-filter: blur(40px);
@@ -99,13 +99,13 @@
       font-size: 22px;
       font-weight: 700;
       letter-spacing: -0.02em;
-      color: #FFFFFF;
+      color: #1A1A2E;
       margin-bottom: 6px;
     }
 
     .login-card .subtitle {
       font-size: 14px;
-      color: rgba(255,255,255,0.45);
+      color: rgba(26,26,46,0.4);
       margin-bottom: 32px;
       line-height: 1.5;
     }
@@ -119,30 +119,30 @@
       display: block;
       font-size: 13px;
       font-weight: 500;
-      color: rgba(255,255,255,0.55);
+      color: rgba(26,26,46,0.5);
       margin-bottom: 8px;
     }
 
     .form-group input {
       width: 100%;
       padding: 13px 16px;
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(0,0,0,0.05);
+      border: 1px solid rgba(0,0,0,0.08);
       border-radius: 12px;
       font-size: 15px;
       font-family: 'Inter', sans-serif;
-      color: #FFFFFF;
+      color: #1A1A2E;
       outline: none;
       transition: border-color 0.2s ease, background 0.2s ease;
     }
 
     .form-group input::placeholder {
-      color: rgba(255,255,255,0.25);
+      color: rgba(26,26,46,0.2);
     }
 
     .form-group input:focus {
       border-color: rgba(139,92,246,0.5);
-      background: rgba(255,255,255,0.08);
+      background: rgba(0,0,0,0.06);
     }
 
     /* Error message */
@@ -158,7 +158,7 @@
     .submit-btn {
       width: 100%;
       padding: 14px;
-      background: linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%);
+      background: linear-gradient(135deg, #6C3AED 0%, #7C3AED 100%);
       color: #FFFFFF;
       border: none;
       border-radius: 12px;
@@ -194,7 +194,7 @@
       display: none;
       width: 18px;
       height: 18px;
-      border: 2px solid rgba(255,255,255,0.3);
+      border: 2px solid rgba(26,26,46,0.25);
       border-top-color: #FFFFFF;
       border-radius: 50%;
       animation: spin 0.6s linear infinite;
@@ -221,12 +221,12 @@
       content: '';
       flex: 1;
       height: 1px;
-      background: rgba(255,255,255,0.08);
+      background: rgba(0,0,0,0.06);
     }
 
     .divider span {
       font-size: 12px;
-      color: rgba(255,255,255,0.3);
+      color: rgba(26,26,46,0.25);
       text-transform: uppercase;
       letter-spacing: 0.05em;
     }
@@ -237,13 +237,13 @@
       text-align: center;
       margin-top: 24px;
       font-size: 13px;
-      color: rgba(255,255,255,0.35);
+      color: rgba(26,26,46,0.3);
       text-decoration: none;
       transition: color 0.2s ease;
     }
 
     .back-link:hover {
-      color: rgba(255,255,255,0.6);
+      color: rgba(26,26,46,0.55);
     }
 
     /* Forgot password */

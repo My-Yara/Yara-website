@@ -18,80 +18,80 @@
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-    html,body{height:100%;font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;-webkit-font-smoothing:antialiased;background:#0A0A0A;color:#fff}
+    html,body{height:100%;font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;-webkit-font-smoothing:antialiased;background:#FDFCFF;color:#1A1A2E}
 
     /* Topbar */
-    .topbar{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:10px 20px;background:rgba(10,10,10,0.9);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,0.06)}
+    .topbar{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:10px 20px;background:rgba(253,252,255,0.95);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid rgba(0,0,0,0.05)}
     .topbar .brand{display:flex;align-items:center;gap:8px;text-decoration:none}
-    .topbar .brand img{width:24px;height:24px;filter:brightness(0) invert(1)}
-    .topbar .brand span{font-family:'Plus Jakarta Sans',sans-serif;font-size:16px;font-weight:700;color:#fff;letter-spacing:-0.02em}
+    .topbar .brand img{width:24px;height:24px;}
+    .topbar .brand span{font-family:'Plus Jakarta Sans',sans-serif;font-size:16px;font-weight:700;color:#1A1A2E;letter-spacing:-0.02em}
     .topbar .right{display:flex;align-items:center;gap:12px}
-    .topbar .user-email{font-size:12px;color:rgba(255,255,255,0.4)}
-    .nav-link{padding:5px 12px;border-radius:6px;font-size:12px;font-weight:500;color:rgba(255,255,255,0.5);text-decoration:none;transition:all .15s}
-    .nav-link:hover{background:rgba(255,255,255,0.06);color:#fff}
-    .nav-link.active{background:rgba(139,92,246,0.15);color:#8B5CF6}
-    .btn-sm{padding:5px 12px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:rgba(255,255,255,0.7);font-size:12px;font-weight:500;cursor:pointer;transition:all .15s;font-family:inherit}
-    .btn-sm:hover{background:rgba(255,255,255,0.1);color:#fff}
+    .topbar .user-email{font-size:12px;color:rgba(26,26,46,0.35)}
+    .nav-link{padding:5px 12px;border-radius:6px;font-size:12px;font-weight:500;color:rgba(26,26,46,0.45);text-decoration:none;transition:all .15s}
+    .nav-link:hover{background:rgba(0,0,0,0.05);color:#1A1A2E}
+    .nav-link.active{background:rgba(139,92,246,0.15);color:#6C3AED}
+    .btn-sm{padding:5px 12px;background:rgba(0,0,0,0.05);border:1px solid rgba(0,0,0,0.08);border-radius:6px;color:rgba(26,26,46,0.65);font-size:12px;font-weight:500;cursor:pointer;transition:all .15s;font-family:inherit}
+    .btn-sm:hover{background:rgba(0,0,0,0.08);color:#1A1A2E}
 
     /* Layout */
     .main{display:grid;grid-template-columns:1fr 1fr;gap:0;height:calc(100vh - 45px);overflow:hidden}
 
     /* Editor pane */
-    .editor-pane{display:flex;flex-direction:column;border-right:1px solid rgba(255,255,255,0.06);overflow:hidden}
-    .pane-header{padding:14px 20px;border-bottom:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
-    .pane-title{font-size:12px;font-weight:600;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:0.05em}
+    .editor-pane{display:flex;flex-direction:column;border-right:1px solid rgba(0,0,0,0.05);overflow:hidden}
+    .pane-header{padding:14px 20px;border-bottom:1px solid rgba(0,0,0,0.05);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+    .pane-title{font-size:12px;font-weight:600;color:rgba(26,26,46,0.45);text-transform:uppercase;letter-spacing:0.05em}
     .editor-body{flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:16px}
 
     /* Template type switcher */
-    .type-tabs{display:flex;gap:0;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:3px;flex-shrink:0;margin:14px 20px 0}
-    .type-tab{flex:1;padding:7px 12px;border:none;background:none;color:rgba(255,255,255,0.5);font-size:12px;font-weight:600;cursor:pointer;border-radius:6px;transition:all .15s;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:6px}
-    .type-tab:hover:not(.active){color:rgba(255,255,255,0.8)}
-    .type-tab.active{background:linear-gradient(135deg,#8B5CF6,#7C3AED);color:#fff}
+    .type-tabs{display:flex;gap:0;background:rgba(0,0,0,0.03);border:1px solid rgba(0,0,0,0.06);border-radius:8px;padding:3px;flex-shrink:0;margin:14px 20px 0}
+    .type-tab{flex:1;padding:7px 12px;border:none;background:none;color:rgba(26,26,46,0.45);font-size:12px;font-weight:600;cursor:pointer;border-radius:6px;transition:all .15s;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:6px}
+    .type-tab:hover:not(.active){color:#1A1A2E}
+    .type-tab.active{background:linear-gradient(135deg,#6C3AED,#7C3AED);color:#fff}
     .type-tab .badge{font-size:10px;opacity:0.7;font-weight:500}
     .type-tab.active .badge{opacity:1}
 
     /* Form fields */
-    .field-label{font-size:11px;font-weight:600;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:6px}
-    .field-input{width:100%;padding:9px 12px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:8px;font-size:13px;font-family:'Inter',sans-serif;color:#fff;outline:none;transition:border-color .15s}
+    .field-label{font-size:11px;font-weight:600;color:rgba(26,26,46,0.3);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:6px}
+    .field-input{width:100%;padding:9px 12px;background:rgba(0,0,0,0.05);border:1px solid rgba(0,0,0,0.08);border-radius:8px;font-size:13px;font-family:'Inter',sans-serif;color:#1A1A2E;outline:none;transition:border-color .15s}
     .field-input:focus{border-color:rgba(139,92,246,0.5)}
-    .field-input::placeholder{color:rgba(255,255,255,0.2)}
+    .field-input::placeholder{color:rgba(26,26,46,0.15)}
     textarea.field-input{resize:vertical;min-height:380px;font-family:'Fira Code','SF Mono',monospace;font-size:12px;line-height:1.6}
 
     /* Variables reference */
     .vars-card{background:rgba(139,92,246,0.06);border:1px solid rgba(139,92,246,0.12);border-radius:8px;padding:12px 14px}
-    .vars-title{font-size:10px;font-weight:700;color:#8B5CF6;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px}
+    .vars-title{font-size:10px;font-weight:700;color:#6C3AED;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px}
     .vars-grid{display:flex;flex-wrap:wrap;gap:6px}
-    .var-chip{padding:3px 8px;background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.2);border-radius:4px;font-size:11px;font-family:'Fira Code','SF Mono',monospace;color:#a78bfa;cursor:pointer;user-select:all}
+    .var-chip{padding:3px 8px;background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.2);border-radius:4px;font-size:11px;font-family:'Fira Code','SF Mono',monospace;color:#7C3AED;cursor:pointer;user-select:all}
     .var-chip:hover{background:rgba(139,92,246,0.2)}
-    .vars-desc{margin-top:8px;font-size:11px;color:rgba(255,255,255,0.3);line-height:1.5}
+    .vars-desc{margin-top:8px;font-size:11px;color:rgba(26,26,46,0.25);line-height:1.5}
 
     /* Action bar */
-    .action-bar{padding:12px 20px;border-top:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;gap:10px;flex-shrink:0}
-    .btn-save{padding:8px 20px;background:linear-gradient(135deg,#8B5CF6,#7C3AED);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s}
+    .action-bar{padding:12px 20px;border-top:1px solid rgba(0,0,0,0.05);display:flex;align-items:center;gap:10px;flex-shrink:0}
+    .btn-save{padding:8px 20px;background:linear-gradient(135deg,#6C3AED,#7C3AED);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s}
     .btn-save:hover:not(:disabled){box-shadow:0 4px 16px rgba(139,92,246,0.3);transform:translateY(-1px)}
     .btn-save:disabled{opacity:0.5;cursor:not-allowed}
-    .btn-reset{padding:8px 16px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.6);border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;font-family:inherit;transition:all .15s}
-    .btn-reset:hover{background:rgba(255,255,255,0.1);color:#fff}
-    .save-status{font-size:12px;color:rgba(255,255,255,0.3);margin-left:auto}
+    .btn-reset{padding:8px 16px;background:rgba(0,0,0,0.05);border:1px solid rgba(0,0,0,0.08);color:rgba(26,26,46,0.55);border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;font-family:inherit;transition:all .15s}
+    .btn-reset:hover{background:rgba(0,0,0,0.08);color:#1A1A2E}
+    .save-status{font-size:12px;color:rgba(26,26,46,0.25);margin-left:auto}
     .save-status.ok{color:#22C55E}
     .save-status.err{color:#EF4444}
 
     /* Preview pane */
     .preview-pane{display:flex;flex-direction:column;overflow:hidden}
-    .preview-tabs{padding:0 20px;border-bottom:1px solid rgba(255,255,255,0.06);display:flex;gap:2px;flex-shrink:0;padding-top:8px}
-    .preview-tab{padding:6px 14px;border-radius:6px 6px 0 0;font-size:12px;font-weight:500;color:rgba(255,255,255,0.4);cursor:pointer;transition:all .15s;border:none;background:none;font-family:inherit}
-    .preview-tab.active{background:rgba(255,255,255,0.06);color:#fff}
+    .preview-tabs{padding:0 20px;border-bottom:1px solid rgba(0,0,0,0.05);display:flex;gap:2px;flex-shrink:0;padding-top:8px}
+    .preview-tab{padding:6px 14px;border-radius:6px 6px 0 0;font-size:12px;font-weight:500;color:rgba(26,26,46,0.35);cursor:pointer;transition:all .15s;border:none;background:none;font-family:inherit}
+    .preview-tab.active{background:rgba(0,0,0,0.05);color:#1A1A2E}
     .preview-frame{flex:1;overflow:hidden;position:relative}
     iframe#previewFrame{width:100%;height:100%;border:none;background:#fff}
-    .preview-source{flex:1;overflow-y:auto;padding:16px 20px;font-family:'Fira Code','SF Mono',monospace;font-size:11px;line-height:1.6;color:rgba(255,255,255,0.5);white-space:pre-wrap;word-break:break-all;display:none}
+    .preview-source{flex:1;overflow-y:auto;padding:16px 20px;font-family:'Fira Code','SF Mono',monospace;font-size:11px;line-height:1.6;color:rgba(26,26,46,0.45);white-space:pre-wrap;word-break:break-all;display:none}
 
     /* Auth gate */
     .auth-gate{display:flex;align-items:center;justify-content:center;height:100vh;text-align:center}
-    .auth-gate p{color:rgba(255,255,255,0.4);font-size:14px;margin-bottom:16px}
-    .btn-login{padding:10px 24px;background:linear-gradient(135deg,#8B5CF6,#7C3AED);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s}
+    .auth-gate p{color:rgba(26,26,46,0.35);font-size:14px;margin-bottom:16px}
+    .btn-login{padding:10px 24px;background:linear-gradient(135deg,#6C3AED,#7C3AED);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s}
     .btn-login:hover{box-shadow:0 8px 24px rgba(139,92,246,0.3);transform:translateY(-1px)}
 
-    .spinner-sm{width:20px;height:20px;border:2px solid rgba(255,255,255,0.1);border-top-color:#8B5CF6;border-radius:50%;animation:spin .6s linear infinite;display:inline-block;vertical-align:middle;margin-right:6px}
+    .spinner-sm{width:20px;height:20px;border:2px solid rgba(0,0,0,0.08);border-top-color:#6C3AED;border-radius:50%;animation:spin .6s linear infinite;display:inline-block;vertical-align:middle;margin-right:6px}
     @keyframes spin{to{transform:rotate(360deg)}}
 
     /* Toast */
@@ -102,71 +102,65 @@
 
     @media(max-width:900px){
       .main{grid-template-columns:1fr;grid-template-rows:1fr 1fr}
-      .editor-pane{border-right:none;border-bottom:1px solid rgba(255,255,255,0.06)}
+      .editor-pane{border-right:none;border-bottom:1px solid rgba(0,0,0,0.05)}
     }
 
     /* ── Editor mode tabs (Visual / Source) ───────────────── */
     .editor-mode-tabs{display:flex;gap:4px;margin-bottom:8px}
-    .editor-mode-tab{padding:5px 11px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:6px;color:rgba(255,255,255,0.5);font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .15s;display:inline-flex;align-items:center;gap:6px}
-    .editor-mode-tab:hover:not(.active){color:rgba(255,255,255,0.85);background:rgba(255,255,255,0.07)}
-    .editor-mode-tab.active{background:rgba(139,92,246,0.15);border-color:rgba(139,92,246,0.3);color:#a78bfa}
-    .editor-mode-hint{margin-left:auto;font-size:10px;color:rgba(255,255,255,0.3);font-weight:400}
+    .editor-mode-tab{padding:5px 11px;background:rgba(0,0,0,0.03);border:1px solid rgba(0,0,0,0.06);border-radius:6px;color:rgba(26,26,46,0.45);font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .15s;display:inline-flex;align-items:center;gap:6px}
+    .editor-mode-tab:hover:not(.active){color:#1A1A2E;background:rgba(0,0,0,0.05)}
+    .editor-mode-tab.active{background:rgba(108,58,237,0.12);border-color:rgba(108,58,237,0.25);color:#6C3AED}
+    .editor-mode-hint{margin-left:auto;font-size:10px;color:rgba(26,26,46,0.25);font-weight:400}
 
     .editor-mode-content{display:none}
     .editor-mode-content.active{display:block}
 
     /* ── Form mode fields ─────────────────────────────────── */
-    .form-section{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:14px 16px;margin-bottom:10px}
-    .form-section-title{font-size:10px;font-weight:700;color:#a78bfa;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:10px;display:flex;align-items:center;gap:6px}
-    .form-section-title .sec-num{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:4px;background:rgba(139,92,246,0.15);color:#a78bfa;font-size:9px;font-weight:700}
+    .form-section{background:rgba(0,0,0,0.02);border:1px solid rgba(0,0,0,0.05);border-radius:10px;padding:14px 16px;margin-bottom:10px}
+    .form-section-title{font-size:10px;font-weight:700;color:#7C3AED;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+    .form-section-title .sec-num{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:4px;background:rgba(139,92,246,0.15);color:#7C3AED;font-size:9px;font-weight:700}
     .form-field{margin-bottom:10px}
     .form-field:last-child{margin-bottom:0}
-    .form-field-label{font-size:11px;font-weight:500;color:rgba(255,255,255,0.55);margin-bottom:5px;display:flex;align-items:center;gap:6px}
-    .form-field-label .hint{font-weight:400;color:rgba(255,255,255,0.3);font-size:10px}
+    .form-field-label{font-size:11px;font-weight:500;color:rgba(26,26,46,0.5);margin-bottom:5px;display:flex;align-items:center;gap:6px}
+    .form-field-label .hint{font-weight:400;color:rgba(26,26,46,0.25);font-size:10px}
     .form-field input[type=text],
-    .form-field textarea{width:100%;padding:8px 11px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:6px;font-size:13px;font-family:'Inter',sans-serif;color:#fff;outline:none;transition:border-color .15s;line-height:1.5}
+    .form-field textarea{width:100%;padding:8px 11px;background:rgba(0,0,0,0.05);border:1px solid rgba(0,0,0,0.08);border-radius:6px;font-size:13px;font-family:'Inter',sans-serif;color:#1A1A2E;outline:none;transition:border-color .15s;line-height:1.5}
     .form-field input[type=text]:focus,
-    .form-field textarea:focus{border-color:rgba(139,92,246,0.5);background:rgba(255,255,255,0.08)}
+    .form-field textarea:focus{border-color:rgba(139,92,246,0.5);background:rgba(0,0,0,0.06)}
     .form-field textarea{resize:vertical;min-height:70px;font-family:'Inter',sans-serif}
     .form-field input[type=text]::placeholder,
-    .form-field textarea::placeholder{color:rgba(255,255,255,0.22)}
+    .form-field textarea::placeholder{color:rgba(26,26,46,0.2)}
 
-    /* ── Quill dark theme overrides ───────────────────────── */
-    .ql-toolbar.ql-snow{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-bottom:none;border-radius:8px 8px 0 0;padding:8px 10px}
-    .ql-container.ql-snow{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:0 0 8px 8px;font-family:'Inter',sans-serif;font-size:13px}
-    .ql-editor{color:#fff;min-height:340px;max-height:50vh;line-height:1.65;font-family:'Inter',sans-serif;padding:14px 16px}
-    .ql-editor.ql-blank::before{color:rgba(255,255,255,0.25);font-style:normal;font-family:'Inter',sans-serif;left:16px;right:16px}
-    .ql-editor h1,.ql-editor h2,.ql-editor h3{color:#fff;font-weight:700}
-    .ql-editor a{color:#a78bfa;text-decoration:underline}
-    .ql-editor blockquote{border-left:3px solid rgba(139,92,246,0.5);padding-left:12px;color:rgba(255,255,255,0.75)}
-
-    .ql-snow .ql-stroke{stroke:rgba(255,255,255,0.65)}
-    .ql-snow .ql-fill{fill:rgba(255,255,255,0.65)}
-    .ql-snow .ql-picker{color:rgba(255,255,255,0.65)}
-    .ql-snow .ql-picker-options{background:#1a1a1a;border-color:rgba(255,255,255,0.12)}
+    /* ── Quill light theme refinements ──────────────────── */
+    .ql-toolbar.ql-snow{background:#F5F2FF;border:1px solid rgba(0,0,0,0.08);border-bottom:none;border-radius:8px 8px 0 0;padding:8px 10px}
+    .ql-container.ql-snow{background:#fff;border:1px solid rgba(0,0,0,0.08);border-radius:0 0 8px 8px;font-family:'Inter',sans-serif;font-size:13px}
+    .ql-editor{color:#1A1A2E;min-height:340px;max-height:50vh;line-height:1.65;font-family:'Inter',sans-serif;padding:14px 16px}
+    .ql-editor.ql-blank::before{color:#8888A4;font-style:normal;font-family:'Inter',sans-serif;left:16px;right:16px}
+    .ql-editor h1,.ql-editor h2,.ql-editor h3{color:#1A1A2E;font-weight:700}
+    .ql-editor a{color:#6C3AED;text-decoration:underline}
+    .ql-editor blockquote{border-left:3px solid #6C3AED;padding-left:12px;color:#4A4A68}
     .ql-snow .ql-toolbar button:hover .ql-stroke,
-    .ql-snow .ql-toolbar .ql-picker-label:hover .ql-stroke{stroke:#a78bfa}
+    .ql-snow .ql-toolbar .ql-picker-label:hover .ql-stroke{stroke:#6C3AED}
     .ql-snow .ql-toolbar button:hover .ql-fill,
-    .ql-snow .ql-toolbar .ql-picker-label:hover .ql-fill{fill:#a78bfa}
+    .ql-snow .ql-toolbar .ql-picker-label:hover .ql-fill{fill:#6C3AED}
     .ql-snow .ql-toolbar button.ql-active .ql-stroke,
-    .ql-snow .ql-toolbar .ql-picker-label.ql-active .ql-stroke{stroke:#8B5CF6}
+    .ql-snow .ql-toolbar .ql-picker-label.ql-active .ql-stroke{stroke:#5B21B6}
     .ql-snow .ql-toolbar button.ql-active .ql-fill,
-    .ql-snow .ql-toolbar .ql-picker-label.ql-active .ql-fill{fill:#8B5CF6}
+    .ql-snow .ql-toolbar .ql-picker-label.ql-active .ql-fill{fill:#5B21B6}
     .ql-snow .ql-toolbar .ql-picker-label:hover,
-    .ql-snow .ql-toolbar .ql-picker-label.ql-active{color:#a78bfa}
-    .ql-snow .ql-picker-item:hover{color:#a78bfa}
-    .ql-snow a{color:#a78bfa}
-    .ql-tooltip{background:#1a1a1a!important;border:1px solid rgba(255,255,255,0.15)!important;border-radius:8px!important;color:#fff!important;box-shadow:0 8px 24px rgba(0,0,0,0.5)!important;padding:6px 10px!important}
-    .ql-tooltip input[type=text]{background:rgba(255,255,255,0.06)!important;border:1px solid rgba(255,255,255,0.15)!important;color:#fff!important;border-radius:4px!important}
-    .ql-tooltip::before{color:rgba(255,255,255,0.5)!important}
-    .ql-tooltip a.ql-action::after,.ql-tooltip a.ql-remove::before{color:#a78bfa!important}
+    .ql-snow .ql-toolbar .ql-picker-label.ql-active{color:#6C3AED}
+    .ql-snow a{color:#6C3AED}
+    .ql-tooltip{background:#fff!important;border:1px solid rgba(0,0,0,0.1)!important;border-radius:8px!important;color:#1A1A2E!important;box-shadow:0 4px 16px rgba(108,58,237,0.08)!important;padding:6px 10px!important}
+    .ql-tooltip input[type=text]{background:#F5F2FF!important;border:1px solid rgba(0,0,0,0.1)!important;color:#1A1A2E!important;border-radius:4px!important}
+    .ql-tooltip::before{color:#4A4A68!important}
+    .ql-tooltip a.ql-action::after,.ql-tooltip a.ql-remove::before{color:#6C3AED!important}
   </style>
 </head>
 <body>
 
   <div id="authGate" class="auth-gate" style="display:none;">
     <div>
-      <img src="yara_butterfly.png" alt="Yara" style="width:48px;height:48px;filter:brightness(0) invert(1);margin-bottom:20px;">
+      <img src="yara_butterfly.png" alt="Yara" style="width:48px;height:48px;;margin-bottom:20px;">
       <p>You need to sign in to access this page.</p>
       <button class="btn-login" onclick="window.location.href='/login.html?redirect=/email-template.html'">Sign In</button>
     </div>
@@ -196,7 +190,7 @@
       <div class="editor-pane">
         <div class="pane-header">
           <span class="pane-title">Template Editor</span>
-          <span id="lastUpdated" style="font-size:11px;color:rgba(255,255,255,0.25);"></span>
+          <span id="lastUpdated" style="font-size:11px;color:rgba(26,26,46,0.2);"></span>
         </div>
         <div class="type-tabs">
           <button class="type-tab" data-type="welcome">
@@ -250,9 +244,9 @@
               <span class="var-chip" title="Click to copy">{{appStoreLink}}</span>
             </div>
             <div class="vars-desc">
-              <strong style="color:rgba(255,255,255,0.5);">{{email}}</strong> — recipient's full email address<br>
-              <strong style="color:rgba(255,255,255,0.5);">{{firstName}}</strong> — derived from email prefix (e.g. john.doe@… → John Doe)<br>
-              <strong style="color:rgba(255,255,255,0.5);">{{appStoreLink}}</strong> — App Store URL <em style="color:rgba(255,255,255,0.25);">(invite only — substituted to "#" in welcome emails)</em>
+              <strong style="color:rgba(26,26,46,0.45);">{{email}}</strong> — recipient's full email address<br>
+              <strong style="color:rgba(26,26,46,0.45);">{{firstName}}</strong> — derived from email prefix (e.g. john.doe@… → John Doe)<br>
+              <strong style="color:rgba(26,26,46,0.45);">{{appStoreLink}}</strong> — App Store URL <em style="color:rgba(26,26,46,0.2);">(invite only — substituted to "#" in welcome emails)</em>
             </div>
           </div>
 
@@ -266,12 +260,12 @@
 
       <!-- ── Preview pane ── -->
       <div class="preview-pane">
-        <div style="padding:14px 20px 0;border-bottom:1px solid rgba(255,255,255,0.06);flex-shrink:0;display:flex;align-items:center;justify-content:space-between;">
+        <div style="padding:14px 20px 0;border-bottom:1px solid rgba(0,0,0,0.05);flex-shrink:0;display:flex;align-items:center;justify-content:space-between;">
           <div class="preview-tabs" style="padding:0;border:none;">
             <button class="preview-tab active" id="tabRendered">Rendered</button>
             <button class="preview-tab" id="tabSource">Source</button>
           </div>
-          <span style="font-size:11px;color:rgba(255,255,255,0.2);padding-bottom:8px;">Live preview</span>
+          <span style="font-size:11px;color:rgba(26,26,46,0.15);padding-bottom:8px;">Live preview</span>
         </div>
         <div class="preview-frame" id="renderedPane">
           <iframe id="previewFrame" title="Email preview" sandbox="allow-same-origin"></iframe>
@@ -482,34 +476,34 @@
   <div style="max-width:520px;margin:0 auto;padding:40px 24px;">
 
     <div style="text-align:center;margin-bottom:32px;">
-      <h1 style="color:#fff;font-size:26px;font-weight:800;margin:0;letter-spacing:-0.03em;">${f.headline || ''}</h1>
-      <p style="color:rgba(255,255,255,0.55);font-size:15px;margin:10px 0 0;font-weight:400;">${f.subtitle || ''}</p>
+      <h1 style="color:#1A1A2E;font-size:26px;font-weight:800;margin:0;letter-spacing:-0.03em;">${f.headline || ''}</h1>
+      <p style="color:rgba(26,26,46,0.5);font-size:15px;margin:10px 0 0;font-weight:400;">${f.subtitle || ''}</p>
     </div>
 
-    <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:24px;margin-bottom:20px;">
+    <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(0,0,0,0.06);border-radius:20px;padding:24px;margin-bottom:20px;">
       <div style="color:rgba(255,255,255,0.85);font-size:15px;line-height:1.65;margin:0 0 14px;">${paragraphsHtml(f.intro1)}</div>
-      <div style="color:rgba(255,255,255,0.7);font-size:14px;line-height:1.65;">${paragraphsHtml(f.intro2)}</div>
+      <div style="color:rgba(26,26,46,0.65);font-size:14px;line-height:1.65;">${paragraphsHtml(f.intro2)}</div>
     </div>
 
     <div style="background:linear-gradient(135deg,rgba(108,58,237,0.18),rgba(167,139,250,0.10));border:1px solid rgba(108,58,237,0.32);border-radius:20px;padding:24px;margin-bottom:20px;text-align:center;">
       <p style="color:#A78BFA;font-size:11px;font-weight:700;margin:0 0 10px;text-transform:uppercase;letter-spacing:0.1em;">${f.offerEyebrow || ''}</p>
-      <p style="color:#fff;font-size:20px;font-weight:800;margin:0 0 10px;line-height:1.3;letter-spacing:-0.02em;">${f.offerTitle || ''}</p>
+      <p style="color:#1A1A2E;font-size:20px;font-weight:800;margin:0 0 10px;line-height:1.3;letter-spacing:-0.02em;">${f.offerTitle || ''}</p>
       <p style="color:rgba(255,255,255,0.65);font-size:13px;line-height:1.6;margin:0;">${f.offerSubtitle || ''}</p>
     </div>
 
-    <div style="color:rgba(255,255,255,0.7);font-size:14px;line-height:1.65;margin-bottom:20px;padding:0 4px;">${paragraphsHtml(f.body)}</div>
+    <div style="color:rgba(26,26,46,0.65);font-size:14px;line-height:1.65;margin-bottom:20px;padding:0 4px;">${paragraphsHtml(f.body)}</div>
 
     <div style="background:rgba(108,58,237,0.08);border:1px solid rgba(108,58,237,0.15);border-radius:14px;padding:18px 20px;margin-bottom:24px;">
-      <div style="color:rgba(255,255,255,0.7);font-size:13px;line-height:1.6;">${paragraphsHtml(f.whitelistAsk)}</div>
+      <div style="color:rgba(26,26,46,0.65);font-size:13px;line-height:1.6;">${paragraphsHtml(f.whitelistAsk)}</div>
     </div>
 
     <div style="text-align:center;padding-top:8px;">
-      <p style="color:rgba(255,255,255,0.5);font-size:13px;line-height:1.6;margin:0 0 6px;">${f.closing || ''}</p>
-      <p style="color:rgba(255,255,255,0.4);font-size:13px;margin:0;">${f.signoff || ''}</p>
+      <p style="color:rgba(26,26,46,0.45);font-size:13px;line-height:1.6;margin:0 0 6px;">${f.closing || ''}</p>
+      <p style="color:rgba(26,26,46,0.35);font-size:13px;margin:0;">${f.signoff || ''}</p>
     </div>
 
-    <div style="text-align:center;padding-top:24px;margin-top:24px;border-top:1px solid rgba(255,255,255,0.06);">
-      <p style="color:rgba(255,255,255,0.25);font-size:11px;margin:0;">Yara — Optimize Every Dollar. Protect Every Right.<br><a href="https://my-yara.com" style="color:#A78BFA;text-decoration:none;">my-yara.com</a></p>
+    <div style="text-align:center;padding-top:24px;margin-top:24px;border-top:1px solid rgba(0,0,0,0.05);">
+      <p style="color:rgba(26,26,46,0.2);font-size:11px;margin:0;">Yara — Optimize Every Dollar. Protect Every Right.<br><a href="https://my-yara.com" style="color:#A78BFA;text-decoration:none;">my-yara.com</a></p>
     </div>
   </div>
 </body>
@@ -520,29 +514,29 @@
       return `<!DOCTYPE html>
 <html>
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
-<body style="margin:0;padding:0;background:#0A0A0A;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
+<body style="margin:0;padding:0;background:#FDFCFF;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
   <div style="max-width:520px;margin:0 auto;padding:40px 24px;">
 
     <div style="text-align:center;margin-bottom:32px;">
-      <h1 style="color:#fff;font-size:24px;font-weight:700;margin:0;">${f.headline || ''}</h1>
-      <p style="color:rgba(255,255,255,0.5);font-size:14px;margin:8px 0 0;">${f.subtitle || ''}</p>
+      <h1 style="color:#1A1A2E;font-size:24px;font-weight:700;margin:0;">${f.headline || ''}</h1>
+      <p style="color:rgba(26,26,46,0.45);font-size:14px;margin:8px 0 0;">${f.subtitle || ''}</p>
     </div>
 
-    <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:24px;margin-bottom:24px;">
+    <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(0,0,0,0.08);border-radius:12px;padding:24px;margin-bottom:24px;">
       <div style="color:rgba(255,255,255,0.8);font-size:15px;line-height:1.6;margin:0 0 16px;">${paragraphsHtml(f.intro)}</div>
       <div style="text-align:center;margin:24px 0;">
-        <a href="${f.ctaUrl || '#'}" style="display:inline-block;background:linear-gradient(135deg,#8B5CF6,#7C3AED);color:#fff;text-decoration:none;padding:14px 32px;border-radius:10px;font-size:16px;font-weight:600;">${f.ctaLabel || ''}</a>
+        <a href="${f.ctaUrl || '#'}" style="display:inline-block;background:linear-gradient(135deg,#6C3AED,#7C3AED);color:#1A1A2E;text-decoration:none;padding:14px 32px;border-radius:10px;font-size:16px;font-weight:600;">${f.ctaLabel || ''}</a>
       </div>
-      <div style="color:rgba(255,255,255,0.5);font-size:13px;line-height:1.5;margin:16px 0 0;">${paragraphsHtml(f.ctaSubtext)}</div>
+      <div style="color:rgba(26,26,46,0.45);font-size:13px;line-height:1.5;margin:16px 0 0;">${paragraphsHtml(f.ctaSubtext)}</div>
     </div>
 
     <div style="background:rgba(139,92,246,0.08);border:1px solid rgba(139,92,246,0.15);border-radius:10px;padding:20px;margin-bottom:24px;">
-      <p style="color:#8B5CF6;font-size:13px;font-weight:600;margin:0 0 8px;">${f.gettingStartedTitle || ''}</p>
-      <ul style="color:rgba(255,255,255,0.6);font-size:13px;line-height:1.8;margin:0;padding:0 0 0 18px;">${bulletsHtml(f.bullets)}</ul>
+      <p style="color:#6C3AED;font-size:13px;font-weight:600;margin:0 0 8px;">${f.gettingStartedTitle || ''}</p>
+      <ul style="color:rgba(26,26,46,0.55);font-size:13px;line-height:1.8;margin:0;padding:0 0 0 18px;">${bulletsHtml(f.bullets)}</ul>
     </div>
 
-    <div style="text-align:center;padding-top:16px;border-top:1px solid rgba(255,255,255,0.06);">
-      <p style="color:rgba(255,255,255,0.25);font-size:11px;margin:0;">${f.signoff || ''}<br><a href="https://my-yara.com" style="color:rgba(139,92,246,0.6);text-decoration:none;">my-yara.com</a></p>
+    <div style="text-align:center;padding-top:16px;border-top:1px solid rgba(0,0,0,0.05);">
+      <p style="color:rgba(26,26,46,0.2);font-size:11px;margin:0;">${f.signoff || ''}<br><a href="https://my-yara.com" style="color:rgba(139,92,246,0.6);text-decoration:none;">my-yara.com</a></p>
     </div>
   </div>
 </body>
