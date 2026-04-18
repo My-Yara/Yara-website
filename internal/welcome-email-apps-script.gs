@@ -16,11 +16,16 @@
  */
 
 // ───────────────────────────── Config ─────────────────────────────
-const RECIPIENT   = 'ain@my-yara.com';           // ← set recipient here
-const FIRST_NAME  = '';                          // ← optional; blank = derived from email prefix
+// Recipients: each gets an individualized copy (firstName derived from email).
+const RECIPIENTS = [
+  { email: 'ain@my-yara.com' },
+  { email: 'vikash@my-yara.com' }
+];
+
+const FROM_ADDRESS   = 'Hassan@my-yara.com';     // must be a Send-mail-as alias in the account running the script
+const FROM_NAME      = 'Yara';                   // shown as sender display name
+const REPLY_TO       = 'hello@my-yara.com';
 const APP_STORE_LINK = '#';                      // welcome template doesn't use this, kept for parity
-const FROM_NAME   = 'Yara';                      // shown as sender display name
-const REPLY_TO    = 'hello@my-yara.com';
 
 const SUBJECT = "Thanks for joining the Yara waitlist";
 
@@ -107,33 +112,9 @@ function deriveFirstName_(email) {
     .join(' ');
 }
 
-// ──────────────────────── Single-recipient send ────────────────────────
+// ──────────────────────── Send ────────────────────────
+// Sends an individualized welcome email to each address in RECIPIENTS.
 function sendWelcomeEmail() {
-  const firstName = FIRST_NAME || deriveFirstName_(RECIPIENT);
-  const html = interpolate_(WELCOME_HTML, {
-    email: RECIPIENT,
-    firstName,
-    appStoreLink: APP_STORE_LINK
-  });
-  const subject = interpolate_(SUBJECT, { email: RECIPIENT, firstName, appStoreLink: APP_STORE_LINK });
-
-  GmailApp.sendEmail(RECIPIENT, subject, stripHtml_(html), {
-    htmlBody: html,
-    name: FROM_NAME,
-    replyTo: REPLY_TO
-  });
-
-  Logger.log('Sent welcome email to ' + RECIPIENT);
-}
-
-// ──────────────────────── Bulk send ────────────────────────
-// Usage: edit RECIPIENTS below, then Run → sendBulkWelcomeEmails
-function sendBulkWelcomeEmails() {
-  const RECIPIENTS = [
-    // { email: 'ain@example.com', firstName: 'Ain' },
-    // { email: 'jane.doe@example.com' },   // firstName will be derived
-  ];
-
   if (!RECIPIENTS.length) {
     Logger.log('No recipients configured — edit RECIPIENTS array.');
     return;
@@ -157,9 +138,11 @@ function sendBulkWelcomeEmails() {
       GmailApp.sendEmail(r.email, subject, stripHtml_(html), {
         htmlBody: html,
         name: FROM_NAME,
+        from: FROM_ADDRESS,
         replyTo: REPLY_TO
       });
       sent++;
+      Logger.log('Sent to ' + r.email);
     } catch (err) {
       Logger.log('Failed ' + r.email + ': ' + err.message);
       failed++;
