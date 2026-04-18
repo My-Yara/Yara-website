@@ -265,7 +265,10 @@
             <button class="preview-tab active" id="tabRendered">Rendered</button>
             <button class="preview-tab" id="tabSource">Source</button>
           </div>
-          <span style="font-size:11px;color:rgba(26,26,46,0.15);padding-bottom:8px;">Live preview</span>
+          <div style="display:flex;align-items:center;gap:8px;padding-bottom:8px;">
+            <button id="copyHtmlBtn" style="padding:4px 10px;background:rgba(108,58,237,0.08);border:1px solid rgba(108,58,237,0.15);border-radius:6px;color:#6C3AED;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .15s;" onmouseover="this.style.background='rgba(108,58,237,0.15)'" onmouseout="this.style.background='rgba(108,58,237,0.08)'">Copy HTML</button>
+            <span style="font-size:11px;color:rgba(26,26,46,0.15);">Live preview</span>
+          </div>
         </div>
         <div class="preview-frame" id="renderedPane">
           <iframe id="previewFrame" title="Email preview" sandbox="allow-same-origin"></iframe>
@@ -355,7 +358,7 @@
           { key: 'offerSubtitle', label: 'Details',  type: 'text', placeholder: 'No card up front. No fine print. Yours when we open your spot.' }
         ]},
         { section: 'Body', fields: [
-          { key: 'body',          label: 'Body paragraph', type: 'textarea', placeholder: "We're letting people in carefully so Yara can give every early member real attention. We don't have a fixed date yet, but when your invite arrives, you'll get a private App Store link and be up and running in minutes." },
+          { key: 'body',          label: 'Body paragraph', type: 'textarea', placeholder: "We're opening access in small batches. When your spot is ready, we'll send you a private App Store link to download Yara and get started right away." },
           { key: 'whitelistAsk',  label: 'Whitelist ask',  type: 'textarea', placeholder: 'Add hello@my-yara.com to your contacts so our invite lands in your inbox, not spam.' }
         ]},
         { section: 'Sign-off', fields: [
@@ -784,6 +787,28 @@
         document.getElementById('saveStatus').className = 'save-status';
         await loadTemplate();
       });
+    });
+
+    // ── Copy HTML button (preserves formatting when pasting into Gmail etc.) ──
+    document.getElementById('copyHtmlBtn').addEventListener('click', async () => {
+      const html = document.getElementById('htmlInput').value;
+      const interpolated = html
+        .replace(/\{\{email\}\}/g, 'jane.doe@example.com')
+        .replace(/\{\{firstName\}\}/g, 'Jane Doe')
+        .replace(/\{\{appStoreLink\}\}/g, '#');
+      try {
+        await navigator.clipboard.write([
+          new ClipboardItem({
+            'text/html': new Blob([interpolated], { type: 'text/html' }),
+            'text/plain': new Blob([interpolated], { type: 'text/plain' })
+          })
+        ]);
+        showToast('Copied! Paste into Gmail, Word, or any email client.', 'success');
+      } catch (err) {
+        // Fallback: copy raw HTML as text
+        await navigator.clipboard.writeText(interpolated);
+        showToast('Copied as raw HTML', 'success');
+      }
     });
 
     // ── Copy variable chips ───────────────────────────────

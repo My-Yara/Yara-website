@@ -54,7 +54,7 @@ const WELCOME_HTML_DEFAULT = `<!DOCTYPE html>
 
     <div style="color:#4A4A68;font-size:14px;line-height:1.65;margin-bottom:20px;padding:0 4px;">
       <p style="margin:0;">
-        We're letting people in carefully so Yara can give every early member real attention. We don't have a fixed date yet, but when your invite arrives, you'll get a private App Store link and be up and running in minutes.
+        We're opening access in small batches. When your spot is ready, we'll send you a private App Store link to download Yara and get started right away.
       </p>
     </div>
 
