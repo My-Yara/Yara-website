@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Cost of Being a Consumer · Open Book · Yara</title>
+  <meta name="description" content="American households lose hundreds of billions of dollars every year to overpayment, hidden fees, and the time cost of managing service providers. A closer look at where the money goes." />
+  <link rel="canonical" href="https://www.my-yara.com/open-book/the-cost-of-being-a-consumer" /><!-- nosemgrep: html.security.audit.missing-integrity.missing-integrity -->
+  <link rel="icon" type="image/png" href="/yara_butterfly.png" />
+  <link rel="apple-touch-icon" href="/yara_butterfly.png" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://www.my-yara.com/open-book/the-cost-of-being-a-consumer" />
+  <meta property="og:title" content="The Cost of Being a Consumer" />
+  <meta property="og:description" content="American households lose hundreds of billions of dollars every year to overpayment, hidden fees, and the time cost of managing service providers." />
+  <meta property="og:image" content="https://www.my-yara.com/open-book/og-cost-of-being-a-consumer.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:site_name" content="Yara · Open Book" />
+  <meta property="article:section" content="Open Book" />
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:url" content="https://www.my-yara.com/open-book/the-cost-of-being-a-consumer" />
+  <meta name="twitter:title" content="The Cost of Being a Consumer" />
+  <meta name="twitter:description" content="American households lose hundreds of billions of dollars every year to overpayment, hidden fees, and the time cost of managing service providers." />
+  <meta name="twitter:image" content="https://www.my-yara.com/open-book/og-cost-of-being-a-consumer.png" />
+
+  <meta name="robots" content="index, follow, max-image-preview:large" />
+  <meta name="theme-color" content="#FDFCFF" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800&display=swap" rel="stylesheet" /><!-- nosemgrep: html.security.audit.missing-integrity.missing-integrity -->
+
+  <!-- JSON-LD Article schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "The Cost of Being a Consumer",
+    "description": "American households lose hundreds of billions of dollars every year to overpayment, hidden fees, and the time cost of managing service providers.",
+    "image": "https://www.my-yara.com/open-book/og-cost-of-being-a-consumer.png",
+    "url": "https://www.my-yara.com/open-book/the-cost-of-being-a-consumer",
+    "datePublished": "2026-04-20",
+    "publisher": {
+      "@type": "Organization",
+      "name": "Yara",
+      "logo": { "@type": "ImageObject", "url": "https://www.my-yara.com/yara_butterfly.png" }
+    },
+    "articleSection": "Open Book",
+    "mainEntityOfPage": "https://www.my-yara.com/open-book/the-cost-of-being-a-consumer"
+  }
+  </script>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --purple: #6C3AED;
+      --purple-light: #8B5CF6;
+      --purple-softer: #A78BFA;
+      --teal: #14B8A6;
+      --gold: #F59E0B;
+      --text-main: #1A1A2E;
+      --text-body: #3D3D5C;
+      --text-muted: #6B6B8A;
+      --border: rgba(0,0,0,0.07);
+      --bg: #FDFCFF;
+      --bg-card: #FFFFFF;
+      --bg-highlight: #F5F2FF;
+    }
+
+    html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+
+    body {
+      font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text-body);
+      font-size: 17px;
+      line-height: 1.75;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* Ambient background, subtle gradient wash */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      background:
+        radial-gradient(ellipse 70% 50% at 15% 10%, rgba(108,58,237,0.04) 0%, transparent 70%),
+        radial-gradient(ellipse 60% 40% at 85% 60%, rgba(20,184,166,0.03) 0%, transparent 70%);
+    }
+
+    /* Nav */
+    nav.topnav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(253,252,255,0.92);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 24px;
+    }
+    .nav-inner {
+      max-width: 760px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 56px;
+    }
+    .nav-brand {
+      display: flex; align-items: center; gap: 8px;
+      text-decoration: none; color: var(--text-main);
+      font-weight: 700; font-size: 17px; letter-spacing: -0.02em;
+    }
+    .nav-brand img { width: 26px; height: 26px; }
+    .nav-brand .brand-sep { color: var(--text-muted); font-weight: 400; margin: 0 6px; }
+    .nav-brand .brand-section { color: var(--purple); font-weight: 600; }
+    .nav-back {
+      font-size: 13px; font-weight: 500; color: var(--text-muted);
+      text-decoration: none; display: inline-flex; align-items: center; gap: 4px;
+      transition: color 0.15s;
+    }
+    .nav-back:hover { color: var(--purple); }
+    .nav-back svg { width: 14px; height: 14px; }
+
+    /* Page layout */
+    .page { max-width: 760px; margin: 0 auto; padding: 56px 24px 96px; }
+
+    /* Article header */
+    .article-eyebrow {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: var(--bg-highlight);
+      color: var(--purple);
+      font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+      padding: 5px 12px; border-radius: 999px; margin-bottom: 20px;
+    }
+    .article-eyebrow svg { width: 10px; height: 10px; }
+
+    h1.article-title {
+      font-size: clamp(32px, 5vw, 52px);
+      font-weight: 700;
+      letter-spacing: -0.035em;
+      color: var(--text-main);
+      line-height: 1.1;
+      margin-bottom: 18px;
+    }
+
+    p.article-dek {
+      font-size: clamp(17px, 2vw, 20px);
+      line-height: 1.55;
+      color: var(--text-body);
+      max-width: 620px;
+      margin-bottom: 28px;
+      font-weight: 400;
+    }
+
+    .article-meta {
+      display: flex; gap: 18px; flex-wrap: wrap;
+      font-size: 13px; color: var(--text-muted);
+      padding-bottom: 40px; margin-bottom: 48px;
+      border-bottom: 1px solid var(--border);
+    }
+    .article-meta span { display: inline-flex; align-items: center; gap: 5px; }
+    .article-meta svg { width: 13px; height: 13px; }
+
+    /* Hero number block */
+    .hero-number {
+      text-align: center;
+      padding: 56px 24px;
+      margin: 0 -8px 40px;
+      background: linear-gradient(135deg, #F5F2FF 0%, #EEF9F7 100%);
+      border: 1px solid rgba(108,58,237,0.08);
+      border-radius: 20px;
+    }
+    .hero-number .big {
+      font-size: clamp(64px, 12vw, 128px);
+      font-weight: 800;
+      letter-spacing: -0.05em;
+      line-height: 0.95;
+      background: linear-gradient(135deg, #6C3AED 0%, #14B8A6 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 12px;
+    }
+    .hero-number .caption {
+      font-size: 14px;
+      color: var(--text-muted);
+      letter-spacing: 0.01em;
+      max-width: 420px; margin: 0 auto;
+    }
+
+    /* Three-pillar chart */
+    .chart-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 32px 28px;
+      margin: 40px 0;
+    }
+    .chart-card h3 {
+      font-size: 13px; font-weight: 700;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+    }
+    .chart-row {
+      display: grid;
+      grid-template-columns: 130px 1fr 90px;
+      align-items: center;
+      gap: 16px;
+      padding: 10px 0;
+    }
+    .chart-label { font-size: 14px; font-weight: 600; color: var(--text-main); }
+    .chart-bar {
+      height: 12px; border-radius: 999px;
+      background: rgba(108,58,237,0.08);
+      overflow: hidden;
+      position: relative;
+    }
+    .chart-bar .fill {
+      height: 100%; border-radius: 999px;
+      transition: width 1s ease-out;
+    }
+    .chart-bar .fill.purple { background: linear-gradient(90deg, #6C3AED, #8B5CF6); }
+    .chart-bar .fill.teal { background: linear-gradient(90deg, #14B8A6, #2DD4BF); }
+    .chart-bar .fill.gold { background: linear-gradient(90deg, #F59E0B, #FBBF24); }
+    .chart-value {
+      font-size: 15px; font-weight: 700;
+      color: var(--text-main);
+      text-align: right;
+      letter-spacing: -0.01em;
+    }
+    .chart-footnote {
+      font-size: 12px; color: var(--text-muted);
+      margin-top: 16px; padding-top: 16px;
+      border-top: 1px solid var(--border);
+      line-height: 1.55;
+    }
+
+    /* Body */
+    .article-body h2 {
+      font-size: clamp(22px, 3vw, 28px);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--text-main);
+      line-height: 1.2;
+      margin: 56px 0 18px;
+    }
+    .article-body h2:first-child { margin-top: 24px; }
+    .article-body p {
+      font-size: 17px;
+      line-height: 1.75;
+      color: var(--text-body);
+      margin-bottom: 18px;
+    }
+
+    /* Pull quote */
+    .pullquote {
+      font-size: clamp(20px, 3vw, 26px);
+      font-weight: 600;
+      line-height: 1.35;
+      letter-spacing: -0.015em;
+      color: var(--text-main);
+      padding: 20px 0 20px 28px;
+      margin: 40px 0;
+      border-left: 3px solid var(--purple);
+    }
+
+    /* Gap callout */
+    .gap-callout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin: 28px 0;
+    }
+    .gap-callout .stat {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+    }
+    .gap-callout .stat .label {
+      font-size: 12px; font-weight: 600;
+      letter-spacing: 0.05em; text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+    .gap-callout .stat .value {
+      font-size: 28px; font-weight: 700;
+      letter-spacing: -0.03em;
+      color: var(--text-main);
+      line-height: 1.1;
+    }
+    .gap-callout .stat.highlight .value { color: var(--purple); }
+    .gap-callout .stat .hint {
+      font-size: 12px; color: var(--text-muted);
+      margin-top: 6px;
+    }
+
+    /* Next article card */
+    .next-article {
+      margin: 64px 0 0;
+      padding: 28px 32px;
+      background: linear-gradient(135deg, #F5F2FF 0%, #FFFFFF 100%);
+      border: 1px solid rgba(108,58,237,0.14);
+      border-radius: 16px;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 20px; flex-wrap: wrap;
+      text-decoration: none;
+      color: inherit;
+      transition: box-shadow 0.3s ease, transform 0.3s ease;
+    }
+    .next-article:hover { box-shadow: 0 20px 60px rgba(108,58,237,0.08); transform: translateY(-2px); }
+    .next-article .label {
+      font-size: 11px; font-weight: 700;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--purple); margin-bottom: 6px;
+    }
+    .next-article .title {
+      font-size: 19px; font-weight: 700;
+      color: var(--text-main); letter-spacing: -0.02em;
+    }
+    .next-article .arrow {
+      flex-shrink: 0;
+      width: 40px; height: 40px;
+      border-radius: 999px;
+      background: var(--purple); color: #fff;
+      display: inline-flex; align-items: center; justify-content: center;
+    }
+    .next-article .arrow svg { width: 18px; height: 18px; }
+
+    /* CTA */
+    .cta-block {
+      margin: 72px 0 0;
+      padding: 44px 32px;
+      text-align: center;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+    }
+    .cta-block h3 {
+      font-size: clamp(20px, 3vw, 26px);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--text-main);
+      margin-bottom: 10px;
+    }
+    .cta-block p {
+      font-size: 15px;
+      color: var(--text-muted);
+      margin-bottom: 22px;
+      max-width: 440px;
+      margin-left: auto; margin-right: auto;
+    }
+    .cta-button {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 12px 24px; border-radius: 999px;
+      background: var(--purple); color: #fff;
+      font-size: 14px; font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .cta-button:hover { background: #5B21B6; box-shadow: 0 8px 32px rgba(108,58,237,0.3); transform: translateY(-1px); }
+
+    /* References */
+    .references {
+      margin-top: 72px;
+      padding-top: 32px;
+      border-top: 1px solid var(--border);
+    }
+    .references h2 {
+      font-size: 16px; font-weight: 700;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+    }
+    .references ol {
+      list-style: none; padding: 0; counter-reset: ref;
+    }
+    .references li {
+      counter-increment: ref;
+      padding: 14px 0 14px 34px;
+      position: relative;
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--text-body);
+      border-bottom: 1px solid var(--border);
+    }
+    .references li:last-child { border-bottom: none; }
+    .references li::before {
+      content: counter(ref);
+      position: absolute;
+      left: 0; top: 14px;
+      width: 24px; height: 24px;
+      border-radius: 999px;
+      background: var(--bg-highlight);
+      color: var(--purple);
+      font-size: 11px; font-weight: 700;
+      display: inline-flex; align-items: center; justify-content: center;
+    }
+    .references li .ref-title { font-weight: 600; color: var(--text-main); }
+    .references li a {
+      color: var(--purple);
+      text-decoration: none;
+      word-break: break-word;
+    }
+    .references li a:hover { text-decoration: underline; }
+
+    /* Footer */
+    footer.sitefoot {
+      padding: 32px 24px 64px;
+      background: #F8F7FC;
+      border-top: 1px solid var(--border);
+    }
+    footer.sitefoot .inner {
+      max-width: 760px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 12px;
+    }
+    footer.sitefoot span { font-size: 13px; color: var(--text-muted); }
+    footer.sitefoot a { color: var(--text-muted); text-decoration: none; }
+    footer.sitefoot a:hover { color: var(--purple); }
+    footer.sitefoot a.email { color: var(--purple); font-weight: 500; }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      .page { padding: 36px 18px 72px; }
+      body { font-size: 16px; }
+      .article-body p { font-size: 16px; }
+      .hero-number { padding: 40px 18px; margin: 0 -4px 32px; border-radius: 16px; }
+      .chart-card { padding: 22px 18px; }
+      .chart-row { grid-template-columns: 100px 1fr 72px; gap: 12px; }
+      .chart-label { font-size: 13px; }
+      .chart-value { font-size: 13px; }
+      .gap-callout { grid-template-columns: 1fr; }
+      .pullquote { padding-left: 18px; margin: 28px 0; }
+      .cta-block { padding: 32px 22px; }
+      .next-article { padding: 22px; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="topnav">
+    <div class="nav-inner">
+      <a href="/" class="nav-brand">
+        <img src="/yara_butterfly.png" alt="Yara" />
+        Yara<span class="brand-sep">·</span><span class="brand-section">Open Book</span>
+      </a>
+      <a href="/open-book/" class="nav-back">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+        All articles
+      </a>
+    </div>
+  </nav>
+
+  <article class="page">
+
+    <header>
+      <span class="article-eyebrow">
+        <svg viewBox="0 0 10 10" fill="currentColor"><circle cx="5" cy="5" r="2.5"/></svg>
+        Open Book &nbsp;/&nbsp; No. 01
+      </span>
+
+      <h1 class="article-title">The Cost of Being a Consumer</h1>
+
+      <p class="article-dek">
+        American households lose hundreds of billions of dollars every year to overpayment, hidden fees, and the time cost of managing service providers. A closer look at where the money goes.
+      </p>
+
+      <div class="article-meta">
+        <span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          April 2026
+        </span>
+        <span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          5 minute read
+        </span>
+      </div>
+    </header>
+
+    <!-- Hero number -->
+    <div class="hero-number">
+      <div class="big">$400B+</div>
+      <div class="caption">Estimated annual loss to U.S. households from overpayment, hidden fees, and administrative burden. Roughly $3,200 per household per year.</div>
+    </div>
+
+    <div class="article-body">
+
+      <p>
+        Every year, American households collectively lose an estimated four hundred billion dollars before a single discretionary purchase is made. The money disappears into three distinct categories: plans that cost more than they should, fees disclosed in fine print rather than in the advertised price, and hours spent on hold, in portals, and on disputes that produce no product or service. Across roughly 125 million U.S. households, the total averages just over $3,200 per household per year.
+      </p>
+
+      <!-- Chart -->
+      <div class="chart-card">
+        <h3>Where the $400 billion goes</h3>
+        <div class="chart-row">
+          <span class="chart-label">Overpayment</span>
+          <div class="chart-bar"><div class="fill purple" style="width: 86%;"></div></div>
+          <span class="chart-value">$170B</span>
+        </div>
+        <div class="chart-row">
+          <span class="chart-label">Hidden fees</span>
+          <div class="chart-bar"><div class="fill teal" style="width: 100%;"></div></div>
+          <span class="chart-value">$197B</span>
+        </div>
+        <div class="chart-row">
+          <span class="chart-label">Time cost</span>
+          <div class="chart-bar"><div class="fill gold" style="width: 51%;"></div></div>
+          <span class="chart-value">$100B</span>
+        </div>
+        <div class="chart-footnote">
+          Overpayment figure from J.D. Power, ValuePenguin, and Consumer Reports analysis. Hidden fees from doxo 2024 Hidden Costs of Bill Pay Report. Time cost derived from TIME, U.S. Bureau of Labor Statistics time-use data, and average hourly earnings. Full references below.
+        </div>
+      </div>
+
+      <h2>Overpayment. $170 billion a year.</h2>
+
+      <p>
+        Service providers build their products to sell at the point of signup, not to match how a household actually uses them. Plans, bundles, and coverage tiers are designed around a pricing model rather than an individual consumption profile. Over time, the mismatch becomes expensive.
+      </p>
+
+      <p>
+        Auto insurance costs rose 22.2 percent year over year through early 2024, the steepest increase in any category tracked by the U.S. Department of Labor in the Consumer Price Index. Nearly half of all auto insurance customers, 49 percent, are now actively shopping for a new policy, driven by rising prices and declining satisfaction with their current providers.
+      </p>
+
+      <p>
+        The subscription economy produces similar patterns at smaller per-item values. Research by C+R Research finds the average U.S. household spends roughly $273 per month on recurring subscriptions. The self-reported estimate is closer to $111 per month. The gap between those two figures represents money that households are paying but cannot account for.
+      </p>
+
+      <div class="gap-callout">
+        <div class="stat">
+          <div class="label">Actual subscription spend</div>
+          <div class="value">$273<span style="font-size:16px;font-weight:500;color:var(--text-muted);"> / mo</span></div>
+          <div class="hint">C+R Research, 2024</div>
+        </div>
+        <div class="stat highlight">
+          <div class="label">What people think they spend</div>
+          <div class="value">$111<span style="font-size:16px;font-weight:500;color:var(--text-muted);"> / mo</span></div>
+          <div class="hint">Roughly $1,944 a year is invisible</div>
+        </div>
+      </div>
+
+      <p>
+        Forty-two percent of respondents have forgotten about at least one active subscription. Forty-eight percent have been charged after failing to cancel a free trial. Scaled across telecom, insurance, streaming, and financial services, the aggregate national overpayment is estimated at approximately $170 billion annually.
+      </p>
+
+      <h2>Hidden fees. Approximately $197 billion a year.</h2>
+
+      <p>
+        Hidden fees are disclosed but rarely advertised. They appear in the gap between the price that secures the sale and the price that arrives on the bill.
+      </p>
+
+      <p>
+        The 2024 Hidden Costs of Bill Pay Report, produced by doxo using data sourced from the Federal Reserve, the Consumer Financial Protection Bureau, and the Federal Trade Commission, estimates that the average household pays $1,495 per year in hidden bill pay costs. Multiplied across 125 million U.S. households, the total is approximately $197 billion nationally, an 18 percent increase over the 2023 figure.
+      </p>
+
+      <p>
+        The patterns are documented by category. Consumer Reports analyzed roughly 800 cable bills gathered in 2018 and found that company-imposed fees averaged $37 per month, representing a 24 percent surcharge on top of the advertised base price, or about $450 per year per customer. At the industry level, the investigation estimated that cable providers collect approximately $28 billion annually from these fees.
+      </p>
+
+      <p>
+        In banking, the White House Council of Economic Advisers reported in March 2024 that junk fees, a category that includes overdraft fees, bounced check fees, credit card late fees, and miscellaneous service charges, cost American consumers approximately $90 billion a year. Credit card late fees alone account for an estimated $12 billion of that total, according to the Consumer Financial Protection Bureau.
+      </p>
+
+      <p class="pullquote">
+        Individually, these fees are small enough to dismiss. Collectively, they fund industries.
+      </p>
+
+      <h2>The time cost. $100 billion a year.</h2>
+
+      <p>
+        The least counted cost of being a consumer is the time spent resolving, disputing, navigating, and waiting. TIME reporting estimated that the average American spends roughly 13 hours a year on hold with customer service. More recent American Time Use Survey data published by the U.S. Bureau of Labor Statistics shows that the administrative burden on households has grown rather than shrunk, driven by the migration of customer support into chat queues, self service portals, and callback systems that frequently route back to phone queues.
+      </p>
+
+      <p>
+        Valued at average U.S. hourly earnings, the aggregate time lost to these interactions represents roughly $100 billion in foregone household productivity each year. Unlike fees and overpayment, the time cost produces nothing in exchange. It cannot be refunded.
+      </p>
+
+      <h2>Why the number stays large.</h2>
+
+      <p>
+        The $400 billion figure is not a collection of individual failures or poor financial hygiene. It is the predictable output of an asymmetric market.
+      </p>
+
+      <p>
+        Every provider a household engages with, whether a telecom, insurer, bank, or streaming service, operates with pricing teams, retention specialists, and AI systems optimized to protect margin and reduce churn. These systems remember every prior interaction, benchmark against competitors in real time, and run continuously.
+      </p>
+
+      <p>
+        The household sits on the other side of that table without comparable tooling. There is no unified record of last year's terms, no automated comparison to current offers, and no system that flags when a promotional rate quietly expires or a premium increases at renewal. Each provider relationship is a negotiation the consumer enters cold, every time.
+      </p>
+
+      <p>
+        The result is a market in which one side is professionally equipped and the other is not. The $400 billion figure is the price of that asymmetry. It does not close on its own.
+      </p>
+
+      <h2>What comes next.</h2>
+
+      <p>
+        Companies solved their side of this problem thirty years ago by adopting Customer Relationship Management software. Salesforce alone is valued at over $300 billion on the strength of it. Consumers have never had the equivalent.
+      </p>
+
+      <p>
+        The next article in Open Book examines that asymmetry. What it took for CRM to become standard in the corporate world, and why the consumer side of the same problem has remained unaddressed.
+      </p>
+
+    </div>
+
+    <!-- Next article -->
+    <a href="/open-book/" class="next-article" aria-label="See all Open Book articles">
+      <div>
+        <div class="label">Next in Open Book</div>
+        <div class="title">Companies have CRM. Consumers need PRM.</div>
+        <div style="font-size:13px;color:var(--text-muted);margin-top:6px;">Coming soon</div>
+      </div>
+      <span class="arrow" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </span>
+    </a>
+
+    <!-- CTA -->
+    <div class="cta-block">
+      <h3>Yara is building the consumer side.</h3>
+      <p>An AI that tracks every provider relationship, catches hidden fees, and negotiates on your behalf. Free during early access.</p>
+      <a href="/#waitlist" class="cta-button">
+        Get early access
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
+    </div>
+
+    <!-- References -->
+    <section class="references">
+      <h2>References</h2>
+      <ol>
+        <li>
+          <span class="ref-title">doxo.</span> 2024 Hidden Costs of Bill Pay Report. December 11, 2024.
+          <br /><a href="https://www.doxo.com/insights/the-hidden-costs-of-bill-pay-report-2024" target="_blank" rel="noopener noreferrer">doxo.com/insights/the-hidden-costs-of-bill-pay-report-2024</a>
+        </li>
+        <li>
+          <span class="ref-title">Consumer Reports.</span> Investigation Finds Cable Company-Imposed Fees Add Nearly $450 to Customer Bills Each Year. October 3, 2019.
+          <br /><a href="https://advocacy.consumerreports.org/press_release/consumer-reports-investigation-finds-cable-company-imposed-fees-add-nearly-450-to-customer-bills-each-year/" target="_blank" rel="noopener noreferrer">advocacy.consumerreports.org</a>
+        </li>
+        <li>
+          <span class="ref-title">White House Council of Economic Advisers.</span> The Price Isn't Right: How Junk Fees Cost Consumers and Undermine Competition. March 5, 2024.
+          <br /><a href="https://www.whitehouse.gov/cea/written-materials/2024/03/05/the-price-isnt-right-how-junk-fees-cost-consumers-and-undermine-competition/" target="_blank" rel="noopener noreferrer">whitehouse.gov/cea</a>
+        </li>
+        <li>
+          <span class="ref-title">Consumer Financial Protection Bureau.</span> CFPB Proposes Rule to Close Bank Overdraft Loophole that Costs Americans Billions Each Year in Junk Fees. 2024.
+          <br /><a href="https://www.consumerfinance.gov/about-us/newsroom/cfpb-proposes-rule-to-close-bank-overdraft-loophole-that-costs-americans-billions-each-year-in-junk-fees/" target="_blank" rel="noopener noreferrer">consumerfinance.gov</a>
+        </li>
+        <li>
+          <span class="ref-title">C+R Research.</span> Subscription Service Statistics and Costs. 2024.
+          <br /><a href="https://www.crresearch.com/blog/subscription-service-statistics-and-costs/" target="_blank" rel="noopener noreferrer">crresearch.com/blog/subscription-service-statistics-and-costs</a>
+        </li>
+        <li>
+          <span class="ref-title">Insurance Journal</span>, citing Insurance Research Council and J.D. Power 2024 U.S. Insurance Shopping Study. Rising Prices, Low Satisfaction Drive 49% of Customers to Shop For New Auto Insurance. May 3, 2024.
+          <br /><a href="https://www.insurancejournal.com/news/national/2024/05/03/772568.htm" target="_blank" rel="noopener noreferrer">insurancejournal.com</a>
+        </li>
+        <li>
+          <span class="ref-title">Reviews.org.</span> State of Consumer Media Spending 2024: Cost of Internet, TV, and Mobile. 2024.
+          <br /><a href="https://www.reviews.org/internet-service/2024-cost-of-internet-streaming-and-cell-phone-bills/" target="_blank" rel="noopener noreferrer">reviews.org/internet-service</a>
+        </li>
+        <li>
+          <span class="ref-title">U.S. Bureau of Labor Statistics.</span> American Time Use Survey, 2024 Results.
+          <br /><a href="https://www.bls.gov/news.release/pdf/atus.pdf" target="_blank" rel="noopener noreferrer">bls.gov/news.release/pdf/atus.pdf</a>
+        </li>
+        <li>
+          <span class="ref-title">TIME.</span> You Probably Spent 13 Hours on Hold Last Year. January 24, 2013.
+          <br /><a href="https://business.time.com/2013/01/24/you-probably-spent-13-hours-on-hold-last-year/" target="_blank" rel="noopener noreferrer">business.time.com</a>
+        </li>
+      </ol>
+    </section>
+
+  </article>
+
+  <footer class="sitefoot">
+    <div class="inner">
+      <span>
+        &copy; 2026 My Yara &nbsp;&middot;&nbsp;
+        <a href="/privacy.html">Privacy Policy</a>
+      </span>
+      <span>
+        Questions or feedback? <a href="mailto:contact@my-yara.com" class="email">contact@my-yara.com</a>
+      </span>
+    </div>
+  </footer>
+
+</body>
+</html>
