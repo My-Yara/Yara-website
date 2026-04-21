@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Open Book · Yara</title>
+  <meta name="description" content="A Yara series documenting consumer spending, provider behavior, and where the money goes. Sourced, factual, and written for the consumer's side of the table." />
+  <link rel="canonical" href="https://www.my-yara.com/open-book/" /><!-- nosemgrep: html.security.audit.missing-integrity.missing-integrity -->
+  <link rel="icon" type="image/png" href="/yara_butterfly.png" />
+  <link rel="apple-touch-icon" href="/yara_butterfly.png" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://www.my-yara.com/open-book/" />
+  <meta property="og:title" content="Open Book · Yara" />
+  <meta property="og:description" content="A Yara series documenting consumer spending, provider behavior, and where the money goes." />
+  <meta property="og:image" content="https://www.my-yara.com/open-book/og-open-book.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:site_name" content="Yara" />
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:url" content="https://www.my-yara.com/open-book/" />
+  <meta name="twitter:title" content="Open Book · Yara" />
+  <meta name="twitter:description" content="A Yara series documenting consumer spending, provider behavior, and where the money goes." />
+  <meta name="twitter:image" content="https://www.my-yara.com/open-book/og-open-book.png" />
+
+  <meta name="robots" content="index, follow, max-image-preview:large" />
+  <meta name="theme-color" content="#FDFCFF" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800&display=swap" rel="stylesheet" /><!-- nosemgrep: html.security.audit.missing-integrity.missing-integrity -->
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --purple: #6C3AED;
+      --purple-light: #8B5CF6;
+      --purple-softer: #A78BFA;
+      --teal: #14B8A6;
+      --gold: #F59E0B;
+      --text-main: #1A1A2E;
+      --text-body: #3D3D5C;
+      --text-muted: #6B6B8A;
+      --border: rgba(0,0,0,0.07);
+      --bg: #FDFCFF;
+      --bg-card: #FFFFFF;
+      --bg-highlight: #F5F2FF;
+    }
+
+    html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+
+    body {
+      font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text-body);
+      font-size: 16px;
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      background:
+        radial-gradient(ellipse 70% 50% at 15% 10%, rgba(108,58,237,0.05) 0%, transparent 70%),
+        radial-gradient(ellipse 60% 40% at 85% 60%, rgba(20,184,166,0.03) 0%, transparent 70%);
+    }
+
+    /* Nav */
+    nav.topnav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(253,252,255,0.92);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 24px;
+    }
+    .nav-inner {
+      max-width: 1080px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 56px;
+    }
+    .nav-brand {
+      display: flex; align-items: center; gap: 8px;
+      text-decoration: none; color: var(--text-main);
+      font-weight: 700; font-size: 17px; letter-spacing: -0.02em;
+    }
+    .nav-brand img { width: 26px; height: 26px; }
+    .nav-brand .brand-sep { color: var(--text-muted); font-weight: 400; margin: 0 6px; }
+    .nav-brand .brand-section { color: var(--purple); font-weight: 600; }
+    .nav-back {
+      font-size: 13px; font-weight: 500; color: var(--text-muted);
+      text-decoration: none; display: inline-flex; align-items: center; gap: 4px;
+      transition: color 0.15s;
+    }
+    .nav-back:hover { color: var(--purple); }
+    .nav-back svg { width: 14px; height: 14px; }
+
+    /* Page */
+    .page { max-width: 1080px; margin: 0 auto; padding: 72px 24px 96px; }
+
+    /* Masthead */
+    .masthead { margin-bottom: 56px; }
+    .masthead .eyebrow {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: var(--bg-highlight);
+      color: var(--purple);
+      font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+      padding: 5px 12px; border-radius: 999px; margin-bottom: 20px;
+    }
+    .masthead .eyebrow svg { width: 10px; height: 10px; }
+    .masthead h1 {
+      font-size: clamp(44px, 7vw, 96px);
+      font-weight: 800;
+      letter-spacing: -0.045em;
+      color: var(--text-main);
+      line-height: 0.95;
+    }
+    .masthead h1 .accent {
+      background: linear-gradient(135deg, #6C3AED 0%, #14B8A6 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* Featured article card */
+    .featured {
+      margin: 0 0 64px;
+      padding: 44px 44px;
+      background: linear-gradient(135deg, #F5F2FF 0%, #EEF9F7 100%);
+      border: 1px solid rgba(108,58,237,0.12);
+      border-radius: 24px;
+      display: grid;
+      grid-template-columns: 1fr 360px;
+      gap: 40px;
+      align-items: center;
+      text-decoration: none;
+      color: inherit;
+      transition: transform 0.35s ease, box-shadow 0.35s ease;
+    }
+    .featured:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 30px 80px rgba(108,58,237,0.1);
+    }
+    .featured .label {
+      font-size: 11px; font-weight: 700;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--purple);
+      margin-bottom: 14px;
+    }
+    .featured h2 {
+      font-size: clamp(28px, 4vw, 40px);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      color: var(--text-main);
+      line-height: 1.1;
+      margin-bottom: 14px;
+    }
+    .featured p {
+      font-size: 16px;
+      line-height: 1.6;
+      color: var(--text-body);
+      margin-bottom: 22px;
+      max-width: 540px;
+    }
+    .featured .read-link {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 14px; font-weight: 600;
+      color: var(--purple);
+    }
+    .featured .read-link svg { width: 14px; height: 14px; transition: transform 0.2s; }
+    .featured:hover .read-link svg { transform: translateX(4px); }
+
+    /* Featured visual */
+    .featured-visual {
+      background: var(--bg-card);
+      border: 1px solid rgba(108,58,237,0.1);
+      border-radius: 18px;
+      padding: 36px 28px;
+      text-align: center;
+    }
+    .featured-visual .big {
+      font-size: 72px;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      line-height: 1;
+      background: linear-gradient(135deg, #6C3AED 0%, #14B8A6 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 8px;
+    }
+    .featured-visual .big-caption {
+      font-size: 12px;
+      color: var(--text-muted);
+      letter-spacing: 0.02em;
+      margin-bottom: 20px;
+    }
+    .featured-visual .bars { display: flex; flex-direction: column; gap: 8px; align-items: stretch; }
+    .featured-visual .bar {
+      display: flex; align-items: center; gap: 10px;
+      font-size: 12px;
+    }
+    .featured-visual .bar .bar-label { width: 80px; text-align: left; color: var(--text-muted); font-weight: 500; }
+    .featured-visual .bar .bar-track {
+      flex: 1; height: 8px; border-radius: 999px;
+      background: rgba(108,58,237,0.06);
+      overflow: hidden;
+    }
+    .featured-visual .bar .bar-fill { height: 100%; border-radius: 999px; }
+    .featured-visual .bar .bar-fill.purple { background: linear-gradient(90deg, #6C3AED, #8B5CF6); }
+    .featured-visual .bar .bar-fill.teal { background: linear-gradient(90deg, #14B8A6, #2DD4BF); }
+    .featured-visual .bar .bar-fill.gold { background: linear-gradient(90deg, #F59E0B, #FBBF24); }
+    .featured-visual .bar .bar-value { width: 46px; text-align: right; font-weight: 700; color: var(--text-main); }
+
+    /* Upcoming grid */
+    .upcoming-heading {
+      font-size: 13px; font-weight: 700;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+    }
+    .upcoming-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+      margin-bottom: 80px;
+    }
+    .upcoming-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px;
+      transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
+    }
+    .upcoming-card .number {
+      font-size: 12px; font-weight: 700;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--purple);
+      margin-bottom: 14px;
+    }
+    .upcoming-card h3 {
+      font-size: 22px; font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--text-main);
+      line-height: 1.2;
+      margin-bottom: 12px;
+    }
+    .upcoming-card p {
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+    }
+    .upcoming-card .status {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 12px; font-weight: 600;
+      color: var(--text-muted);
+      letter-spacing: 0.02em;
+    }
+    .upcoming-card .status .dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--text-muted); opacity: 0.5;
+    }
+
+    /* CTA */
+    .cta-block {
+      margin: 0 0 24px;
+      padding: 56px 40px;
+      text-align: center;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+    }
+    .cta-block h3 {
+      font-size: clamp(24px, 3.5vw, 32px);
+      font-weight: 700;
+      letter-spacing: -0.025em;
+      color: var(--text-main);
+      margin-bottom: 10px;
+      line-height: 1.2;
+    }
+    .cta-block p {
+      font-size: 16px;
+      color: var(--text-muted);
+      margin-bottom: 26px;
+      max-width: 520px;
+      margin-left: auto; margin-right: auto;
+    }
+    .cta-button {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 14px 28px; border-radius: 999px;
+      background: var(--purple); color: #fff;
+      font-size: 15px; font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .cta-button:hover { background: #5B21B6; box-shadow: 0 8px 32px rgba(108,58,237,0.3); transform: translateY(-1px); }
+
+    /* Footer */
+    footer.sitefoot {
+      padding: 32px 24px 64px;
+      background: #F8F7FC;
+      border-top: 1px solid var(--border);
+    }
+    footer.sitefoot .inner {
+      max-width: 1080px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 12px;
+    }
+    footer.sitefoot span { font-size: 13px; color: var(--text-muted); }
+    footer.sitefoot a { color: var(--text-muted); text-decoration: none; }
+    footer.sitefoot a:hover { color: var(--purple); }
+    footer.sitefoot a.email { color: var(--purple); font-weight: 500; }
+
+    @media (max-width: 860px) {
+      .featured { grid-template-columns: 1fr; padding: 32px; gap: 28px; }
+      .featured-visual { padding: 28px 20px; }
+      .featured-visual .big { font-size: 56px; }
+      .masthead { margin-bottom: 44px; }
+    }
+    @media (max-width: 600px) {
+      .page { padding: 44px 18px 72px; }
+      .featured { padding: 24px; border-radius: 18px; }
+      .featured-visual .big { font-size: 48px; }
+      .upcoming-card { padding: 22px; }
+      .cta-block { padding: 40px 22px; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="topnav">
+    <div class="nav-inner">
+      <a href="/" class="nav-brand">
+        <img src="/yara_butterfly.png" alt="Yara" />
+        Yara<span class="brand-sep">·</span><span class="brand-section">Open Book</span>
+      </a>
+      <a href="/" class="nav-back">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+        Back to home
+      </a>
+    </div>
+  </nav>
+
+  <main class="page">
+
+    <!-- Masthead -->
+    <header class="masthead">
+      <span class="eyebrow">
+        <svg viewBox="0 0 10 10" fill="currentColor"><circle cx="5" cy="5" r="2.5"/></svg>
+        A series by Yara
+      </span>
+      <h1>Open <span class="accent">Book</span>.</h1>
+    </header>
+
+    <!-- Featured -->
+    <a href="/open-book/the-cost-of-being-a-consumer" class="featured">
+      <div class="featured-content">
+        <div class="label">No. 01 · Featured</div>
+        <h2>The Cost of Being a Consumer</h2>
+        <p>
+          American households lose hundreds of billions of dollars every year to overpayment, hidden fees, and the time cost of managing service providers. A closer look at where the money goes.
+        </p>
+        <span class="read-link">
+          Read the article
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </span>
+      </div>
+      <div class="featured-visual" aria-hidden="true">
+        <div class="big">$450B+</div>
+        <div class="big-caption">estimated annual household loss</div>
+        <div class="bars">
+          <div class="bar">
+            <span class="bar-label">Overpayment</span>
+            <span class="bar-track"><span class="bar-fill purple" style="width: 86%;"></span></span>
+            <span class="bar-value">$170B</span>
+          </div>
+          <div class="bar">
+            <span class="bar-label">Hidden fees</span>
+            <span class="bar-track"><span class="bar-fill teal" style="width: 100%;"></span></span>
+            <span class="bar-value">$197B</span>
+          </div>
+          <div class="bar">
+            <span class="bar-label">Time cost</span>
+            <span class="bar-track"><span class="bar-fill gold" style="width: 51%;"></span></span>
+            <span class="bar-value">$100B</span>
+          </div>
+        </div>
+      </div>
+    </a>
+
+    <!-- Upcoming -->
+    <h3 class="upcoming-heading">Upcoming in the series</h3>
+    <div class="upcoming-grid">
+
+      <div class="upcoming-card">
+        <div class="number">No. 02</div>
+        <h3>Companies have CRM. Consumers need PRM.</h3>
+        <p>
+          Salesforce is valued at over $300 billion because every company on earth adopted Customer Relationship Management software. Consumers never got the equivalent. What happens when they do.
+        </p>
+        <span class="status"><span class="dot"></span> Coming soon</span>
+      </div>
+
+      <div class="upcoming-card">
+        <div class="number">No. 03</div>
+        <h3>Why the consumer side needs AI.</h3>
+        <p>
+          Every provider a household deals with already operates on AI. A consumer cannot install an agent framework and ask it to lower their bill. The gap is not automation. It is the intelligence on the consumer's side.
+        </p>
+        <span class="status"><span class="dot"></span> Coming soon</span>
+      </div>
+
+    </div>
+
+    <!-- CTA -->
+    <div class="cta-block">
+      <h3>An AI that stands on the consumer's side.</h3>
+      <p>Yara is building the tooling that consumers have never had. Track every provider. Catch hidden fees. Negotiate on your behalf.</p>
+      <a href="/#waitlist" class="cta-button">
+        Get early access
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
+    </div>
+
+  </main>
+
+  <footer class="sitefoot">
+    <div class="inner">
+      <span>
+        &copy; 2026 My Yara &nbsp;&middot;&nbsp;
+        <a href="/privacy.html">Privacy Policy</a>
+      </span>
+      <span>
+        Questions or feedback? <a href="mailto:contact@my-yara.com" class="email">contact@my-yara.com</a>
+      </span>
+    </div>
+  </footer>
+
+</body>
+</html>
