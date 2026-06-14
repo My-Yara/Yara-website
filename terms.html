@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Terms of Service — Yara</title>
+  <meta name="description" content="Yara's Terms of Service — the agreement that governs your use of Yara." />
+  <link rel="canonical" href="https://www.my-yara.com/terms.html" /><!-- nosemgrep: html.security.audit.missing-integrity.missing-integrity -->
+  <link rel="icon" type="image/png" href="yara_butterfly.png" />
+  <link rel="apple-touch-icon" href="yara_butterfly.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700&display=swap" rel="stylesheet" /><!-- nosemgrep: html.security.audit.missing-integrity.missing-integrity -->
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --purple: #6C3AED;
+      --purple-light: #8B5CF6;
+      --text-main: #1A1A2E;
+      --text-body: #3D3D5C;
+      --text-muted: #6B6B8A;
+      --border: rgba(0,0,0,0.07);
+      --bg: #FAFAF9;
+      --bg-card: #FFFFFF;
+      --bg-highlight: #F5F2FF;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text-body);
+      font-size: 16px;
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Nav ─────────────────────────────────────── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(250,250,249,0.92);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 24px;
+    }
+    .nav-inner {
+      max-width: 800px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 56px;
+    }
+    .nav-brand {
+      display: flex; align-items: center; gap: 8px;
+      text-decoration: none; color: var(--text-main);
+      font-weight: 700; font-size: 17px; letter-spacing: -0.02em;
+    }
+    .nav-brand img { width: 26px; height: 26px; }
+    .nav-back {
+      font-size: 13px; font-weight: 500; color: var(--text-muted);
+      text-decoration: none; display: flex; align-items: center; gap: 4px;
+      transition: color 0.15s;
+    }
+    .nav-back:hover { color: var(--purple); }
+    .nav-back svg { width: 14px; height: 14px; }
+
+    /* ── Page layout ─────────────────────────────── */
+    .page {
+      max-width: 800px; margin: 0 auto;
+      padding: 56px 24px 96px;
+    }
+
+    /* ── Header ──────────────────────────────────── */
+    .page-header { margin-bottom: 48px; padding-bottom: 32px; border-bottom: 1px solid var(--border); }
+    .page-header .eyebrow {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: var(--bg-highlight);
+      color: var(--purple);
+      font-size: 12px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;
+      padding: 4px 10px; border-radius: 999px; margin-bottom: 16px;
+    }
+    .page-header h1 {
+      font-size: clamp(28px, 4vw, 40px);
+      font-weight: 700; letter-spacing: -0.03em;
+      color: var(--text-main); line-height: 1.15; margin-bottom: 12px;
+    }
+    .page-header .meta {
+      font-size: 13px; color: var(--text-muted);
+      display: flex; gap: 16px; flex-wrap: wrap;
+    }
+    .page-header .meta span { display: flex; align-items: center; gap: 4px; }
+
+    /* ── Commitment card ─────────────────────────── */
+    .commitment {
+      background: linear-gradient(135deg, #F5F2FF 0%, #EEF9F7 100%);
+      border: 1px solid rgba(108,58,237,0.12);
+      border-radius: 16px; padding: 28px 32px; margin-bottom: 48px;
+    }
+    .commitment h2 {
+      font-size: 18px; font-weight: 700; color: var(--text-main);
+      margin-bottom: 8px; letter-spacing: -0.02em;
+    }
+    .commitment p { font-size: 15px; color: var(--text-body); line-height: 1.65; }
+
+    /* ── Sections ────────────────────────────────── */
+    .section { margin-bottom: 48px; }
+
+    .section-number {
+      display: inline-block;
+      font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+      color: var(--purple); margin-bottom: 8px;
+    }
+
+    .section h2 {
+      font-size: 22px; font-weight: 700; letter-spacing: -0.02em;
+      color: var(--text-main); margin-bottom: 16px;
+      padding-bottom: 12px; border-bottom: 1px solid var(--border);
+    }
+
+    .section h3 {
+      font-size: 15px; font-weight: 600; color: var(--text-main);
+      margin: 20px 0 8px;
+    }
+
+    .section p { margin-bottom: 12px; font-size: 15px; }
+    .section p:last-child { margin-bottom: 0; }
+
+    .section ul {
+      list-style: none; padding: 0; margin: 8px 0 12px;
+    }
+    .section ul li {
+      font-size: 15px; padding: 5px 0 5px 20px; position: relative; color: var(--text-body);
+    }
+    .section ul li::before {
+      content: ''; position: absolute; left: 0; top: 13px;
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--purple-light);
+    }
+    .section ul li strong { color: var(--text-main); }
+
+    /* ── Highlight box ───────────────────────────── */
+    .highlight-box {
+      background: var(--bg-highlight);
+      border-left: 3px solid var(--purple);
+      border-radius: 0 10px 10px 0;
+      padding: 14px 18px; margin: 16px 0;
+      font-size: 14px; color: var(--text-body);
+    }
+    .highlight-box strong { color: var(--purple); }
+
+    /* ── Never box ───────────────────────────────── */
+    .never-box {
+      display: flex; align-items: flex-start; gap: 12px;
+      background: #F0FDF4; border: 1px solid #BBF7D0;
+      border-radius: 10px; padding: 16px 18px; margin: 16px 0;
+    }
+    .never-box .icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+    .never-box p { font-size: 14px; color: #166534; margin: 0; font-weight: 500; }
+
+    /* ── Contact card ────────────────────────────── */
+    .contact-card {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 16px; padding: 28px 32px;
+      display: flex; align-items: flex-start; justify-content: space-between;
+      gap: 24px; flex-wrap: wrap;
+    }
+    .contact-card h3 { font-size: 17px; font-weight: 700; color: var(--text-main); margin-bottom: 6px; }
+    .contact-card p { font-size: 14px; color: var(--text-muted); margin-bottom: 16px; }
+    .contact-link {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 10px 20px; border-radius: 999px;
+      background: var(--purple); color: #fff;
+      font-size: 14px; font-weight: 600; text-decoration: none;
+      transition: all 0.2s;
+    }
+    .contact-link:hover { background: #5B21B6; box-shadow: 0 4px 16px rgba(108,58,237,0.3); }
+
+    /* ── Footer ──────────────────────────────────── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 24px;
+      text-align: center;
+    }
+    footer .inner { max-width: 800px; margin: 0 auto; }
+    footer p { font-size: 13px; color: var(--text-muted); }
+    footer a { color: var(--purple); text-decoration: none; font-weight: 500; }
+    footer a:hover { opacity: 0.75; }
+
+    /* ── Responsive ──────────────────────────────── */
+    @media (max-width: 600px) {
+      .page { padding: 36px 18px 72px; }
+      .commitment { padding: 20px; }
+      .contact-card { padding: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="nav-inner">
+      <a href="/" class="nav-brand">
+        <img src="yara_butterfly.png" alt="Yara" />
+        Yara
+      </a>
+      <a href="/" class="nav-back">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+        Back to home
+      </a>
+    </div>
+  </nav>
+
+  <div class="page">
+
+    <!-- Header -->
+    <div class="page-header">
+      <div class="eyebrow">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        Legal
+      </div>
+      <h1>Terms of Service</h1>
+      <div class="meta">
+        <span>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          Effective Date: June 14, 2026
+        </span>
+        <span>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          Last Updated: June 14, 2026
+        </span>
+      </div>
+    </div>
+
+    <!-- Intro -->
+    <div class="commitment">
+      <h2>Agreement to These Terms</h2>
+      <p>These Terms of Service ("Terms") are an agreement between you and My Yara Inc. ("Yara," "we," "us") that governs your use of the Yara app and related services (the "Service"). Please read them carefully. By creating an account or using the Service, you agree to these Terms and to our <a href="https://www.my-yara.com/privacy.html" style="color:var(--purple);font-weight:600;text-decoration:none;">Privacy Policy</a>. If you do not agree, please do not use the Service.</p>
+    </div>
+
+    <!-- 1 -->
+    <div class="section">
+      <span class="section-number">Section 01</span>
+      <h2>Acceptance of These Terms</h2>
+      <p>By accessing or using the Service, you confirm that you have read, understood, and agree to be bound by these Terms and any policies referenced in them. If you use the Service on behalf of someone else, you confirm that you are authorized to do so.</p>
+    </div>
+
+    <!-- 2 -->
+    <div class="section">
+      <span class="section-number">Section 02</span>
+      <h2>Who Can Use Yara</h2>
+      <p>You must be at least 18 years old and a resident of the United States to use the Service. The Service is intended for personal, non-commercial use to manage your own provider relationships.</p>
+    </div>
+
+    <!-- 3 -->
+    <div class="section">
+      <span class="section-number">Section 03</span>
+      <h2>What Yara Is</h2>
+      <p>Yara is an AI product that helps you manage your relationships with service providers, such as analyzing bills, finding savings, and advocating or negotiating on your behalf. Yara works for you, on your side.</p>
+      <p>Yara is <strong>not a bank, lender, money transmitter, broker-dealer, or investment, tax, or legal adviser</strong>, and is not a credit-repair organization or a consumer reporting agency. Yara does not provide banking, lending, or professional advisory services.</p>
+    </div>
+
+    <!-- 4 -->
+    <div class="section">
+      <span class="section-number">Section 04</span>
+      <h2>Not Financial, Legal, or Tax Advice</h2>
+      <p>The information and outputs the Service provides, including savings estimates, bill summaries, and negotiation suggestions, are for general informational purposes only and may be incomplete or incorrect. They are <strong>not professional financial, legal, or tax advice</strong>, and they are not a substitute for advice from a qualified professional. You are responsible for your own decisions, and you should review important financial decisions independently.</p>
+    </div>
+
+    <!-- 5 -->
+    <div class="section">
+      <span class="section-number">Section 05</span>
+      <h2>Your Account and Responsibilities</h2>
+      <ul>
+        <li>Provide accurate information and keep it up to date.</li>
+        <li>Keep your account credentials and device secure, and enable available protections such as biometric unlock.</li>
+        <li>You are responsible for activity that occurs under your account.</li>
+        <li>Tell us promptly if you believe your account has been compromised.</li>
+      </ul>
+    </div>
+
+    <!-- 6 -->
+    <div class="section">
+      <span class="section-number">Section 06</span>
+      <h2>Acceptable Use</h2>
+      <p>When using the Service, you agree not to:</p>
+      <ul>
+        <li>Use the Service for any unlawful, fraudulent, or harmful purpose, or in violation of these Terms.</li>
+        <li><strong>Direct Yara to access or automate a bank or other financial-institution portal, or provide bank log-in credentials for that purpose.</strong> Financial accounts are connected only through Plaid (see Section 07).</li>
+        <li>Submit information about other people unless you have the authority to do so.</li>
+        <li>Reverse engineer, copy, resell, or attempt to extract the underlying source code or models of the Service, except where the law does not allow this restriction.</li>
+        <li>Interfere with, disrupt, or attempt to gain unauthorized access to the Service or its systems.</li>
+      </ul>
+      <p>We may remove content or suspend access that we believe violates these Terms.</p>
+    </div>
+
+    <!-- 7 -->
+    <div class="section">
+      <span class="section-number">Section 07</span>
+      <h2>Connecting Financial Accounts (Plaid)</h2>
+      <p>If you choose to connect a financial account, Yara uses Plaid Inc. to retrieve your financial data securely through your institution's authorized interfaces. Your use of Plaid is also governed by <a href="https://plaid.com/legal/#end-user-privacy-policy" style="color:var(--purple);font-weight:600;text-decoration:none;" target="_blank" rel="noopener">Plaid's End User Privacy Policy</a>. You can disconnect an account at any time in the app.</p>
+      <div class="highlight-box">
+        Information obtained through Plaid is <strong>not a consumer report</strong> under the Fair Credit Reporting Act (FCRA), and Yara does not use it to determine your eligibility for credit, insurance, employment, housing, or any other FCRA-covered purpose.
+      </div>
+    </div>
+
+    <!-- 8 -->
+    <div class="section">
+      <span class="section-number">Section 08</span>
+      <h2>AI Features and Acting on Your Behalf</h2>
+      <p>Yara is an AI product. To handle some requests, Yara draws on trusted third-party AI models that process your data solely to generate a response. How your data is handled is described in our <a href="https://www.my-yara.com/privacy.html" style="color:var(--purple);font-weight:600;text-decoration:none;">Privacy Policy</a>.</p>
+      <p><strong>You stay in control.</strong> Yara does not take actions that have a legal or similarly significant effect on you through automated processing alone. Actions that change your provider relationships, such as cancelling, switching, or agreeing to new terms, require your review and consent before Yara acts.</p>
+      <p>When you ask Yara to contact a provider for you, Yara's AI may place a voice call and create a recording or transcript so it can complete your request. At the start of the call, Yara identifies itself as an automated assistant acting on your behalf and states that the call may be recorded and transcribed. By asking Yara to make a call for you, you authorize this.</p>
+    </div>
+
+    <!-- 9 -->
+    <div class="section">
+      <span class="section-number">Section 09</span>
+      <h2>Fees and Subscriptions</h2>
+      <p>Some features of the Service may require payment. If a feature is paid, we will present the price and terms before you purchase. Any purchases or subscriptions you make through the App Store are processed and managed by Apple under your App Store account, and renewals, cancellations, and refunds are subject to Apple's terms. We may change our fees on a going-forward basis with notice.</p>
+    </div>
+
+    <!-- 10 -->
+    <div class="section">
+      <span class="section-number">Section 10</span>
+      <h2>Intellectual Property</h2>
+      <p>The Service, including its software, design, and content we provide, is owned by Yara and its licensors and is protected by intellectual-property laws. We grant you a limited, personal, non-transferable, revocable license to use the Service under these Terms.</p>
+      <p><strong>Your content stays yours.</strong> You keep ownership of the information and documents you share with Yara. You grant us a limited license to use that content only to provide and improve the Service for you, as described in our Privacy Policy.</p>
+    </div>
+
+    <!-- 11 -->
+    <div class="section">
+      <span class="section-number">Section 11</span>
+      <h2>Privacy</h2>
+      <p>Your privacy matters to us. Our <a href="https://www.my-yara.com/privacy.html" style="color:var(--purple);font-weight:600;text-decoration:none;">Privacy Policy</a> explains what information we handle, how it is protected on your device, and how consent controls what Yara can access. By using the Service, you agree to the Privacy Policy.</p>
+    </div>
+
+    <!-- 12 -->
+    <div class="section">
+      <span class="section-number">Section 12</span>
+      <h2>Disclaimers</h2>
+      <p>The Service is provided <strong>"as is" and "as available"</strong>, without warranties of any kind, whether express or implied, including implied warranties of merchantability, fitness for a particular purpose, and non-infringement, to the fullest extent permitted by law. We do not warrant that the Service will be uninterrupted, error-free, or that outputs will be accurate or complete. You use the Service, and rely on its outputs, at your own discretion.</p>
+    </div>
+
+    <!-- 13 -->
+    <div class="section">
+      <span class="section-number">Section 13</span>
+      <h2>Limitation of Liability</h2>
+      <p>To the fullest extent permitted by law, Yara and its affiliates will not be liable for any indirect, incidental, special, consequential, or punitive damages, or for any loss of profits, data, or goodwill, arising out of or relating to your use of the Service. To the fullest extent permitted by law, our total liability for any claim relating to the Service will not exceed the greater of the amount you paid us for the Service in the twelve months before the claim, or one hundred U.S. dollars (US$100). Some jurisdictions do not allow certain limitations, so some of these may not apply to you.</p>
+    </div>
+
+    <!-- 14 -->
+    <div class="section">
+      <span class="section-number">Section 14</span>
+      <h2>Indemnification</h2>
+      <p>You agree to indemnify and hold Yara harmless from claims, losses, and expenses (including reasonable legal fees) arising out of your misuse of the Service, your violation of these Terms, or your violation of any law or the rights of another, including sharing information about other people without authority.</p>
+    </div>
+
+    <!-- 15 -->
+    <div class="section">
+      <span class="section-number">Section 15</span>
+      <h2>Termination</h2>
+      <p>You may stop using the Service and delete your account at any time in the app. We may suspend or terminate your access if you violate these Terms or to protect the Service or other users. When your account is deleted, we handle your data as described in the Privacy Policy. Sections that by their nature should survive termination (such as intellectual property, disclaimers, limitation of liability, indemnification, and dispute resolution) will survive.</p>
+    </div>
+
+    <!-- 16 -->
+    <div class="section">
+      <span class="section-number">Section 16</span>
+      <h2>Changes to These Terms</h2>
+      <p>We may update these Terms from time to time. For material changes, we will provide notice through the app or by email before the changes take effect. The "Last Updated" date above reflects the most recent revision. Continuing to use the Service after changes take effect means you accept the updated Terms.</p>
+    </div>
+
+    <!-- 17 -->
+    <div class="section">
+      <span class="section-number">Section 17</span>
+      <h2>Governing Law and Dispute Resolution</h2>
+      <p>These Terms are governed by the laws of the State of Delaware, without regard to its conflict-of-laws rules. Any dispute arising out of or relating to these Terms or the Service that is not resolved informally will be settled by <strong>binding individual arbitration</strong> administered by JAMS under its applicable rules, rather than in court, except that either party may bring a claim in small-claims court. <strong>You and Yara agree to bring claims only on an individual basis and waive any right to participate in a class or representative action.</strong> You may opt out of arbitration by contacting us within 30 days of first accepting these Terms.</p>
+    </div>
+
+    <!-- 18 -->
+    <div class="section">
+      <span class="section-number">Section 18</span>
+      <h2>Contact Us</h2>
+      <div class="contact-card">
+        <div>
+          <h3>Questions about these Terms?</h3>
+          <p>We're happy to help. Reach out any time.</p>
+          <a href="mailto:support@my-yara.com" class="contact-link">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            support@my-yara.com
+          </a>
+        </div>
+        <div style="font-size:13px;color:var(--text-muted);line-height:1.6;">
+          <strong style="color:var(--text-main);display:block;margin-bottom:4px;">My Yara Inc.</strong>
+          6899 Collins Ave, Unit 1108<br>
+          Miami Beach, FL 33141, USA<br>
+          <a href="https://my-yara.com" style="color:var(--purple);text-decoration:none;">my-yara.com</a>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /page -->
+
+  <footer>
+    <div class="inner">
+      <p style="margin-bottom:8px;">
+        <a href="/">← Back to Yara</a>
+        &nbsp;·&nbsp;
+        <a href="https://www.my-yara.com/privacy.html">Privacy Policy</a>
+        &nbsp;·&nbsp;
+        <a href="mailto:support@my-yara.com">support@my-yara.com</a>
+      </p>
+      <p>&copy; 2026 My Yara Inc. All rights reserved.</p>
+    </div>
+  </footer>
+
+</body>
+</html>
