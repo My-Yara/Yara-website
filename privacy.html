@@ -275,11 +275,11 @@
       <div class="meta">
         <span>
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-          Effective Date: February 2026
+          Effective Date: June 14, 2026
         </span>
         <span>
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-          Last Updated: June 2026
+          Last Updated: June 14, 2026
         </span>
       </div>
     </div>
@@ -298,15 +298,16 @@
       <h3>Information You Provide</h3>
       <ul>
         <li><strong>Account Information:</strong> Email address, name, phone number, and authentication credentials</li>
-        <li><strong>Financial Documents:</strong> Bills, statements, and service agreements you upload</li>
+        <li><strong>Documents You Share:</strong> Bills, statements, and service agreements you share with Yara, stored encrypted on your device and not on our servers</li>
         <li><strong>Preferences:</strong> Settings and customizations you configure</li>
       </ul>
 
       <h3>Information Collected Automatically</h3>
       <ul>
-        <li><strong>Usage Data:</strong> How you interact with the app (anonymized)</li>
+        <li><strong>Usage Data:</strong> How you interact with the app (de-identified)</li>
         <li><strong>Device Information:</strong> Device type and operating system for compatibility</li>
         <li><strong>Error Reports:</strong> Crash logs to improve stability</li>
+        <li><strong>Cookies &amp; Similar Technologies:</strong> Our website uses essential cookies and similar technologies; the Yara app does not use advertising cookies or third-party ad trackers</li>
       </ul>
 
       <h3>Information from Connected Financial Accounts</h3>
@@ -317,8 +318,15 @@
         <li><strong>Institution Details:</strong> Name of your financial institution</li>
       </ul>
       <div class="highlight-box">
-        This data is retrieved through Plaid Inc.'s secure API services. We only access the categories of data you explicitly consent to when connecting your account. Plaid's collection and use of your data is also subject to <strong>Plaid's End User Privacy Policy</strong>.
+        <strong>We do not store your bank statements or raw financial-account data.</strong> This information is pulled live from Plaid each time you open the app, used only during a consent session, and purged when the session ends. Only the insights Yara derives from it, such as a savings recommendation, are kept on your device in encrypted form; the underlying financial data is not retained after your session ends. We access only the categories of data you explicitly consent to.
       </div>
+
+      <h3>Information You Share with Yara</h3>
+      <p>When you ask Yara to help, you share information with Yara, such as your messages and documents like bills, statements, and service agreements. This information lives encrypted on your device. During a consent session, Yara's AI accesses only the specific information needed to act on your behalf; <strong>when the consent session ends, the access ends and the working session data is deleted from our servers</strong>, other than limited records such as audit and consent records or data we must keep by law, and your information remains only in encrypted form on your device. Yara's models cannot use your data once consent ends.</p>
+      <p>You control what you share. Please share only what Yara needs to act on your behalf, and <strong>avoid sharing highly sensitive information you don't need Yara to use</strong>: for example, government identification numbers, health or medical records, or account passwords. <strong>Do not share information about other people unless you have the authority to do so.</strong> You are responsible for the content you choose to share, and we may remove content that violates our Terms of Service.</p>
+
+      <h3>Permissions the App Uses</h3>
+      <p>With your permission, the app uses certain device features only for the feature you are using: the camera and photo library to capture and read your bills and documents, the microphone to place provider calls on your behalf, and notifications to alert you about renewals, savings, and negotiation outcomes. You can grant or revoke each permission at any time in your device settings. Revoking a permission turns off the related feature but does not otherwise affect the app.</p>
     </div>
 
     <!-- 2. How We Protect Your Data -->
@@ -326,30 +334,31 @@
       <span class="section-number">Section 02</span>
       <h2>How We Protect Your Data</h2>
 
-      <h3>End-to-End Encryption</h3>
-      <p>All your personal information is encrypted on your device before transmission. Our servers store only encrypted data that we cannot read without your active participation.</p>
+      <h3>Your Data Lives on Your Device</h3>
+      <p>Yara is built device-first. Your information is stored primarily on your own device, encrypted using AES-256. You may optionally enable an encrypted cloud backup (for example, to Yara Cloud, iCloud, Google Drive, or OneDrive) so your data is available across your devices. That backup is encrypted as well.</p>
 
-      <h3>Zero-Knowledge Architecture</h3>
-      <p>Your sensitive data is encrypted with keys derived from your credentials. Yara's servers cannot decrypt your stored data without your cooperation.</p>
+      <h3>Encryption in Transit and at Rest</h3>
+      <p>Data is encrypted in transit using TLS 1.3 and at rest using AES-256. Access to decrypted data is limited to the active, consent-driven sessions you initiate.</p>
 
-      <h3>Consent-Driven AI Sessions</h3>
-      <p>When you enable AI features, you grant temporary access for a limited time (1–24 hours). After the session expires, decrypted data is automatically purged from our servers.</p>
+      <h3>Biometric Login</h3>
+      <p>If you turn on Face ID or Touch ID to unlock the app, that authentication is handled entirely by your device's operating system. Yara never receives, collects, or stores your fingerprint, face scan, or any biometric identifier. You can turn off biometric unlock at any time in Settings.</p>
+
+      <h3>Consent Controls What Yara Can See</h3>
+      <p>Yara's AI works only on the data you allow, and only while you have granted consent. While you are using the app, your consent lets <strong>Yara's AI models access your data</strong> to fulfill your request. You can also grant consent for Yara to keep working on a task when you are not actively in the app. Even then, Yara uses your data only under that consent. When the consent ends, <strong>both the access and the working session data are removed from our servers</strong>, other than limited records such as audit and consent records or data we must keep by law, and your information remains only in encrypted form on your device.</p>
+      <p>During processing, the third-party AI models that power Yara receive only the data needed, for only as long as it takes to answer your request, and <strong>do not store your data</strong>. Consent sessions are limited in time (up to 24 hours), and you can end one at any time.</p>
 
       <h3>Financial Data Security</h3>
-      <p>Data retrieved from connected financial accounts through Plaid is:</p>
+      <p>Data from connected financial accounts through Plaid is:</p>
       <ul>
         <li>Transmitted over encrypted channels (TLS 1.3)</li>
-        <li>Stored only in encrypted form in our persistent databases</li>
-        <li>Accessible to our AI only during active, consent-driven sessions</li>
-        <li>Never stored in plaintext on disk</li>
+        <li><strong>Not stored by Yara:</strong> it is pulled live from Plaid each time you open the app, used only during your consent session, and purged when the session ends</li>
+        <li>Accessed only transiently, in memory, to process your request</li>
+        <li>Insights Yara derives from it, such as a savings recommendation, are kept on your device in encrypted form; the financial data itself is not retained after your session ends</li>
       </ul>
 
       <div class="security-badges">
         <span class="badge"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>AES-256 Encryption</span>
         <span class="badge"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>TLS 1.3 in Transit</span>
-        <span class="badge"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>AICPA Trust Criteria</span>
-        <span class="badge"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>NIST 800-53</span>
-        <span class="badge"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>ISO 27002</span>
       </div>
     </div>
 
@@ -362,13 +371,16 @@
         <li>Provide AI-powered bill analysis and recommendations</li>
         <li>Assist with provider negotiations and calls</li>
         <li>Deliver spending insights and financial optimization suggestions based on connected account data</li>
-        <li>Improve the Service through anonymized analytics</li>
+        <li>Power Yara's own AI to answer your questions and act on your behalf. This processing is handled by third-party AI models that <strong>do not store your data</strong> (see Section 05)</li>
+        <li>Improve the Service through de-identified, aggregated analytics</li>
         <li>Communicate important updates about your account</li>
       </ul>
       <div class="never-box">
         <span class="icon">🔒</span>
-        <p>We never sell your personal information to third parties — period.</p>
+        <p>We do not sell your personal information, and we do not share it for cross-context behavioral advertising.</p>
       </div>
+
+      <p>We may also create and use aggregated or de-identified information that cannot reasonably identify you, such as anonymized usage statistics, to operate and improve Yara. We do not attempt to re-identify it.</p>
     </div>
 
     <!-- 4. Financial Account Connections -->
@@ -377,10 +389,10 @@
       <h2>Financial Account Connections (Plaid)</h2>
 
       <h3>How Plaid Works</h3>
-      <p>Yara uses Plaid Inc. to securely connect to your financial institutions. When you link an account, Plaid retrieves your financial data directly from your bank or financial institution through authorized APIs — never through screen scraping or credential storage.</p>
+      <p>Yara uses Plaid Inc. to securely connect to your financial institutions. When you link an account, Plaid retrieves your financial data directly from your bank or financial institution through authorized APIs, never through screen scraping or credential storage.</p>
 
       <h3>Your Consent</h3>
-      <p>Before connecting any financial account, you will be asked to provide clear, informed consent specifying which financial institution you are connecting, what categories of data Yara will access, and how your data will be used. You may connect or disconnect accounts at any time through the app.</p>
+      <p>Before connecting any financial account, you will be asked to provide clear, informed consent specifying which financial institution you are connecting, what categories of data Yara will access, and how your data will be used. You control what Yara can see during each session, and you can change or withdraw your consent, or connect or disconnect accounts, at any time through the app. We maintain records of the consents you provide.</p>
 
       <h3>How We Use Connected Account Data</h3>
       <p>Data from connected financial accounts is used solely to:</p>
@@ -391,26 +403,73 @@
         <li>Provide personalized financial optimization</li>
       </ul>
       <div class="highlight-box">
-        We do not use your connected account data for advertising, and we do not sell it. We share it only with the service and AI providers described in this policy to operate the Service. Plaid's collection, use, and handling of your data is governed by <strong>Plaid's End User Privacy Policy</strong>.
+        We do not use your connected account data for advertising, and we do not share it with unrelated third parties. Plaid's collection, use, and handling of your data is governed by <a href="https://plaid.com/legal/#end-user-privacy-policy" style="color:var(--purple);text-decoration:none;font-weight:600;" target="_blank" rel="noopener">Plaid's End User Privacy Policy</a>.
       </div>
+
+      <h3>Not a Consumer Report</h3>
+      <p>Information obtained through Plaid is <strong>not a consumer report</strong> under the Fair Credit Reporting Act (FCRA), and Yara does <strong>not</strong> use it to determine your eligibility for credit, insurance, employment, housing, or any other FCRA-covered purpose.</p>
     </div>
 
-    <!-- 5. AI and Third-Party Processors -->
+    <!-- 5. Third-Party AI Processing -->
     <div class="section">
       <span class="section-number">Section 05</span>
-      <h2>Third-Party AI Processors</h2>
+      <h2>Third-Party AI Processing</h2>
 
-      <p>To provide the AI assistant, Yara transmits certain personal information through Yara's servers to trusted third-party AI service providers (our &ldquo;sub-processors&rdquo;) that supply the underlying language-model capabilities. We engage these providers solely to generate responses for you, and we do not permit them to use your information for their own purposes.</p>
-      <p><strong>Data sent:</strong> your messages to the assistant; connected account balances, transaction history, and institution names obtained via Plaid; and the contents of documents you upload or share with the assistant.</p>
-      <p><strong>Purpose:</strong> solely to generate the assistant's response to you. We do not sell your data, and your data is not used by providers to train their models, per our agreements with each provider.</p>
-      <p><strong>Retention:</strong> these providers operate under zero-data-retention (ZDR) terms — they do not retain your messages or the information sent to them once a response has been generated.</p>
-      <p><strong>Protection:</strong> each provider is contractually bound to provide the same or an equivalent level of data protection as described in this policy.</p>
-      <p><strong>Your control:</strong> affirmative consent is required before any data is shared with these providers. You can revoke consent at any time in Settings &rarr; Privacy &amp; Data. Revoking consent disables the AI assistant.</p>
+      <h3>How Yara's AI Processes Your Request</h3>
+      <p><strong>Yara shares only the data needed for the specific feature you are using, and only for as long as it takes to process your request.</strong> Yara is an AI product that answers your questions, analyzes your bills, and advocates on your behalf. To handle some requests, Yara's AI draws on trusted third-party AI models that process your data in a secure, enterprise environment <strong>solely to generate a response</strong>. Depending on what you ask, this can include:</p>
+      <ul>
+        <li><strong>Your chat messages:</strong> the text of your conversations with Yara</li>
+        <li><strong>Bills and documents:</strong> the bills, statements, and service agreements you share with Yara</li>
+        <li><strong>Financial and transaction details:</strong> account and transaction information relevant to the task you've asked Yara to perform</li>
+        <li><strong>Provider and negotiation context:</strong> details about the provider relationship needed to advocate or negotiate on your behalf</li>
+        <li><strong>Search queries:</strong> questions Yara sends to find answers or recommendations</li>
+        <li><strong>Provider-portal content:</strong> screenshots and page content from provider websites when you ask Yara to act on a provider portal for you</li>
+      </ul>
+      <p><strong>These third-party AI models do not store your data.</strong> Your information is processed to answer your request and is then discarded.</p>
+
+      <div class="never-box">
+        <span class="icon">🔒</span>
+        <p>Under our agreements with these models, your data is <strong>not used to train them</strong> and is <strong>not retained after your request is processed</strong>, apart from any short-term operational handling needed to deliver the response or any retention required by law. Yara uses an enterprise processing tier governed by contractual no-training and no-retention terms.</p>
+      </div>
+
+      <h3>When Yara Makes Calls on Your Behalf</h3>
+      <p>When you ask Yara to contact a provider for you, Yara's AI may place a voice call and create a recording or transcript of that call so Yara can complete your request and keep a record of what was agreed. At the start of the call, Yara identifies itself as an automated assistant acting on your behalf and states that the call may be recorded and transcribed, so that all parties are on notice before the conversation continues. Call transcripts receive the same protection as the other documents in your account: they are stored encrypted on your device, accessed only during a consent session, and are not used to train any AI models.</p>
+
+      <h3>AI Outputs and Your Control</h3>
+      <p>Yara is an AI product. While we work to make Yara accurate and helpful, AI outputs such as savings estimates, bill summaries, and negotiation suggestions may be incomplete or incorrect, and they are not professional financial, legal, or tax advice. Yara does not take actions that have a legal or similarly significant effect on you through automated processing alone: actions that change your provider relationships, such as cancelling, switching, or agreeing to new terms, require your review and consent before Yara acts. We do not use human reviewers to read your conversations as a routine matter; limited human review may occur only to investigate a security issue or suspected abuse, or where required by law. You may ask us how an AI-assisted recommendation about your providers was generated, and you may request human review of any such recommendation before acting on it.</p>
+
+      <h3>Equal Protection by Third Parties</h3>
+      <p>Our service providers (including the third-party AI models that process your requests and our infrastructure and hosting providers) are contractually bound to protect your data to a standard consistent with this Privacy Policy, to use it only to provide services to Yara, and not to sell it or use it for their own purposes. <strong>Plaid Inc. is an independent company</strong> that also processes your data under <strong>its own End User Privacy Policy</strong>; Plaid's use of your information is governed by that policy in addition to its agreement with us.</p>
+
+      <h3>Service Providers</h3>
+      <p>We work with trusted service providers who help us operate the Service, including:</p>
+      <ul>
+        <li><strong>Plaid Inc.:</strong> Financial account connectivity and transaction data retrieval</li>
+        <li><strong>Third-party AI models:</strong> Process your requests to power Yara's AI features; they do not store your data</li>
+        <li><strong>Infrastructure and hosting providers:</strong> Secure storage and delivery of the Service</li>
+      </ul>
+      <p>All service providers are contractually bound to protect your information and use it only for the purposes of providing services to Yara.</p>
     </div>
 
-    <!-- 6. Your Rights -->
+    <!-- 6. When We May Disclose Information -->
     <div class="section">
       <span class="section-number">Section 06</span>
+      <h2>When We May Disclose Information</h2>
+      <p>Your information lives on your device and is used only under your consent. We do not sell your personal information. Apart from the service providers and AI models described in Section 05 and Plaid in Section 04, we disclose information only in these limited situations:</p>
+      <ul>
+        <li><strong>For legal reasons:</strong> to comply with applicable law, a subpoena, court order, or other legal process, or to respond to a lawful request from a government or law-enforcement authority</li>
+        <li><strong>For safety:</strong> to protect the rights, property, or safety of you, Yara, or others, including to prevent fraud or address security threats</li>
+        <li><strong>In a business transfer:</strong> in connection with a merger, acquisition, financing, reorganization, or sale of all or part of our business, where the recipient must honor this Privacy Policy and we will notify you before your information becomes subject to a different policy</li>
+        <li><strong>With your consent:</strong> when you direct us to disclose information or otherwise agree</li>
+      </ul>
+
+      <h3>Third-Party Links</h3>
+      <p>Yara may link to or interact with third-party websites and services, including provider websites. We do not control those services and are not responsible for their privacy practices. We encourage you to review their policies.</p>
+    </div>
+
+    <!-- 7. Your Rights -->
+    <div class="section">
+      <span class="section-number">Section 07</span>
       <h2>Your Rights and Choices</h2>
       <div class="rights-grid">
         <div class="right-card">
@@ -441,16 +500,27 @@
         <div class="right-card">
           <div class="right-icon">📋</div>
           <div class="right-name">Audit</div>
-          <div class="right-desc">Review logs of all data access</div>
+          <div class="right-desc">Review logs of data access activity</div>
         </div>
       </div>
-      <h3>Deleting Connected Account Data</h3>
-      <p>When you disconnect a financial account, the associated data is removed from our systems. You may also request deletion of all your data by contacting us or through the app settings.</p>
+      <h3>Revoking Consent</h3>
+      <p>You can withdraw your consent at any time. You may end an active AI session and purge its cached data directly in the app, disconnect any connected financial account in the app at any time, and turn off AI features in your settings. Withdrawing consent stops further processing of the affected data, including any sharing with third-party AI models, going forward.</p>
+
+      <h3>Requesting Deletion</h3>
+      <p>You can request deletion of your data in two ways:</p>
+      <ul>
+        <li><strong>In the app:</strong> Use the account and data controls in Settings to delete connected-account data or your entire account.</li>
+        <li><strong>By email:</strong> Contact us at <a href="mailto:privacy@my-yara.com" style="color:var(--purple);text-decoration:none;font-weight:600;">privacy@my-yara.com</a> and we will process your request.</li>
+      </ul>
+      <p>When you disconnect a financial account, the associated data is removed from our systems. When you delete your account, all of your data is permanently deleted from our systems within 30 days, except where we are required to retain limited records to comply with law. Any encrypted backups you have stored in your own cloud account (such as iCloud, Google Drive, or OneDrive) are under your control and can be deleted by you at any time. Because the third-party AI models that power Yara process your data transiently and do not retain it after a request is processed, they do not keep a separate stored copy of it.</p>
+
+      <h3>Communication Preferences</h3>
+      <p>You can opt out of promotional emails at any time using the unsubscribe link in any such email or by contacting us. We will still send you essential service and account messages.</p>
     </div>
 
     <!-- 7. Data Retention -->
     <div class="section">
-      <span class="section-number">Section 07</span>
+      <span class="section-number">Section 08</span>
       <h2>Data Retention</h2>
       <table class="retention-table">
         <thead>
@@ -470,7 +540,11 @@
           </tr>
           <tr>
             <td>Connected account data</td>
-            <td>Retained while connection is active; removed upon disconnection</td>
+            <td>Connection kept active so data can be re-pulled live; raw data not stored; access removed on disconnection</td>
+          </tr>
+          <tr>
+            <td>Data shared with third-party AI models</td>
+            <td>Not retained after your request is processed, apart from transient processing or as required by law</td>
           </tr>
           <tr>
             <td>Deleted account data</td>
@@ -478,40 +552,91 @@
           </tr>
         </tbody>
       </table>
+      <p>We retain your data only for as long as needed to provide the Service or as required by law. When you delete your account, we permanently delete your data within 30 days, except for limited records (such as transaction, tax, or compliance records) we are required to retain to meet legal or regulatory obligations. See <strong>Section 07</strong> for how to revoke consent and request deletion.</p>
     </div>
 
     <!-- 8. Security Measures -->
     <div class="section">
-      <span class="section-number">Section 08</span>
+      <span class="section-number">Section 09</span>
       <h2>Security Measures</h2>
-      <p>We implement industry-standard security measures including:</p>
+      <p>We implement reasonable, risk-appropriate security measures including:</p>
       <ul>
         <li>AES-256 encryption for data at rest</li>
         <li>TLS 1.3 for data in transit</li>
-        <li>Regular security audits and penetration testing</li>
+        <li>Periodic security reviews and testing of our systems</li>
         <li>Strict access controls and audit logging</li>
-        <li>Comprehensive information security program aligned with AICPA, NIST, and ISO standards</li>
-        <li>Security breach notification procedures in compliance with applicable laws</li>
+        <li>An information security program designed with reference to recognized frameworks, including NIST and ISO</li>
+        <li>Security breach notification, without undue delay and as required by applicable law</li>
       </ul>
+      <p>We use strong technical and organizational measures to protect your information, including on-device encryption and consent-gated processing. However, no method of transmission over the internet or method of electronic storage is completely secure, and we cannot guarantee absolute security.</p>
     </div>
 
     <!-- 9. Children's Privacy -->
     <div class="section">
-      <span class="section-number">Section 09</span>
+      <span class="section-number">Section 10</span>
       <h2>Children's Privacy</h2>
-      <p>Yara is not intended for users under 18 years of age. We do not knowingly collect information from children.</p>
+      <p>Yara is intended only for users 18 years of age and older. The Service is not directed to children, and we do not knowingly collect personal information from anyone under 13 (or the applicable age of digital consent in your jurisdiction). If we learn that we have collected personal information from anyone under 18, we will delete it promptly.</p>
     </div>
 
     <!-- 10. Changes -->
     <div class="section">
-      <span class="section-number">Section 10</span>
+      <span class="section-number">Section 11</span>
       <h2>Changes to This Policy</h2>
-      <p>We may update this Privacy Policy periodically. We will notify you of material changes through the app or by email.</p>
+      <p>We may update this Privacy Policy from time to time. For material changes, we will provide notice through the app or by email before the changes take effect. Where we intend to collect new categories of personal information or use your information for a materially different purpose, we will obtain your consent where required by law. The "Last Updated" date above reflects the most recent revision.</p>
     </div>
 
-    <!-- 11. Contact -->
+    <!-- 12. Regional rights -->
     <div class="section">
-      <span class="section-number">Section 11</span>
+      <span class="section-number">Section 12</span>
+      <h2>Regional Privacy Rights</h2>
+
+      <div class="region-section">
+        <h3>
+          California Residents
+          <span class="region-badge">CCPA</span>
+        </h3>
+        <ul>
+          <li>Right to know what personal information we collect, the sources, the purposes, and the categories of third parties we share it with</li>
+          <li>Right to correct inaccurate personal information</li>
+          <li>Right to delete your personal information</li>
+          <li>Right to opt-out of the sale or sharing of personal information (we do not sell your personal information, and we do not share it for cross-context behavioral advertising)</li>
+          <li>Right to limit the use of sensitive personal information, such as financial account information</li>
+          <li>Right to non-discrimination for exercising your privacy rights</li>
+        </ul>
+        <p>To exercise these rights, contact us at <a href="mailto:privacy@my-yara.com" style="color:var(--purple);text-decoration:none;font-weight:600;">privacy@my-yara.com</a> or use the in-app privacy controls. We will verify your identity before fulfilling access, correction, or deletion requests, and will respond within the timeframes required by law (generally within 45 days). You may use an authorized agent to submit a request on your behalf.</p>
+        <p>We collect the categories of personal information described in Section 01, including identifiers, contact details, commercial and financial information, and internet/usage activity. The financial account information you connect is treated as <strong>sensitive personal information</strong> under California law; we use it only to provide the Service and the features you request. We do <strong>not</strong> offer financial incentives in exchange for your personal information, and we honor opt-out preference signals such as the Global Privacy Control (GPC).</p>
+
+        <table class="retention-table">
+          <thead>
+            <tr><th>Category of Personal Information</th><th>Source</th><th>Business Purpose</th><th>Categories of Recipients</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Identifiers and contact details (name, email, phone)</td><td>You</td><td>Account creation, authentication, support, and account messages</td><td>Third-party AI models; infrastructure and hosting providers</td></tr>
+            <tr><td>Commercial and provider information (bills, statements, provider details)</td><td>You</td><td>Bill analysis, savings, and provider negotiation</td><td>Third-party AI models</td></tr>
+            <tr><td>Financial and transaction information</td><td>Plaid; you</td><td>Spending insights and savings recommendations</td><td>Third-party AI models (transiently); Plaid</td></tr>
+            <tr><td>Internet and usage activity</td><td>Collected automatically</td><td>De-identified analytics to operate and improve Yara</td><td>Infrastructure and hosting providers</td></tr>
+          </tbody>
+        </table>
+        <p>We collect personal information from the sources, for the business purposes, and disclose it to the categories of recipients described above. We do not sell or share any category of personal information.</p>
+        <p><strong>Sensitive Personal Information.</strong> The financial-account information you connect through Plaid is the only category of sensitive personal information Yara processes. We use it solely to provide the features you request, not to infer characteristics about you and not for advertising, and we do not sell or share it. You can ask us to limit its use to that purpose at any time.</p>
+
+        <p>California's "Shine the Light" law (Civil Code §1798.83) lets California residents request information about disclosures of personal information to third parties for those third parties' own direct-marketing purposes. Yara does not disclose personal information to third parties for their own direct marketing.</p>
+      </div>
+
+      <div class="region-section">
+        <h3>Other U.S. State Privacy Rights</h3>
+        <p>If you reside in a U.S. state with a comprehensive privacy law (including, among others, Virginia, Colorado, Connecticut, Texas, Oregon, and Utah), you may have rights to access, correct, delete, and obtain a portable copy of your personal information, and to opt out of targeted advertising, the sale of personal information, or certain profiling. Financial account information is treated as sensitive data under several of these laws. To exercise these rights, contact us at <a href="mailto:privacy@my-yara.com" style="color:var(--purple);text-decoration:none;font-weight:600;">privacy@my-yara.com</a>. We will not discriminate against you for exercising them, and you may appeal a denied request by replying to our response.</p>
+      </div>
+
+      <div class="region-section">
+        <h3>Users Outside the United States</h3>
+        <p>Yara is offered to, and intended for, users in the United States, and our services are operated in the United States. The Service is not directed to individuals in the European Economic Area or the United Kingdom. If you choose to access Yara from outside the United States, you do so on your own initiative and are responsible for compliance with local laws. We process personal information in the United States; if we transfer information across borders in the future, we will apply the protections described in this Policy and any safeguards required by law.</p>
+      </div>
+    </div>
+
+    <!-- 13. Contact -->
+    <div class="section">
+      <span class="section-number">Section 13</span>
       <h2>Contact Us</h2>
       <div class="contact-card">
         <div>
@@ -523,43 +648,14 @@
           </a>
         </div>
         <div style="font-size:13px;color:var(--text-muted);line-height:1.6;">
-          <strong style="color:var(--text-main);display:block;margin-bottom:4px;">Yara Inc.</strong>
+          <strong style="color:var(--text-main);display:block;margin-bottom:4px;">My Yara Inc.</strong>
+          Attn: Privacy Officer<br>
+          6899 Collins Ave, Unit 1108<br>
+          Miami Beach, FL 33141, USA<br>
           <a href="https://my-yara.com" style="color:var(--purple);text-decoration:none;">my-yara.com</a>
         </div>
       </div>
-    </div>
-
-    <!-- 12 & 13. Regional rights -->
-    <div class="section">
-      <span class="section-number">Section 12–13</span>
-      <h2>Regional Privacy Rights</h2>
-
-      <div class="region-section">
-        <h3>
-          California Residents
-          <span class="region-badge">CCPA</span>
-        </h3>
-        <ul>
-          <li>Right to know what personal information is collected</li>
-          <li>Right to delete personal information</li>
-          <li>Right to opt-out of sale of personal information (we don't sell data)</li>
-          <li>Right to non-discrimination for exercising privacy rights</li>
-        </ul>
-      </div>
-
-      <div class="region-section">
-        <h3>
-          European Economic Area
-          <span class="region-badge">GDPR</span>
-        </h3>
-        <ul>
-          <li>Right to access and data portability</li>
-          <li>Right to rectification and erasure</li>
-          <li>Right to restrict processing</li>
-          <li>Right to object to processing</li>
-          <li>Right to withdraw consent</li>
-        </ul>
-      </div>
+      <p style="margin-top:16px;font-size:13px;color:var(--text-muted);">If you have a disability and need this Privacy Policy in an alternative format, contact <a href="mailto:privacy@my-yara.com" style="color:var(--purple);text-decoration:none;">privacy@my-yara.com</a> and we will provide one.</p>
     </div>
 
   </div><!-- /page -->
@@ -571,7 +667,7 @@
         &nbsp;·&nbsp;
         <a href="mailto:privacy@my-yara.com">privacy@my-yara.com</a>
       </p>
-      <p>&copy; 2026 Yara Inc. All rights reserved.</p>
+      <p>&copy; 2026 My Yara Inc. All rights reserved.</p>
     </div>
   </footer>
 
