@@ -262,7 +262,7 @@
       if (!raw) { document.getElementById('authGate').style.display = 'flex'; return false; }
       try {
         session = JSON.parse(raw);
-        if (!session.password) {
+        if (!session.token) {
           sessionStorage.removeItem('yara_auth');
           window.location.href = '/login.html?v=' + Date.now();
           return false;
@@ -283,8 +283,7 @@
       try {
         const res = await fetch(WAITLIST_API, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email: session.email || session.userId, password: session.password }),
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + session.token },
         });
         if (!res.ok) throw new Error('HTTP ' + res.status);
         rawData = await res.json();
@@ -700,8 +699,7 @@
       try {
         const res = await fetch(VISITS_API, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email: session.email || session.userId, password: session.password }),
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + session.token },
         });
         if (!res.ok) return;
         visitData = await res.json();

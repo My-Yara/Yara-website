@@ -372,11 +372,14 @@
         const result = await response.json();
 
         if (response.ok && result.success) {
-          // Store session
+          // YARA-3551: store the short-lived signed session token issued by
+          // authenticate.js — never the raw password. Every admin request
+          // now authenticates via this token (Authorization: Bearer header)
+          // instead of replaying credentials.
           sessionStorage.setItem('yara_auth', JSON.stringify({
             userId: result.userId,
             email: email,
-            password: password,
+            token: result.token,
             timestamp: result.timestamp,
           }));
 

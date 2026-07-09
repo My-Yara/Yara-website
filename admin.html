@@ -236,7 +236,7 @@
       if (!raw) { document.getElementById('authGate').style.display = 'flex'; return false; }
       try {
         session = JSON.parse(raw);
-        if (!session.password) {
+        if (!session.token) {
           sessionStorage.removeItem('yara_auth');
           window.location.href = '/login.html?v=' + Date.now();
           return false;
@@ -260,8 +260,7 @@
       try {
         const res = await fetch(WAITLIST_API, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email: session.email || session.userId, password: session.password }),
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + session.token },
         });
         if (!res.ok) throw new Error('HTTP ' + res.status);
         rawData = await res.json();
@@ -489,10 +488,8 @@
       try {
         const res = await fetch(APPROVE_API, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + session.token },
           body: JSON.stringify({
-            adminEmail: session.email || session.userId,
-            adminPassword: session.password,
             userEmail: email,
             filename: btn.dataset.file,
             sha: btn.dataset.sha,
@@ -525,10 +522,8 @@
       try {
         const res = await fetch(DELETE_API, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + session.token },
           body: JSON.stringify({
-            adminEmail: session.email || session.userId,
-            adminPassword: session.password,
             userEmail: email,
             filename: btn.dataset.file,
             sha: btn.dataset.sha,
@@ -565,10 +560,8 @@
       try {
         const res = await fetch(SEND_EMAIL_API, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + session.token },
           body: JSON.stringify({
-            adminEmail: session.email || session.userId,
-            adminPassword: session.password,
             toEmail: email,
             templateType: type,
           }),
