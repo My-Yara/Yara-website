@@ -1,10 +1,17 @@
 // authenticate.js - Server-side authentication for executive survey access
 
 const crypto = require('crypto');
+const jwt = require('jsonwebtoken');
 
 // Load authorized credentials from environment variable
 // Format: {"email@example.com": "hashed_password", ...}
 const AUTH_CREDENTIALS = process.env.AUTH_CREDENTIALS;
+
+// YARA-3551: session tokens are short-lived and signed with a secret
+// separate from AUTH_CREDENTIALS. Must be provisioned in the deployment
+// environment — there is no safe default.
+const SESSION_TOKEN_SECRET = process.env.SESSION_TOKEN_SECRET;
+const SESSION_TOKEN_TTL = '8h';
 
 // CORS headers to allow requests from the website
 const corsHeaders = {
@@ -81,6 +88,19 @@ exports.handler = async (event, context) => {
 
     // Check if email exists and password matches
     if (credentials[email] && credentials[email] === hashedPassword) {
+        if (!SESSION_TOKEN_SECRET) {
+            console.error('SESSION_TOKEN_SECRET environment variable not set');
+            return {
+                statusCode: 500,
+                headers: corsHeaders,
+                body: JSON.stringify({ message: 'Authentication system not configured' })
+            };
+        }
+
+        // YARA-3551: issue a short-lived signed session token instead of
+        // letting the client hold onto (and replay) the raw password.
+        const token = jwt.sign({ email }, SESSION_TOKEN_SECRET, { expiresIn: SESSION_TOKEN_TTL });
+
         // Authentication successful
         return {
             statusCode: 200,
@@ -89,6 +109,7 @@ exports.handler = async (event, context) => {
                 success: true,
                 message: 'Authentication successful',
                 userId: email,
+                token,
                 timestamp: new Date().toISOString()
             })
         };

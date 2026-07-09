@@ -4,7 +4,8 @@
   "description": "Yara stakeholder survey website with Netlify functions",
   "main": "index.html",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node --test test-auth-token.spec.js",
+    "test:e2e": "playwright test"
   },
   "dependencies": {
     "jsonwebtoken": "^9.0.3",

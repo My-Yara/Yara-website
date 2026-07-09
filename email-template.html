@@ -563,7 +563,7 @@
       if (!raw) { document.getElementById('authGate').style.display = 'flex'; return false; }
       try {
         session = JSON.parse(raw);
-        if (!session.password) {
+        if (!session.token) {
           sessionStorage.removeItem('yara_auth');
           window.location.href = '/login.html?redirect=/email-template.html&v=' + Date.now();
           return false;
@@ -588,10 +588,8 @@
       try {
         const res = await fetch(GET_TEMPLATE_API, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + session.token },
           body: JSON.stringify({
-            email: session.email || session.userId,
-            password: session.password,
             templateType: currentType
           })
         });
@@ -649,10 +647,8 @@
       try {
         const res = await fetch(SAVE_TEMPLATE_API, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + session.token },
           body: JSON.stringify({
-            email: session.email || session.userId,
-            password: session.password,
             templateType: currentType,
             subject,
             html,
