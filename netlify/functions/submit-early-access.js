@@ -99,7 +99,18 @@ exports.handler = async (event, context) => {
     data.ipAddress = clientIp;
     data.location = `${city}, ${region}, ${country}`;
 
-    const emailPrefix = data.email.replace('@', '_at_');
+    // YARA-3555: never put the email (even '_at_'-obfuscated) in a filename or
+    // commit message — git history is a PII leak. Key dedup/overwrite on an
+    // opaque sha256 of the normalized email instead; the email itself lives only
+    // inside the encrypted blob.
+    const emailKey = crypto.createHash('sha256')
+        .update(data.email.trim().toLowerCase())
+        .digest('hex');
+    // Files created before this fix were named with the '_at_'-obfuscated email.
+    // We still match them so existing signups stay de-duplicated during the
+    // transition — but this value is only ever used to FIND old files, never
+    // written to a filename or commit message.
+    const legacyPrefix = data.email.replace('@', '_at_');
     const isSurveyUpdate = data.surveyUpdate === true;
 
     // Check for existing entry by this email to prevent duplicates
@@ -117,7 +128,7 @@ exports.handler = async (event, context) => {
             const files = await listRes.json();
             // Find the most recent file for this email
             const matches = files
-                .filter(f => f.name.startsWith(emailPrefix) && f.name.endsWith('.encrypted'))
+                .filter(f => (f.name.startsWith(emailKey) || f.name.startsWith(legacyPrefix)) && f.name.endsWith('.encrypted'))
                 .sort((a, b) => b.name.localeCompare(a.name));
             if (matches.length > 0) {
                 existingFile = matches[0];
@@ -148,15 +159,19 @@ exports.handler = async (event, context) => {
     let fileSha;
     let commitMessage;
 
-    if (isSurveyUpdate && existingFile) {
+    if (isSurveyUpdate && existingFile && existingFile.name.startsWith(emailKey)) {
+        // Overwrite in place only when the existing file already uses the opaque
+        // name. A legacy email-named file must NOT be rewritten under its leaky
+        // name, so it falls through to a fresh hashed file below (the old file is
+        // scrubbed by the separate history rewrite).
         filename = `early-access/${existingFile.name}`;
         fileSha = existingFile.sha;
-        commitMessage = `Survey update for ${data.email}`;
+        commitMessage = 'Survey update';
     } else {
         const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-        filename = `early-access/${emailPrefix}_${timestamp}.encrypted`;
+        filename = `early-access/${emailKey}_${timestamp}.encrypted`;
         fileSha = null;
-        commitMessage = `New ENCRYPTED early access signup from ${data.email}`;
+        commitMessage = isSurveyUpdate ? 'Survey update' : 'New encrypted early access signup';
     }
 
     // Prepare GitHub API request
