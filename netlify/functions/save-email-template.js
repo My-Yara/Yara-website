@@ -60,7 +60,7 @@ exports.handler = async (event) => {
     const contentEncoded = Buffer.from(JSON.stringify(template, null, 2)).toString('base64');
 
     const commitBody = {
-        message: `Update ${templateType} email template (by ${body.email})`,
+        message: `Update ${templateType} email template`,
         content: contentEncoded,
         branch: 'main'
     };
