@@ -101,27 +101,32 @@ exports.handler = async (event, context) => {
         );
 
         if (needsGeo.length > 0) {
-            // Batch lookup: ipapi.co supports up to ~30 req/min on free tier
-            // Use ip-api.com batch endpoint for bulk lookups (free, up to 100 per request)
+            // ip-api.com's batch endpoint rejects requests with more than 100
+            // queries (HTTP 422), so look the IPs up in chunks of 100.
             const ips = [...new Set(needsGeo.map(e => e.ipAddress))];
             const ipToLocation = {};
 
-            try {
-                const batchRes = await fetch('http://ip-api.com/batch?fields=query,city,regionName,country,status', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(ips.map(ip => ({ query: ip })))
-                });
-                if (batchRes.ok) {
-                    const batchData = await batchRes.json();
-                    batchData.forEach(r => {
-                        if (r.status === 'success') {
-                            ipToLocation[r.query] = `${r.city || 'Unknown'}, ${r.regionName || 'Unknown'}, ${r.country || 'Unknown'}`;
-                        }
+            for (let i = 0; i < ips.length; i += 100) {
+                const chunk = ips.slice(i, i + 100);
+                try {
+                    const batchRes = await fetch('http://ip-api.com/batch?fields=query,city,regionName,country,status', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(chunk.map(ip => ({ query: ip })))
                     });
+                    if (batchRes.ok) {
+                        const batchData = await batchRes.json();
+                        batchData.forEach(r => {
+                            if (r.status === 'success') {
+                                ipToLocation[r.query] = `${r.city || 'Unknown'}, ${r.regionName || 'Unknown'}, ${r.country || 'Unknown'}`;
+                            }
+                        });
+                    } else {
+                        console.log('Batch geo lookup failed with status:', batchRes.status);
+                    }
+                } catch (geoErr) {
+                    console.log('Batch geo lookup failed:', geoErr.message);
                 }
-            } catch (geoErr) {
-                console.log('Batch geo lookup failed:', geoErr.message);
             }
 
             // Apply resolved locations
