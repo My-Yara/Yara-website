@@ -63,6 +63,7 @@
     .cell-source{color:rgba(26,26,46,0.25);font-size:11px}
     .cell-ip{color:rgba(26,26,46,0.2);font-size:11px;font-family:'SF Mono','Fira Code',monospace}
     .cell-loc{color:rgba(26,26,46,0.25);font-size:11px;max-width:160px;overflow:hidden;text-overflow:ellipsis}
+    .cell-country{color:rgba(26,26,46,0.55);font-size:12px;white-space:nowrap}
     .badge{display:inline-block;padding:2px 8px;border-radius:999px;font-size:10px;font-weight:600}
     .badge.pending{background:rgba(245,158,11,0.12);color:#F59E0B}
     .badge.approved{background:rgba(34,197,94,0.12);color:#22C55E}
@@ -121,6 +122,7 @@
     }
     @media(max-width:480px){
       .stats-row .stat-card:nth-child(n+4){display:none}
+      .col-country{display:none}
       .toolbar{flex-direction:column;align-items:stretch}
       .toolbar .search-input{width:100%}
       .toolbar-actions{display:flex;gap:8px}
@@ -177,6 +179,9 @@
           <option value="v4">Website v4</option>
           <option value="survey">Survey</option>
         </select>
+        <select class="filter-select" id="filterCountry">
+          <option value="all">All Countries</option>
+        </select>
         <button class="btn-export" id="exportBtn">Export CSV</button>
         <button class="btn-refresh2" id="refreshBtn">Refresh</button>
       </div>
@@ -191,6 +196,7 @@
                 <th data-col="source" class="col-source">Source <span class="sort-icon">&#9650;</span></th>
                 <th data-col="ip" class="col-ip">IP <span class="sort-icon">&#9650;</span></th>
                 <th data-col="location" class="col-loc">Location <span class="sort-icon">&#9650;</span></th>
+                <th data-col="country" class="col-country">Country <span class="sort-icon">&#9650;</span></th>
                 <th data-col="status">Status <span class="sort-icon">&#9650;</span></th>
                 <th class="col-action" style="width:160px">Action</th>
               </tr>
@@ -255,7 +261,7 @@
     // --- Fetch ---
     async function fetchWaitlist() {
       const tb = document.getElementById('tableBody');
-      tb.innerHTML = '<tr><td colspan="7"><div class="state-box"><div class="spinner-sm"></div><p>Loading...</p></div></td></tr>';
+      tb.innerHTML = '<tr><td colspan="8"><div class="state-box"><div class="spinner-sm"></div><p>Loading...</p></div></td></tr>';
 
       try {
         const res = await fetch(WAITLIST_API, {
@@ -270,11 +276,15 @@
           e._ts = e.timestamp ? new Date(e.timestamp).getTime() : 0;
           e._status = e.status || 'pending';
           e._source = (e.financialGoals || '').indexOf('website-v4') !== -1 ? 'v4' : 'survey';
+          const locParts = (e.location || '').split(',');
+          const country = locParts[locParts.length - 1].trim();
+          e._country = (!country || country === 'Unknown') ? 'Unknown' : country;
         });
         renderStats();
+        buildCountryOptions();
         applyFilters();
       } catch (err) {
-        tb.innerHTML = '<tr><td colspan="7"><div class="state-box"><p style="color:#F87171;">' + err.message + '</p><button class="btn-refresh2" onclick="fetchWaitlist()">Retry</button></div></td></tr>';
+        tb.innerHTML = '<tr><td colspan="8"><div class="state-box"><p style="color:#F87171;">' + err.message + '</p><button class="btn-refresh2" onclick="fetchWaitlist()">Retry</button></div></td></tr>';
       }
     }
 
@@ -289,6 +299,25 @@
       document.getElementById('statToday').textContent = today;
     }
 
+    // Rebuild the country dropdown from loaded data, keeping the current selection
+    function buildCountryOptions() {
+      const sel = document.getElementById('filterCountry');
+      const prev = sel.value;
+      const counts = {};
+      rawData.forEach(e => { counts[e._country] = (counts[e._country] || 0) + 1; });
+      const countries = Object.keys(counts).sort((a, b) => {
+        if (a === 'Unknown') return 1;
+        if (b === 'Unknown') return -1;
+        return counts[b] - counts[a] || a.localeCompare(b);
+      });
+      let html = '<option value="all">All Countries</option>';
+      countries.forEach(c => {
+        html += '<option value="' + esc(c) + '">' + esc(c) + ' (' + counts[c] + ')</option>';
+      });
+      sel.innerHTML = html;
+      if (countries.indexOf(prev) !== -1) sel.value = prev;
+    }
+
     // --- Filter + Sort + Render ---
     function getPerPage() {
       const v = document.getElementById('perPage').value;
@@ -299,11 +328,13 @@
       const q = document.getElementById('searchInput').value.trim().toLowerCase();
       const status = document.getElementById('filterStatus').value;
       const source = document.getElementById('filterSource').value;
+      const country = document.getElementById('filterCountry').value;
 
       filtered = rawData.filter(e => {
         if (q && !(e.email || '').toLowerCase().includes(q)) return false;
         if (status !== 'all' && e._status !== status) return false;
         if (source !== 'all' && e._source !== source) return false;
+        if (country !== 'all' && e._country !== country) return false;
         return true;
       });
 
@@ -316,6 +347,7 @@
           case 'source': va = a._source; vb = b._source; break;
           case 'ip': va = a.ipAddress || ''; vb = b.ipAddress || ''; break;
           case 'location': va = a.location || ''; vb = b.location || ''; break;
+          case 'country': va = a._country; vb = b._country; break;
           case 'status': va = a._status; vb = b._status; break;
           default: va = a._ts; vb = b._ts;
         }
@@ -339,7 +371,7 @@
       const tb = document.getElementById('tableBody');
 
       if (filtered.length === 0) {
-        tb.innerHTML = '<tr><td colspan="7"><div class="state-box"><p>No results.</p></div></td></tr>';
+        tb.innerHTML = '<tr><td colspan="8"><div class="state-box"><p>No results.</p></div></td></tr>';
         document.getElementById('pgInfo').textContent = '0 results';
         updatePgButtons(1, 1);
         return;
@@ -355,6 +387,7 @@
         html += '<td class="cell-source col-source">' + (entry._source === 'v4' ? 'Website' : 'Survey') + '</td>';
         html += '<td class="cell-ip col-ip">' + esc(entry.ipAddress || '-') + '</td>';
         html += '<td class="cell-loc col-loc" title="' + esc(entry.location || '') + '">' + esc(entry.location || '-') + '</td>';
+        html += '<td class="cell-country col-country">' + esc(entry._country === 'Unknown' ? '-' : entry._country) + '</td>';
         html += '<td><span class="badge ' + (isApproved ? 'approved' : 'pending') + '">' + (isApproved ? 'Approved' : 'Pending') + '</span></td>';
         html += '<td class="col-action"><div class="action-group">';
         if (isApproved) {
@@ -446,18 +479,20 @@
     document.getElementById('searchInput').addEventListener('input', applyFilters);
     document.getElementById('filterStatus').addEventListener('change', applyFilters);
     document.getElementById('filterSource').addEventListener('change', applyFilters);
+    document.getElementById('filterCountry').addEventListener('change', applyFilters);
     document.getElementById('refreshBtn').addEventListener('click', fetchWaitlist);
 
     // --- Export CSV ---
     document.getElementById('exportBtn').addEventListener('click', () => {
       if (filtered.length === 0) return;
-      const headers = ['Email', 'Date', 'Source', 'IP', 'Location', 'Status', 'Financial Goals', 'Rights Protection', 'Ideal Outcome'];
+      const headers = ['Email', 'Date', 'Source', 'IP', 'Location', 'Country', 'Status', 'Financial Goals', 'Rights Protection', 'Ideal Outcome'];
       const rows = filtered.map(e => [
         e.email || '',
         e.timestamp || '',
         e._source === 'v4' ? 'Website v4' : 'Survey',
         e.ipAddress || '',
         e.location || '',
+        e._country || '',
         e._status || 'pending',
         e.financialGoals || '',
         e.rightsProtection || '',
