@@ -2,12 +2,11 @@
 // Supports two templates via `templateType` body field: 'invite' (default) and 'welcome'.
 
 const fetch = require('node-fetch');
-const crypto = require('crypto');
+const { verifySessionToken } = require('./lib/verify-session');
 
 const GITHUB_PAT = process.env.GITHUB_PAT_TOKEN;
 const DATA_REPO = process.env.GITHUB_DATA_REPO;
 const GITHUB_ORG = 'My-Yara';
-const AUTH_CREDENTIALS = process.env.AUTH_CREDENTIALS;
 
 const TEMPLATE_FILES = {
     invite: 'config/email-template.json',
@@ -16,7 +15,7 @@ const TEMPLATE_FILES = {
 
 const corsHeaders = {
     'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Headers': 'Content-Type',
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
     'Access-Control-Allow-Methods': 'POST, OPTIONS'
 };
 
@@ -33,15 +32,15 @@ exports.handler = async (event) => {
         return { statusCode: 400, headers: corsHeaders, body: JSON.stringify({ message: 'Invalid JSON' }) };
     }
 
-    // Authenticate admin
-    if (!AUTH_CREDENTIALS) {
-        return { statusCode: 500, headers: corsHeaders, body: JSON.stringify({ message: 'Auth not configured' }) };
-    }
-    const credentials = JSON.parse(AUTH_CREDENTIALS);
-    const hashedPassword = crypto.createHash('sha256').update(body.password || '').digest('hex');
-    if (!credentials[body.email] || credentials[body.email] !== hashedPassword) {
+    // Authenticate admin — YARA-3551: verify the session token issued by
+    // authenticate.js instead of re-checking a replayed password. The
+    // admin's identity comes from the verified token, not a client-supplied
+    // email field, so it can't be spoofed independently of the token.
+    const session = verifySessionToken(event.headers.authorization || event.headers.Authorization);
+    if (!session) {
         return { statusCode: 401, headers: corsHeaders, body: JSON.stringify({ message: 'Unauthorized' }) };
     }
+    const adminEmail = session.email;
 
     const { subject, html, sha, fields } = body;
     if (!subject || !html) {
@@ -51,7 +50,7 @@ exports.handler = async (event) => {
     const templateType = (body.templateType === 'welcome') ? 'welcome' : 'invite';
     const filePath = TEMPLATE_FILES[templateType];
 
-    const template = { subject, html, updatedAt: new Date().toISOString(), updatedBy: body.email };
+    const template = { subject, html, updatedAt: new Date().toISOString(), updatedBy: adminEmail };
     // fields are optional — only present when the user has edited in Form mode at least once.
     // Storing them lets Form mode reopen with the same values next time.
     if (fields && typeof fields === 'object' && !Array.isArray(fields)) {
@@ -60,7 +59,7 @@ exports.handler = async (event) => {
     const contentEncoded = Buffer.from(JSON.stringify(template, null, 2)).toString('base64');
 
     const commitBody = {
-        message: `Update ${templateType} email template (by ${body.email})`,
+        message: `Update ${templateType} email template (by ${adminEmail})`,
         content: contentEncoded,
         branch: 'main'
     };

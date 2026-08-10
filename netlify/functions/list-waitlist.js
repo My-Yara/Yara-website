@@ -2,13 +2,13 @@
 
 const fetch = require('node-fetch');
 const crypto = require('crypto');
+const { verifySessionToken } = require('./lib/verify-session');
 
 // --- Configuration ---
 const GITHUB_PAT = process.env.GITHUB_PAT_TOKEN;
 const DATA_REPO = process.env.GITHUB_DATA_REPO;
 const GITHUB_ORG = 'My-Yara';
 const ENCRYPTION_KEY = process.env.ENCRYPTION_KEY;
-const AUTH_CREDENTIALS = process.env.AUTH_CREDENTIALS;
 const ALGORITHM = 'aes-256-cbc';
 
 // CORS headers
@@ -27,24 +27,10 @@ exports.handler = async (event, context) => {
         return { statusCode: 405, headers: corsHeaders, body: 'Method Not Allowed' };
     }
 
-    let requestData;
-    try {
-        requestData = JSON.parse(event.body);
-    } catch (error) {
-        return { statusCode: 400, headers: corsHeaders, body: 'Invalid JSON' };
-    }
-
-    const { email, password } = requestData;
-
-    // 1. Authenticate admin
-    if (!AUTH_CREDENTIALS) {
-        return { statusCode: 500, headers: corsHeaders, body: JSON.stringify({ message: 'Auth not configured' }) };
-    }
-
-    const credentials = JSON.parse(AUTH_CREDENTIALS);
-    const hashedPassword = crypto.createHash('sha256').update(password).digest('hex');
-
-    if (!credentials[email] || credentials[email] !== hashedPassword) {
+    // 1. Authenticate admin — YARA-3551: verify the session token issued by
+    // authenticate.js instead of re-checking a replayed password.
+    const session = verifySessionToken(event.headers.authorization || event.headers.Authorization);
+    if (!session) {
         return { statusCode: 401, headers: corsHeaders, body: JSON.stringify({ message: 'Unauthorized' }) };
     }
 
