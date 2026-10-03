@@ -52,14 +52,17 @@ exports.handler = async (event, context) => {
 
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
     // Save as .encrypted file to signal it's encrypted
-    const filename = `responses/${data.userId}_${timestamp}.encrypted`;
+    // YARA-3555: data.userId may be an email — never put it in a filename (git
+    // history leak). Use an opaque sha256; the userId stays inside the blob.
+    const userKey = crypto.createHash('sha256').update(String(data.userId)).digest('hex');
+    const filename = `responses/${userKey}_${timestamp}.encrypted`;
 
     // 2. Prepare GitHub API request
     const contentEncoded = Buffer.from(encryptedContent).toString('base64');
     const githubApiUrl = `https://api.github.com/repos/${GITHUB_ORG}/${DATA_REPO}/contents/${filename}`;
 
     const commitData = {
-        message: `New ENCRYPTED response from user ${data.userId}`,
+        message: 'New encrypted response',
         content: contentEncoded,
         branch: 'main'
     };

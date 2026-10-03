@@ -60,7 +60,7 @@ exports.handler = async (event, context) => {
                 'User-Agent': 'Netlify-Function-Yara-App'
             },
             body: JSON.stringify({
-                message: `Deleted waitlist entry: ${userEmail}`,
+                message: 'Deleted waitlist entry',
                 sha: sha,
                 branch: 'main'
             })

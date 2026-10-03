@@ -92,7 +92,7 @@ exports.handler = async (event, context) => {
                     'User-Agent': 'Netlify-Function-Yara-App'
                 },
                 body: JSON.stringify({
-                    message: `Approved beta tester: ${userEmail}`,
+                    message: 'Approved beta tester',
                     content: contentEncoded,
                     sha: fileData.sha,
                     branch: 'main'
