@@ -83,15 +83,19 @@ exports.handler = async (event, context) => {
         console.log('Geo lookup failed:', geoErr.message);
     }
 
-    // Fallback: use free IP geolocation if still unknown
+    // Fallback: use free IP geolocation if still unknown.
+    // ip-api.com rather than ipapi.co — the latter's free tier rate-limits
+    // hard enough that signups were being stored with 'Unknown' locations.
     if (city === 'Unknown' && clientIp !== 'unknown') {
         try {
-            const geoRes = await fetch(`https://ipapi.co/${clientIp}/json/`);
+            const geoRes = await fetch(`http://ip-api.com/json/${clientIp}?fields=status,city,regionName,country`);
             if (geoRes.ok) {
                 const geoData = await geoRes.json();
-                city = geoData.city || 'Unknown';
-                region = geoData.region || 'Unknown';
-                country = geoData.country_name || 'Unknown';
+                if (geoData.status === 'success') {
+                    city = geoData.city || 'Unknown';
+                    region = geoData.regionName || 'Unknown';
+                    country = geoData.country || 'Unknown';
+                }
             }
         } catch (e) { /* non-critical */ }
     }
